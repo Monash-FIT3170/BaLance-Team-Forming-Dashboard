@@ -2,9 +2,15 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+If you do not have npm, please install node js first (npm is included inside the installation bundle).
+
 ## Available Scripts
 
 In the project directory, you can run:
+
+### 'npm install'
+Install packages for the first time when this project is cloned 
+
 
 ### `npm start`
 
