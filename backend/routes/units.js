@@ -3,7 +3,7 @@ const router = express.Router()
 
 // TODO API endpoints for units
 router.get('/', (req, res) => {
-    console.log(req.route);
+    console.log("GET all units");
 })
 
 // export this router for external use
