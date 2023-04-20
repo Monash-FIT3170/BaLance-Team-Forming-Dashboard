@@ -13,8 +13,8 @@ const app = express();
 app.use(express.json());
 
 // route middleware
-app.use('api/units', unitRoutes);
-app.use('api/groups', teamRoutes);
+app.use('api/units/', unitRoutes);
+app.use('api/units/:id/', teamRoutes);
 
 // TODO connect to mysql -> listen to port after connection
 
