@@ -10,5 +10,10 @@ router.get('/', (req, res) => {
     console.log("GET all teams");
 })
 
+// get a specific group for a specific unit
+router.get('/', )
+
+
+
 // export this router for external use
 module.exports = router
