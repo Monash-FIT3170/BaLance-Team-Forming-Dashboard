@@ -28,3 +28,10 @@ const updateGroup = async (req, res) => {
         group: "group updated"
     })
 }
+
+module.exports = {
+    getGroup,
+    addGroup,
+    deleteGroup,
+    updateGroup
+}
