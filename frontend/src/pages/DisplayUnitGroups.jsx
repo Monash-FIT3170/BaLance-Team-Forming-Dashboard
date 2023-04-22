@@ -1,15 +1,13 @@
 import { DragHandleIcon, CloseIcon, AddIcon } from '@chakra-ui/icons'
 import { MdFilterList } from 'react-icons/md'
 import {
-    Card, CardBody, CardHeader, CardFooter, Table, Icon,
+    Card, CardBody, CardHeader, Table, Icon,
     Thead,
     Tbody,
-    Tfoot,
     Tr,
     Th,
     Td,
-    TableCaption,
-    TableContainer, SimpleGrid, Text, Heading, Center, Spacer, HStack, Button
+    TableContainer, SimpleGrid, Heading, Center, Spacer, HStack, Button
 } from "@chakra-ui/react"
 import NavBar from "../components/NavBar.jsx"
 
