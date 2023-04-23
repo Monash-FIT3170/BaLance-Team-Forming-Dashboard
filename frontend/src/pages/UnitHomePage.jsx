@@ -19,5 +19,15 @@ function UnitPage() {
     let secondaryText = useColorModeValue("gray.600", "gray.600");
     let iconBox = useColorModeValue("gray.100", "whiteAlpha.200");
     let iconColor = useColorModeValue("brand.200", "white");
+
+    
+  return(
+    <div>
+      <NavBar />
+        <Center margin="40px">
+          <Heading>Unit Home Page</Heading>
+        </Center>
+    </div>
+  );
 }
 export default UnitPage;
