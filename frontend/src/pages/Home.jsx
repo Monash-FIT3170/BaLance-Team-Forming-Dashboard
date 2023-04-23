@@ -1,46 +1,59 @@
-import { DragHandleIcon, CloseIcon, AddIcon } from '@chakra-ui/icons'
-import { MdFilterList } from 'react-icons/md'
 import {
     Card, CardBody, CardHeader, CardFooter, Table, Icon,
-    Text, Heading, Center, Spacer, HStack, Button
+    Text, Heading, Center, Spacer, HStack, Button, SimpleGrid,
+    Modal, ModalBody,ModalOverlay,
+    ModalContent,ModalHeader,ModalFooter,ModalCloseButton,
 } from "@chakra-ui/react"
-import { ChakraBaseProvider, extendBaseTheme } from '@chakra-ui/react'
-// `@chakra-ui/theme` is a part of the base install with `@chakra-ui/react`
-import chakraTheme from '@chakra-ui/theme'
-import React from 'react'
+
+import {useDisclosure} from "@chakra-ui/react";
 import NavBar from "../components/NavBar.jsx"
 
+<<<<<<< HEAD
 class PageProps extends React.Component {
   render() {
+=======
+import React from 'react'
+
+
+
+export default function CreatePopup(){
+  
+  const {isOpen, onOpen, onClose } = useDisclosure()
+>>>>>>> bad06ec5d6e7887646f5d197da733d8943fd4363
     return (
-      <h2>hello</h2>
-    );
-  }
+      <>
+        <Button onClick={onOpen}>Unit Details</Button>
+        <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>FIT3077</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody pb={6}>
+              DA BEST UNIT EVAHHH
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme='blue' mr={3} onClick={onClose}>
+                Save
+              </Button>
+              <Button onClick={onClose}>Cancel</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </>
+    )
 }
 
-
-const theme = extendBaseTheme({
-  components: {
-    Button,
-  },
-})
-
-function MyComponent(props) {
-  return (
+function CreateHomePage(){
+  return(
     <div>
-      <h1>Unit Lists</h1>
-      {props.componentInstance}
+        <NavBar />
+        <SimpleGrid minChildWidth={300}>
+          <Card border="1px" marginX="20px" marginBottom="20px">
+
+          </Card>
+        </SimpleGrid>
     </div>
   );
 }
 
-function Home() {
-  return (
-    <ChakraBaseProvider theme={theme}>
-      <MyComponent componentInstance={<PageProps />} />
-      
-    </ChakraBaseProvider>
-  );
-}
 
-export default Home;
