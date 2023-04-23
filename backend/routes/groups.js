@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { // import controller functions for route handlers
+    getAllGroups,
     getGroup,
     addGroup,
     deleteGroup,
@@ -8,7 +9,7 @@ const { // import controller functions for route handlers
 } = require('../controllers/groupController')
 
 // get all groups for a specific unit
-router.get('/', (req, res) => {console.log("GET all teams");})
+router.get('/', getAllGroups)
 
 // get a specific group for a specific unit
 router.get('/:groupId', getGroup)
@@ -21,8 +22,6 @@ router.delete('/:groupId', deleteGroup)
 
 // update a specific group from a unit
 router.patch('/:groupId', updateGroup)
-
-router.get('/:unitId/groups', groupController.getAllGroups)
 
 // export this router for external use
 module.exports = router

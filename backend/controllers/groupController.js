@@ -1,11 +1,13 @@
-// TODO controller functions to handle requests for groups data
+/**
+ * A module containing controller functions for routes related to
+ * group data within a unit.
+ *
+ */
 
-getAllGroups: async function (req, res){
-
+// get all groups from a unit
+const getAllGroups = async (req, res) => {
     let unitId = req.params.unitId;
-
     res.send(`Groups from ${unitId}`);
-
 }
 
 // get a single group from a unit
@@ -37,6 +39,7 @@ const updateGroup = async (req, res) => {
 }
 
 module.exports = {
+    getAllGroups,
     getGroup,
     addGroup,
     deleteGroup,

@@ -1,7 +1,7 @@
 const express = require('express');
 const {Sequelize} = require('sequelize');
 const unitRoutes = require('./routes/units');
-const teamRoutes = require('./routes/groups');
+const groupRoutes = require('./routes/groups');
 
 // attach .env contents to the global process object
 require('dotenv').config();
@@ -14,10 +14,9 @@ app.use(express.json());
 
 // route middleware
 app.use('api/units/', unitRoutes);
-app.use('api/units/:unitId/', teamRoutes);
+app.use('api/units/:unitId/', groupRoutes);
 
 // TODO connect to mysql -> listen to port after connection
-
 // listen to port
 app.listen(process.env.PORT, () => {
     console.log(`listening to port ${process.env.PORT}`);
