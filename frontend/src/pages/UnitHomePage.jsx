@@ -12,3 +12,7 @@ import { AddIcon } from "@chakra-ui/icons";
 import { Center, Heading } from "@chakra-ui/react"
 import { IoEllipsisHorizontalSharp } from "react-icons/io5";
 import NavBar from "../components/NavBar.jsx"
+
+function UnitPage(){
+
+}export default UnitPage;
