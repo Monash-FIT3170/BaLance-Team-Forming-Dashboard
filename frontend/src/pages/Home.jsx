@@ -10,6 +10,13 @@ import chakraTheme from '@chakra-ui/theme'
 import React from 'react'
 import NavBar from "../components/NavBar.jsx"
 
+import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraBaseProvider, extendBaseTheme } from '@chakra-ui/react'
+// `@chakra-ui/theme` is a part of the base install with `@chakra-ui/react`
+import chakraTheme from '@chakra-ui/theme'
+
+import React from 'react'
+
 class PageProps extends React.Component {
   render() {
     return (
