@@ -8,18 +8,10 @@ import {
 import {useDisclosure} from "@chakra-ui/react";
 import NavBar from "../components/NavBar.jsx"
 
-<<<<<<< HEAD
-class PageProps extends React.Component {
-  render() {
-=======
 import React from 'react'
-
-
-
 export default function CreatePopup(){
   
   const {isOpen, onOpen, onClose } = useDisclosure()
->>>>>>> bad06ec5d6e7887646f5d197da733d8943fd4363
     return (
       <>
         <Button onClick={onOpen}>Unit Details</Button>
