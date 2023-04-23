@@ -7,6 +7,16 @@ import {
   Image,
   Text,
   useColorModeValue,
+  Card, 
+  SimpleGrid,
+  Modal,
+  ModalBody,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalCloseButton,
+  useDisclosure
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { Center, Heading } from "@chakra-ui/react"
@@ -19,7 +29,7 @@ function UnitPage() {
   let secondaryText = useColorModeValue("gray.600", "gray.600");
   let iconBox = useColorModeValue("gray.100", "whiteAlpha.200");
   let iconColor = useColorModeValue("brand.200", "white");
-
+  const {isOpen, onOpen, onClose } = useDisclosure()
   return(
     <div>
       <NavBar />
@@ -76,13 +86,32 @@ function UnitPage() {
               justify='right'
               borderRadius='12px'
               me='12px'
-              bg={iconBox}>
+              bg={iconBox}
+              onClick={onOpen}>
                 <Icon
                 w='24px'
                 h ='24px'
                 as={IoEllipsisHorizontalSharp}
-                color={iconColor}/>
+                color={iconColor}
+                />
+              
             </Button>
+            <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>FIT3077</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody pb={6}>
+                  DA BEST UNIT EVAHHH
+                </ModalBody>
+                <ModalFooter>
+                  <Button colorScheme='blue' mr={3} onClick={onClose}>
+                    Save
+                  </Button>
+                  <Button onClick={onClose}>Cancel</Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
         </Flex>
         <Image
         src='https://img.freepik.com/free-vector/gradient-purple-color-gradient-background-abstract-modern_343694-2243.jpg?w=740&t=st=1682246391~exp=1682246991~hmac=24a5e0adc73d36b09e5b9fc4b2b05aabd12bab82078f67b6556cb3800ca6d1e4'
@@ -101,4 +130,6 @@ function UnitPage() {
     </div>
   )
 }
+
+
 export default UnitPage;
