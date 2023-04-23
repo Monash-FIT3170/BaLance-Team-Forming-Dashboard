@@ -22,5 +22,7 @@ router.delete('/:groupId', deleteGroup)
 // update a specific group from a unit
 router.patch('/:groupId', updateGroup)
 
+router.get('/:unitId/groups', groupController.getAllGroups)
+
 // export this router for external use
 module.exports = router

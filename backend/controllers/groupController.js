@@ -1,5 +1,12 @@
 // TODO controller functions to handle requests for groups data
 
+getAllGroups: async function (req, res){
+
+    let unitId = req.params.unitId;
+
+    res.send(`Groups from ${unitId}`);
+
+}
 
 // get a single group from a unit
 const getGroup = async (req, res) => {
