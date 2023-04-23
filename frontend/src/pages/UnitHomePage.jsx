@@ -25,7 +25,16 @@ function UnitPage() {
     <div>
       <NavBar />
         <Center margin="40px">
-          <Heading>Unit Home Page</Heading>
+          <Heading>Unit Home Page</Heading>          
+          {/* <Button
+              w='30px'
+              h='40px'
+              alignContent='right'
+              borderRadius='12px'
+              me='12px'>
+                <Icon w='24px' h='24px'as={AddIcon} color={iconColor}/>
+            </Button> */} 
+          <br />
         </Center>
     </div>
   );
