@@ -1,3 +1,9 @@
+/**
+ * A module containing route handlers for group related
+ * API calls
+ *
+ */
+
 const express = require('express')
 const router = express.Router()
 const { // import controller functions for route handlers
