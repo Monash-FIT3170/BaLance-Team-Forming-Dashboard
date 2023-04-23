@@ -8,6 +8,14 @@ module.exports = {
 
         res.send(`${unitId} has been deleted`);
 
+    },
+
+    updateUnit: async function (req, res){
+
+        let unitId = req.params.unitId;
+
+        res.send(`${unitId} has been updated`);
+
     }
 
 

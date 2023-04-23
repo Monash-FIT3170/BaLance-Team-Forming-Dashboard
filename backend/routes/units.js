@@ -22,5 +22,8 @@ router.post('/', (req, res) => {
 })
 
 router.delete('/:unitId', unitController.deleteUnit);
+
+router.patch('/:unitId', unitController.updateUnit);
+
 // export this router for external use
 module.exports = router
