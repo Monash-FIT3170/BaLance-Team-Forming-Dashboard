@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { Center, Heading } from "@chakra-ui/react"
-import { IoEllipsisHorizontalSharp } from "react-icons/io5";
+import { IoEllipsisHorizontalSharp,IoTrashOutline } from "react-icons/io5";
 import NavBar from "../components/NavBar.jsx"
 
 function UnitPage() {
@@ -36,15 +36,23 @@ function UnitPage() {
         <Center margin="40px">
           <Heading>Unit Home Page</Heading>
           <Flex>
-           <Button
-              w='30px'
+          <Button
+              w='40px'
               h='40px'
               align='right'
               justify='right'
               borderRadius='12px'
-              me='12px'>
-                <Icon w='24px' h='24px'as={AddIcon} color={iconColor}/>
-            </Button> 
+              me='12px'
+              bg={iconBox}
+              onClick={onOpen}>
+                <Icon
+                w='24px'
+                h ='24px'
+                as={AddIcon}
+                color={iconColor}
+                />
+              
+            </Button>
             </Flex>
           <br />
         </Center>
@@ -102,9 +110,20 @@ function UnitPage() {
                 <ModalHeader>FIT3170</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody pb={6}>
-                  DA BEST UNIT EVAHHH
+                  150 Students enrrolled
                 </ModalBody>
                 <ModalFooter>
+                  <Text
+                    my='auto'
+                    fontWeight='800'
+                      
+                    color={mainText}
+                    textAlign='left'
+                    fontSize='xl'
+                    me='auto'>
+                      <Button style={{ fontSize: '20px'}}>Edit</Button>
+                    
+                  </Text>
                   <Button colorScheme='blue' mr={3} onClick={onClose}>
                     Save
                   </Button>
