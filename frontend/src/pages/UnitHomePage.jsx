@@ -1,5 +1,5 @@
 import React from "react";
-// Chakra imports
+import createUnitGroups from './DisplayUnitGroups'// Chakra imports
 import {
   Flex,
   Button,
@@ -28,6 +28,7 @@ function UnitPage() {
   let iconBox = useColorModeValue("gray.100", "whiteAlpha.200");
   let iconColor = useColorModeValue("brand.200", "white");
   const {isOpen, onOpen, onClose } = useDisclosure()
+
   return(
     <div>
       <NavBar />
@@ -78,7 +79,6 @@ function UnitPage() {
               fontSize='xl'
               me='auto'>
                 <Button style={{fontWeight: 'bold', fontSize: '20px'}}>FIT3170</Button>
-              
             </Text>
             
             <Button
@@ -98,7 +98,7 @@ function UnitPage() {
                 />
               
             </Button>
-            <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
+            <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} onClick={'/DisplayUnitGroups'}>
               <ModalOverlay />
               <ModalContent>
                 <ModalHeader>FIT3170</ModalHeader>
@@ -118,10 +118,10 @@ function UnitPage() {
                       <Button> <Icon as={EditIcon}></Icon> </Button>
                     
                   </Text>
-                  <Button colorScheme='blue' mr={3} onClick={onClose}>
+                  <Button onClick={onClose} mr={3}>Cancel</Button>
+                  <Button colorScheme='blue' onClick={onClose}>
                     Save
                   </Button>
-                  <Button onClick={onClose}>Cancel</Button>
                 </ModalFooter>
               </ModalContent>
             </Modal>

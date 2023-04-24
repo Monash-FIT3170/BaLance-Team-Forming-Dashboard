@@ -24,6 +24,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<UnitHomePage />}/>
+            <Route path="./DisplayUnitGroups" element={<DisplayUnitGroups />}/>
           </Routes>
         </BrowserRouter>
       </div>
