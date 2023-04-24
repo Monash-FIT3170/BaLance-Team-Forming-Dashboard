@@ -1,16 +1,28 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import Home from './pages/Home'
-import ImportClass from './pages/ImportClass'
-import logo from './assets/logo.png';
+import  ImportClass from './pages/ImportClass'
 
+import DisplayUnitGroups from './pages/DisplayUnitGroups'
+//import logo from './assets/logo.png';
+
+
+const theme = extendTheme({
+  colors: {
+      balance: {
+        header_color: "#F0EDE7",
+        logo_purple: "#24265D"
+    },
+
+  }
+}) 
 function App() {
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <div className="App">
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<ImportClass />}/>
+          <Route path="/" element={<ImportClass/>}/>
           </Routes>
         </BrowserRouter>
       </div>

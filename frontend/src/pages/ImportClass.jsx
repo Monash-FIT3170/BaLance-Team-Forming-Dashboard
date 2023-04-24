@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import logo from "../assets/logo.png";
 import { Box, Heading, Text, Flex, Input, Alert, AlertIcon, AlertTitle, AlertDescription } from "@chakra-ui/react";
+import NavBar from "../components/NavBar";
+
 
 function ImportPage() {
   const [csvFile, setCsvFile] = useState(null);
@@ -41,6 +43,8 @@ function ImportPage() {
   };
 
   return (
+    <> 
+    <NavBar/>   
     <Flex
       height="100%"
       flexDirection="column"
@@ -52,7 +56,6 @@ function ImportPage() {
       }}
       onDrop={handleDrop}
     >
-      <Heading as="h1">This page is used to:</Heading>
       {errorMessage && (
         <Alert status="error" my={4}>
           <AlertIcon />
@@ -73,6 +76,7 @@ function ImportPage() {
         </Box>
       )}
     </Flex>
+    </>
   );
 }
 
