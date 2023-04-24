@@ -35,22 +35,22 @@ function UnitPage() {
       <NavBar />
         <Center margin="40px">
           <Heading>Unit Home Page</Heading>
-          
-          {/* <Button
+          <Flex>
+           <Button
               w='30px'
               h='40px'
-              alignContent='right'
+              align='right'
+              justify='right'
               borderRadius='12px'
               me='12px'>
                 <Icon w='24px' h='24px'as={AddIcon} color={iconColor}/>
-            </Button> */}
-          
+            </Button> 
+            </Flex>
           <br />
         </Center>
 
         <Flex 
         borderRadius='20px'
-        borderColor={'purple'}
         bg={boxBg}
         p='20px'
         h='345px'
@@ -72,10 +72,10 @@ function UnitPage() {
               fontWeight='800'
                 
               color={mainText}
-              textAlign='left'
+              textAlign='center'
               fontSize='xl'
               me='auto'>
-                <Button style={{fontWeight: 'bold', fontSize: '20px'}}>FIT3107</Button>
+                <Button style={{fontWeight: 'bold', fontSize: '20px'}}>FIT3170</Button>
               
             </Text>
             
@@ -99,7 +99,7 @@ function UnitPage() {
             <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
               <ModalOverlay />
               <ModalContent>
-                <ModalHeader>FIT3077</ModalHeader>
+                <ModalHeader>FIT3170</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody pb={6}>
                   DA BEST UNIT EVAHHH
