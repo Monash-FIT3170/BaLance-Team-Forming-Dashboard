@@ -43,7 +43,7 @@ function UnitPage() {
               justify='right'
               borderRadius='12px'
               me='12px'
-              bg={iconBox}
+              //bg={iconBox}
               onClick={onOpen}>
                 <Icon
                 w='24px'
