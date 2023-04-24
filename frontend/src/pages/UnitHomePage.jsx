@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { Center, Heading } from "@chakra-ui/react"
-import { IoEllipsisHorizontalSharp } from "react-icons/io5";
+import { IoEllipsisHorizontalSharp,IoTrashOutline } from "react-icons/io5";
 import NavBar from "../components/NavBar.jsx"
 
 function UnitPage() {
@@ -99,12 +99,40 @@ function UnitPage() {
             <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
               <ModalOverlay />
               <ModalContent>
-                <ModalHeader>FIT3077</ModalHeader>
+                <ModalHeader>FIT3077{'          '} 
+                  <Button
+                      w='38px'
+                      h='38px'
+                      align='right'
+                      justify='right'
+                      borderRadius='12px'
+                      me='12px'
+                      bg={iconBox}
+                      >
+                      <Icon
+                        w='24px'
+                        h ='24px'
+                        as={IoTrashOutline}
+                        color={iconColor}
+                      />
+                    </Button>
+                </ModalHeader>
                 <ModalCloseButton />
                 <ModalBody pb={6}>
-                  DA BEST UNIT EVAHHH
+                  150 Students enrrolled
                 </ModalBody>
                 <ModalFooter>
+                  <Text
+                    my='auto'
+                    fontWeight='800'
+                      
+                    color={mainText}
+                    textAlign='left'
+                    fontSize='xl'
+                    me='auto'>
+                      <Button style={{ fontSize: '20px'}}>Edit</Button>
+                    
+                  </Text>
                   <Button colorScheme='blue' mr={3} onClick={onClose}>
                     Save
                   </Button>
