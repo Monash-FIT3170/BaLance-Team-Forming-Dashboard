@@ -12,6 +12,11 @@ const app = express();
 // required to attach reqs with a body to the req object for req handling
 app.use(express.json());
 
+app.use((req, res, next) => {
+    console.log(req.path, req.method)
+    next()
+})
+
 // route middleware
 app.use('/api/units/', unitRoutes);
 app.use('/api/units/:unitId/groups', groupRoutes);
