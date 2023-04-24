@@ -7,8 +7,6 @@ import {
   Image,
   Text,
   useColorModeValue,
-  Card, 
-  SimpleGrid,
   Modal,
   ModalBody,
   ModalOverlay,
@@ -18,7 +16,7 @@ import {
   ModalCloseButton,
   useDisclosure
 } from "@chakra-ui/react";
-import { AddIcon } from "@chakra-ui/icons";
+import { PlusSquareIcon, EditIcon } from "@chakra-ui/icons";
 import { Center, Heading } from "@chakra-ui/react"
 import { IoEllipsisHorizontalSharp,IoTrashOutline } from "react-icons/io5";
 import NavBar from "../components/NavBar.jsx"
@@ -42,15 +40,12 @@ function UnitPage() {
               align='right'
               justify='right'
               borderRadius='12px'
-              me='12px'
-              onClick={onOpen}>
+              me='12px'>
                 <Icon
                 w='24px'
                 h ='24px'
-                as={AddIcon}
-                color={iconColor}
-                />
-              
+                as={PlusSquareIcon}
+                color={iconColor}/>
             </Button>
             </Flex>
           <br />
@@ -120,7 +115,7 @@ function UnitPage() {
                     textAlign='left'
                     fontSize='xl'
                     me='auto'>
-                      <Button style={{ fontSize: '20px'}}>Edit</Button>
+                      <Button> <Icon as={EditIcon}></Icon> </Button>
                     
                   </Text>
                   <Button colorScheme='blue' mr={3} onClick={onClose}>
