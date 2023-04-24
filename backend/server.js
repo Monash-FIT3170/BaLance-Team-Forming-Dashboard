@@ -13,11 +13,11 @@ const app = express();
 app.use(express.json());
 
 // route middleware
-app.use('api/units/', unitRoutes);
-app.use('api/units/:unitId/', groupRoutes);
+app.use('/api/units/', unitRoutes);
+app.use('/api/units/:unitId/groups', groupRoutes);
 
 // TODO connect to mysql -> listen to port after connection
 // listen to port
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 8080, () => {
     console.log(`listening to port ${process.env.PORT}`);
 })
