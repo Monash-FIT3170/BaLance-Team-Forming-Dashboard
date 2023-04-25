@@ -1,6 +1,7 @@
 import React from "react";
 import createUnitGroups from './DisplayUnitGroups'// Chakra imports
 import {
+  Link,
   Flex,
   Button,
   Icon,
@@ -51,7 +52,7 @@ function UnitPage() {
             </Flex>
           <br />
         </Center>
-
+        
         <Flex 
         borderRadius='20px'
         bg={boxBg}
@@ -98,7 +99,7 @@ function UnitPage() {
                 />
               
             </Button>
-            <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} onClick={'/DisplayUnitGroups'}>
+            <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} onClick={<Link to={this} onClick={isOpen}>'./DisplayUnitGroups'</Link>}>
               <ModalOverlay />
               <ModalContent>
                 <ModalHeader>FIT3170</ModalHeader>
