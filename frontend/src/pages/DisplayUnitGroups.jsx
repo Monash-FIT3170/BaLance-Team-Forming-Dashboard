@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react"
 import NavBar from "../components/NavBar.jsx"
 
-export default function createUnitGroups() {
+function createUnitGroups() {
 
     return (
         <div>
@@ -131,3 +131,5 @@ export default function createUnitGroups() {
     )
 
 }
+
+export default createUnitGroups
