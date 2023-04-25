@@ -22,6 +22,7 @@ function App() {
     <ChakraProvider theme={theme}>
       <div className="App">
         <BrowserRouter>
+        
           <Routes>
             <Route path="/" element={<UnitHomePage />}/>
             <Route path="./DisplayUnitGroups" element={<DisplayUnitGroups />}/>
