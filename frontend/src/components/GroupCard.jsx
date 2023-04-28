@@ -56,23 +56,4 @@ const GroupCard = (props) =>{
         </Card>
     )
 }
-export default function GroupCard(props) {
-
-    return (
-        <Tr>
-            <Td>
-                <HStack>
-                    <button><CloseIcon /></button>
-                    <Spacer />
-                    <button><DragHandleIcon /></button>
-                </HStack>
-            </Td>
-            <Td>{firstName}</Td>
-            <Td>{email}</Td>
-            <Td>{classNum}</Td>
-            <Td>{wamAverage}</Td>
-            <Td>{enrolmentStatus}</Td>
-            <Td>{discPersonality}</Td>
-        </Tr>
-    )
-}
+export default GroupCard
