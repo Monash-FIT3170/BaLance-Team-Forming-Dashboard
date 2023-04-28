@@ -7,19 +7,18 @@ Group card needs to:
     - the student's details (found from the group data) need to be passed into the StudentRow component via props
         - e.g. <Student firstName=_firstName email=_email classNum=_classNum wamAverage=_wamAverage enrolmentStatus=_enrolmentStatus discPersonality=_discPersonality > 
 */
-
-import { Tr, Td, HStack, Spacer } from "@chakra-ui/react";
-import { DragHandleIcon, CloseIcon } from '@chakra-ui/icons'
+import {Card, CardBody, CardHeader, Table, Thead,Tbody,Tr,Th,Td,TableContainer,Heading, Center, Spacer, HStack} from "@chakra-ui/react"
+import { AddIcon } from '@chakra-ui/icons'
 import StudentRow from './StudentRow'
 
 const GroupCard = (props) =>{
-    const {labNumber, GroupId, Students} = props
+    const {labId, groupId, members} = props
 
     return (
         <Card border="1px" marginX="20px" marginBottom="20px">
             <CardHeader>
                 <HStack>
-                    <Heading>Lab {labNumber} Group {GroupId}</Heading>
+                    <Heading>Lab {labId} Group {groupId}</Heading>
                     <Spacer />
                 </HStack>
             </CardHeader>
@@ -39,7 +38,7 @@ const GroupCard = (props) =>{
                             </Tr>
                         </Thead>
                         <Tbody>
-                            {Students.map(student =>(
+                            {members.map(student =>(
                                 <StudentRow props = {student} key = {student._id}/>
                             ))}
                             <Tr>
