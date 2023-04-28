@@ -40,7 +40,7 @@ const GroupCard = (props) =>{
                         </Thead>
                         <Tbody>
                             {Students.map(student =>(
-                                <StudentRow details = {student} key = {student._id}/>
+                                <StudentRow props = {student} key = {student._id}/>
                             ))}
                             <Tr>
                                 <Td colspan="7">
