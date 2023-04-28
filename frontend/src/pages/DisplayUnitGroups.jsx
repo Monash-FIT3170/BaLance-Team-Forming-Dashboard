@@ -1,13 +1,7 @@
 import { DragHandleIcon, CloseIcon, AddIcon } from '@chakra-ui/icons'
 import { MdFilterList } from 'react-icons/md'
 import {
-    Card, CardBody, CardHeader, Table, Icon,
-    Thead,
-    Tbody,
-    Tr,
-    Th,
-    Td,
-    TableContainer, SimpleGrid, Heading, Center, Spacer, HStack, Button
+    Card, CardBody, CardHeader, Table, Icon, Thead,Tbody,Tr,Th,Td,TableContainer, SimpleGrid, Heading, Center, Spacer, HStack, Button
 } from "@chakra-ui/react"
 import NavBar from "../components/NavBar.jsx"
 
@@ -21,7 +15,6 @@ function createUnitGroups() {
             </Center>
 
             <SimpleGrid minChildWidth="300">
-
 
                 <Card border="1px" marginX="20px" marginBottom="20px">
                     <CardHeader>
