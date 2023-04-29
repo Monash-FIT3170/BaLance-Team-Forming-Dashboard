@@ -24,8 +24,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Home />}/>
-            <Route path = "/test" element ={<Groups />}/>
-            <Route path="/groups" element={<DisplayUnitGroups />}/>
+            <Route path="/groups" element={<Groups />}/>
           </Routes>
         </BrowserRouter>
       </div>
