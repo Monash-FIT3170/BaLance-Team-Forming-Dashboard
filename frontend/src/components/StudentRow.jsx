@@ -4,7 +4,7 @@ import { DragHandleIcon, CloseIcon } from '@chakra-ui/icons'
 export default function StudentRow(props) {
 
     // desctructure the content of props 
-    const { firstName, email, classNum, wamAverage, enrolmentStatus, discPersonality } = props;
+    const { firstName, email, classNum, wamAverage, enrolmentStatus, discPersonality } = props.props;
 
     return (
         <Tr>

@@ -2,7 +2,7 @@ import GroupCard from "../components/GroupCard";
 import React from "react";
 import NavBar from "../components/NavBar";
 
-function groups(){
+function Groups(){
     const data = [
          {
              "groupId": 123,
@@ -74,4 +74,4 @@ function groups(){
     );
   };
 
-  export default groups;
+  export default Groups;

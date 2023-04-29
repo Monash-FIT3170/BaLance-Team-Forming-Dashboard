@@ -12,7 +12,9 @@ import { AddIcon } from '@chakra-ui/icons'
 import StudentRow from './StudentRow'
 
 const GroupCard = (props) =>{
-    const {labId, groupId, members} = props
+    const {labId, groupId, members} = props.props
+
+
 
     return (
         <Card border="1px" marginX="20px" marginBottom="20px">
