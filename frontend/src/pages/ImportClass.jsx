@@ -11,7 +11,15 @@ import {
   ChakraProvider,
   extendTheme,
   AlertDescription,
-  Button
+  Button,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableCaption,
+  TableContainer
 } from "@chakra-ui/react";
 import NavBar from "../components/NavBar";
 
@@ -65,9 +73,50 @@ function ImportPage() {
     }
   };
 
+  // Dummy data for the table
+  const profiles = [
+    {
+      firstName: "John",
+      lastName: "Doe",
+      emailAddress: "john.doe@example.com",
+      wam: "HD",
+      status: "Active",
+      role: "Teacher"
+    },
+    {
+      firstName: "Jane",
+      lastName: "Duncan",
+      emailAddress: "jane.duncan@example.com",
+      wam: "D",
+      status: "Active",
+      role: "Student"
+    },
+    {
+      firstName: "Tom",
+      lastName: "Marshall",
+      emailAddress: "tom.marshall@example.com",
+      wam: "D",
+      status: "Active",
+      role: "Student"
+    },
+    {
+      firstName: "Jessica",
+      lastName: "Stoltman",
+      emailAddress: "jessica.stoltman@example.com",
+      wam: "P",
+      status: "Active",
+      role: "Student"
+    },
+  ];
+
   return (
     <>
       <NavBar />
+      <Box as="header" p="4">
+        <Text fontSize="2xl" fontWeight="bold">
+          Upload Profiles
+        </Text>
+      </Box>
       <Flex
         height="100%"
         flexDirection="column"
@@ -129,9 +178,50 @@ function ImportPage() {
             </Alert>
           )}
         </Box>
+        <Box
+          width="80%"
+          borderWidth="1px"
+          borderRadius="lg"
+          overflow="hidden"
+          mt={8}
+        >
+        <Box borderWidth="2px" borderColor="black" as="header" p="4">
+        <Text fontSize="2xl" fontWeight="bold">
+          View Profiles
+        </Text>
+        </Box>
+          <TableContainer borderWidth="2px" borderColor="black">
+            <Table variant="striped">
+              <Thead>
+                <Tr>
+                  <Th>First Name</Th>
+                  <Th>Last Name</Th>
+                  <Th>Email Address</Th>
+                  <Th>WAM</Th>
+                  <Th>Status</Th>
+                  <Th>Role</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {profiles.map((profile, index) => (
+                  <Tr key={index}>
+                    <Td>{profile.firstName}</Td>
+                    <Td>{profile.lastName}</Td>
+                    <Td>{profile.emailAddress}</Td>
+                    <Td>{profile.wam}</Td>
+                    <Td>{profile.status}</Td>
+                    <Td>{profile.role}</Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          </TableContainer>
+        </Box>
       </Flex>
     </>
-  ); 
+  );
+  
+
 }
 
 export default ImportPage;
