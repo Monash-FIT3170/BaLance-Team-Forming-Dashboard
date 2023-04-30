@@ -11,23 +11,29 @@ const { // import controller functions for route handlers
     getGroup,
     addGroup,
     deleteGroup,
-    updateGroup
+    updateGroup,
+    createUnitGroups
 } = require('../controllers/groupController')
 
+// Api Structure /api/groups/{unitId}/{groupId}
+
 // get all groups for a specific unit
-router.get('/', getAllGroups)
+router.get('/:unitId/', getAllGroups)
 
 // get a specific group for a specific unit
-router.get('/:groupId', getGroup)
+router.get('/:unitId/:groupId', getGroup)
+
+// create unit groups
+router.post('/:unitId/', createUnitGroups)
 
 // add a new group to a unit
 router.post('/', addGroup)
 
 // delete a specific group from a unit
-router.delete('/:groupId', deleteGroup)
+router.delete('/:unitId/:groupId', deleteGroup)
 
 // update a specific group from a unit
-router.patch('/:groupId', updateGroup)
+router.patch('/:unitId/:groupId', updateGroup)
 
 // export this router for external use
 module.exports = router
