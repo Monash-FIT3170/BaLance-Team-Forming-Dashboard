@@ -1,0 +1,74 @@
+[
+    {
+        "studentId": "54321867",
+        "studentFirstName": "BCA",
+        "studentLastName": "ABC",
+        "studentEmailAddress": "some@student.monash.edu",
+        "wamAverage": 69,
+        "gender": "F",
+        "units": [["FIT2099_CL_S1_ON-CAMPUS", "01_DualMode-P1", true]]
+    },
+    {
+        "studentId": "12345678",
+        "studentFirstName": "FRIDAY",
+        "studentLastName": "HAPPY",
+        "studentEmailAddress": "hrid1234@student.monash.edu",
+        "wamAverage": 91.25,
+        "gender": "M",
+        "units": [["FIT2099_CL_S1_ON-CAMPUS", "01_DualMode-P1", true]]
+    },
+    {
+        "studentId": "12345677",
+        "studentFirstName": "FARADAY",
+        "studentLastName": "KEPLER",
+        "studentEmailAddress": "xzho0118@student.monash.edu",
+        "wamAverage": 73,
+        "gender": "F",
+        "units": [["FIT2099_CL_S1_ON-CAMPUS", "01_DualMode-P1", true]]
+    },
+    {
+        "studentId": "12345676",
+        "studentFirstName": "WEDNESDAY",
+        "studentLastName": "STEVENS",
+        "studentEmailAddress": "wste0065@student.monash.edu",
+        "wamAverage": 95,
+        "gender": "F",
+        "units": [["FIT2099_CL_S1_ON-CAMPUS", "01_DualMode-P1", true]]
+    },
+    {
+        "studentId": "12300015",
+        "studentFirstName": "STEVE",
+        "studentLastName": "JOBS",
+        "studentEmailAddress": "steve.jobs@apple.com",
+        "wamAverage": 85,
+        "gender": "M",
+        "units": [["FIT2099_CL_S1_ON-CAMPUS", "02_DualMode-P1", true]]
+    },
+    {
+        "studentId": "12300014",
+        "studentFirstName": "BILL",
+        "studentLastName": "GATES",
+        "studentEmailAddress": "bill.gates@microsoft.com",
+        "wamAverage": 86,
+        "gender": "M",
+        "units": [["FIT2099_CL_S1_ON-CAMPUS", "02_DualMode-P1", true]]
+    },
+    {
+        "studentId": "12300013",
+        "studentFirstName": "LINUS",
+        "studentLastName": "TORVALDS",
+        "studentEmailAddress": "linus.torvalds@linux.com",
+        "wamAverage": 99,
+        "gender": "M",
+        "units": [["FIT2099_CL_S1_ON-CAMPUS", "02_DualMode-P1", true]]
+    },
+    {
+        "studentId": "12300012",
+        "studentFirstName": "RANDOM",
+        "studentLastName": "MAN",
+        "studentEmailAddress": "random.man@monash.edu",
+        "wamAverage": 50,
+        "gender": "M",
+        "units": [["FIT2099_CL_S1_ON-CAMPUS", "02_DualMode-P1", true]]
+    }
+]
