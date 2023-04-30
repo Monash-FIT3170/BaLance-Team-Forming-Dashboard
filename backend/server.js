@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 
 // route middleware
 app.use('/api/units/', unitRoutes);
-app.use('/api/units/:unitId/groups', groupRoutes);
+app.use('/api/groups/', groupRoutes);
 
 // TODO connect to mysql -> listen to port after connection
 // listen to port
