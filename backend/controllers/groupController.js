@@ -226,6 +226,14 @@ const createUnitGroups = async (req, res) => {
 
     }
 
+    for (let i = 0; i < createdGroups.length; i++){
+
+        unit.groups.push(createdGroups[i].groupId)
+
+    }
+
+    //console.log(unit)
+
     //console.log(createdGroups);
     
     //createdGroupsJSON = JSON.stringify(createdGroups);
