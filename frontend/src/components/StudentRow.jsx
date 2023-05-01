@@ -17,7 +17,6 @@ export default function StudentRow(props) {
             </Td>
             <Td>{studentFirstName}</Td>
             <Td>{studentEmail}</Td>
-            <Td>{classNum}</Td>
             <Td>{wam}</Td>
             <Td>{status}</Td>
             <Td>{discPersonality}</Td>

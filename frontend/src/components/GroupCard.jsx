@@ -33,7 +33,6 @@ const GroupCard = (props) =>{
                                 <Th></Th>
                                 <Th>Name</Th>
                                 <Th>Email Address</Th>
-                                <Th>Lab Number</Th>
                                 <Th>WAM average</Th>
                                 <Th>Enrolment Status</Th>
                                 <Th>DISC Personality</Th>
