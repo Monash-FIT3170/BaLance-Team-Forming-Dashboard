@@ -17,7 +17,7 @@ const { // import controller functions for route handlers
 
 // Api Structure /api/groups/{unitId}/{groupId}
 
-// get all groups for a specific unit
+// get all groups for a specific unit FIXME why is there a route param here?
 router.get('/:unitId/', getAllGroups)
 
 // get a specific group for a specific unit

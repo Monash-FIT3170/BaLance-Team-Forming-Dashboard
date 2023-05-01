@@ -12,10 +12,8 @@ const { // import controller functions for route handlers
     updateUnit
 } = require('../controllers/unitController');
 
-// get all units for a user FIXME
-router.get('/', (req, res) => {
-    console.log("GET all units");
-})
+// get all units for a user
+router.get('/', getAllUnits)
 
 // get a specific unit for a user TODO
 

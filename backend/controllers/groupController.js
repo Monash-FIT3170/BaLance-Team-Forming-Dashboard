@@ -63,9 +63,7 @@ const getAllGroups = async (req, res) => {
         }
     ]
 
-    //groups = JSON.stringify(groups);
-    
-    res.send(groups);
+    res.json(groups);
 }
 
 // get a single group from a unit
@@ -97,10 +95,10 @@ const getGroup = async (req, res) => {
     }
 
     //group = JSON.stringify(group);
-
     res.send(group);
 }
 
+// create all of the groups (based on csv)
 const createUnitGroups = async (req, res) => {
     let unitId = req.params.unitId;
     let groupSize = req.body.groupSize;
@@ -121,27 +119,18 @@ const createUnitGroups = async (req, res) => {
 
     let unitStudents = []
     for (let i = 0; i < unit.students.length; i++){
-
         for (let j = 0; j < students.length; j++){
-
-            
-
             if (students[j].studentId == unit.students[i]){
-
                 let lab;
 
                 for (let k = 0; k < students[j].units.length; k++){
-
                     if (students[j].units[k][0] == unit.unitCode){
                         lab = students[j].units[k][1];
                     }
                 }
-
                 unitStudents.push([students[j], lab]);
             }
-
         }
-
     }
 
     unitStudents.sort((a, b) => a[1] - b[1]);
@@ -151,7 +140,6 @@ const createUnitGroups = async (req, res) => {
     unassignedStudents = [];
 
     for (let i = 0; i < unitStudents.length; i = i + groupSize){
-
         let groupIndex = Math.floor(i/groupSize) + 1;
 
         if (i + groupSize - 1 < unitStudents.length && unitStudents[i][1] == unitStudents[i + groupSize - 1][1]){
@@ -179,13 +167,9 @@ const createUnitGroups = async (req, res) => {
         else {
 
             let groupStudents = unitStudents.slice(i, i + groupSize)
-
             for (let j = 0; j < groupStudents.length; j++){
-
                 unassignedStudents.push(groupStudents[j])
-
             }
-
         }
     }
 
@@ -197,18 +181,14 @@ const createUnitGroups = async (req, res) => {
 
         for (let j = 0; j < createdGroups.length; j++){
             if (createdGroups[j].labId == lab && createdGroups[j].members.length < groupSize + variance){
-
                 createdGroups[j].members.push(unassignedStudents[i][0]);
                 groupFound = true;
                 break;
-
             }
-
         }
 
         if (!groupFound){
             let groupIndex = createdGroups.length + 1;
-
             let newGroup = {
                 groupId: unit.unitCode + "00" + groupIndex,
                 groupNumber: groupIndex,
@@ -219,33 +199,33 @@ const createUnitGroups = async (req, res) => {
 
             newGroup.labId = lab;
             newGroup.members.push(unassignedStudents[i][0])
-
             createdGroups.push(newGroup);
-
         }
-
     }
 
     for (let i = 0; i < createdGroups.length; i++){
-
         unit.groups.push(createdGroups[i].groupId)
-
     }
 
     //console.log(unit)
-
     //console.log(createdGroups);
-    
     //createdGroupsJSON = JSON.stringify(createdGroups);
     //fs.writeFileSync('../db/groups.json', createdGroupsJSON);
 
     res.send(createdGroups);
-
-
 }
 
 // add a new group to a unit
 const addGroup = async (req, res) => {
+    // takes the group info from the req body
+    const groupId = req.params.groupId;
+
+
+    // creates the group document
+
+
+    // appends to the groups.json
+
     res.status(200).json({
         group: "group added"
     })
@@ -253,6 +233,12 @@ const addGroup = async (req, res) => {
 
 // delete a specific group from a unit
 const deleteGroup = async (req, res) => {
+    // takes an id
+
+    // searches groups.json for the document containing the id
+
+    // filters and then updates groups.json
+
     res.status(200).json({
         group: "group deleted"
     })
