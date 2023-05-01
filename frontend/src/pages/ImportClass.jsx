@@ -19,7 +19,8 @@ import {
   Th,
   Td,
   TableCaption,
-  TableContainer
+  TableContainer,
+  Select
 } from "@chakra-ui/react";
 import NavBar from "../components/NavBar";
 
@@ -217,6 +218,17 @@ function ImportPage() {
             </Table>
           </TableContainer>
         </Box>
+        <Box mt={8} display="flex" justifyContent="space-between" alignItems="center">
+              <Select placeholder="Select strategy" w="40%" mr={4}>
+                <option value="random">Random</option>
+              </Select>
+              <Select placeholder="No. per team" w="40%" mr={4}>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </Select>
+              <Button colorScheme="green">Assign groups</Button>
+          </Box>
       </Flex>
     </>
   );
