@@ -1,5 +1,8 @@
 import React from "react";
-import createUnitGroups from './DisplayUnitGroups'// Chakra imports
+import createUnitGroups from './DisplayUnitGroups'
+import { BrowserRouter, Routes, Route,Switch } from 'react-router-dom'
+
+// Chakra imports
 import {
   Link,
   Flex,
@@ -22,6 +25,8 @@ import { Center, Heading } from "@chakra-ui/react"
 import { IoEllipsisHorizontalSharp,IoTrashOutline } from "react-icons/io5";
 import NavBar from "../components/NavBar.jsx"
 
+
+
 function UnitPage() {
   let boxBg = useColorModeValue("white !important", "#111c44 !important");
   let mainText = useColorModeValue("gray.800", "white");
@@ -32,26 +37,24 @@ function UnitPage() {
 
   return(
     <div>
-      <NavBar />
         <Center margin="40px">
           <Heading>Unit Home Page</Heading>
-          <Flex>
           <Button
-              w='40px'
-              h='40px'
-              align='right'
-              justify='right'
-              borderRadius='12px'
-              me='12px'>
-                <Icon
-                w='24px'
-                h ='24px'
-                as={PlusSquareIcon}
-                color={iconColor}/>
-            </Button>
-            </Flex>
-          <br />
+                w='100px'
+                h='40px'
+                align='right'
+                justify='right'
+                borderRadius='12px'
+                style={{position: 'absolute', top: 135, right: 10}}
+                me='12px'>
+                  <Icon
+                  w='24px'
+                  h ='24px'
+                  as={PlusSquareIcon}
+                  color={iconColor}/>
+              </Button>
         </Center>
+        
         
         <Flex 
         borderRadius='20px'
@@ -61,6 +64,7 @@ function UnitPage() {
         w={{ base: "315px", md: "345px" }}
         alignItems='center'
         direction='column'>  
+
         <Flex w='100%' mb='18px'>
           <Flex
             w='20px'
@@ -127,23 +131,27 @@ function UnitPage() {
               </ModalContent>
             </Modal>
         </Flex>
-        <Image
-        src='https://img.freepik.com/free-vector/gradient-purple-color-gradient-background-abstract-modern_343694-2243.jpg?w=740&t=st=1682246391~exp=1682246991~hmac=24a5e0adc73d36b09e5b9fc4b2b05aabd12bab82078f67b6556cb3800ca6d1e4'
-        style={{ height: '30%', width: '80%', display: 'flex', justifyContent: 'center'}}
-        borderRadius='20px'
-        mb='10px'/>
-        <Text
-        fontWeight='600'
-        color={secondaryText}
-        textAlign='center'
-        fontSize='l'
-        w='80%'>
-        Software Engineering Practice
-      </Text>
+        <Button style={{ display: 'inline-block', width: 'auto', height: 'auto' }}  >
+          <Image
+          src='https://img.freepik.com/free-vector/gradient-purple-color-gradient-background-abstract-modern_343694-2243.jpg?w=740&t=st=1682246391~exp=1682246991~hmac=24a5e0adc73d36b09e5b9fc4b2b05aabd12bab82078f67b6556cb3800ca6d1e4'
+          style={{ height: '60%', width: '100%', display: 'flex', justifyContent: 'center'}}
+          borderRadius='20px'
+          mb='10px'/>
+          <Text
+          fontWeight='600'
+          color={secondaryText}
+          textAlign='center'
+          fontSize='l'
+          w='80%'>
+          Software Engineering Practice
+          </Text>
+        </Button>
       </Flex>
     </div>
   )
 }
+
+
 
 
 export default UnitPage;
