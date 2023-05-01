@@ -7,91 +7,69 @@
 const fs = require('fs');
 const path = require('path')
 const { UUID } = require('sequelize');
-let students = fs.readFileSync(path.join(__dirname, '../db') + '/students.json', 'utf8');
-let units = fs.readFileSync(path.join(__dirname, '../db') + '/units.json', 'utf8');
-let groups = fs.readFileSync(path.join(__dirname, '../db') + '/groups.json', 'utf8');
+//let students = fs.readFileSync(path.join(__dirname, '../db') + '/students.json', 'utf8');
+//let units = fs.readFileSync(path.join(__dirname, '../db') + '/units.json', 'utf8');
+//let groups = fs.readFileSync(path.join(__dirname, '../db') + '/groups.json', 'utf8');
 
 
 // get all groups from a unit
 const getAllGroups = async (req, res) => {
     let unitId = req.params.unitId;
-    
-    let groups = [
-        {
-            groupId: "001",
-            groupNumber: "1",
-            labId: "Lab01",
-            members:  [
-                {
-                    studentFirstName: "Steve", 
-                    studentLastName: "Jobs", 
-                    studentEmail: "steve.jobs@apple.com"
-                }, 
-                {
-                    studentFirstName: "Bill", 
-                    studentLastName: "Gates", 
-                    studentEmail: "bill.gates@microsoft.com"
-                },
-                {
-                    studentFirstName: "Linus", 
-                    studentLastName: "Torvalds", 
-                    studentEmail: "linus.torvalds@linux.com"
-                }
-            ],
-        },
-        {
-            groupId: "002",
-            groupNumber: "2",
-            labId: "Lab02",
-            members:  [
-                {
-                    studentFirstName: "Michael", 
-                    studentLastName: "Jordan", 
-                    studentEmail: "michael.jordan@chicago.com"
-                }, 
-                {
-                    studentFirstName: "LeBron", 
-                    studentLastName: "James", 
-                    studentEmail: "lebron.james@cleveland.com"
-                },
-                {
-                    studentFirstName: "Kobe", 
-                    studentLastName: "Bryant", 
-                    studentEmail: "kobe.bryant@la.com"
-                }
-            ],
-        }
-    ]
 
-    res.json(groups);
+    let units = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/units.json', 'utf8'));
+    let groups = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/groups.json', 'utf8'));
+
+    let unitGroups = []
+    let unit;
+
+    for (let i = 0; i < units.length; i++){
+
+        if (units[i].unitCode == unitId){
+
+            unit = units[i];
+            break;
+
+        }
+
+    }
+
+    for (let i = 0; i < unit.groups.length; i++){
+
+        for (let j = 0; j < groups.length; j++){
+
+            if (unit.groups[i] == groups[j].groupId){
+
+
+                unitGroups.push(groups[j])
+                break;
+
+            }
+
+        }
+
+    }
+
+
+    res.json(unitGroups);
 }
 
 // get a single group from a unit
 const getGroup = async (req, res) => {
     let unitId = req.params.unitId;
     let groupId = req.params.group
-    
-    let group = {
-        groupId: "001",
-        groupNumber: "1",
-        labId: "Lab01",
-        members:  [
-            {
-                studentFirstName: "Steve", 
-                studentLastName: "Jobs", 
-                studentEmail: "steve.jobs@apple.com"
-            }, 
-            {
-                studentFirstName: "Bill", 
-                studentLastName: "Gates", 
-                studentEmail: "bill.gates@microsoft.com"
-            },
-            {
-                studentFirstName: "Linus", 
-                studentLastName: "Torvalds", 
-                studentEmail: "linus.torvalds@linux.com"
-            }
-        ],
+
+    let groups = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/groups.json', 'utf8'));
+    let group;
+
+    for (let i = 0; i < groups.length; i++){
+
+        if (groups[i].groupdId == groupId){
+
+            group = groups[i]
+
+        }
+
+
     }
 
     //group = JSON.stringify(group);
@@ -113,6 +91,7 @@ const createUnitGroups = async (req, res) => {
     for (let i = 0; i < units.length; i++){
         if (units[i].unitCode == unitId){
             unit = units[i];
+            units.splice(i, 1);
             break;
         }
     }
@@ -207,10 +186,14 @@ const createUnitGroups = async (req, res) => {
         unit.groups.push(createdGroups[i].groupId)
     }
 
-    //console.log(unit)
-    //console.log(createdGroups);
-    //createdGroupsJSON = JSON.stringify(createdGroups);
-    //fs.writeFileSync('../db/groups.json', createdGroupsJSON);
+    units.push(unit);
+
+    groups = groups.concat(createdGroups)
+
+    console.log(groups)
+
+    fs.writeFileSync(path.join(__dirname, '../db') + '/groups.json', JSON.stringify(groups));
+    fs.writeFileSync(path.join(__dirname, '../db') + '/units.json', JSON.stringify(units));
 
     res.send(createdGroups);
 }
