@@ -42,13 +42,6 @@ const GroupCard = (props) =>{
                             {members.map(student =>(
                                 <StudentRow props = {student} key = {student._id}/>
                             ))}
-                            <Tr>
-                                <Td colspan="7">
-                                    <Center>
-                                        <button><AddIcon /></button>
-                                    </Center>
-                                </Td>
-                            </Tr>
                         </Tbody>
                     </Table>
                 </TableContainer>
