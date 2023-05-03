@@ -17,7 +17,7 @@ const GroupCard = (props) =>{
 
 
     return (
-        <Card border="1px" marginX="20px" marginBottom="20px">
+        <Card border="1px" margin="20px">
             <CardHeader>
                 <HStack>
                     <Heading>Lab: {labId} Group: {groupNumber} Group ID: {groupId}</Heading>
