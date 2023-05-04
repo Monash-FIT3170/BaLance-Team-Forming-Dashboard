@@ -9,9 +9,7 @@ const fs = require('fs');
 // gets all units for a user
 const getAllUnits = async (req, res) => {
     // open units.json and read
-    console.log('reaching database');
     const file = './db/units.json';
-    console.log(req)
 
     // read file
     fs.readFile(file, 'utf-8', (err, unitsData) => {
@@ -87,17 +85,49 @@ const addUnit = async (req, res) => {
         // send response status
         res.status(200).send(newUnit);
     });
-
 }
 
 deleteUnit = async function (req, res) {
-    let unitId = req.params.unitId;
-    res.send(`${unitId} has been deleted`);
+    const { unitId } = req.params;
+    const file = './db/units.json';
+
+    // get the items from the file
+
+    // read file
+    fs.readFile(file, 'utf-8', (err, unitsData) => {
+        // append the new unit to the file
+        const units = JSON.parse(unitsData);
+
+        // filter the units
+        const remainingUnits = units.filter((unit) => {
+            return unit.unitCode !== unitId;
+        });
+        const deletedUnit = units.filter((unit) => {
+            return unit.unitCode === unitId;
+        });
+
+        console.log(deletedUnit);
+
+        // write to the file
+        fs.writeFile(file, JSON.stringify(remainingUnits), (err) => {
+            console.log(err);
+        });
+
+        // send response status
+        res.status(200).send(deletedUnit);
+    });
 }
 
 updateUnit = async function (req, res){
-    let unitId = req.params.unitId;
+    const { unitId } = req.params;
     res.send(`${unitId} has been updated`);
+
+    // Have a look at the above code for adding a unit
+    // Read the units.json file and store in a variable
+    // Update the unit with unitCode matchin unitId
+    // write this to the units.json file
+    // send a res status of 200 and send the unit updated
+
 }
 
 module.exports = {
