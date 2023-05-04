@@ -4,8 +4,8 @@
  *
  */
 
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
 const { // import controller functions for route handlers
     getAllGroups,
     getGroup,
@@ -13,27 +13,27 @@ const { // import controller functions for route handlers
     deleteGroup,
     updateGroup,
     createUnitGroups
-} = require('../controllers/groupController')
+} = require('../controllers/groupController');
 
 // Api Structure /api/groups/{unitId}/{groupId}
 
 // get all groups for a specific unit FIXME why is there a route param here?
-router.get('/', getAllGroups)
+router.get('/', getAllGroups);
 
 // get a specific group for a specific unit
-router.get('/:unitId/:groupId', getGroup)
+router.get('/:unitId/:groupId', getGroup);
 
 // create unit groups
-router.post('/:unitId/', createUnitGroups)
+router.post('/:unitId/', createUnitGroups);
 
 // add a new group to a unit
-router.post('/', addGroup)
+router.post('/', addGroup);
 
 // delete a specific group from a unit
-router.delete('/:unitId/:groupId', deleteGroup)
+router.delete('/:unitId/:groupId', deleteGroup);
 
 // update a specific group from a unit
-router.patch('/:unitId/:groupId', updateGroup)
+router.patch('/:unitId/:groupId', updateGroup);
 
 // export this router for external use
-module.exports = router
+module.exports = router;

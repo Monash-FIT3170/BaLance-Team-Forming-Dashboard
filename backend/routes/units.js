@@ -4,8 +4,8 @@
  *
  */
 
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
 const { // import controller functions for route handlers
     getAllUnits,
     getUnit,

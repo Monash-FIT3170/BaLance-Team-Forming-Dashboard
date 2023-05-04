@@ -13,9 +13,9 @@ const app = express();
 app.use(express.json());
 
 app.use((req, res, next) => {
-    console.log(req.path, req.method)
-    next()
-})
+    console.log(req.path, req.method);
+    next();
+});
 
 // route middleware
 app.use('/api/units/', unitRoutes);
@@ -25,4 +25,4 @@ app.use('/api/groups/', groupRoutes);
 // listen to port
 app.listen(process.env.PORT || 8080, () => {
     console.log(`listening to port ${process.env.PORT}`);
-})
+});

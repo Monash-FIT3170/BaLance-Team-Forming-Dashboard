@@ -7,10 +7,6 @@
 const fs = require('fs');
 const path = require('path')
 const { UUID } = require('sequelize');
-//let students = fs.readFileSync(path.join(__dirname, '../db') + '/students.json', 'utf8');
-//let units = fs.readFileSync(path.join(__dirname, '../db') + '/units.json', 'utf8');
-//let groups = fs.readFileSync(path.join(__dirname, '../db') + '/groups.json', 'utf8');
-
 
 // get all groups from a unit
 const getAllGroups = async (req, res) => {
@@ -23,32 +19,20 @@ const getAllGroups = async (req, res) => {
     let unit;
 
     for (let i = 0; i < units.length; i++){
-
         if (units[i].unitCode == unitId){
-
             unit = units[i];
             break;
-
         }
-
     }
 
     for (let i = 0; i < unit.groups.length; i++){
-
         for (let j = 0; j < groups.length; j++){
-
             if (unit.groups[i] == groups[j].groupId){
-
-
                 unitGroups.push(groups[j])
                 break;
-
             }
-
         }
-
     }
-
 
     res.json(unitGroups);
 }
@@ -76,7 +60,7 @@ const getGroup = async (req, res) => {
     res.send(group);
 }
 
-// create all of the groups (based on csv)
+// create all the groups (based on csv)
 const createUnitGroups = async (req, res) => {
     let unitId = req.params.unitId;
     let groupSize = req.body.groupSize;
