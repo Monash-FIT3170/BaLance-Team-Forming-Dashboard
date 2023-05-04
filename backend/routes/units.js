@@ -8,6 +8,7 @@ const express = require('express')
 const router = express.Router()
 const { // import controller functions for route handlers
     getAllUnits,
+    getUnit,
     deleteUnit,
     updateUnit
 } = require('../controllers/unitController');
@@ -16,6 +17,7 @@ const { // import controller functions for route handlers
 router.get('/', getAllUnits)
 
 // get a specific unit for a user TODO
+router.get('/:unitId', getUnit)
 
 // add a new unit for the user FIXME
 router.post('/', (req, res) => {

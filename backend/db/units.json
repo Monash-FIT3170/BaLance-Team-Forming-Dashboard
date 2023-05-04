@@ -1,6 +1,6 @@
 [
     {
-        "unitCode": "FIT2099_CL_S1_ON-CAMPUS",
+        "unitCode": "FIT2099",
         "unitFaculty": "Faculty of Information Technology",
         "labs": ["01_DualMode-P1", "02_DualMode-P1"],
         "groups": [],
@@ -8,7 +8,7 @@
         "teachers": []
     },
     {
-        "unitCode": "FIT3170_CL_S2_ON-CAMPUS",
+        "unitCode": "FIT3170",
         "unitFaculty": "Faculty of Information Technology",
         "labs": ["01_DualMode-P1"],
         "groups": [],
