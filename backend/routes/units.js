@@ -9,20 +9,19 @@ const router = express.Router()
 const { // import controller functions for route handlers
     getAllUnits,
     getUnit,
+    addUnit,
     deleteUnit,
     updateUnit
 } = require('../controllers/unitController');
 
 // get all units for a user
-router.get('/', getAllUnits)
+router.get('/', getAllUnits);
 
-// get a specific unit for a user TODO
-router.get('/:unitId', getUnit)
+// get a specific unit for a user
+router.get('/:unitId', getUnit);
 
-// add a new unit for the user FIXME
-router.post('/', (req, res) => {
-    console.log("GET all units");
-})
+// add a new unit for the user
+router.post('/', addUnit);
 
 // delete a specific unit for a user
 router.delete('/:unitId', deleteUnit);
@@ -31,4 +30,4 @@ router.delete('/:unitId', deleteUnit);
 router.patch('/:unitId', updateUnit);
 
 // export this router for external use
-module.exports = router
+module.exports = router;

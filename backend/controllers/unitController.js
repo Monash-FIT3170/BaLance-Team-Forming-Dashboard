@@ -15,7 +15,6 @@ const getAllUnits = async (req, res) => {
 
     // read file
     fs.readFile(file, 'utf-8', (err, unitsData) => {
-        console.log("### GETTING ALL UNITS ###");
         // convert to JSON
         let units = JSON.parse(unitsData);
 
@@ -28,18 +27,15 @@ const getAllUnits = async (req, res) => {
         })
 
         // send to frontend
-        res.send(resData);
+        res.status(200).send(resData);
     });
 }
 
 // get a single unit for a user
 const getUnit = async (req, res) => {
     // open units.json and read
-    console.log('### GETTING SPECIFIED UNIT ###');
     const file = './db/units.json';
     const { unitId } = req.params;
-
-
 
     // read file
     fs.readFile(file, 'utf-8', (err, unitsData) => {
@@ -52,7 +48,7 @@ const getUnit = async (req, res) => {
 
         // filter desired fields from the unit
         let resData = { };
-        const resFields = ["unitCode", "unitFaculty"];
+        const resFields = ["unitCode", "unitFaculty", "labs", "teachers"];
         for(const field in unit) {
             if(resFields.includes(field)) {
                 resData[field] = unit[field];
@@ -60,10 +56,39 @@ const getUnit = async (req, res) => {
         }
 
         // send to frontend
-        res.send(resData);
+        res.status(200).send(resData);
     });
 }
 
+const addUnit = async (req, res) => {
+    // get the req body
+    const newUnit = {
+        unitCode,
+        unitFaculty,
+        labs,
+        teachers
+    } = req.body
+    const file = './db/units.json';
+
+    // get the items from the file
+
+    // read file
+    fs.readFile(file, 'utf-8', (err, unitsData) => {
+        // append the new unit to the file
+        const units = JSON.parse(unitsData);
+        units.push(newUnit);
+        console.log(typeof units);
+
+        // write to the file
+        fs.writeFile(file, JSON.stringify(units), (err) => {
+            console.log(err);
+        });
+
+        // send response status
+        res.status(200).send(newUnit);
+    });
+
+}
 
 deleteUnit = async function (req, res) {
     let unitId = req.params.unitId;
@@ -78,6 +103,7 @@ updateUnit = async function (req, res){
 module.exports = {
     getAllUnits,
     getUnit,
+    addUnit,
     deleteUnit,
     updateUnit
 }
