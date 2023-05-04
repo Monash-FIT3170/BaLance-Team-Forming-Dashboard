@@ -75,7 +75,6 @@ const addUnit = async (req, res) => {
         // append the new unit to the file
         const units = JSON.parse(unitsData);
         units.push(newUnit);
-        console.log(typeof units);
 
         // write to the file
         fs.writeFile(file, JSON.stringify(units), (err) => {
@@ -105,8 +104,6 @@ deleteUnit = async function (req, res) {
         const deletedUnit = units.filter((unit) => {
             return unit.unitCode === unitId;
         });
-
-        console.log(deletedUnit);
 
         // write to the file
         fs.writeFile(file, JSON.stringify(remainingUnits), (err) => {
