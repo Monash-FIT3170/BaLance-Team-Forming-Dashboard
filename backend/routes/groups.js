@@ -27,7 +27,7 @@ router.get('/:unitId/:groupId', getGroup);
 router.post('/:unitId/', createUnitGroups);
 
 // add a new group to a unit
-router.post('/', addGroup);
+router.post('/:unitId/new', addGroup);
 
 // delete a specific group from a unit
 router.delete('/:unitId/:groupId', deleteGroup);
