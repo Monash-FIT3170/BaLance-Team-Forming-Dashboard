@@ -1,10 +1,1 @@
-[
-    {
-        "unitCode": "FIT2099_CL_S1_ON-CAMPUS",
-        "unitFaculty": "Faculty of Information Technology",
-        "labs": ["01_DualMode-P1", "02_DualMode-P1"],
-        "groups": [],
-        "students": ["54321867", "12345678", "12345677", "12345676", "12300015", "12300014", "12300013", "12300012"],
-        "teachers": []
-    }
-]
+[{"unitCode":"FIT2099_CL_S1_ON-CAMPUS","unitFaculty":"Faculty of Information Technology","labs":["01_DualMode-P1","02_DualMode-P1"],"groups":[],"students":["54321867","12345678","12345677","12345676","12300015","12300014","12300013","12300012"],"teachers":[]},{"unitCode":"FIT2004_S1_ON-CAMPUS","unitFaculty":"Faculty of Information Technology","labs":["01_DualMode-P1","02_DualMode-P1"],"teachers":["nat.pat@monash.edu","bah.fin@monash.edu"]},{"unitCode":"FIT2101_S2_ON-CAMPUS","unitFaculty":"Faculty of Information Technology","labs":["01_DualMode-P1","02_DualMode-P1"],"teachers":["nat.pat@monash.edu","bah.fin@monash.edu"]}]

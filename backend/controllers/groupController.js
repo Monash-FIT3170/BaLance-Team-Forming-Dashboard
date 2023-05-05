@@ -10,31 +10,20 @@ const { UUID } = require('sequelize');
 
 // get all groups from a unit
 const getAllGroups = async (req, res) => {
-    let unitId = req.params.unitId;
+    let { unitId } = req.params;
+    let groupsData = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/groups.json', 'utf8'));
 
-    let units = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/units.json', 'utf8'));
-    let groups = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/groups.json', 'utf8'));
-
-    let unitGroups = []
-    let unit;
-
-    for (let i = 0; i < units.length; i++){
-        if (units[i].unitCode == unitId){
-            unit = units[i];
-            break;
+    const resData = groupsData.filter((group) => { // filter the groups by unitId
+        return group.unitCode === unitId;
+    }).map((group) => { // remove unwanted attributes from group data
+        return {
+            groupId: group["groupId"],
+            groupNumber: group["groupNumber"],
+            members: group["members"]
         }
-    }
+    });
 
-    for (let i = 0; i < unit.groups.length; i++){
-        for (let j = 0; j < groups.length; j++){
-            if (unit.groups[i] == groups[j].groupId){
-                unitGroups.push(groups[j])
-                break;
-            }
-        }
-    }
-
-    res.json(unitGroups);
+    res.status(200).send(resData);
 }
 
 // get a single group from a unit
@@ -184,31 +173,87 @@ const createUnitGroups = async (req, res) => {
 
 // add a new group to a unit
 const addGroup = async (req, res) => {
-    // takes the group info from the req body
-    const groupId = req.params.groupId;
+    const unitsFile = './db/units.json';
+    const groupsFile = './db/groups.json';
+    // takes the group info from the req body and creates the group document
+    const newGroup = {
+        groupId,
+        groupNumber,
+        unitCode,
+        members,
+        labId
+    } = req.body;
 
+    // read both files and update them
 
-    // creates the group document
+    // read files
+    try {
+        // read files
+        let groupsData = await fs.promises.readFile(groupsFile, 'utf-8');
+        let unitsData = await fs.promises.readFile(unitsFile, 'utf-8');
 
+        // parse file data for use
+        groupsData = JSON.parse(groupsData);
+        unitsData = JSON.parse(unitsData);
 
-    // appends to the groups.json
+        // add the new group to both groupsData and unitsData
+        let unitIdx = unitsData.findIndex(unit => unit["unitCode"] === newGroup["unitCode"]);
+        unitsData[unitIdx]["groups"].push(newGroup);
+        groupsData.push(newGroup);
 
-    res.status(200).json({
-        group: "group added"
-    })
+        // write data to files
+        fs.writeFile(unitsFile, JSON.stringify(unitsData), (err) => {console.log(err);});
+        fs.writeFile(groupsFile, JSON.stringify(groupsData), (err) => {console.log(err);});
+
+        res.status(200).send(newGroup);
+    } catch (readFileErr) {
+        console.log(readFileErr);
+        res.status(500).json({ err: readFileErr })
+    }
 }
 
 // delete a specific group from a unit
 const deleteGroup = async (req, res) => {
-    // takes an id
+    const unitsFile = './db/units.json';
+    const groupsFile = './db/groups.json';
+    // takes the group info from the req body and creates the group document
+    const { unitId, groupId } = req.params;
 
-    // searches groups.json for the document containing the id
+    // read files
+    try {
+        // read files
+        let groupsData = await fs.promises.readFile(groupsFile, 'utf-8');
+        let unitsData = await fs.promises.readFile(unitsFile, 'utf-8');
 
-    // filters and then updates groups.json
+        // parse file data for use
+        groupsData = JSON.parse(groupsData);
+        unitsData = JSON.parse(unitsData);
 
-    res.status(200).json({
-        group: "group deleted"
-    })
+        // filter the item to delete from the groups DB
+        const remainingGroups = groupsData.filter((group) => {
+            return group.unitCode !== groupId;
+        });
+        const deletedGroup = groupsData.filter((group) => {
+            return group.unitCode === groupId;
+        });
+
+        // filter the item to delete from the units DB
+        const unitIdx = unitsData.findIndex(unit => unit.unitCode === unitId);
+        const unitGroups = unitsData[unitId].groups;
+        const newUnitGroups = unitGroups.filter(group => group !== groupId);
+
+
+
+        // write data to files
+        fs.writeFile(unitsFile, JSON.stringify(unitsData), (err) => {console.log(err);});
+        fs.writeFile(groupsFile, JSON.stringify(groupsData), (err) => {console.log(err);});
+
+        res.status(200).send(newGroup);
+    } catch (readFileErr) {
+        console.log(readFileErr);
+        res.status(500).json({ err: readFileErr })
+    }
+
 }
 
 // update a specific group from a unit

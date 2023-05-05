@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "groupId": "3232",
+    "groupNumber": 1,
+    "unitCode": "FIT2099_CL_S1_ON-CAMPUS",
+    "members": ["54321867", "12345676"],
+    "labId": "01_DualMode-P1"
+  },
+  {
+    "groupId": "3233",
+    "groupNumber": 2,
+    "unitCode": "FIT2099_CL_S1_ON-CAMPUS",
+    "members": ["12300015", "12300012"],
+    "labId": "02_DualMode-P1"
+  },
+  {
+    "groupId": "3234",
+    "groupNumber": 3,
+    "unitCode": "FIT2099_CL_S1_ON-CAMPUS",
+    "members": ["12300013", "12300014", "12345677"],
+    "labId": "01_DualMode-P1"
+  }
+]
