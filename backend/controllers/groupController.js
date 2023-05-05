@@ -220,25 +220,28 @@ const deleteGroup = async (req, res) => {
 
         // filter the item to delete from the groups DB
         const remainingGroups = groupsData.filter((group) => {
-            return group.unitCode !== groupId;
+            return !(group.unitCode === unitId && group.groupId === groupId);
         });
+        // store the deleted group to res.send() back as confirmation
         const deletedGroup = groupsData.filter((group) => {
-            return group.unitCode === groupId;
+            return group.unitCode === unitId && group.groupId === groupId;
         });
 
-        // filter the item to delete from the units DB
-        const unitIdx = unitsData.findIndex(unit => unit.unitCode === unitId);
-        const unitGroups = unitsData[unitId].groups; // fixme
-        const newUnitGroups = unitGroups.filter(group => group !== groupId);
-
+        // get the index of this unit
+        let unitIdx = unitsData.findIndex((unit) => {
+            return unit.unitCode === unitId;
+        });
+        // get the units groups and remove the deleted unit
+        unitsData[unitIdx].groups = unitsData[unitIdx].groups.filter((group) => {
+            return !(group.unitCode === unitId && group.groupId === groupId);
+        });
 
         // write data to files
         fs.writeFile(unitsFile, JSON.stringify(unitsData), (err) => {console.log(err);});
-        fs.writeFile(groupsFile, JSON.stringify(groupsData), (err) => {console.log(err);});
+        fs.writeFile(groupsFile, JSON.stringify(remainingGroups), (err) => {console.log(err);});
 
         res.status(200).send(deletedGroup);
     } catch (readFileErr) {
-        console.log(readFileErr);
         res.status(500).json({ err: readFileErr })
     }
 
