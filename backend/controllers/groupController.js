@@ -35,17 +35,11 @@ const getGroup = async (req, res) => {
     let group;
 
     for (let i = 0; i < groups.length; i++){
-
-        if (groups[i].groupdId == groupId){
-
+        if (groups[i].groupdId === groupId){
             group = groups[i]
-
         }
-
-
     }
 
-    //group = JSON.stringify(group);
     res.send(group);
 }
 
@@ -88,7 +82,6 @@ const createUnitGroups = async (req, res) => {
     unitStudents.sort((a, b) => a[1] - b[1]);
 
     let createdGroups = [];
-
     unassignedStudents = [];
 
     for (let i = 0; i < unitStudents.length; i = i + groupSize){
@@ -108,16 +101,13 @@ const createUnitGroups = async (req, res) => {
             newGroup.labId = unitStudents[i][1];
 
             for (let j = 0; j < groupStudents.length; j++){
-
                 newGroup.members.push(groupStudents[j][0])
-
             }
 
             createdGroups.push(newGroup);
 
         }
         else {
-
             let groupStudents = unitStudents.slice(i, i + groupSize)
             for (let j = 0; j < groupStudents.length; j++){
                 unassignedStudents.push(groupStudents[j])
@@ -160,7 +150,6 @@ const createUnitGroups = async (req, res) => {
     }
 
     units.push(unit);
-
     groups = groups.concat(createdGroups)
 
     console.log(groups)
@@ -239,16 +228,15 @@ const deleteGroup = async (req, res) => {
 
         // filter the item to delete from the units DB
         const unitIdx = unitsData.findIndex(unit => unit.unitCode === unitId);
-        const unitGroups = unitsData[unitId].groups;
+        const unitGroups = unitsData[unitId].groups; // fixme
         const newUnitGroups = unitGroups.filter(group => group !== groupId);
-
 
 
         // write data to files
         fs.writeFile(unitsFile, JSON.stringify(unitsData), (err) => {console.log(err);});
         fs.writeFile(groupsFile, JSON.stringify(groupsData), (err) => {console.log(err);});
 
-        res.status(200).send(newGroup);
+        res.status(200).send(deletedGroup);
     } catch (readFileErr) {
         console.log(readFileErr);
         res.status(500).json({ err: readFileErr })
