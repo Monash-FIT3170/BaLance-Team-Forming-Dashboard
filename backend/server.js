@@ -2,7 +2,7 @@ const express = require('express');
 const {Sequelize} = require('sequelize');
 const unitRoutes = require('./routes/units');
 const groupRoutes = require('./routes/groups');
-const groupRoutes = require('./routes/students');
+const studentRoutes = require('./routes/students');
 
 // attach .env contents to the global process object
 require('dotenv').config();

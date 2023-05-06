@@ -13,7 +13,7 @@ const { // import controller functions for route handlers
     addStudent,
     deleteStudent,
     updateStudent
-} = require('../controllers/unitController');
+} = require('../controllers/studentController');
 
 // get all students from a unit
 router.get('/:unitId', getAllStudents);
