@@ -1,5 +1,6 @@
 import GroupCard from "../components/GroupCard";
 import React from "react";
+import {Stack, Button, ButtonGroup} from "@chakra-ui/react"
 import NavBar from "../components/NavBar";
 
 function Groups(){
@@ -65,6 +66,16 @@ function Groups(){
     return (
     <div>
       <NavBar />
+      <Stack direction='row' spacing={4} align='center' margin="20px">
+        <ButtonGroup colorScheme='#282c34' variant='outline' size='lg'>
+          <Button>
+            Groups
+          </Button>
+          <Button>
+            Students
+          </Button>
+        </ButtonGroup>
+      </Stack>
       <div className="groups">
         {data.map((group) => (
           <GroupCard props = {group} key = {group.id}/>
