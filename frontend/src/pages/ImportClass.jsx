@@ -36,7 +36,8 @@ import {
 import {
   AddIcon,
   CloseIcon,
-  EditIcon
+  EditIcon,
+  DeleteIcon
 } from "@chakra-ui/icons";
 import NavBar from "../components/NavBar";
 
@@ -176,6 +177,13 @@ function ImportPage() {
     // Close the edit modal
     onClose();
   };
+
+  const handleDeleteProfile = (index) => {
+    const newProfiles = [...profiles];
+    newProfiles.splice(index, 1); // Remove the profile at the given index from the array
+    setProfiles(newProfiles); // Update the state with the new profiles array
+  };
+  
   
   
   
@@ -290,7 +298,13 @@ function ImportPage() {
                           onOpen();
                         }}
                       />
-                  </Td>
+                    </Td>
+                    <Td>
+                      <DeleteIcon
+                        style={{ cursor: "pointer", color: "red" }}
+                        onClick={() => handleDeleteProfile(index)} // Call a function to delete the profile when the icon is clicked
+                      />
+                    </Td>
                   </Tr>
                 ))}
               </Tbody>
