@@ -75,18 +75,29 @@ function Students(){
             <Stack direction='row' spacing={4} align='center' margin="20px">
                 <ButtonGroup colorScheme='#282c34' variant='outline' size='lg'>
                     <Button>
-            Groups
+                        Show Groups
                     </Button>
                     <Button>
-            Students
+                        List Students
                     </Button>
                 </ButtonGroup>
             </Stack>
-      <div className="groups">
-        {data.map((group) => (
-          <GroupCard props = {group} key = {group.id}/>
+            <Table variant='striped' >
+                <Thead>
+                    <Tr>
+                        <Th></Th>
+                        <Th>Name</Th>
+                        <Th>Email Address</Th>
+                        <Th>Lab Number</Th>
+                        <Th>Group Number</Th>
+                    </Tr>
+                </Thead>
+                <Tbody>
+                {data.map((student) => (
+                    <StudentRow2 props={student} key={student.id} />
                 ))}
-      </div>
+                </Tbody>
+            </Table>
         </div>
     );
 };
