@@ -1,5 +1,6 @@
 import React from "react";
-import {Stack, Button, ButtonGroup} from "@chakra-ui/react"
+import { Stack, Button, ButtonGroup, Table, Tr, Th, Thead, Tbody } from "@chakra-ui/react"
+import StudentRow2 from "../components/StudentRow2";
 import NavBar from "../components/NavBar";
 
 function Students(){
