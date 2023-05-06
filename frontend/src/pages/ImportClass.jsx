@@ -29,6 +29,7 @@ import {
 import {
   AddIcon,
   CloseIcon,
+  EditIcon
 } from "@chakra-ui/icons";
 import NavBar from "../components/NavBar";
 
@@ -244,6 +245,12 @@ function ImportPage() {
                     <Td>{profile.wam}</Td>
                     <Td>{profile.status}</Td>
                     <Td>{profile.role}</Td>
+                    <Td>
+                      <EditIcon
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleEdit(profile)}
+                      />
+                  </Td>
                   </Tr>
                 ))}
               </Tbody>
