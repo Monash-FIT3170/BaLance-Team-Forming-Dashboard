@@ -23,7 +23,14 @@ import {
   Select,
   FormControl,
   FormLabel,
-  Textarea,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure
 
 } from "@chakra-ui/react";
 import {
@@ -49,6 +56,8 @@ function ImportPage() {
   const [csvFile, setCsvFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [showAddProfileForm, setShowAddProfileForm] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+
 
   const handleFile = (file) => {
     if (!file.type.match("csv.*")) {
@@ -141,7 +150,35 @@ function ImportPage() {
     setStatus("");
     setRole("");
   };
+  
+  const [profileToEdit, setProfileToEdit] = useState(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
+  
+  const handleSaveProfile = (updatedProfile) => {
+    console.log(updatedProfile);
+  
+    if (!profileToEdit) {
+      // handle error - profileToEdit is not defined
+      return;
+    }
+  
+    // Find the index of the profile in the profiles array
+    const index = profiles.findIndex(profile => profile.emailAddress === profileToEdit.emailAddress);
+    
+    // Update the profile object with the new values
+    const updatedProfiles = [...profiles];
+    updatedProfiles[index] = {...updatedProfile};
+  
+    // Update the profiles state with the updated profile object
+    setProfiles(updatedProfiles);
+    
+    // Close the edit modal
+    onClose();
+  };
+  
+  
+  
 
   return (
     <>
@@ -248,13 +285,118 @@ function ImportPage() {
                     <Td>
                       <EditIcon
                         style={{ cursor: "pointer" }}
-                        onClick={() => handleEdit(profile)}
+                        onClick={() => {
+                          setProfileToEdit(profile);
+                          onOpen();
+                        }}
                       />
                   </Td>
                   </Tr>
                 ))}
               </Tbody>
             </Table>
+            <Modal isOpen={isOpen} onClose={onClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>Edit Profile</ModalHeader>
+                <ModalBody>
+                  <FormControl>
+                    <FormLabel>First Name</FormLabel>
+                    <Input
+                      value={profileToEdit?.firstName}
+                      onChange={(e) =>
+                        setProfileToEdit({
+                          ...profileToEdit,
+                          firstName: e.target.value,
+                        })
+                      }
+                    />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Last Name</FormLabel>
+                    <Input
+                      value={profileToEdit?.lastName}
+                      onChange={(e) =>
+                        setProfileToEdit({
+                          ...profileToEdit,
+                          lastName: e.target.value,
+                        })
+                      }
+                    />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Email Address</FormLabel>
+                    <Input
+                      type="email"
+                      value={profileToEdit?.emailAddress}
+                      onChange={(e) =>
+                        setProfileToEdit({
+                          ...profileToEdit,
+                          emailAddress: e.target.value,
+                        })
+                      }
+                    />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>WAM</FormLabel>
+                    <Select
+                      placeholder="Select WAM"
+                      value={profileToEdit?.wam}
+                      onChange={(e) =>
+                        setProfileToEdit({
+                          ...profileToEdit,
+                          wam: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="HD">HD</option>
+                      <option value="D">D</option>
+                      <option value="P">P</option>
+                      <option value="N">N</option>
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Status</FormLabel>
+                    <Select
+                      placeholder="Select Status"
+                      value={profileToEdit?.status}
+                      onChange={(e) =>
+                        setProfileToEdit({
+                          ...profileToEdit,
+                          status: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="Active">Active</option>
+                      <option value="Inactive">Inactive</option>
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Role</FormLabel>
+                    <Select
+                      placeholder="Select Role"
+                      value={profileToEdit?.role}
+                      onChange={(e) =>
+                        setProfileToEdit({
+                          ...profileToEdit,
+                          role: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="Teacher">Teacher</option>
+                      <option value="Student">Student</option>
+                    </Select>
+                  </FormControl>
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button onClick={() => handleSaveProfile(profileToEdit)} type="submit" colorScheme="green" mr={3}>
+                      Save
+                    </Button>
+                    <Button onClick={() => { setIsEditing(false); onClose();}}>Cancel</Button>
+                  </ModalFooter>
+              </ModalContent>
+            </Modal>
+
             <Box textAlign="center">
               <Button
                 mt={4}
@@ -325,7 +467,12 @@ function ImportPage() {
               </FormControl>
               <FormControl mb={4}>
                 <FormLabel>WAM</FormLabel>
-                <Input placeholder="Enter WAM" value={wam} onChange={e => setWam(e.target.value)} />
+                <Select placeholder="Select WAM" value={wam} onChange={e => setWam(e.target.value)}>
+                  <option value="HD">HD</option>
+                  <option value="D">D</option>
+                  <option value="P">P</option>
+                  <option value="N">N</option>
+                </Select>
               </FormControl>
               <FormControl mb={4}>
                 <FormLabel>Status</FormLabel>
