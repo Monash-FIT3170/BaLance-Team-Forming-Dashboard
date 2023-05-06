@@ -1,8 +1,8 @@
 import { Tr, Td, HStack, Spacer } from "@chakra-ui/react";
 import { DragHandleIcon, CloseIcon } from '@chakra-ui/icons'
 
-export default function StudentRow(props) {
-
+function StudentRow(props) {
+    /*HTML component for each student in each group in the 'View Groups' View*/
     // desctructure the content of props 
     const { studentFirstName, studentEmail, wam, status, discPersonality } = props.props;
 
@@ -23,3 +23,5 @@ export default function StudentRow(props) {
         </Tr>
     )
 }
+
+export default StudentRow
