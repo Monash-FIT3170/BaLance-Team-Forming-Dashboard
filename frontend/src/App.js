@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import Home from './pages/Home'
-import DisplayUnitGroups from './pages/DisplayUnitGroups'
 import Groups from './pages/groups'
+import Students from './pages/students'
 //import logo from './assets/logo.png';
 
 
@@ -25,6 +25,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />}/>
             <Route path="/groups" element={<Groups />}/>
+            <Route path="/students" element={<Students />}/>
           </Routes>
         </BrowserRouter>
       </div>
