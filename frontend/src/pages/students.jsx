@@ -102,4 +102,4 @@ function Students(){
     );
 };
 
-  export default Groups;
+  export default Students;
