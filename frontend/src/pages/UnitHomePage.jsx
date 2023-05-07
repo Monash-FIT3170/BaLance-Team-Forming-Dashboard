@@ -40,7 +40,7 @@ function UnitPage() {
         <Center margin="40px">
           <Heading>Unit Home Page</Heading>
           <Button
-                w='100px'
+                w='50px'
                 h='40px'
                 align='right'
                 justify='right'
@@ -48,8 +48,8 @@ function UnitPage() {
                 style={{position: 'absolute', top: 135, right: 10}}
                 me='12px'>
                   <Icon
-                  w='24px'
-                  h ='24px'
+                  w='30px'
+                  h ='30px'
                   as={PlusSquareIcon}
                   color={iconColor}/>
               </Button>
@@ -121,6 +121,7 @@ function UnitPage() {
                     fontSize='xl'
                     me='auto'>
                       <Button> <Icon as={EditIcon}></Icon> </Button>
+
                     
                   </Text>
                   <Button onClick={onClose} mr={3}>Cancel</Button>
