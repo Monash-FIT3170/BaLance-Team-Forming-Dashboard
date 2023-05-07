@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import createUnitGroups from './DisplayUnitGroups'
 import { BrowserRouter, Routes, Route,Switch } from 'react-router-dom'
 
@@ -22,7 +22,8 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Select
+  Select,
+  FormErrorMessage
 } from "@chakra-ui/react";
 import { PlusSquareIcon, EditIcon } from "@chakra-ui/icons";
 import { Center, Heading } from "@chakra-ui/react"
@@ -39,13 +40,14 @@ function UnitPage() {
   let iconColor = useColorModeValue("brand.200", "white");
   const {isOpen: isOpenDetails, onOpen: onOpenDetails, onClose: onCloseDetails } = useDisclosure()
   const {isOpen: isOpenAdd, onOpen: onOpenAdd, onClose: onCloseAdd } = useDisclosure()
+  const [unitNameError, setUnitNameError] = useState(false);
 
   return(
     <div>
         <Center margin="40px">
           <Heading>Unit Home Page</Heading>
           <Button
-                w='50px'
+                w='40px'
                 h='40px'
                 align='right'
                 justify='right'
@@ -53,7 +55,7 @@ function UnitPage() {
                 style={{position: 'absolute', top: 135, right: 10}}
                 me='12px'>
                   <Icon
-                  w='30px'
+                  w='50px'
                   h ='30px'
                   as={PlusSquareIcon}
                   color={iconColor}
@@ -68,8 +70,8 @@ function UnitPage() {
                   <form 
                   id='create-unit'
                   onSubmit={
-                    (e) => {
-                      e.preventDefault();
+                    (event) => {
+                      event.preventDefault();
                       alert("Unit created successfully")
                   }}>
                     <FormControl isRequired>
@@ -81,7 +83,7 @@ function UnitPage() {
                         <Select placeholder="Select an option"
                           placeholderStyles={{ fontStyle: "italic" }}
                           placeholderTextColor="gray.500"
-                          width='30%'>
+                          width='50%'>
                           <option value="1">2</option>
                           <option value="1">3</option>
                           <option value="1">4</option>
