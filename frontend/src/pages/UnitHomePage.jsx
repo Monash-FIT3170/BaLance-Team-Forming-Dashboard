@@ -72,7 +72,7 @@ function UnitPage() {
                   onSubmit={
                     (event) => {
                       event.preventDefault();
-                      alert("Unit created successfully")
+                      alert("Unit created successfully");                      
                   }}>
                     <FormControl isRequired>
                       <FormLabel>Unit Code </FormLabel>
@@ -93,7 +93,7 @@ function UnitPage() {
                 </ModalBody>
                 <ModalFooter>
                   <Button onClick={onCloseAdd} colorScheme='red' mr={3}>Cancel</Button>
-                  <Button type='submit' colorScheme='green' onClick={onCloseAdd} form='create-unit'>
+                  <Button type='submit' colorScheme='green' form='create-unit'>
                     Create Unit
                   </Button>
                 </ModalFooter>
