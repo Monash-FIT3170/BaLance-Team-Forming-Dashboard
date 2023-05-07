@@ -64,9 +64,13 @@ const addUnit = async (req, res) => {
         unitCode,
         unitFaculty,
         labs,
+        groups: [],
+        students: [],
         teachers
     } = req.body
     const file = './db/units.json';
+
+
 
     // get the items from the file
 
