@@ -17,7 +17,7 @@ const StudentRow2=(props)=> {
             <Td>{studentEmail}</Td>
             <Td>{labId}</Td>
             <Td>
-            <Select placeholder={'Group '+groupNumber} bg="white">
+            <Select bg="white"> 
                 <option value='option1'>Group 1</option>
                 <option value='option2'>Group 2</option>
                 <option value='option3'>Group 3</option>

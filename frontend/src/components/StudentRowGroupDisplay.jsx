@@ -1,10 +1,14 @@
 import { Tr, Td, HStack, Spacer } from "@chakra-ui/react";
 import { DragHandleIcon, CloseIcon } from '@chakra-ui/icons'
+import ChangeStudentGroupModal from "./ChangeStudentGroupModal"
+
 
 function StudentRow(props) {
     /*HTML component for each student in each group in the 'View Groups' View*/
     // desctructure the content of props 
-    const { studentFirstName, studentEmail, wam, status, discPersonality } = props.props;
+    const { studentFirstName, studentEmail, wam, status, discPersonality } = props.studentInfo;
+    const classNum = props.classNum;
+    const groupNum = props.groupNum;
 
     return (
         <Tr>
@@ -12,7 +16,7 @@ function StudentRow(props) {
                 <HStack>
                     <button><CloseIcon /></button>
                     <Spacer />
-                    <button><DragHandleIcon /></button>
+                    <ChangeStudentGroupModal studentFirstName={studentFirstName} classNum={classNum} groupNum={groupNum}/>
                 </HStack>
             </Td>
             <Td>{studentFirstName}</Td>
