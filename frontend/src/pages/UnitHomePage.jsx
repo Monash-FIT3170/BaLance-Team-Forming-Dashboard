@@ -10,7 +10,6 @@ import {
   Icon,
   Image,
   Text,
-  useColorModeValue,
   Modal,
   ModalBody,
   ModalOverlay,
@@ -18,7 +17,12 @@ import {
   ModalHeader,
   ModalFooter,
   ModalCloseButton,
-  useDisclosure
+  useColorModeValue,
+  useDisclosure,
+  FormControl,
+  FormLabel,
+  Input,
+  Select
 } from "@chakra-ui/react";
 import { PlusSquareIcon, EditIcon } from "@chakra-ui/icons";
 import { Center, Heading } from "@chakra-ui/react"
@@ -33,7 +37,8 @@ function UnitPage() {
   let secondaryText = useColorModeValue("gray.600", "gray.600");
   let iconBox = useColorModeValue("gray.100", "whiteAlpha.200");
   let iconColor = useColorModeValue("brand.200", "white");
-  const {isOpen, onOpen, onClose } = useDisclosure()
+  const {isOpen: isOpenDetails, onOpen: onOpenDetails, onClose: onCloseDetails } = useDisclosure()
+  const {isOpen: isOpenAdd, onOpen: onOpenAdd, onClose: onCloseAdd } = useDisclosure()
 
   return(
     <div>
@@ -51,8 +56,47 @@ function UnitPage() {
                   w='30px'
                   h ='30px'
                   as={PlusSquareIcon}
-                  color={iconColor}/>
-              </Button>
+                  color={iconColor}
+                  onClick={onOpenAdd}/>
+          </Button>
+          <Modal closeOnOverlayClick={false} isOpen={isOpenAdd} onClose={onCloseAdd}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>New Unit</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody pb={10}>
+                  <form 
+                  id='create-unit'
+                  onSubmit={
+                    (e) => {
+                      e.preventDefault();
+                      alert("Unit created successfully")
+                  }}>
+                    <FormControl>
+                      <FormLabel>Unit Code </FormLabel>
+                      <Input mb='5'/>                     
+                      <FormLabel>Unit Name</FormLabel>
+                      <Input mb='5'/>                     
+                      <FormLabel>Students Per Team</FormLabel>
+                        <Select placeholder="Select an option"
+                          placeholderStyles={{ fontStyle: "italic" }}
+                          placeholderTextColor="gray.500"
+                          width='30%'>
+                          <option value="1">2</option>
+                          <option value="1">3</option>
+                          <option value="1">4</option>
+                        </Select>                      
+                    </FormControl>
+                  </form>
+                </ModalBody>
+                <ModalFooter>
+                  <Button onClick={onCloseAdd} colorScheme='red' mr={3}>Cancel</Button>
+                  <Button type='submit' colorScheme='green' onClick={onCloseAdd} form='create-unit'>
+                    Create Unit
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
         </Center>
         
         
@@ -94,7 +138,7 @@ function UnitPage() {
               borderRadius='12px'
               me='12px'
               bg={iconBox}
-              onClick={onOpen}>
+              onClick={onOpenDetails}>
                 <Icon
                 w='24px'
                 h ='24px'
@@ -103,13 +147,13 @@ function UnitPage() {
                 />
               
             </Button>
-            <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} onClick={<Link to={this} onClick={isOpen}>'./DisplayUnitGroups'</Link>}>
+            <Modal closeOnOverlayClick={false} isOpen={isOpenDetails} onClose={onCloseDetails} onClick={<Link to={this} onClick={isOpenDetails}>'./DisplayUnitGroups'</Link>}>
               <ModalOverlay />
               <ModalContent>
                 <ModalHeader>FIT3170</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody pb={6}>
-                  150 Students enrrolled
+                  150 Students enrolled
                 </ModalBody>
                 <ModalFooter>
                   <Text
@@ -124,8 +168,8 @@ function UnitPage() {
 
                     
                   </Text>
-                  <Button onClick={onClose} mr={3}>Cancel</Button>
-                  <Button colorScheme='blue' onClick={onClose}>
+                  <Button onClick={onCloseDetails} mr={3}>Cancel</Button>
+                  <Button colorScheme='blue' onClick={onCloseDetails}>
                     Save
                   </Button>
                 </ModalFooter>
