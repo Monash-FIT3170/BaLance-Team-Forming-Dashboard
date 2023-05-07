@@ -2,6 +2,7 @@ import GroupCard from "../components/GroupCard";
 import React from "react";
 import {Stack, Button, ButtonGroup} from "@chakra-ui/react"
 import NavBar from "../components/NavBar";
+import {Link } from "react-router-dom";
 
 function Groups(){
     const data = [
@@ -68,12 +69,10 @@ function Groups(){
       <NavBar />
       <Stack direction='row' spacing={4} align='center' margin="20px">
         <ButtonGroup colorScheme='#282c34' variant='outline' size='lg'>
-          <Button>
-            Groups
-          </Button>
-          <Button>
+          <Link to = '/students'><Button>
             Students
           </Button>
+          </Link>
         </ButtonGroup>
       </Stack>
       <div className="groups">

@@ -2,6 +2,7 @@ import React from "react";
 import { Stack, Button, ButtonGroup, Table, Tr, Th, Thead, Tbody } from "@chakra-ui/react"
 import StudentRow2 from "../components/StudentRow2";
 import NavBar from "../components/NavBar";
+import {Link } from "react-router-dom";
 
 function Students(){
     const data =  [{
@@ -74,12 +75,10 @@ function Students(){
             <NavBar />
             <Stack direction='row' spacing={4} align='center' margin="20px">
                 <ButtonGroup colorScheme='#282c34' variant='outline' size='lg'>
-                    <Button>
-                        Show Groups
+                    <Link to = '/groups'><Button>
+                    Groups
                     </Button>
-                    <Button>
-                        List Students
-                    </Button>
+                    </Link>
                 </ButtonGroup>
             </Stack>
             <Table variant='striped' >
