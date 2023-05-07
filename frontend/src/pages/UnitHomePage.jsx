@@ -72,7 +72,7 @@ function UnitPage() {
                       e.preventDefault();
                       alert("Unit created successfully")
                   }}>
-                    <FormControl>
+                    <FormControl isRequired>
                       <FormLabel>Unit Code </FormLabel>
                       <Input mb='5'/>                     
                       <FormLabel>Unit Name</FormLabel>
