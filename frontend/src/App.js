@@ -8,6 +8,7 @@ import UnitHomePage from './pages/UnitHomePage'
 import NavBar from './components/NavBar'
 import Groups from './pages/groups'
 import Students from './pages/students'
+import AssigningPage from './pages/AssigningPage'
 //import logo from './assets/logo.png';
 
 
@@ -24,20 +25,20 @@ const theme = extendTheme({
 function App() {
   return (
     <ChakraProvider theme={theme}>
-      <NavBar/>
-      <div className="App">
-        <BrowserRouter>
+      <BrowserRouter>
+        <NavBar />
+        <div className="App">
           <Routes>
             <Route path="/" element={<UnitHomePage />}/>
             <Route path="/DisplayUnitGroups" element={<DisplayUnitGroups />}/>
-            <Route path="/" element={<Home />}/>
+            <Route path="/home" element={<Home />}/>
             <Route path="/groups" element={<Groups />}/>
             <Route path="/students" element={<Students />}/>
-          <Route path="/" element={<ImportClass/>}/>
-
+            <Route path="/uploadStudents" element={<ImportClass/>}/>
+            <Route path="/assigningPage" element={<AssigningPage/>}/>
           </Routes>
-        </BrowserRouter>
-      </div>
+        </div>
+      </BrowserRouter>
     </ChakraProvider>
 
   );
