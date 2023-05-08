@@ -1,6 +1,6 @@
 import GroupCard from "../components/GroupCard";
 import React from "react";
-import { Stack, Button, ButtonGroup, HStack, Spacer, Container, Heading, Center, Icon } from "@chakra-ui/react"
+import { Button, ButtonGroup, HStack, Spacer, Container, Heading, Center, Icon } from "@chakra-ui/react"
 import { MdFilterAlt } from 'react-icons/md'
 import NavBar from "../components/NavBar";
 import { Link } from "react-router-dom";
