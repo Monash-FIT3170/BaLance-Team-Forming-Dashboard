@@ -1,0 +1,6 @@
+{
+	"unitId": "ENG1003",
+	"unitFaculty": "Engineering",
+	"labs": ["001", "002", "003"],
+	"teachers": ["EvanSmith@teacher.monash.edu", "JaneDoe@teacher.monash.edu"]
+}
