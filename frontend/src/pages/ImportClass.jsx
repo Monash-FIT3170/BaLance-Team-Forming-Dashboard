@@ -109,8 +109,8 @@ function ImportPage() {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
 
 
-  const handleSort = (key) => {
-     
+  const handleSort = (header) => {
+    const key = header[0];
     if (sortConfig.key === key) {
       setSortConfig({ ...sortConfig, direction: sortConfig.direction === 'ascending' ? 'descending' : 'ascending' });
        console.log("current sortConfig key: ", sortConfig.key);
@@ -192,7 +192,8 @@ function ImportPage() {
   const [profileToEdit, setProfileToEdit] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const headers = ['firstName', 'lastName', 'emailAddress', 'WAM', 'status', 'role'];
+  const headers = [
+    ['firstName', 'First Name'], ['lastName', "Last Name"], ['emailAddress', "Email Address"], ['wam', "WAM"], ['status', "Status"], ['role', "Role"]];
 
   const handleSaveProfile = (updatedProfile) => {
     console.log(updatedProfile);
@@ -307,10 +308,11 @@ const handleDeleteProfile = (emailAddress) => {
             <Table variant="striped">
    <thead>
         <tr>
-          {headers.map((header) => (
-            <th key={header} onClick={() => handleSort(header)}>
-              {header}
-              {sortConfig.key === header && (
+                  {headers.map((header) => (
+            
+            <th key={header[0]} onClick={() => handleSort(header)}>
+              {header[1]}
+              {sortConfig.key === header[0] && (
                 <span>{sortConfig.direction === 'ascending' ? '▲' : '▼'}</span>
               )}
             </th>
