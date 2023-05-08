@@ -66,13 +66,17 @@ function UnitPage() {
               <ModalContent>
                 <ModalHeader>New Unit</ModalHeader>
                 <ModalCloseButton />
+                <hr></hr>
                 <ModalBody pb={10}>
                   <form 
                   id='create-unit'
                   onSubmit={
                     (event) => {
                       event.preventDefault();
-                      alert("Unit created successfully");                      
+                      let answer = window.confirm("Unit created successfully");    
+                      if (answer){
+                        onCloseAdd();
+                      }           
                   }}>
                     <FormControl isRequired>
                       <FormLabel>Unit Code </FormLabel>
