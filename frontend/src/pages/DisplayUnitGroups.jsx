@@ -9,7 +9,6 @@ function createUnitGroups() {
 
     return (
         <div>
-            <NavBar />
             <Center margin="40px">
                 <Heading>FIT3170 Semester 1 2023 - Lab 1</Heading>
             </Center>

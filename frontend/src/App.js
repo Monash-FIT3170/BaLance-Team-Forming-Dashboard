@@ -29,7 +29,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<UnitHomePage />}/>
-            <Route path="./DisplayUnitGroups" element={<DisplayUnitGroups />}/>
+            <Route path="/DisplayUnitGroups" element={<DisplayUnitGroups />}/>
             <Route path="/" element={<Home />}/>
             <Route path="/groups" element={<Groups />}/>
             <Route path="/students" element={<Students />}/>
