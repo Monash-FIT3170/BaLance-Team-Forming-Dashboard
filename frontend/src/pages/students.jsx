@@ -73,7 +73,6 @@ function Students() {
 
     return (
         <div>
-            <NavBar />
 
             <Heading alignContent={"center"}>
                 <Center margin="10">{"FIT3170 - Software Engineering Practice (S1, 2023)"}</Center>
