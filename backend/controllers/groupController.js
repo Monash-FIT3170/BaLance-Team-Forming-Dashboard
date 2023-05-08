@@ -249,9 +249,50 @@ const deleteGroup = async (req, res) => {
 
 // update a specific group from a unit
 const updateGroup = async (req, res) => {
-    res.status(200).json({
-        group: "group updated"
-    })
+    const groupsFile = './db/groups.json';
+    const { unitId, groupId } = req.params;
+    const updatedGroupData = req.body;
+
+    try {
+        // Read the groups file
+        let groupsData = await fs.promises.readFile(groupsFile, 'utf-8');
+
+        // Parse the file data for use
+        groupsData = JSON.parse(groupsData);
+
+        // Find the index of the group to update
+        let groupIdx = groupsData.findIndex(group => group.unitCode === unitId && group.groupId === groupId);
+
+        // Check if group exists
+        if (groupIdx === -1) {
+            res.status(404).send({ message: 'Group not found' });
+            return;
+        }
+
+        // Update the group data
+        for (const key in updatedGroupData) {
+            if (groupsData[groupIdx].hasOwnProperty(key)) {
+                groupsData[groupIdx][key] = updatedGroupData[key];
+            }
+        }
+
+        // Write the updated data to the groups file
+        fs.writeFile(groupsFile, JSON.stringify(groupsData), (err) => {
+            if (err) {
+                console.log(err);
+                res.status(500).send({ message: 'Error updating group data' });
+            } else {
+                res.status(200).send(groupsData[groupIdx]);
+                res.status(200).json({
+                    group: "group updated"
+                })
+            }
+        });
+
+    } catch (readFileErr) {
+        console.log(readFileErr);
+        res.status(500).json({ err: readFileErr })
+    }
 }
 
 function shuffle(array) {
