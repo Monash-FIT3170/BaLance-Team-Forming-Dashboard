@@ -106,21 +106,20 @@ function ImportPage() {
   const [isEditing, setIsEditing] = useState(false);
 // Define state for the current sort order and column
   // Define state for the current sort order and column
-  const [sortOrder, setSortOrder] = useState('asc');
-  const [sortColumn, setSortColumn] = useState(null);
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
 
-  // Define a function to handle sorting when a column header is clicked
-  const handleSort = (column) => {
-    if (sortColumn === column) {
-      // If the same column is clicked, toggle the sort order
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+
+  const handleSort = (key) => {
+     
+    if (sortConfig.key === key) {
+      setSortConfig({ ...sortConfig, direction: sortConfig.direction === 'ascending' ? 'descending' : 'ascending' });
+       console.log("current sortConfig key: ", sortConfig.key);
+      console.log("current sortConfig key: ", key, "current direction: ", sortConfig.direction);
+      console.log("updated profiles dummy:", sortedProfiles);
     } else {
-      // If a different column is clicked, set the new column and default to ascending order
-      setSortColumn(column);
-      setSortOrder('asc');
+      setSortConfig({ key, direction: 'ascending' });
     }
   };
-
 
   const handleFile = (file) => {
     if (!file.type.match("csv.*")) {
@@ -177,11 +176,23 @@ function ImportPage() {
     setStatus("");
     setRole("");
   };
+
+
+  const sortedProfiles = [...DUMMYPROFILE].sort((a, b) => {
+    if (a[sortConfig.key] < b[sortConfig.key]) {
+      return sortConfig.direction === 'ascending' ? -1 : 1;
+    }
+    if (a[sortConfig.key] > b[sortConfig.key]) {
+      return sortConfig.direction === 'ascending' ? 1 : -1;
+    }
+    return 0;
+  });
+
   
   const [profileToEdit, setProfileToEdit] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const headers = ['First Name', 'Last Name', 'Email Address', 'WAM', 'Status', 'Role'];
+  const headers = ['firstName', 'lastName', 'emailAddress', 'WAM', 'status', 'role'];
 
   const handleSaveProfile = (updatedProfile) => {
     console.log(updatedProfile);
@@ -205,12 +216,11 @@ function ImportPage() {
     onClose();
   };
 
-  const handleDeleteProfile = (index) => {
-    const newProfiles = [...profiles];
-    newProfiles.splice(index, 1); // Remove the profile at the given index from the array
-    setProfiles(newProfiles); // Update the state with the new profiles array
-  };
-  
+const handleDeleteProfile = (emailAddress) => {
+  const newProfiles = profiles.filter((profile) => profile.emailAddress !== emailAddress);
+  setProfiles(newProfiles);
+};
+
 
   return (
     <>
@@ -295,31 +305,24 @@ function ImportPage() {
         </Box>
           <TableContainer borderWidth="2px" borderColor="black">
             <Table variant="striped">
-<Thead>
-  <Tr>
-    {headers.map((header, index) => (
-      <Th key={index} onClick={() => handleSort(header)}>
-        {header} {sortColumn === header && (sortOrder === 'asc' ? '▲' : '▼')}
-      </Th>
-    ))}
-  </Tr>
-</Thead>
+   <thead>
+        <tr>
+          {headers.map((header) => (
+            <th key={header} onClick={() => handleSort(header)}>
+              {header}
+              {sortConfig.key === header && (
+                <span>{sortConfig.direction === 'ascending' ? '▲' : '▼'}</span>
+              )}
+            </th>
+          ))}
+        </tr>
+      </thead>
               <Tbody>
 
-{DUMMYPROFILE.sort((a, b) => {
-  // Use the current sort column and order to sort the array
-  if (sortColumn) {
-    if (sortOrder === 'asc') {
-      return a[sortColumn] > b[sortColumn] ? 1 : -1;
-    } else {
-      return b[sortColumn] > a[sortColumn] ? 1 : -1;
-    }
-  } else {
-    // If no sort column is selected, default to sorting by first name in ascending order
-    return a.firstName > b.firstName ? 1 : -1;
-  }
-}).map((profile, index) => (
-  <Tr key={index}>
+
+                
+ {sortedProfiles.map((profile) => (
+  <Tr key={profile.emailAddress}>
     <Td>{profile.firstName}</Td>
     <Td>{profile.lastName}</Td>
     <Td>{profile.emailAddress}</Td>
@@ -338,11 +341,11 @@ function ImportPage() {
     <Td>
       <DeleteIcon
         style={{ cursor: "pointer", color: "red" }}
-        onClick={() => handleDeleteProfile(index)} // Call a function to delete the profile when the icon is clicked
+        onClick={() => handleDeleteProfile(profile.emailAddress)} // Call a function to delete the profile when the icon is clicked
       />
     </Td>
   </Tr>
-))}
+))} 
               </Tbody>
             </Table>
             <Modal isOpen={isOpen} onClose={onClose}>
