@@ -121,13 +121,41 @@ deleteUnit = async function (req, res) {
 
 updateUnit = async function (req, res){
     const { unitId } = req.params;
-    res.send(`${unitId} has been updated`);
 
     // Have a look at the above code for adding a unit
     // Read the units.json file and store in a variable
     // Update the unit with unitCode matchin unitId
     // write this to the units.json file
     // send a res status of 200 and send the unit updated
+    const updatedUnitData = req.body;
+    const file = './db/units.json';
+
+    fs.readFile(file, 'utf-8', (err, unitsData) => {
+        const units = JSON.parse(unitsData);
+
+        const updatedUnits = units.map((unit) => {
+            if (unit.unitCode === unitId) {
+                // Update the unit data
+                for (const key in updatedUnitData) {
+                    if (unit.hasOwnProperty(key)) {
+                        unit[key] = updatedUnitData[key];
+                    }
+                }
+                return unit;
+            }
+            return unit;
+        });
+
+        fs.writeFile(file, JSON.stringify(updatedUnits), (err) => {
+            if (err) {
+                console.log(err);
+                res.status(500).send({ error: 'Error updating unit' });
+            } else {
+                res.send(`${unitId} has been updated`);
+                res.status(200).send({ message: `${unitId} has been updated` });
+            }
+        });
+    });
 
 }
 
