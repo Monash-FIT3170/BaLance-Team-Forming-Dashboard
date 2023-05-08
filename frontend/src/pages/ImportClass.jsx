@@ -505,7 +505,7 @@ function ImportPage() {
                 Add Profile
               </Button>
 
-      <Button marginLeft="2em"   colorScheme="red" onClick={() => handleDeleteInactiveProfiles(profiles)}>Delete Inactive Profiles</Button>
+      <Button marginLeft="2em"   colorScheme="red" onClick={() => handleDeleteInactiveProfiles(profiles)}>Delete All Inactive Profiles</Button>
             </Box>
           </TableContainer>
         </Box>
