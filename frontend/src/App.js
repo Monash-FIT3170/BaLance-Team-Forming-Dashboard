@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import Home from './pages/Home'
+import  ImportClass from './pages/ImportClass'
+
 import DisplayUnitGroups from './pages/DisplayUnitGroups'
 import UnitHomePage from './pages/UnitHomePage'
 import NavBar from './components/NavBar'
@@ -19,7 +21,6 @@ const theme = extendTheme({
   }
 }) 
 
-//test
 function App() {
   return (
     <ChakraProvider theme={theme}>
@@ -32,6 +33,8 @@ function App() {
             <Route path="/" element={<Home />}/>
             <Route path="/groups" element={<Groups />}/>
             <Route path="/students" element={<Students />}/>
+          <Route path="/" element={<ImportClass/>}/>
+
           </Routes>
         </BrowserRouter>
       </div>
