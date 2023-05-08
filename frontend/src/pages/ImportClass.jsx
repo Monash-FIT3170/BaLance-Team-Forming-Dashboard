@@ -41,6 +41,52 @@ import {
 } from "@chakra-ui/icons";
 import NavBar from "../components/NavBar";
 
+
+const DUMMYPROFILE = [
+  {
+    firstName: "John",
+    lastName: "Doe",
+    emailAddress: "johndoe@example.com",
+    wam: 85.5,
+    status: "Active",
+    role: "Developer"
+  },
+  {
+    firstName: "Jane",
+    lastName: "Doe",
+    emailAddress: "janedoe@example.com",
+    wam: 91.2,
+    status: "Active",
+    role: "Manager"
+  },
+  {
+    firstName: "Bob",
+    lastName: "Smith",
+    emailAddress: "bobsmith@example.com",
+    wam: 78.9,
+    status: "Inactive",
+    role: "Analyst"
+  },
+  {
+    firstName: "Alice",
+    lastName: "Jones",
+    emailAddress: "alicejones@example.com",
+    wam: 92.6,
+    status: "Active",
+    role: "Designer"
+  },
+  {
+    firstName: "David",
+    lastName: "Lee",
+    emailAddress: "davidlee@example.com",
+    wam: 80.3,
+    status: "Inactive",
+    role: "Engineer"
+  }
+];
+
+
+
 const customTheme = extendTheme({
   fonts: {
     heading: "Montserrat, sans-serif",
@@ -58,6 +104,22 @@ function ImportPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [showAddProfileForm, setShowAddProfileForm] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+// Define state for the current sort order and column
+  // Define state for the current sort order and column
+  const [sortOrder, setSortOrder] = useState('asc');
+  const [sortColumn, setSortColumn] = useState(null);
+
+  // Define a function to handle sorting when a column header is clicked
+  const handleSort = (column) => {
+    if (sortColumn === column) {
+      // If the same column is clicked, toggle the sort order
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      // If a different column is clicked, set the new column and default to ascending order
+      setSortColumn(column);
+      setSortOrder('asc');
+    }
+  };
 
 
   const handleFile = (file) => {
@@ -94,42 +156,6 @@ function ImportPage() {
     }
   };
 
-  /* Dummy data for the table
-  const profiles = [
-    {
-      firstName: "John",
-      lastName: "Doe",
-      emailAddress: "john.doe@example.com",
-      wam: "HD",
-      status: "Active",
-      role: "Teacher"
-    },
-    {
-      firstName: "Jane",
-      lastName: "Duncan",
-      emailAddress: "jane.duncan@example.com",
-      wam: "D",
-      status: "Active",
-      role: "Student"
-    },
-    {
-      firstName: "Tom",
-      lastName: "Marshall",
-      emailAddress: "tom.marshall@example.com",
-      wam: "D",
-      status: "Active",
-      role: "Student"
-    },
-    {
-      firstName: "Jessica",
-      lastName: "Stoltman",
-      emailAddress: "jessica.stoltman@example.com",
-      wam: "P",
-      status: "Active",
-      role: "Student"
-    },
-  ];
-  */
   const [profiles, setProfiles] = useState([]);
 
   const [firstName, setFirstName] = useState("");
@@ -155,7 +181,8 @@ function ImportPage() {
   const [profileToEdit, setProfileToEdit] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  
+  const headers = ['First Name', 'Last Name', 'Email Address', 'WAM', 'Status', 'Role'];
+
   const handleSaveProfile = (updatedProfile) => {
     console.log(updatedProfile);
   
@@ -183,9 +210,6 @@ function ImportPage() {
     newProfiles.splice(index, 1); // Remove the profile at the given index from the array
     setProfiles(newProfiles); // Update the state with the new profiles array
   };
-  
-  
-  
   
 
   return (
@@ -271,42 +295,54 @@ function ImportPage() {
         </Box>
           <TableContainer borderWidth="2px" borderColor="black">
             <Table variant="striped">
-              <Thead>
-                <Tr>
-                  <Th>First Name</Th>
-                  <Th>Last Name</Th>
-                  <Th>Email Address</Th>
-                  <Th>WAM</Th>
-                  <Th>Status</Th>
-                  <Th>Role</Th>
-                </Tr>
-              </Thead>
+<Thead>
+  <Tr>
+    {headers.map((header, index) => (
+      <Th key={index} onClick={() => handleSort(header)}>
+        {header} {sortColumn === header && (sortOrder === 'asc' ? '▲' : '▼')}
+      </Th>
+    ))}
+  </Tr>
+</Thead>
               <Tbody>
-                {profiles.map((profile, index) => (
-                  <Tr key={index}>
-                    <Td>{profile.firstName}</Td>
-                    <Td>{profile.lastName}</Td>
-                    <Td>{profile.emailAddress}</Td>
-                    <Td>{profile.wam}</Td>
-                    <Td>{profile.status}</Td>
-                    <Td>{profile.role}</Td>
-                    <Td>
-                      <EditIcon
-                        style={{ cursor: "pointer" }}
-                        onClick={() => {
-                          setProfileToEdit(profile);
-                          onOpen();
-                        }}
-                      />
-                    </Td>
-                    <Td>
-                      <DeleteIcon
-                        style={{ cursor: "pointer", color: "red" }}
-                        onClick={() => handleDeleteProfile(index)} // Call a function to delete the profile when the icon is clicked
-                      />
-                    </Td>
-                  </Tr>
-                ))}
+
+{DUMMYPROFILE.sort((a, b) => {
+  // Use the current sort column and order to sort the array
+  if (sortColumn) {
+    if (sortOrder === 'asc') {
+      return a[sortColumn] > b[sortColumn] ? 1 : -1;
+    } else {
+      return b[sortColumn] > a[sortColumn] ? 1 : -1;
+    }
+  } else {
+    // If no sort column is selected, default to sorting by first name in ascending order
+    return a.firstName > b.firstName ? 1 : -1;
+  }
+}).map((profile, index) => (
+  <Tr key={index}>
+    <Td>{profile.firstName}</Td>
+    <Td>{profile.lastName}</Td>
+    <Td>{profile.emailAddress}</Td>
+    <Td>{profile.wam}</Td>
+    <Td>{profile.status}</Td>
+    <Td>{profile.role}</Td>
+    <Td>
+      <EditIcon
+        style={{ cursor: "pointer" }}
+        onClick={() => {
+          setProfileToEdit(profile);
+          onOpen();
+        }}
+      />
+    </Td>
+    <Td>
+      <DeleteIcon
+        style={{ cursor: "pointer", color: "red" }}
+        onClick={() => handleDeleteProfile(index)} // Call a function to delete the profile when the icon is clicked
+      />
+    </Td>
+  </Tr>
+))}
               </Tbody>
             </Table>
             <Modal isOpen={isOpen} onClose={onClose}>
