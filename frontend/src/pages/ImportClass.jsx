@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import logo from "../assets/logo.png";
+import { useNavigate } from "react-router-dom";
+
 import { 
   Box,
   Text,
@@ -66,6 +68,11 @@ function ImportPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [profiles, setProfiles] = useState([]);
 
+  const navigate = useNavigate();
+
+  const handleAssignGroupsClick = () => {
+    navigate('/groups');
+  };
 
   const headers = [
     ['studentId', "Student ID"], ['studentFirstName', 'First Name'], ['studentLastName', "Last Name"], ['studentEmailAddress', "Email Address"], ['wamAverage', "WAM"], ['gender', "Gender"], ['labId', "Lab ID"]];
@@ -265,7 +272,6 @@ function ImportPage() {
           </ModalContent>
         </Modal>
       )}
-      <NavBar />
       <Box as="header" p="4" textAlign="center">
         <Text fontSize="2xl" fontWeight="bold">
           Upload Profiles
@@ -479,7 +485,7 @@ function ImportPage() {
                 <option value="3">3</option>
                 <option value="4">4</option>
               </Select>
-              <Button colorScheme="blue">Assign groups</Button>
+              <Button onClick={handleAssignGroupsClick} colorScheme="blue">Assign groups</Button>
           </Box>
       </Flex>
       {showAddProfileForm && (

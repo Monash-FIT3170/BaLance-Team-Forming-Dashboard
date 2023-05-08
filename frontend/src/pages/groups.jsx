@@ -3,9 +3,15 @@ import React from "react";
 import { Button, ButtonGroup, HStack, Spacer, Container, Heading, Center, Icon } from "@chakra-ui/react"
 import { MdFilterAlt } from 'react-icons/md'
 import NavBar from "../components/NavBar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Groups() {
+  const navigate = useNavigate();
+
+  const handleUploadClick = () => {
+    navigate('/uploadStudents');
+  };
+
   const data = [
     {
       "groupId": 123,
@@ -105,8 +111,11 @@ function Groups() {
 
       <HStack margin="0px 0px 5vh 0px">
 
-        <Spacer /><Spacer /><Spacer /><Spacer /><Spacer /><Spacer /><Spacer /><Spacer /><Spacer />
-
+        <Spacer />
+        <Button onClick={handleUploadClick} colorScheme='gray' >
+            Upload Students
+        </Button>
+        <Spacer /><Spacer /><Spacer /><Spacer /><Spacer /><Spacer />
         <HStack m="40px">
           <Spacer />
           <ButtonGroup colorScheme='#282c34' variant='outline' size='lg'>

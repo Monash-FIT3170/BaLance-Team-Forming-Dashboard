@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import createUnitGroups from './DisplayUnitGroups'
-import { BrowserRouter, Routes, Route,Switch } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
+
 
 // Chakra imports
 import {
@@ -32,6 +33,7 @@ import NavBar from "../components/NavBar.jsx"
 
 
 
+
 function UnitPage() {
   let boxBg = useColorModeValue("white !important", "#111c44 !important");
   let mainText = useColorModeValue("gray.800", "white");
@@ -41,6 +43,13 @@ function UnitPage() {
   const {isOpen: isOpenDetails, onOpen: onOpenDetails, onClose: onCloseDetails } = useDisclosure()
   const {isOpen: isOpenAdd, onOpen: onOpenAdd, onClose: onCloseAdd } = useDisclosure()
   const [unitNameError, setUnitNameError] = useState(false);
+
+  // setting up navigation
+  const navigate = useNavigate();
+
+  const handleUnitClick = () => {
+    navigate('/groups');
+  };
 
   return(
     <div>
@@ -134,7 +143,7 @@ function UnitPage() {
               textAlign='center'
               fontSize='xl'
               me='auto'>
-                <Button style={{fontWeight: 'bold', fontSize: '20px'}}>FIT3170</Button>
+                <Button onClick={handleUnitClick} style={{fontWeight: 'bold', fontSize: '20px'}}>FIT3170</Button>
             </Text>
             
             <Button
@@ -183,7 +192,7 @@ function UnitPage() {
               </ModalContent>
             </Modal>
         </Flex>
-        <Button style={{ display: 'inline-block', width: 'auto', height: 'auto' }}  >
+        <Button onClick={handleUnitClick} style={{ display: 'inline-block', width: 'auto', height: 'auto' }}  >
           <Image
           src='https://img.freepik.com/free-vector/gradient-purple-color-gradient-background-abstract-modern_343694-2243.jpg?w=740&t=st=1682246391~exp=1682246991~hmac=24a5e0adc73d36b09e5b9fc4b2b05aabd12bab82078f67b6556cb3800ca6d1e4'
           style={{ height: '60%', width: '100%', display: 'flex', justifyContent: 'center'}}
