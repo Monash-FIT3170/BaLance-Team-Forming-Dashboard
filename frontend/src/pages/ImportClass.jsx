@@ -30,8 +30,7 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure
-
+  useDisclosure,
 } from "@chakra-ui/react";
 import {
   AddIcon,
@@ -107,7 +106,8 @@ function ImportPage() {
 // Define state for the current sort order and column
   // Define state for the current sort order and column
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
-
+ const [profileToDelete, setProfileToDelete] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSort = (header) => {
     const key = header[0];
@@ -155,7 +155,8 @@ function ImportPage() {
     }
   };
 
-  const [profiles, setProfiles] = useState([]);
+  //todo: remove DUMMYPROFILE AND REPLACE WITH [] IN PROD
+  const [profiles, setProfiles] = useState(DUMMYPROFILE);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -178,7 +179,7 @@ function ImportPage() {
   };
 
 
-  const sortedProfiles = [...DUMMYPROFILE].sort((a, b) => {
+  const sortedProfiles = [...profiles].sort((a, b) => {
     if (a[sortConfig.key] < b[sortConfig.key]) {
       return sortConfig.direction === 'ascending' ? -1 : 1;
     }
@@ -217,14 +218,55 @@ function ImportPage() {
     onClose();
   };
 
-const handleDeleteProfile = (emailAddress) => {
-  const newProfiles = profiles.filter((profile) => profile.emailAddress !== emailAddress);
-  setProfiles(newProfiles);
-};
+// const handleDeleteProfile = (emailAddress) => {
+//   const newProfiles = profiles.filter((profile) => profile.emailAddress !== emailAddress);
+//   setProfiles(newProfiles);
+// };
 
+   const handleDeleteProfile = (emailAddress) => {
+    const newProfiles = profiles.filter(
+      (profile) => profile.emailAddress !== emailAddress
+    );
+    setProfileToDelete(newProfiles);
+    setIsModalOpen(true);
+   };
+  
+  const handleDeleteInactiveProfiles = (profiles) => {
+    const newProfiles = profiles.filter((profile) => profile.status.toLowerCase() !== "active");
+    setProfileToDelete(newProfiles);
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    setProfiles(profileToDelete);
+    setProfileToDelete(null);
+    setIsModalOpen(false);
+  };
+
+  const handleCancelDelete = () => {
+    setProfileToDelete(null);
+    setIsModalOpen(false);
+  };
 
   return (
     <>
+           {profileToDelete && (
+        <Modal isOpen={isModalOpen} onClose={handleCancelDelete}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Delete Profile</ModalHeader>
+            <ModalBody>
+              Are you sure you want to delete these records?
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme="red" mr={3} onClick={handleConfirmDelete}>
+                Delete
+              </Button>
+              <Button onClick={handleCancelDelete}>Cancel</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      )}
       <NavBar />
       <Box as="header" p="4" textAlign="center">
         <Text fontSize="2xl" fontWeight="bold">
@@ -462,6 +504,8 @@ const handleDeleteProfile = (emailAddress) => {
               >
                 Add Profile
               </Button>
+
+      <Button marginLeft="2em"   colorScheme="red" onClick={() => handleDeleteInactiveProfiles(profiles)}>Delete Inactive Profiles</Button>
             </Box>
           </TableContainer>
         </Box>
