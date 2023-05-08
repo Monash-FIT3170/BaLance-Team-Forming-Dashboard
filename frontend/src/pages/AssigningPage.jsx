@@ -133,7 +133,7 @@ function AssigningPage(){
                                                     </Box>
                                                 ))}
                                             </SimpleGrid>
-                                                
+                                            <br/> 
                                             <Menu>
                                                 <MenuButton px={4}
                                                             py={2}
@@ -182,7 +182,7 @@ function AssigningPage(){
                                                     </Box>
                                                 ))}
                                             </SimpleGrid>
-                                                
+                                            <br/>
                                             <Menu>
                                                 <MenuButton px={4}
                                                                 py={2}
@@ -231,7 +231,7 @@ function AssigningPage(){
                                                     </Box>
                                                 ))}
                                             </SimpleGrid>
-                                                
+                                            <br/>
                                             <Menu>
                                                 <MenuButton px={4}
                                                             py={2}
@@ -280,7 +280,7 @@ function AssigningPage(){
                                                     </Box>
                                                 ))}
                                             </SimpleGrid>
-                                                
+                                            <br/>
                                             <Menu>
                                                 <MenuButton px={4}
                                                             py={2}
