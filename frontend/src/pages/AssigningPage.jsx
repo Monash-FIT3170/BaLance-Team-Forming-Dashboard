@@ -124,7 +124,7 @@ function AssigningPage(){
                                             </HStack>
                                         </Td>
                                         <Td>teacher1</Td>
-                                        <Td>aaa0000@student.monash.edu</Td>
+                                        <Td>aaa0000@staff.monash.edu</Td>
                                         <Td>
                                             <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing="10px">
                                                 {checkedValues1.map((card, index) => (
@@ -173,7 +173,7 @@ function AssigningPage(){
                                             </HStack>
                                         </Td>
                                         <Td>teacher2</Td>
-                                        <Td>aaa0001@student.monash.edu</Td>
+                                        <Td>aaa0001@staff.monash.edu</Td>
                                         <Td>
                                             <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing="10px">
                                                 {checkedValues2.map((card, index) => (
@@ -222,7 +222,7 @@ function AssigningPage(){
                                             </HStack>
                                         </Td>
                                         <Td>teacher3</Td>
-                                        <Td>aaa0002@student.monash.edu</Td>
+                                        <Td>aaa0002@staff.monash.edu</Td>
                                         <Td>
                                             <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing="10px">
                                                 {checkedValues3.map((card, index) => (
@@ -271,7 +271,7 @@ function AssigningPage(){
                                             </HStack>
                                         </Td>
                                         <Td>teacher4</Td>
-                                        <Td>aaa0003@student.monash.edu</Td>
+                                        <Td>aaa0003@staff.monash.edu</Td>
                                         <Td>
                                             <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing="10px">
                                                 {checkedValues4.map((card, index) => (
