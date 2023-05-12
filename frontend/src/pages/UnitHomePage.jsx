@@ -154,7 +154,7 @@ function UnitPage() {
         
       <Container className="units" maxW="80vw">
         {units.map((unit) => (
-          <UnitCard unit={unit} key={unit.unitId} className="unit" />
+          <UnitCard {...unit} key={unit.unitId} className="unit" />
         ))}
       </Container>
     </div>
