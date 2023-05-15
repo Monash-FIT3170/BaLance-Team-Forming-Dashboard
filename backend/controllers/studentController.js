@@ -8,7 +8,30 @@ const fs = require('fs');
 const path = require('path')
 
 // gets all students for a unit
-const getAllStudents = async (req, res) => { }
+const getAllStudents = async (req, res) => {
+    let unitId = req.params.unitId;
+
+    let studentData = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/students.json', 'utf8'));
+    let students = [];
+
+
+    for(let i = 0; i< studentData.length; i++){
+
+
+        for(let j = 0; j < studentData[i].units.length; j++){
+
+            if(studentData[i].units[j].unitcode == unitId){
+                students.push(studentData[i]);
+            }
+        }
+
+    }
+
+
+    res.status(200).send(students);
+
+
+ }
 
 // get a single student for a unit
 const getStudent = async (req, res) => { }

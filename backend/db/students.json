@@ -8,8 +8,8 @@
         "gender": "F",
         "status": "Active", 
         "discPersonality": "DOMINANT", 
-        "units": [[{"unitcode": "FIT2099_CL_S1_ON-CAMPUS", "labId": "1", 
-        "groupNumber": "1"}]]
+        "units": [{"unitcode": "FIT2099_CL_S1_ON-CAMPUS", "labId": "1", 
+        "groupNumber": "1"}]
     },
     {
         "studentId": "12345678",
@@ -20,8 +20,8 @@
         "gender": "M",
         "status": "Active", 
         "discPersonality": "DOMINANT", 
-        "units": [[{"unitcode": "FIT2099_CL_S1_ON-CAMPUS", "labId": "1", 
-        "groupNumber": "1"}]]
+        "units": [{"unitcode": "FIT2099_CL_S1_ON-CAMPUS", "labId": "1", 
+        "groupNumber": "1"}]
     },
     {
         "studentId": "12345677",
@@ -32,8 +32,8 @@
         "gender": "F",
         "status": "Active", 
         "discPersonality": "DOMINANT", 
-        "units": [[{"unitcode": "FIT2099_CL_S1_ON-CAMPUS", "labId": "1", 
-        "groupNumber": "1"}]]
+        "units": [{"unitcode": "FIT2099_CL_S1_ON-CAMPUS", "labId": "1", 
+        "groupNumber": "1"}]
     },
     {
         "studentId": "12345676",
@@ -44,8 +44,8 @@
         "gender": "F",
         "status": "Active", 
         "discPersonality": "DOMINANT", 
-        "units": [[{"unitcode": "FIT2099_CL_S1_ON-CAMPUS", "labId": "1", 
-        "groupNumber": "1"}]]
+        "units": [{"unitcode": "FIT2099_CL_S1_ON-CAMPUS", "labId": "1", 
+        "groupNumber": "1"}]
     },
     {
         "studentId": "12300015",
@@ -56,8 +56,8 @@
         "gender": "M",
         "status": "Active", 
         "discPersonality": "DOMINANT", 
-        "units": [[{"unitcode": "FIT2099_CL_S1_ON-CAMPUS", "labId": "1", 
-        "groupNumber": "1"}]]
+        "units": [{"unitcode": "FIT2099_CL_S1_ON-CAMPUS", "labId": "1", 
+        "groupNumber": "1"}]
     },
     {
         "studentId": "12300014",
@@ -68,8 +68,8 @@
         "gender": "M",
         "status": "Active", 
         "discPersonality": "DOMINANT", 
-        "units": [[{"unitcode": "FIT2099_CL_S1_ON-CAMPUS", "labId": "1", 
-        "groupNumber": "1"}]]
+        "units": [{"unitcode": "FIT2099_CL_S1_ON-CAMPUS", "labId": "1", 
+        "groupNumber": "1"}]
     },
     {
         "studentId": "12300013",
@@ -80,8 +80,8 @@
         "gender": "M",
         "status": "Active", 
         "discPersonality": "DOMINANT", 
-        "units": [[{"unitcode": "FIT2099_CL_S1_ON-CAMPUS", "labId": "1", 
-        "groupNumber": "1"}]]
+        "units": [{"unitcode": "FIT2099_CL_S1_ON-CAMPUS", "labId": "1", 
+        "groupNumber": "1"}]
     },
     {
         "studentId": "12300012",
@@ -92,8 +92,8 @@
         "gender": "M",
         "status": "Active", 
         "discPersonality": "DOMINANT", 
-        "units": [[{"unitcode": "FIT2099_CL_S1_ON-CAMPUS", "labId": "1", 
-        "groupNumber": "1"}]]
+        "units": [{"unitcode": "FIT2099_CL_S1_ON-CAMPUS", "labId": "1", 
+        "groupNumber": "1"}]
     },
     {
         "studentId": "54321899",
@@ -104,8 +104,8 @@
         "gender": "M",
         "status": "Active", 
         "discPersonality": "DOMINANT", 
-        "units": [[{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "1", 
-        "groupNumber": "1"}]]
+        "units": [{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "1", 
+        "groupNumber": "1"}]
     },
     {
         "studentId": "54321811",
@@ -116,8 +116,8 @@
         "gender": "M",
         "status": "Active", 
         "discPersonality": "STEADINESS AND INFLUENCE", 
-        "units": [[{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "1", 
-        "groupNumber": "1"}]]
+        "units": [{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "1", 
+        "groupNumber": "1"}]
     },
     {
         "studentId": "54321822",
@@ -128,8 +128,8 @@
         "gender": "M",
         "status": "Not Active", 
         "discPersonality": "DOMINANT", 
-        "units": [[{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "4", 
-        "groupNumber": "3"}]]
+        "units": [{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "4", 
+        "groupNumber": "3"}]
     },
     {
         "studentId": "54321833",
@@ -140,8 +140,8 @@
         "gender": "F",
         "status": "Active", 
         "discPersonality": "DOMINANT", 
-        "units": [[{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "4", 
-        "groupNumber": "3"}]]
+        "units": [{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "4", 
+        "groupNumber": "3"}]
     },
     {
         "studentId": "54321844",
@@ -152,8 +152,8 @@
         "gender": "F",
         "status": "Not Active", 
         "discPersonality": "DOMINANT", 
-        "units": [[{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "4", 
-        "groupNumber": "1"}]]
+        "units": [{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "4", 
+        "groupNumber": "1"}]
     },
     {
         "studentId": "54321855",
@@ -164,8 +164,8 @@
         "gender": "F", 
         "status": "Active", 
         "discPersonality": "CONSCIENTIOUSNESS", 
-        "units": [[{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "1", 
-        "groupNumber": "1"}]]
+        "units": [{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "1", 
+        "groupNumber": "1"}]
     },
     {
         "studentId": "54321866",
@@ -176,8 +176,8 @@
         "gender": "F",
         "status": "Not Active", 
         "discPersonality": "DOMINANT", 
-        "units": [[{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "1", 
-        "groupNumber": "1"}]]
+        "units": [{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "1", 
+        "groupNumber": "1"}]
     },
     {
         "studentId": "54321877",
@@ -188,8 +188,8 @@
         "gender": "M", 
         "status": "Active", 
         "discPersonality": "STEADINESS AND INFLUENCE", 
-        "units": [[{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "1", 
-        "groupNumber": "1"}]]
+        "units": [{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "1", 
+        "groupNumber": "1"}]
     },
     {
         "studentId": "54321888",
@@ -200,8 +200,8 @@
         "gender": "M",
         "status": "Active", 
         "discPersonality": "CONSCIENTIOUSNESS", 
-        "units": [[{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "3", 
-        "groupNumber": "1"}]]
+        "units": [{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "3", 
+        "groupNumber": "1"}]
     },
     {
         "studentId": "54321812",
@@ -212,8 +212,8 @@
         "gender": "M",
         "status": "Active", 
         "discPersonality": "CONSCIENTIOUSNESS", 
-        "units": [[{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "2", 
-        "groupNumber": "3"}]]
+        "units": [{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "2", 
+        "groupNumber": "3"}]
     },
     {
         "studentId": "54321823",
@@ -224,8 +224,8 @@
         "gender": "M",
         "status": "Active", 
         "discPersonality": "DOMINANT", 
-        "units": [[{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "3", 
-        "groupNumber": "2"}]]
+        "units": [{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "3", 
+        "groupNumber": "2"}]
     },
     {
         "studentId": "54321834",
@@ -236,8 +236,8 @@
         "gender": "M",
         "status": "Active", 
         "discPersonality": "INFLUENCE", 
-        "units": [[{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "3", 
-        "groupNumber": "3"}]]
+        "units": [{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "3", 
+        "groupNumber": "3"}]
     },
     {
         "studentId": "54321845",
@@ -248,8 +248,8 @@
         "gender": "M",
         "status": "Active", 
         "discPersonality": "DOMINANT", 
-        "units": [[{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "1", 
-        "groupNumber": "1"}]]
+        "units": [{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "1", 
+        "groupNumber": "1"}]
     },
     {
         "studentId": "54321861",
@@ -260,8 +260,8 @@
         "gender": "M",
         "status": "Active", 
         "discPersonality": "INFLUENCE", 
-        "units": [[{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "2", 
-        "groupNumber": "1"}]]
+        "units": [{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "2", 
+        "groupNumber": "1"}]
     },
     {
         "studentId": "54321878",
@@ -272,8 +272,8 @@
         "gender": "M",
         "status": "Not Active", 
         "discPersonality": "CONSCIENTIOUSNESS", 
-        "units": [[{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "1", 
-        "groupNumber": "3"}]]
+        "units": [{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "1", 
+        "groupNumber": "3"}]
     },
     {
         "studentId": "54321891",
@@ -284,7 +284,7 @@
         "gender": "F",
         "status": "Active", 
         "discPersonality": "DOMINANT", 
-        "units": [[{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "1", 
-        "groupNumber": "2"}]]
+        "units": [{"unitcode": "FIT2085_CL_S1_ON-CAMPUS", "labId": "1", 
+        "groupNumber": "2"}]
     }
 ]
