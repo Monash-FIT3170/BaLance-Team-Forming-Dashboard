@@ -93,15 +93,17 @@ function UnitPage() {
 
 
   useEffect(() => {
-      fetch("http://localhost:8080/api/units/")
-      .then(
-          res => res.json()
-      .then((res) => {
-          console.log(res)
+    fetch("http://localhost:8080/api/units/")
+      .then((res) => res.json())
+      .then((data) => {
+        setUnits(data); // Assuming the JSON response is an array of units
       })
-      .then(res => setUnits(res.units))
-      ).catch(err => setHasError(true))
-  }, [])
+      .catch((err) => {
+        setHasError(true);
+        console.error("Error fetching units:", err);
+      });
+  }, []);
+  
 
 
   return(
@@ -170,7 +172,8 @@ function UnitPage() {
         
         
       <Container className="units" maxW="80vw">
-        {units.map((unit) => (
+        {console.log(units)}
+        {units && units.map((unit) => (
           <UnitCard {...unit} key={unit.unitCode} className="unit" />
         ))}
       </Container>
