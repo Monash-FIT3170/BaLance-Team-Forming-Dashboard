@@ -37,8 +37,8 @@ const UnitCard = (unit) => {
     const {isOpen: isOpenDetails, onOpen: onOpenDetails, onClose: onCloseDetails } = useDisclosure()
 
 
-    const unitCode  = unit.unitId 
-    const unitName = unit.unitName
+    const unitCode  = unit.unitCode 
+    const unitName = unit.unitFaculty
 
     const navigate = useNavigate();
 
