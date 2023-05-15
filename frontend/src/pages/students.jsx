@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from 'react-router';
 import { Stack, Button, ButtonGroup, Table, Tr, Th, Thead, Tbody, HStack, Spacer, Center, Heading, TagLeftIcon, Icon } from "@chakra-ui/react"
 import { MdFilterAlt } from 'react-icons/md'
 import StudentRow2 from "../components/StudentRowStudentDisplay";
@@ -6,13 +7,14 @@ import NavBar from "../components/NavBar";
 import { Link } from "react-router-dom";
 
 function Students() {
+    const { unitID } = useParams();
     
   const [data, setData] = useState([])
   const [hasError, setHasError] = useState(false)
 
 
   useEffect(() => {
-      fetch("http://localhost:8080/api/students/FIT2085_CL_S1_ON-CAMPUS").then(
+      fetch("http://localhost:8080/api/students/" + unitID).then(
           res => res.json().then(
             res => setData(res)
           )
@@ -23,7 +25,7 @@ function Students() {
         <div>
 
             <Heading alignContent={"center"}>
-                <Center margin="10">{"FIT3170 - Software Engineering Practice (S1, 2023)"}</Center>
+                <Center margin="10">{unitID}</Center>
             </Heading>
 
             <HStack margin="0px 0px 5vh 0px">
@@ -33,7 +35,7 @@ function Students() {
                 <HStack m="40px">
                     <Spacer />
                     <ButtonGroup colorScheme='#282c34' variant='outline' size='lg'>
-                        <Link to='/groups'>
+                        <Link to={'/groups/' + unitID}>
                             <Button margin="0px 2px">Groups</Button>
                         </Link>
                         <Button margin="0px 2px" isDisabled={true}>Students</Button>

@@ -1,11 +1,14 @@
 import GroupCard from "../components/GroupCard";
-import React, { useState, useEffect } from "react";
+import { useParams } from 'react-router';
+import React, { useState, useEffect} from "react";
 import { Button, ButtonGroup, HStack, Spacer, Container, Heading, Center, Icon } from "@chakra-ui/react"
 import { MdFilterAlt } from 'react-icons/md'
 import NavBar from "../components/NavBar";
 import { Link, useNavigate } from "react-router-dom";
 
 function Groups() {
+  const {unitID}  = useParams();
+
   const navigate = useNavigate();
 
   const handleUploadClick = () => {
@@ -17,7 +20,7 @@ function Groups() {
 
 
   useEffect(() => {
-      fetch("http://localhost:8080/api/groups/FIT2085_CL_S1_ON-CAMPUS").then(
+      fetch("http://localhost:8080/api/groups/" + unitID).then(
           res => res.json().then(
             res => setState(res)
           )
@@ -29,7 +32,7 @@ function Groups() {
   return (
     <div>
       <Heading alignContent={"center"}>
-        <Center margin="10">{"FIT3170 - Software Engineering Practice (S1, 2023)"}</Center>
+        <Center margin="10">{unitID}</Center>
       </Heading>
 
       <HStack margin="0px 0px 5vh 0px">
@@ -43,7 +46,7 @@ function Groups() {
           <Spacer />
           <ButtonGroup colorScheme='#282c34' variant='outline' size='lg'>
             <Button margin="0px 2px" isDisabled={true}>Groups</Button>
-            <Link to='/students'>
+            <Link to={'/students/' + unitID}>
               <Button margin="0px 2px">Students</Button>
             </Link>
           </ButtonGroup>
