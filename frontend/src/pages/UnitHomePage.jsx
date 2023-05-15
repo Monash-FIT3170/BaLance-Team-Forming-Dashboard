@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import createUnitGroups from './DisplayUnitGroups'
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
 import UnitCard from "../components/UnitCard"
 import "../pages/UnitHomePage.css"
+import { useParams } from 'react-router';
+
 
 // Chakra imports
 import {
@@ -33,40 +35,39 @@ import { Center, Heading } from "@chakra-ui/react"
 import { IoEllipsisHorizontalSharp,IoTrashOutline } from "react-icons/io5";
 import NavBar from "../components/NavBar.jsx"
 
-const units = []
-const eng1003 = {
-	"unitId": "ENG1003",
-  "unitName":"Engineering Mobile Apps",
-	"unitFaculty": "Engineering",
-	"labs": ["001", "002", "003"],
-	"teachers": ["EvanSmith@teacher.monash.edu", "JaneDoe@teacher.monash.edu"]
-}
-const eng1005 = {
-	"unitId": "ENG1005",
-  "unitName":"Engineering Mathematics",
-	"unitFaculty": "Engineering",
-	"labs": ["001", "002", "003"],
-	"teachers": ["EvanSmith@teacher.monash.edu", "JaneDoe@teacher.monash.edu"]
-}
-const eng1001 = {
-	"unitId": "ENG1001",
-  "unitName":"The civil stuff",
-	"unitFaculty": "Engineering",
-	"labs": ["001", "002", "003"],
-	"teachers": ["EvanSmith@teacher.monash.edu", "JaneDoe@teacher.monash.edu"]
-}
-const eng1002 = {
-	"unitId": "ENG1002",
-  "unitName":"The electrical stuff",
-	"unitFaculty": "Engineering",
-	"labs": ["001", "002", "003"],
-	"teachers": ["EvanSmith@teacher.monash.edu", "JaneDoe@teacher.monash.edu"]
-}
-units.push(eng1003)
-units.push(eng1005)
-units.push(eng1001)
-units.push(eng1002)
-
+// const units = []
+// const eng1003 = {
+// 	"unitId": "ENG1003",
+//   "unitName":"Engineering Mobile Apps",
+// 	"unitFaculty": "Engineering",
+// 	"labs": ["001", "002", "003"],
+// 	"teachers": ["EvanSmith@teacher.monash.edu", "JaneDoe@teacher.monash.edu"]
+// }
+// const eng1005 = {
+// 	"unitId": "ENG1005",
+//   "unitName":"Engineering Mathematics",
+// 	"unitFaculty": "Engineering",
+// 	"labs": ["001", "002", "003"],
+// 	"teachers": ["EvanSmith@teacher.monash.edu", "JaneDoe@teacher.monash.edu"]
+// }
+// const eng1001 = {
+// 	"unitId": "ENG1001",
+//   "unitName":"The civil stuff",
+// 	"unitFaculty": "Engineering",
+// 	"labs": ["001", "002", "003"],
+// 	"teachers": ["EvanSmith@teacher.monash.edu", "JaneDoe@teacher.monash.edu"]
+// }
+// const eng1002 = {
+// 	"unitId": "ENG1002",
+//   "unitName":"The electrical stuff",
+// 	"unitFaculty": "Engineering",
+// 	"labs": ["001", "002", "003"],
+// 	"teachers": ["EvanSmith@teacher.monash.edu", "JaneDoe@teacher.monash.edu"]
+// }
+// units.push(eng1003)
+// units.push(eng1005)
+// units.push(eng1001)
+// units.push(eng1002)
 
 
 
@@ -78,7 +79,6 @@ function UnitPage() {
   let iconColor = useColorModeValue("brand.200", "white");
   const {isOpen: isOpenDetails, onOpen: onOpenDetails, onClose: onCloseDetails } = useDisclosure()
   const {isOpen: isOpenAdd, onOpen: onOpenAdd, onClose: onCloseAdd } = useDisclosure()
-  const [unitNameError, setUnitNameError] = useState(false);
 
   // setting up navigation
   const navigate = useNavigate();
@@ -86,6 +86,21 @@ function UnitPage() {
   const handleUnitClick = () => {
     navigate('/groups');
   };
+  const [units, setUnits] = useState([]);
+
+  const [hasError, setHasError] = useState(false)
+
+
+
+  useEffect(() => {
+      fetch("/api/groups/").then(
+          res => res.json().then(
+          res => setUnits(res.units)          
+          )
+      ).catch(err => setHasError(true))
+  }, [])
+
+  console.log(units)
 
   return(
     <div>
