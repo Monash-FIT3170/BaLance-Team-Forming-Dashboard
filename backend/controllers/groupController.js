@@ -295,6 +295,57 @@ const updateGroup = async (req, res) => {
     }
 }
 
+const moveStudent = async (req, res) => {
+
+    const { unitId, studentId } = req.params;
+
+    let previousGroup = req.body.previousGroup;
+    let newGroup = req.body.newGroup;
+
+    let groups = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/groups.json', 'utf8'));
+
+    let student;
+
+    for (let i = 0; i < groups.length; i++){
+        let group = groups[i];
+
+        if (group.groupId == previousGroup){
+            groups.splice(i, 1);
+            let members = group.members;
+
+            for (let j = 0; j < members.length; j++){
+
+                if (members[j].studentId == studentId){
+
+                    student = members[j];
+
+                    group.members.splice(j, 1);
+
+                    groups.push(group);
+                    break;
+                }
+
+            }
+        }
+    }
+
+    for (let i = 0; i < groups.length; i++){
+        let group = groups[i];
+    
+        if (group.groupId == newGroup){
+                
+            groups[i].members.push(student);
+            break;
+
+        }
+    }
+
+    fs.writeFileSync(path.join(__dirname, '../db') + '/groups.json', JSON.stringify(groups));
+
+    res.sendStatus(200)
+
+}
+
 function shuffle(array) {
     let currentIndex = array.length,  randomIndex;
   
@@ -319,5 +370,6 @@ module.exports = {
     addGroup,
     deleteGroup,
     updateGroup,
-    createUnitGroups
+    createUnitGroups,
+    moveStudent
 }

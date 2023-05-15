@@ -12,7 +12,8 @@ const { // import controller functions for route handlers
     addGroup,
     deleteGroup,
     updateGroup,
-    createUnitGroups
+    createUnitGroups,
+    moveStudent
 } = require('../controllers/groupController');
 
 // Api Structure /api/groups/{unitId}/{groupId}
@@ -34,6 +35,8 @@ router.delete('/:unitId/:groupId', deleteGroup);
 
 // update a specific group from a unit
 router.patch('/:unitId/:groupId', updateGroup);
+
+router.patch('/:unitId/move/:studentId/', moveStudent)
 
 // export this router for external use
 module.exports = router;
