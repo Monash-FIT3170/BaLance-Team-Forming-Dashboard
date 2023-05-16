@@ -18,46 +18,32 @@ const getAllStudents = async (req, res) => {
     for (let i = 0; i < groupsData.length; i++){
         
         let group = groupsData[i]
-        let members = group.members;
-        let groupId = group.groupId
-        let groupNumber = group.groupNumber
 
-        for (let j = 0; j < members.length; j++){
+        
 
-            let student = members[j]
-            student.group = {
-                "groupdId": groupId,
-                "groupNumber": groupNumber
+        if (group.unitCode == unitId){
+
+            let members = group.members;
+            let groupId = group.groupId
+            let groupNumber = group.groupNumber
+
+            for (let j = 0; j < members.length; j++){
+
+                let student = members[j]
+                student.group = {
+                    "groupdId": groupId,
+                    "groupNumber": groupNumber
+                }
+
+                students.push(student)
+
             }
-
-            students.push(student)
-
         }
-
 
 
     }
 
     res.status(200).send(students);
-
-    
-
-
-    for(let i = 0; i< studentData.length; i++){
-
-
-        for(let j = 0; j < studentData[i].units.length; j++){
-
-            if(studentData[i].units[j].unitcode == unitId){
-                students.push(studentData[i]);
-            }
-        }
-
-    }
-
-
-    res.status(200).send(students);
-
 
  }
 
