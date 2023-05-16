@@ -228,12 +228,11 @@ function ImportPage() {
 // };
 
    const handleDeleteProfile = (studentEmailAddress) => {
-    const newProfiles = profiles.filter(
-      (profile) => profile.studentEmailAddress !== studentEmailAddress
+    const selectedProfile = profiles.find(
+      (profile) => profile.studentEmailAddress === studentEmailAddress
     );
-    setProfileToDelete(newProfiles);
+    setProfileToDelete(selectedProfile);
     setIsModalOpen(true);
-    setProfiles(newProfiles);
    };
   
   const handleDeleteInactiveProfiles = (profiles) => {
@@ -243,10 +242,16 @@ function ImportPage() {
   };
 
   const handleConfirmDelete = () => {
-    setProfiles(profileToDelete);
-    setProfileToDelete(null);
-    setIsModalOpen(false);
+    if (profileToDelete !== null) {
+      const newProfiles = profiles.filter(
+        (profile) => profile.studentEmailAddress !== profileToDelete.studentEmailAddress
+      );
+      setProfiles(newProfiles);
+      setProfileToDelete(null);
+      setIsModalOpen(false);
+    }
   };
+  
 
   const handleCancelDelete = () => {
     setProfileToDelete(null);
@@ -255,13 +260,16 @@ function ImportPage() {
 
   return (
     <>
-           {profileToDelete && (
+      {profileToDelete !== null && (
         <Modal isOpen={isModalOpen} onClose={handleCancelDelete}>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>Delete Profile</ModalHeader>
             <ModalBody>
-              Are you sure you want to delete these records?
+              <p>Are you sure you want to delete the following profile?</p> <br />
+              <b>Name: </b> <p>{profileToDelete.studentFirstName} {profileToDelete.studentLastName}</p>
+              <b>Email Address: </b> <p> {profileToDelete.studentEmailAddress} </p>
+              <b>WAM: </b> <p>{profileToDelete.wamAverage}</p>
             </ModalBody>
             <ModalFooter>
               <Button colorScheme="red" mr={3} onClick={handleConfirmDelete}>
@@ -272,6 +280,7 @@ function ImportPage() {
           </ModalContent>
         </Modal>
       )}
+
       <Box as="header" p="4" textAlign="center">
         <Text fontSize="2xl" fontWeight="bold">
           Upload Profiles
