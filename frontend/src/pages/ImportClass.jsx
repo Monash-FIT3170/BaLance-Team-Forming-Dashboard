@@ -404,6 +404,18 @@ function ImportPage() {
               <ModalContent>
                 <ModalHeader>Edit Profile</ModalHeader>
                 <ModalBody>
+                <FormControl>
+                    <FormLabel>Student ID</FormLabel>
+                    <Input
+                      value={profileToEdit?.studentId}
+                      onChange={(e) =>
+                        setProfileToEdit({
+                          ...profileToEdit,
+                          studentId: e.target.value,
+                        })
+                      }
+                    />
+                  </FormControl>
                   <FormControl>
                     <FormLabel>First Name</FormLabel>
                     <Input
@@ -443,7 +455,7 @@ function ImportPage() {
                   </FormControl>
                   <FormControl>
                     <FormLabel>WAM</FormLabel>
-                    <Select
+                    <Input
                       placeholder="Select WAM"
                       value={profileToEdit?.wamAverage}
                       onChange={(e) =>
@@ -452,12 +464,7 @@ function ImportPage() {
                           wamAverage: e.target.value,
                         })
                       }
-                    >
-                      <option value="HD">HD</option>
-                      <option value="D">D</option>
-                      <option value="P">P</option>
-                      <option value="N">N</option>
-                    </Select>
+                    />
                   </FormControl>
                   
                   </ModalBody>
