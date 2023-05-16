@@ -456,7 +456,7 @@ function ImportPage() {
                   <FormControl>
                     <FormLabel>WAM</FormLabel>
                     <Input
-                      placeholder="Select WAM"
+                      placeholder="WAM"
                       value={profileToEdit?.wamAverage}
                       onChange={(e) =>
                         setProfileToEdit({
@@ -466,7 +466,35 @@ function ImportPage() {
                       }
                     />
                   </FormControl>
-                  
+                  <FormControl>
+                    <FormLabel>Gender</FormLabel>
+                    <Select
+                      placeholder="Select Gender"
+                      value={profileToEdit?.gender}
+                      onChange={(e) =>
+                        setProfileToEdit({
+                          ...profileToEdit,
+                          gender: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="M">M</option>
+                      <option value="F">F</option>
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Lab ID</FormLabel>
+                    <Input
+                      placeholder="Lab ID"
+                      value={profileToEdit?.labId}
+                      onChange={(e) =>
+                        setProfileToEdit({
+                          ...profileToEdit,
+                          labId: e.target.value,
+                        })
+                      }
+                    />
+                  </FormControl>
                   </ModalBody>
                   <ModalFooter>
                     <Button onClick={() => handleSaveProfile(profileToEdit)} type="submit" colorScheme="green" mr={3}>
