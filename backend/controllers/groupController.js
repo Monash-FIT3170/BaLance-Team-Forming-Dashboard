@@ -52,7 +52,7 @@ const createUnitGroups = async (req, res) => {
 
     let students = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/students.json', 'utf8'));
     let units = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/units.json', 'utf8'));
-    let groups = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/groups.json', 'utf8'));
+    let groups = []; // start with no groups even if there are groups already - we will overwrite them in db
 
     let unit;
     for (let i = 0; i < units.length; i++){
@@ -80,7 +80,8 @@ const createUnitGroups = async (req, res) => {
     }
 
     unitStudents.sort((a, b) => a[1] - b[1]);
-
+    uniStudents = shuffle(unitStudents);
+    
     let createdGroups = [];
     unassignedStudents = [];
 
@@ -115,8 +116,6 @@ const createUnitGroups = async (req, res) => {
         }
     }
 
-    //console.log(unassignedStudents)
-
     for (let i = 0; i < unassignedStudents.length; i++){
         let lab = unassignedStudents[i][1];
         let groupFound = false;
@@ -140,19 +139,17 @@ const createUnitGroups = async (req, res) => {
             }
 
             newGroup.labId = lab;
-            newGroup.members.push(unassignedStudents[i][0])
+            newGroup.members.push(unassignedStudents[i][0]);
             createdGroups.push(newGroup);
         }
     }
 
     for (let i = 0; i < createdGroups.length; i++){
-        unit.groups.push(createdGroups[i].groupId)
+        unit.groups.push(createdGroups[i].groupId);
     }
 
     units.push(unit);
-    groups = groups.concat(createdGroups)
-
-    console.log(groups)
+    groups = groups.concat(createdGroups);
 
     fs.writeFileSync(path.join(__dirname, '../db') + '/groups.json', JSON.stringify(groups));
     fs.writeFileSync(path.join(__dirname, '../db') + '/units.json', JSON.stringify(units));
@@ -296,7 +293,8 @@ const updateGroup = async (req, res) => {
 }
 
 function shuffle(array) {
-    let currentIndex = array.length,  randomIndex;
+    // Fisher-Yates shuffle algorithm from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+    let currentIndex = array.length, randomIndex;
   
     // While there remain elements to shuffle.
     while (currentIndex != 0) {
