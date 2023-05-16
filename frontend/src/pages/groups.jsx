@@ -27,7 +27,6 @@ function Groups() {
   }, [])
 
 
-  //console.log(state);
   return (
     <div>
       <Heading alignContent={"center"}>

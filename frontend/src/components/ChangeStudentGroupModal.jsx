@@ -18,11 +18,11 @@ export default function ChangeStudentGroupModal(props) {
         });
     }
     
-    // generating the group options
-    //for (i=0; i<)
-
-    console.log(props);
-
+    // generating the group options (instead of the list of options in the Select element, replace it with {options})
+    /* let options = "";
+    for (i=0; i<NUM_GROUPS_IN_LAB; i++) {
+        options += `<option>${groups[i].className}, group ${groups[i].groupNum}<option>`
+    } */
 
     return (
         <>
