@@ -8,6 +8,10 @@ const fs = require('fs');
 const path = require('path')
 const { UUID } = require('sequelize');
 
+const defaultGroupSize = 3;
+const defaultVariance = 1;
+const defaultStrategy = "random";
+
 // get all groups from a unit
 const getAllGroups = async (req, res) => {
     let { unitId } = req.params;
@@ -49,6 +53,10 @@ const createUnitGroups = async (req, res) => {
     let groupSize = req.body.groupSize;
     let strategy = req.body.strategy;
     let variance = req.body.variance;
+
+    if (groupSize == null) {groupSize = defaultGroupSize;}
+    if (strategy == null) {strategy = defaultStrategy;}
+    if (variance == null) {variance = defaultVariance;}
 
     let students = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/students.json', 'utf8'));
     let units = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/units.json', 'utf8'));
@@ -145,7 +153,7 @@ const createUnitGroups = async (req, res) => {
     }
 
     for (let i = 0; i < createdGroups.length; i++){
-        unit.groups.push(createdGroups[i].groupId);
+        unit.groups.push(createdGroups[i]);
     }
 
     units.push(unit);
