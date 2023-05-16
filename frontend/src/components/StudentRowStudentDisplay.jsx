@@ -1,10 +1,10 @@
-import {Table, Tr, Td, HStack, Select} from "@chakra-ui/react";
+import {Tr, Td, HStack, Select} from "@chakra-ui/react";
 import { CloseIcon } from '@chakra-ui/icons'
 
 const StudentRow2=(props)=> {
     /*HTML component for each student in each group in the 'List Students' View*/
     // desctructure the content of props
-    const {studentFirstName, studentEmail,labId,groupNumber} = props.props
+    const {studentFirstName, studentEmail,labId, groupNumber} = props.props
 
     return (
         <Tr>

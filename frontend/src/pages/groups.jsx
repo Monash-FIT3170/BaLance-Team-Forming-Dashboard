@@ -3,7 +3,6 @@ import { useParams } from 'react-router';
 import React, { useState, useEffect} from "react";
 import { Button, ButtonGroup, HStack, Spacer, Container, Heading, Center, Icon } from "@chakra-ui/react"
 import { MdFilterAlt } from 'react-icons/md'
-import NavBar from "../components/NavBar";
 import { Link, useNavigate } from "react-router-dom";
 
 function Groups() {
@@ -28,7 +27,7 @@ function Groups() {
   }, [])
 
 
-
+  //console.log(state);
   return (
     <div>
       <Heading alignContent={"center"}>
