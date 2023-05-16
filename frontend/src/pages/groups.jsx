@@ -14,17 +14,32 @@ function Groups() {
     navigate('/uploadStudents');
   };
 
+
   const [state, setState] = useState([])
+  const [allGroups, setAllGroups] = useState([])
   const [hasError, setHasError] = useState(false)
 
 
   useEffect(() => {
+    const summary = [];
+
       fetch("http://localhost:8080/api/groups/" + unitID).then(
           res => res.json().then(
-            res => setState(res)
+            function (res){
+              setState(res);
+
+
+              for(let i = 0; i < res.length; i++){
+                summary.push({number : res[i].groupNumber, id: res[i].groupId});
+              }
+
+              setAllGroups(summary);
+
+            }
           )
       ).catch(err => setHasError(true))
   }, [])
+
 
 
   return (
@@ -66,7 +81,7 @@ function Groups() {
 
       <Container className="groups" maxW="80vw">
         {state.map((group) => (
-          <GroupCard props={group} key={group.id} />
+          <GroupCard props={group} key={group.id} allIds = {allGroups} />
         ))}
       </Container>
     </div>

@@ -4,11 +4,13 @@ import { Button, HStack, Modal, ModalBody, ModalCloseButton, ModalContent, Modal
 
 export default function ChangeStudentGroupModal(props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { studentInfo, classNum, groupNum } = props;
+    const { studentInfo, classNum, groupNum, allIds, groupId} = props;
     const [changeGroupObj, setChangeGroupObj] = useState(
         {initialGroup: null,
         newGroup: groupNum}
     );
+
+
 
     const handleConfirmClick = () => {
         console.log({

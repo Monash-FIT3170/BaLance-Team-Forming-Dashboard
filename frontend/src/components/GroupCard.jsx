@@ -13,7 +13,11 @@ import StudentRow from './StudentRowGroupDisplay'
 
 const GroupCard = (props) => {
 
-    const { labId, groupId, groupNumber, members } = props.props
+    const { labId, groupId, groupNumber, members} = props.props
+    const {allIds} = props;
+
+
+
 
     return (
         <Card border="1px" margin="20px">
@@ -39,7 +43,7 @@ const GroupCard = (props) => {
                         </Thead>
                         <Tbody>
                             {members.map(student => (
-                                <StudentRow studentInfo={student} classNum={labId} groupNum={groupNumber} key={student._id} />
+                                <StudentRow studentInfo={student} classNum={labId} groupNum={groupNumber} key={student._id} groupId = {groupId} allIds = {allIds} />
                             ))}
                         </Tbody>
                     </Table>

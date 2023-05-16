@@ -6,7 +6,8 @@ import ChangeStudentGroupModal from "./ChangeStudentGroupModal"
 function StudentRow(props) {
     /*HTML component for each student in each group in the 'View Groups' View*/
     // desctructure the content of props 
-    const { studentInfo, classNum, groupNum, key } = props;
+    const { studentInfo, classNum, groupNum, key, allIds, groupId } = props;
+
 
     return (
         <Tr>
@@ -14,7 +15,7 @@ function StudentRow(props) {
                 <HStack>
                     <button><CloseIcon /></button>
                     <Spacer />
-                    <ChangeStudentGroupModal studentInfo={studentInfo} classNum={classNum} groupNum={groupNum}/>
+                    <ChangeStudentGroupModal studentInfo={studentInfo} classNum={classNum} groupNum={groupNum} groupId = {groupId} allIds = {allIds}/>
                 </HStack>
             </Td>
             <Td>{studentInfo.studentFirstName}</Td>
