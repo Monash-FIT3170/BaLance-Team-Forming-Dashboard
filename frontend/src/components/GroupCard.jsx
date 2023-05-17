@@ -13,7 +13,7 @@ import StudentRow from './StudentRowGroupDisplay'
 
 const GroupCard = (props) => {
 
-    const { labId, groupId, groupNumber, members} = props.props
+    const { labId, groupId, groupNumber, members} = props.props;
     const {allIds} = props;
 
 

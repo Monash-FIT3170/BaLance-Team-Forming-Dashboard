@@ -8,11 +8,6 @@ const StudentRow2=(props)=> {
 
     return (
         <Tr>
-            <Td>
-                <HStack>
-                    <button><CloseIcon /></button>
-                </HStack>
-            </Td>
             <Td>{studentFirstName}</Td>
             <Td>{studentEmail}</Td>
             <Td>{labId}</Td>

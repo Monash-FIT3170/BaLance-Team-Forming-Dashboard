@@ -41,7 +41,6 @@ function Groups() {
   }, [])
 
 
-
   return (
     <div>
       <Heading alignContent={"center"}>

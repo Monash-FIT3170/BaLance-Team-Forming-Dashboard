@@ -13,8 +13,6 @@ function StudentRow(props) {
         <Tr>
             <Td>
                 <HStack>
-                    <button><CloseIcon /></button>
-                    <Spacer />
                     <ChangeStudentGroupModal studentInfo={studentInfo} classNum={classNum} groupNum={groupNum} groupId = {groupId} allIds = {allIds}/>
                 </HStack>
             </Td>

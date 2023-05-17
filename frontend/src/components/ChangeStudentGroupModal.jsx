@@ -4,27 +4,31 @@ import { Button, HStack, Modal, ModalBody, ModalCloseButton, ModalContent, Modal
 
 export default function ChangeStudentGroupModal(props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { studentInfo, classNum, groupNum, allIds, groupId} = props;
+    const { studentInfo, classNum, groupNum, allIds, groupId } = props;
     const [changeGroupObj, setChangeGroupObj] = useState(
-        {initialGroup: null,
-        newGroup: groupNum}
+        {
+            initialGroupId: null,
+            newGroupId: groupId
+        }
     );
 
+    let options = [];
 
+    for (let i = 0; i < allIds.length; i++) {
+        if (allIds[i].number !== groupNum) { 
+            options.push({label: `Group ${allIds[i].number}`, value: `${allIds[i].id}`});
+        }
+    }
 
     const handleConfirmClick = () => {
+        onClose();
         console.log({
-            student: studentInfo, 
-            initialGroup: changeGroupObj.initialGroup,
-            newGroup: changeGroupObj.newGroup
+            student: studentInfo,
+            initialGroupId: changeGroupObj.initialGroupId,
+            newGroupId: changeGroupObj.newGroupId
         });
     }
-    
-    // generating the group options (instead of the list of options in the Select element, replace it with {options})
-    /* let options = "";
-    for (i=0; i<NUM_GROUPS_IN_LAB; i++) {
-        options += `<option>${groups[i].className}, group ${groups[i].groupNum}<option>`
-    } */
+
 
     return (
         <>
@@ -39,15 +43,18 @@ export default function ChangeStudentGroupModal(props) {
                     <ModalCloseButton />
                     <ModalBody>
                         <Text margin="0px 0px 2vh 0px">
-                            {"Change " + studentInfo.studentFirstName + "'s group from Lab " + classNum + ", Group " + groupNum + " to: "}
+                            {"Change " + studentInfo.studentFirstName + "'s group from Group " + groupNum + " to: "}
                         </Text>
-                        <Select bg="white" onChange={(event) => setChangeGroupObj({initialGroup: changeGroupObj.newGroup, newGroup: event.target.value})}>
-                            <option id='option1' value='option1'>{"Lab " + classNum + ", Group 1"}</option>
-                            <option id='option2' value='option2'>{"Lab " + classNum + ", Group 2"}</option>
-                            <option id='option3' value='option3'>{"Lab " + classNum + ", Group 3"}</option>
-                            <option id='option4' value='option4'>{"Lab " + classNum + ", Group 4"}</option>
-                            <option id='option5' value='option5'>{"Lab " + classNum + ", Group 5"}</option>
-                            <option id='option6' value='option6'>{"Lab " + classNum + ", Group 6"}</option>
+                        <Select 
+                            bg="white" 
+                            onChange={(event) => setChangeGroupObj({ initialGroupId: `${changeGroupObj.newGroupId}`, newGroupId: event.target.value })} 
+                            placeholder={`Group ${groupNum}`} 
+                        >
+                            {options?.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
                         </Select>
                     </ModalBody>
 
@@ -64,5 +71,5 @@ export default function ChangeStudentGroupModal(props) {
             </Modal>
         </>
     )
-    
+
 }

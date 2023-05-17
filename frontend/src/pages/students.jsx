@@ -60,7 +60,6 @@ function Students() {
                 <Table variant='striped' width="80vw">
                     <Thead>
                         <Tr>
-                            <Th></Th>
                             <Th>Name</Th>
                             <Th>Email Address</Th>
                             <Th>Class Number</Th>
