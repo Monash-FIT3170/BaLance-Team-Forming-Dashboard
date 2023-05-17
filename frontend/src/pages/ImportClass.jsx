@@ -169,24 +169,26 @@ function ImportPage() {
     }
   };
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [wam, setWam] = useState("");
-  const [status, setStatus] = useState("");
-  const [role, setRole] = useState("");
+  const [studentId, setStudentId] = useState("");
+  const [studentFirstName, setStudentFirstName] = useState("");
+  const [studentLastName, setStudentLastName] = useState("");
+  const [studentEmailAddress, setStudentEmailAddress] = useState("");
+  const [wamAverage, setWamAverage] = useState("");
+  const [gender, setGender] = useState("");
+  const [labId, setLabId] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newProfile = { firstName, lastName, emailAddress: email, wam, status, role };
+    const newProfile = { studentId, studentFirstName, studentLastName, studentEmailAddress, wamAverage, gender, labId };
     setProfiles([...profiles, newProfile]);
     setShowAddProfileForm(false);
-    setFirstName("");
-    setLastName("");
-    setEmail("");
-    setWam("");
-    setStatus("");
-    setRole("");
+    setStudentId("");
+    setStudentFirstName("");
+    setStudentLastName("");
+    setStudentEmailAddress("");
+    setWamAverage("");
+    setGender("");
+    setLabId("");
   };
 
 
@@ -579,40 +581,36 @@ function ImportPage() {
             </Flex>
             <Divider my={4} />
             <Box as="form" onSubmit={handleSubmit} onCancel={() => setShowAddProfileForm(false)}>
+            <FormControl mb={4}>
+                <FormLabel>Student ID</FormLabel>
+                <Input placeholder="Enter Student ID" value={studentId} onChange={e => setStudentId(e.target.value)} />
+              </FormControl>
               <FormControl mb={4}>
                 <FormLabel>First Name</FormLabel>
-                <Input placeholder="Enter first name" value={firstName} onChange={e => setFirstName(e.target.value)} />
+                <Input placeholder="Enter first name" value={studentFirstName} onChange={e => setStudentFirstName(e.target.value)} />
               </FormControl>
               <FormControl mb={4}>
                 <FormLabel>Last Name</FormLabel>
-                <Input placeholder="Enter last name" value={lastName} onChange={e => setLastName(e.target.value)} />
+                <Input placeholder="Enter last name" value={studentLastName} onChange={e => setStudentLastName(e.target.value)} />
               </FormControl>
               <FormControl mb={4}>
                 <FormLabel>Email</FormLabel>
-                <Input type="email" placeholder="Enter email" value={email} onChange={e => setEmail(e.target.value)} />
+                <Input type="email" placeholder="Enter email" value={studentEmailAddress} onChange={e => setStudentEmailAddress(e.target.value)} />
               </FormControl>
               <FormControl mb={4}>
                 <FormLabel>WAM</FormLabel>
-                <Select placeholder="Select WAM" value={wam} onChange={e => setWam(e.target.value)}>
-                  <option value="HD">HD</option>
-                  <option value="D">D</option>
-                  <option value="P">P</option>
-                  <option value="N">N</option>
+                <Input placeholder="Enter WAM" value={wamAverage} onChange={e => setWamAverage(e.target.value)} />
+              </FormControl>
+              <FormControl mb={4}>
+                <FormLabel>Gender</FormLabel>
+                <Select placeholder="Select gender" value={gender} onChange={e => setGender(e.target.value)} >
+                  <option value="M">M</option>
+                  <option value="F">F</option>
                 </Select>
               </FormControl>
               <FormControl mb={4}>
-                <FormLabel>Status</FormLabel>
-                <Select placeholder="Select Status" value={status} onChange={e => setStatus(e.target.value)}>
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-                </Select>
-              </FormControl>
-              <FormControl mb={4}>
-                <FormLabel>Role</FormLabel>
-                <Select placeholder="Select Role" value={role} onChange={e => setRole(e.target.value)}>
-                <option value="Student">Student</option>
-                <option value="Inactive">Teacher</option>
-                </Select>
+                <FormLabel>Lab ID</FormLabel>
+                <Input placeholder="Enter Lab ID" value={labId} onChange={e => setLabId(e.target.value)} />
               </FormControl>
               <Button type="submit" colorScheme="blue" mr={3}>Save</Button>
               <Button onClick={() => setShowAddProfileForm(false)}>Cancel</Button>
