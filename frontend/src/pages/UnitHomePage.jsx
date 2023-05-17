@@ -35,40 +35,6 @@ import { Center, Heading } from "@chakra-ui/react"
 import { IoEllipsisHorizontalSharp,IoTrashOutline } from "react-icons/io5";
 import NavBar from "../components/NavBar.jsx"
 
-// const units = []
-// const eng1003 = {
-// 	"unitId": "ENG1003",
-//   "unitName":"Engineering Mobile Apps",
-// 	"unitFaculty": "Engineering",
-// 	"labs": ["001", "002", "003"],
-// 	"teachers": ["EvanSmith@teacher.monash.edu", "JaneDoe@teacher.monash.edu"]
-// }
-// const eng1005 = {
-// 	"unitId": "ENG1005",
-//   "unitName":"Engineering Mathematics",
-// 	"unitFaculty": "Engineering",
-// 	"labs": ["001", "002", "003"],
-// 	"teachers": ["EvanSmith@teacher.monash.edu", "JaneDoe@teacher.monash.edu"]
-// }
-// const eng1001 = {
-// 	"unitId": "ENG1001",
-//   "unitName":"The civil stuff",
-// 	"unitFaculty": "Engineering",
-// 	"labs": ["001", "002", "003"],
-// 	"teachers": ["EvanSmith@teacher.monash.edu", "JaneDoe@teacher.monash.edu"]
-// }
-// const eng1002 = {
-// 	"unitId": "ENG1002",
-//   "unitName":"The electrical stuff",
-// 	"unitFaculty": "Engineering",
-// 	"labs": ["001", "002", "003"],
-// 	"teachers": ["EvanSmith@teacher.monash.edu", "JaneDoe@teacher.monash.edu"]
-// }
-// units.push(eng1003)
-// units.push(eng1005)
-// units.push(eng1001)
-// units.push(eng1002)
-
 
 
 function UnitPage() {
@@ -148,15 +114,17 @@ function UnitPage() {
                       <Input mb='5'/>                     
                       <FormLabel>Unit Name</FormLabel>
                       <Input mb='5'/>                     
-                      <FormLabel>Students Per Team</FormLabel>
-                        <Select placeholder="Select an option"
-                          placeholderStyles={{ fontStyle: "italic" }}
-                          placeholderTextColor="gray.500"
-                          width='50%'>
-                          <option value="1">2</option>
-                          <option value="1">3</option>
-                          <option value="1">4</option>
-                        </Select>                      
+                      <FormLabel>offering</FormLabel>
+                      
+                      <Flex direction="row" spacing={4}>
+                        <Input placeholder = 'year' mb='5'/>     
+                        
+                        <Select placeholder="Semester">
+                          <option value="option1">Option 1</option>
+                          <option value="option2">Option 2</option>
+                          <option value="option3">Option 3</option>
+                        </Select> 
+                      </Flex>         
                     </FormControl>
                   </form>
                 </ModalBody>
