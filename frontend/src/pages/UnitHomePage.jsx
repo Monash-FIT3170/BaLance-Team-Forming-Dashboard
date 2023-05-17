@@ -56,13 +56,47 @@ function UnitPage() {
 
   const [hasError, setHasError] = useState(false)
 
+  const[unitCode, setUnitCode] = useState('')
+
+  const[unitName, setUnitName] = useState('')
+
+  const[unitYearOffering, setUnitYearOffering] = useState('')
+
+  const[unitSemesterOffering, setUnitSemesterOffering] = useState('')
+
+  const handleSubmitUnit = (event)=>{
+    event.preventDefault();
+
+    const unitObject = {
+      "unitCode":unitCode,
+      "unitFaculty":unitName,
+      "labs":[],
+      "groups":[],
+      "students":[],
+      "teachers":[]
+    }
+    try {
+      const response = fetch("http://localhost:8080/api/units/",{
+        method:'POST',
+        body:JSON.stringify(unitObject)
+      }
+    )}
+
+      catch(err) {
+        setHasError(true);
+        console.error("Error fetching units:", err);
+      };
+
+  }
+
+
 
 
   useEffect(() => {
     fetch("http://localhost:8080/api/units/")
       .then((res) => res.json())
       .then((data) => {
-        setUnits(data); // Assuming the JSON response is an array of units
+        setUnits(data);
       })
       .catch((err) => {
         setHasError(true);
@@ -109,20 +143,28 @@ function UnitPage() {
                       }           
                   }}>
                     <br></br>
-                    <FormControl isRequired>
+                    <FormControl isRequired onSubmit={handleSubmitUnit}>
                       <FormLabel>Unit Code </FormLabel>
-                      <Input mb='5'/>                     
+                      <Input mb='5'
+                      value = {unitCode}
+                      onChange = {(event) => setUnitCode(event.target.value)}/>                     
                       <FormLabel>Unit Name</FormLabel>
-                      <Input mb='5'/>                     
+                      <Input mb='5'
+                      value = {unitName}
+                      onChange = {(event) => setUnitName(event.target.value)}/>                     
                       <FormLabel>offering</FormLabel>
                       
                       <Flex direction="row" spacing={4}>
-                        <Input placeholder = 'year' mb='5'/>     
+                        <Input placeholder = 'year' mb='5'
+                         value = {unitYearOffering}
+                         onChange = {(event) => setUnitYearOffering(event.target.value)}/>     
                         
-                        <Select placeholder="Semester">
-                          <option value="option1">Option 1</option>
-                          <option value="option2">Option 2</option>
-                          <option value="option3">Option 3</option>
+                        <Select placeholder="Semester"
+                         value = {unitSemesterOffering}
+                         onChange = {(event) => setUnitSemesterOffering(event.target.value)}>
+                          <option value="option1">Semester 1</option>
+                          <option value="option2">Semester 2</option>
+                          <option value="option3">Full-Year</option>
                         </Select> 
                       </Flex>         
                     </FormControl>
