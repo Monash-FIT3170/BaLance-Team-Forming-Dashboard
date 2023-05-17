@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
+import { FiUploadCloud } from "react-icons/fi";
 
 import { 
   Box,
@@ -33,6 +34,8 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
+  Icon,
+  InputGroup
 } from "@chakra-ui/react";
 import {
   AddIcon,
@@ -56,6 +59,7 @@ const customTheme = extendTheme({
 
 function ImportPage() {
 
+  const [isFileChosen, setIsFileChosen] = useState(false);
   const [csvData, setCsvData] = useState("");
   const [csvFile, setCsvFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
@@ -297,7 +301,6 @@ function ImportPage() {
         <Box
           width="50%"
           height="175px"
-          border="2px dashed black"
           borderRadius="md"
           display="flex"
           flexDirection="column"
@@ -314,33 +317,46 @@ function ImportPage() {
             Drag and Drop CSV file here
           </Text>
           <Box
-            bg="white"
+            bg={isFileChosen ? "#00ADB5" : "white"}
             borderRadius="md"
             width="80%"
             p={4}
             mb={4}
             fontWeight="bold"
+            display="flex"
+            justifyContent="center" // Center the content horizontally
+            alignItems="center" // Center the content vertically
+            border="2px dashed #00ADB5"
+            color="#00ADB5"
+            transition="color 0.3s ease"
+            _hover={{ color: "#fff", bg: "#00ADB5", cursor: "pointer" }}
+            _focus={{ outline: "none" }}
+            cursor="pointer"
           >
             {csvFile ? (
-              <Text>No file chosen: {csvFile.name}</Text>
+              <Text color="white">File: {csvFile.name}</Text>
             ) : (
-              <>
-                <input
-                  type="file"
-                  onChange={handleUpload}
-                />
-              </>
+              <Flex  justifyContent="center" mx="auto">
+                  <Icon as={FiUploadCloud} boxSize={6} mr={2} />
+                  <Text> Upload </Text>
+                  <Input
+                    text="Click to Upload"
+                    textColor="white"
+                    type="file"
+                    onChange={(e) => {
+                      handleUpload(e);
+                      setIsFileChosen(true);
+                    }}
+                    opacity={0}
+                    width="100%"
+                    height="100%"
+                    left={0}
+                    top={0}
+                    cursor="pointer"
+                  />
+            </Flex>
             )}
           </Box>
-          {errorMessage && (
-            <Alert status="error" mb={4}>
-              <AlertIcon />
-              <Box flex="1">
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>{errorMessage}</AlertDescription>
-              </Box>
-            </Alert>
-          )}
         </Box>
         <Box
           width="80%"
