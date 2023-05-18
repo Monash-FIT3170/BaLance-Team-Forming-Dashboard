@@ -18,6 +18,7 @@ const getAllGroups = async (req, res) => {
     }).map((group) => { // remove unwanted attributes from group data
         return {
             groupId: group["groupId"],
+            labId: group["labId"],
             groupNumber: group["groupNumber"],
             members: group["members"]
         }
