@@ -1,6 +1,7 @@
 import { DragHandleIcon } from "@chakra-ui/icons"
 import { useState } from 'react';
 import { useParams } from 'react-router';
+import { useNavigate } from "react-router-dom";
 import { Button, HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Spacer, Text, useDisclosure } from "@chakra-ui/react"
 
 export default function ChangeStudentGroupModal(props) {
@@ -23,7 +24,9 @@ export default function ChangeStudentGroupModal(props) {
     }
 
     const handleConfirmClick = () => {
+        
         onClose();
+        
         console.log({
             student: studentInfo,
             initialGroupId: changeGroupObj.initialGroupId,
@@ -39,7 +42,10 @@ export default function ChangeStudentGroupModal(props) {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
             },
-            })
+            });
+        
+        
+            window.location.reload();
     }
 
 
