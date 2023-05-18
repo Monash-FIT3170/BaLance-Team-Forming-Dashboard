@@ -310,7 +310,6 @@ const moveStudent = async (req, res) => {
         let group = groups[i];
 
         if (group.groupId == previousGroup){
-            groups.splice(i, 1);
             let members = group.members;
 
             for (let j = 0; j < members.length; j++){
@@ -321,13 +320,14 @@ const moveStudent = async (req, res) => {
 
                     group.members.splice(j, 1);
 
-                    groups.push(group);
+                    groups[i] = group ;
                     break;
                 }
 
             }
         }
     }
+
 
     for (let i = 0; i < groups.length; i++){
         let group = groups[i];
@@ -339,6 +339,7 @@ const moveStudent = async (req, res) => {
 
         }
     }
+
 
     fs.writeFileSync(path.join(__dirname, '../db') + '/groups.json', JSON.stringify(groups));
 

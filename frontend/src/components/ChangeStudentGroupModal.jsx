@@ -1,8 +1,10 @@
 import { DragHandleIcon } from "@chakra-ui/icons"
 import { useState } from 'react';
+import { useParams } from 'react-router';
 import { Button, HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Spacer, Text, useDisclosure } from "@chakra-ui/react"
 
 export default function ChangeStudentGroupModal(props) {
+    const {unitID}  = useParams();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { studentInfo, classNum, groupNum, allIds, groupId } = props;
     const [changeGroupObj, setChangeGroupObj] = useState(
@@ -27,6 +29,17 @@ export default function ChangeStudentGroupModal(props) {
             initialGroupId: changeGroupObj.initialGroupId,
             newGroupId: changeGroupObj.newGroupId
         });
+
+        fetch('http://localhost:8080/api/groups/'+ unitID +'/move/'+ studentInfo.studentId +'/', {
+            method: 'PATCH',
+            body: JSON.stringify({
+                previousGroup: changeGroupObj.initialGroupId,
+                newGroup: changeGroupObj.newGroupId,
+            }),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+            })
     }
 
 
