@@ -28,9 +28,8 @@ function Groups() {
             function (res){
               setState(res);
 
-
               for(let i = 0; i < res.length; i++){
-                summary.push({number : res[i].groupNumber, id: res[i].groupId});
+                summary.push({labId : res[i].labId, groupNumber : res[i].groupNumber, groupId: res[i].groupId});
               }
 
               setAllGroups(summary);

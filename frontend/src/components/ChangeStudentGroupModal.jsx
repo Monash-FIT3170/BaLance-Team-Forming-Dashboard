@@ -15,11 +15,12 @@ export default function ChangeStudentGroupModal(props) {
         }
     );
 
+    console.log(allIds);
     let options = [];
 
     for (let i = 0; i < allIds.length; i++) {
-        if (allIds[i].number !== groupNum) { 
-            options.push({label: `Group ${allIds[i].number}`, value: `${allIds[i].id}`});
+        if (classNum === allIds[i].labId && allIds[i].groupNumber !== groupNum) { 
+            options.push({label: `Group ${allIds[i].groupNumber}`, value: `${allIds[i].groupId}`});
         }
     }
 

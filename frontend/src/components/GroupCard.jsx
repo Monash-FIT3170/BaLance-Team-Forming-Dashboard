@@ -16,9 +16,6 @@ const GroupCard = (props) => {
     const { labId, groupId, groupNumber, members} = props.props;
     const {allIds} = props;
 
-
-
-
     return (
         <Card border="1px" margin="20px">
             <CardHeader>
