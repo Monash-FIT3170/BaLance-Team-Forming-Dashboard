@@ -4,13 +4,13 @@ import { CloseIcon } from '@chakra-ui/icons'
 const StudentRow2=(props)=> {
     /*HTML component for each student in each group in the 'List Students' View*/
     // desctructure the content of props
-    const {studentFirstName, studentEmail,labId, groupNumber} = props.props
+    const {studentFirstName, studentEmail, group} = props.props
 
     return (
         <Tr>
             <Td>{studentFirstName}</Td>
             <Td>{studentEmail}</Td>
-            <Td>{labId}</Td>
+            <Td>{group.labId}</Td>
             <Td>
             <Select bg="white"> 
                 <option value='option1'>Group 1</option>

@@ -32,7 +32,8 @@ const getAllStudents = async (req, res) => {
                 let student = members[j]
                 student.group = {
                     "groupdId": groupId,
-                    "groupNumber": groupNumber
+                    "groupNumber": groupNumber,
+                    "labId": group.labId
                 }
 
                 students.push(student)
