@@ -65,8 +65,10 @@ function ImportPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [showAddProfileForm, setShowAddProfileForm] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isConfirmationClearOpen, setIsConfirmationClearOpen] = useState(false);
+  
 // Define state for the current sort order and column
-  // Define state for the current sort order and column
+// Define state for the current sort order and column
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
   const [profileToDelete, setProfileToDelete] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -264,6 +266,20 @@ function ImportPage() {
     setIsModalOpen(false);
   };
 
+  const handleClearSelection = () => {
+    setIsConfirmationClearOpen(true);
+  };
+
+  const handleConfirmClearSelection = () => {
+    setCsvFile(null); // Reset the file selection
+    setProfiles([]); // Clear the table data
+    setIsFileChosen(false); // Reset the file chosen state
+  };
+
+  const handleCloseConfirmation = () => {
+    setIsConfirmationClearOpen(false);
+  };
+
   return (
     <>
       {profileToDelete !== null && (
@@ -326,6 +342,7 @@ function ImportPage() {
             mb={4}
             fontWeight="bold"
             display="flex"
+            flexDirection="column"
             justifyContent="center" // Center the content horizontally
             alignItems="center" // Center the content vertically
             border="2px dashed #00ADB5"
@@ -336,13 +353,17 @@ function ImportPage() {
             cursor="pointer"
           >
             {csvFile ? (
-              <Text color="white">File: {csvFile.name}</Text>
+               <>
+               <Text color="white" mb={2}>File: {csvFile.name} </Text>
+                <Button mb={2} colorScheme="red" onClick={handleClearSelection}>
+                  Clear Selection
+                </Button>
+              </>
             ) : (
               <Flex  justifyContent="center" mx="auto">
                   <Icon as={FiUploadCloud} boxSize={6} mr={2} />
                   <Text> Upload </Text>
                   <Input
-                    text="Click to Upload"
                     textColor="white"
                     type="file"
                     onChange={(e) => {
@@ -359,6 +380,24 @@ function ImportPage() {
             </Flex>
             )}
           </Box>
+          <Modal isOpen={isConfirmationClearOpen} onClose={handleCloseConfirmation}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Confirm Clear Selection</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                Are you sure you want to clear the selection?
+              </ModalBody>
+              <ModalFooter>
+                <Button colorScheme="red" onClick={handleConfirmClearSelection}>
+                  Clear Selection
+                </Button>
+                <Button variant="ghost" onClick={handleCloseConfirmation}>
+                  Cancel
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
         </Box>
         <Box
           width="80%"
