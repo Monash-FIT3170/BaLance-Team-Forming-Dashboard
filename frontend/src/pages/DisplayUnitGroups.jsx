@@ -3,7 +3,6 @@ import { MdFilterList } from 'react-icons/md'
 import {
     Card, CardBody, CardHeader, Table, Icon, Thead,Tbody,Tr,Th,Td,TableContainer, SimpleGrid, Heading, Center, Spacer, HStack, Button
 } from "@chakra-ui/react"
-import NavBar from "../components/NavBar.jsx"
 
 function createUnitGroups() {
 

@@ -1,5 +1,21 @@
 import React from "react";
-import { Stack, Button, ButtonGroup, Table, Tr, Th, Thead, Tbody, HStack, Spacer, Center, Heading, TagLeftIcon, Icon } from "@chakra-ui/react"
+import {
+    Stack,
+    Button,
+    ButtonGroup,
+    Table,
+    Tr,
+    Th,
+    Thead,
+    Tbody,
+    HStack,
+    Spacer,
+    Center,
+    Heading,
+    TagLeftIcon,
+    Icon,
+    Flex, Box
+} from "@chakra-ui/react"
 import { MdFilterAlt } from 'react-icons/md'
 import StudentRow2 from "../components/StudentRowStudentDisplay";
 import NavBar from "../components/NavBar";
@@ -78,32 +94,16 @@ function Students() {
                 <Center margin="10">{"FIT3170 - Software Engineering Practice (S1, 2023)"}</Center>
             </Heading>
 
-            <HStack margin="0px 0px 5vh 0px">
-
-                <Spacer /><Spacer /><Spacer /><Spacer /><Spacer /><Spacer /><Spacer /><Spacer /><Spacer />
-
-                <HStack m="40px">
-                    <Spacer />
-                    <ButtonGroup colorScheme='#282c34' variant='outline' size='lg'>
+            <HStack spacing={0} margin="0px 0px 5vh 0px">
+                {/*<Box margin="0 10px"/>*/}
+                <Flex flex={1} justify="center">
+                    <ButtonGroup colorScheme='#282c34' variant='outline' size='md' spacing={0} p={0}>
                         <Link to='/groups'>
-                            <Button margin="0px 2px">Groups</Button>
+                            <Button margin="0px 2px" width={100}>Groups</Button>
                         </Link>
-                        <Button margin="0px 2px" isDisabled={true}>Students</Button>
+                        <Button margin="0px 2px" isDisabled={true} width={100}>Students</Button>
                     </ButtonGroup>
-                    <Spacer />
-                </HStack>
-
-                <Spacer /><Spacer /><Spacer /><Spacer /><Spacer /><Spacer />
-
-                <HStack >
-                    <Spacer />
-                    <Button colorScheme='gray' >
-                        Filter Properties<Icon margin="0px 0px 0px 10px" as={MdFilterAlt}></Icon>
-                    </Button>
-                </HStack>
-
-                <Spacer />
-
+                </Flex>
             </HStack>
 
             <Center>
@@ -127,6 +127,6 @@ function Students() {
 
         </div>
     );
-};
+}
 
 export default Students;

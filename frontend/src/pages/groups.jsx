@@ -1,9 +1,26 @@
 import GroupCard from "../components/GroupCard";
 import React from "react";
-import { Button, ButtonGroup, HStack, Spacer, Container, Heading, Center, Icon, useDisclosure, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, AlertDialogCloseButton, } from "@chakra-ui/react"
+import {
+  Button,
+  ButtonGroup,
+  HStack,
+  Spacer,
+  Container,
+  Heading,
+  Center,
+  Icon,
+  useDisclosure,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  AlertDialogCloseButton,
+  Flex, Box,
+} from "@chakra-ui/react"
 import { MdFilterAlt } from 'react-icons/md'
 import {BiShuffle} from 'react-icons/bi'
-import NavBar from "../components/NavBar";
 import { Link, useNavigate } from "react-router-dom";
 
 const unitID = 'FIT2099_CL_S1_ON-CAMPUS';
@@ -137,67 +154,58 @@ function Groups() {
         <Center margin="10">{"FIT3170 - Software Engineering Practice (S1, 2023)"}</Center>
       </Heading>
 
-      <HStack margin="0px 0px 5vh 0px">
+      <HStack spacing={0} margin="0px 0px 5vh 0px">
+        <Box margin="0 10px">
+          <Button onClick={handleUploadClick} colorScheme='gray' size="md">
+            Upload Students
+          </Button>
+        </Box>
 
         <Spacer />
-        <Button onClick={handleUploadClick} colorScheme='gray' >
-            Upload Students
-        </Button>
-        <Spacer /><Spacer /><Spacer /><Spacer /><Spacer /><Spacer />
-        <HStack m="40px">
-          <Spacer />
-          <ButtonGroup colorScheme='#282c34' variant='outline' size='lg'>
-            <Button margin="0px 2px" isDisabled={true}>Groups</Button>
+
+        <Flex flex={1} justify="center">
+          <ButtonGroup colorScheme='#282c34' variant='outline' size='md' spacing={0} p={0}>
+            <Button margin="0px 2px" isDisabled={true} width={100}>Groups</Button>
             <Link to='/students'>
-              <Button margin="0px 2px">Students</Button>
+              <Button margin="0px 2px" width={100}>Students</Button>
             </Link>
           </ButtonGroup>
-          <Spacer />
-        </HStack>
-
-        <Spacer /><Spacer />
-
-        <HStack >
-          <Spacer />
-
-          <Button colorScheme='gray' onClick={onOpen}>
-            Shuffle Groups<Icon margin="0px 0px 0px 10px" as={BiShuffle}></Icon>
-          </Button>
-
-          <AlertDialog
-            isOpen={isOpen}
-            leastDestructiveRef={cancelRef}
-            onClose={onClose}
-          >
-            <AlertDialogOverlay>
-              <AlertDialogContent>
-                <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-                  Shuffle Groups
-                </AlertDialogHeader>
-
-                <AlertDialogBody>
-                  Are you sure? This will delete all existing groups.
-                </AlertDialogBody>
-
-                <AlertDialogFooter>
-                  <Button ref={cancelRef} onClick={onClose}>
-                    Cancel
-                  </Button>
-                  <Button colorScheme='green' onClick={handleShuffleGroups} ml={3}>
-                    Shuffle
-                  </Button>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialogOverlay>
-          </AlertDialog>
-
-          <Button colorScheme='gray' >
-            Filter Properties<Icon margin="0px 0px 0px 10px" as={MdFilterAlt}></Icon>
-          </Button>
-        </HStack>
+        </Flex>
 
         <Spacer />
 
+        <Box margin="10 10px">
+          <Button colorScheme='gray' onClick={onOpen} size="md">
+            Shuffle Groups<Icon margin="0px 0px 0px 10px" as={BiShuffle}/>
+          </Button>
+        </Box>
+
+        <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
+          <AlertDialogOverlay>
+            <AlertDialogContent>
+              <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                Shuffle Groups
+              </AlertDialogHeader>
+
+              <AlertDialogBody>
+                Are you sure? This will delete all existing groups.
+              </AlertDialogBody>
+
+              <AlertDialogFooter>
+                <Button ref={cancelRef} onClick={onClose}>
+                  Cancel
+                </Button>
+                <Button colorScheme='green' onClick={handleShuffleGroups} ml={3}>
+                  Shuffle
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialogOverlay>
+        </AlertDialog>
+
+        {/*<Button colorScheme='gray' >*/}
+        {/*  Filter Properties<Icon margin="0px 0px 0px 10px" as={MdFilterAlt}></Icon>*/}
+        {/*</Button>*/}
       </HStack>
 
       <Container className="groups" maxW="80vw">
@@ -207,6 +215,6 @@ function Groups() {
       </Container>
     </div>
   );
-};
+}
 
 export default Groups;

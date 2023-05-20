@@ -42,7 +42,6 @@ import {
 import { MdFilterList  } from 'react-icons/md'
 import { DragHandleIcon, CloseIcon, AddIcon, ArrowBackIcon,ChevronDownIcon  } from '@chakra-ui/icons'
 
-import NavBar from "../components/NavBar.jsx"
 
 function AssigningPage(){
 
