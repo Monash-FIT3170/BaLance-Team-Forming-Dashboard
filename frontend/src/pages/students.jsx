@@ -9,17 +9,17 @@ import { Link } from "react-router-dom";
 function Students() {
     const { unitID } = useParams();
     
-  const [data, setData] = useState([])
-  const [hasError, setHasError] = useState(false)
+    const [allStudents, setStudents] = useState([])
+    const [hasError, setHasError] = useState(false)
 
 
-  useEffect(() => {
-      fetch("http://localhost:8080/api/students/" + unitID).then(
-          res => res.json().then(
-            res => setData(res)
-          )
-      ).catch(err => setHasError(true))
-  }, [])
+    useEffect(() => {
+        fetch("http://localhost:8080/api/students/" + unitID).then(
+            res => res.json().then(
+                res => setStudents(res)
+            )
+        ).catch(err => setHasError(true))
+    }, [])
 
     return (
         <div>
@@ -67,7 +67,7 @@ function Students() {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {data.map((student) => (
+                        {allStudents.map((student) => (
                             <StudentRow2 props={student} key={student.id} />
                         ))}
                     </Tbody>
