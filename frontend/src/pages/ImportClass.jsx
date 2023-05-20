@@ -35,7 +35,8 @@ import {
   ModalCloseButton,
   useDisclosure,
   Icon,
-  InputGroup
+  InputGroup,
+  IconButton
 } from "@chakra-ui/react";
 import {
   AddIcon,
@@ -416,18 +417,18 @@ function ImportPage() {
         </Box>
           <TableContainer borderWidth="2px" borderColor="black">
             <Table variant="striped">
-   <thead>
-        <tr>
-            {headers.map((header) => (
-              <th key={header[0]} onClick={() => handleSort(header)}>
-              {header[1]}
-              {sortConfig.key === header[0] && (
-                <span>{sortConfig.direction === 'ascending' ? '▲' : '▼'}</span>
-              )}
-            </th>
-          ))}
-        </tr>
-      </thead>
+            <thead>
+                  <tr>
+                      {headers.map((header) => (
+                        <th key={header[0]} onClick={() => handleSort(header)}>
+                        {header[1]}
+                        {sortConfig.key === header[0] && (
+                          <span>{sortConfig.direction === 'ascending' ? '▲' : '▼'}</span>
+                        )}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
               <Tbody>
                 
   {sortedProfiles.map((profile) => (
@@ -566,15 +567,14 @@ function ImportPage() {
             </Modal>
 
             <Box textAlign="center">
-              <Button
+              <IconButton
                 mt={4}
                 mb={4}
                 colorScheme="green"
-                leftIcon={<AddIcon />}
+                icon={<AddIcon />}
                 onClick={() => setShowAddProfileForm(true)}
               >
-                Add Profile
-              </Button>
+              </IconButton>
 
       <Button marginLeft="2em"   colorScheme="red" onClick={() => handleDeleteInactiveProfiles(profiles)}>Delete All Inactive Profiles</Button>
             </Box>
