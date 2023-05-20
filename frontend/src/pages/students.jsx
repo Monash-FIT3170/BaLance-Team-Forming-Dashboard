@@ -31,7 +31,7 @@ function Students() {
                         setAllGroups(labs)
                     }
                 )
-        )
+        ).catch(err => setHasError(true))
     }, [])
 
     return (
@@ -81,7 +81,7 @@ function Students() {
                     </Thead>
                     <Tbody>
                         {allStudents.map((student) => (
-                            <StudentRow2 props={student} key={student.id} allLabs = {labs} />
+                            <StudentRow2 props={student} key={student.id} allLabs = {allGroups} />
                         ))}
                     </Tbody>
                 </Table>
