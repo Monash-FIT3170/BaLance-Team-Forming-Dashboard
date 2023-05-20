@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+
 
 import { 
   Box,
@@ -71,6 +73,29 @@ function ImportPage() {
   const navigate = useNavigate();
 
   const handleAssignGroupsClick = () => {
+    // send data to backend
+    fetch('http://localhost:8080/api/students/3170', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(profiles),
+  })
+    .then(response => {
+      if (response.ok) {
+        console.log('Data successfully sent to the REST API');
+        // Handle the response from the API if needed
+      } else {
+        throw new Error('Error sending data to the REST API');
+      }
+    })
+    .catch(error => {
+      console.error('Error sending data to the REST API:', error);
+      // Handle the error from the API if needed
+    });
+
+
+    //return user to home page
     navigate('/groups');
   };
 
