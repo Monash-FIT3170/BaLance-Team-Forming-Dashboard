@@ -1,4 +1,4 @@
-import { DragHandleIcon } from "@chakra-ui/icons"
+import { EditIcon} from "@chakra-ui/icons"
 import { useState } from 'react';
 import { useParams } from 'react-router';
 import { useNavigate } from "react-router-dom";
@@ -52,7 +52,7 @@ export default function ChangeStudentGroupModal(props) {
 
     return (
         <>
-            <Button variant="ghost" onClick={onOpen}><DragHandleIcon /></Button>
+            <Button variant="ghost" onClick={onOpen}><EditIcon /></Button>
 
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
