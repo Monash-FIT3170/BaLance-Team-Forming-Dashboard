@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { ChakraProvider, extendTheme } from '@chakra-ui/react'
+import {Box, ChakraProvider, extendTheme} from '@chakra-ui/react'
 import Home from './pages/Home'
 import  ImportClass from './pages/ImportClass'
 
@@ -27,6 +27,7 @@ function App() {
     <ChakraProvider theme={theme}>
       <BrowserRouter>
         <NavBar />
+        <Box pt="12vh"/>
         <div className="App">
           <Routes>
             <Route path="/" element={<UnitHomePage />}/>
