@@ -21,16 +21,17 @@ function Students() {
             res => res.json().then(
                 res => setStudents(res)
             )
-        ).catch(err => setHasError(true))
+        ).catch(err => setHasError(true));
+
         fetch("http://localhost:8080/api/groups/" + unitID).then(
-                res => res.json().then(
-                    function(){
-                        for(let i = 0; i < res.length; i++){
-                            labs.push({labId : res[i].labId, groupNumber : res[i].groupNumber, groupId: res[i].groupId});
-                          }
-                        setAllGroups(labs)
-                    }
-                )
+            res => res.json().then(
+                function(res){
+                    for(let i = 0; i < res.length; i++){
+                        labs.push({labId : res[i].labId, groupNumber : res[i].groupNumber, groupId: res[i].groupId, members: res[i].members});
+                        }
+                    setAllGroups(labs)
+                }
+            )
         ).catch(err => setHasError(true))
     }, [])
 
