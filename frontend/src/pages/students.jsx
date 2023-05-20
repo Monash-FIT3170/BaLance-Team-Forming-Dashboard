@@ -10,15 +10,28 @@ function Students() {
     const { unitID } = useParams();
     
     const [allStudents, setStudents] = useState([])
+    const [allGroups,setAllGroups] = useState([])
     const [hasError, setHasError] = useState(false)
 
 
     useEffect(() => {
+        const labs = [];
+
         fetch("http://localhost:8080/api/students/" + unitID).then(
             res => res.json().then(
                 res => setStudents(res)
             )
         ).catch(err => setHasError(true))
+        fetch("http://localhost:8080/api/groups/" + unitID).then(
+                res => res.json().then(
+                    function(){
+                        for(let i = 0; i < res.length; i++){
+                            labs.push({labId : res[i].labId, groupNumber : res[i].groupNumber, groupId: res[i].groupId});
+                          }
+                        setAllGroups(labs)
+                    }
+                )
+        )
     }, [])
 
     return (
@@ -68,7 +81,7 @@ function Students() {
                     </Thead>
                     <Tbody>
                         {allStudents.map((student) => (
-                            <StudentRow2 props={student} key={student.id} />
+                            <StudentRow2 props={student} key={student.id} allLabs = {labs} />
                         ))}
                     </Tbody>
                 </Table>
