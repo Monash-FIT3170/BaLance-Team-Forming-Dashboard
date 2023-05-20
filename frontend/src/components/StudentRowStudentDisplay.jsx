@@ -5,6 +5,7 @@ const StudentRow2=(props)=> {
     /*HTML component for each student in each group in the 'List Students' View*/
     // desctructure the content of props
     const {studentId,studentFirstName, studentEmail,group} = props.props
+    const {studentInfo} = props
     const { allLabs} = props;
 
     let labId = 0;
@@ -25,7 +26,7 @@ const StudentRow2=(props)=> {
             <Td>{group.groupNumber}</Td>
             <Td>
                 <HStack>
-                    <ChangeStudentGroupModal studentInfo={props} classNum={labId} groupNum={group.groupNumber} groupId = {group.groupId} allIds = {allLabs}/>
+                    <ChangeStudentGroupModal studentInfo={studentInfo} classNum={labId} groupNum={group.groupNumber} groupId = {group.groupId} allIds = {allLabs}/>
                 </HStack>
             </Td>
         </Tr>

@@ -82,7 +82,7 @@ function Students() {
                     </Thead>
                     <Tbody>
                         {allStudents.map((student) => (
-                            <StudentRow2 props={student} key={student.id} allLabs = {allGroups} />
+                            <StudentRow2 props={student} studentInfo = {student} key={student.id} allLabs = {allGroups} />
                         ))}
                     </Tbody>
                 </Table>
