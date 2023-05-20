@@ -235,6 +235,7 @@ function ImportPage() {
 //   setProfiles(newProfiles);
 // };
 
+  // Profile Editing functions
    const handleDeleteProfile = (studentEmailAddress) => {
     const selectedProfile = profiles.find(
       (profile) => profile.studentEmailAddress === studentEmailAddress
@@ -266,6 +267,7 @@ function ImportPage() {
     setIsModalOpen(false);
   };
 
+  // Clear CSV file selection
   const handleClearSelection = () => {
     setIsConfirmationClearOpen(true);
   };
@@ -274,6 +276,7 @@ function ImportPage() {
     setCsvFile(null); // Reset the file selection
     setProfiles([]); // Clear the table data
     setIsFileChosen(false); // Reset the file chosen state
+    setIsConfirmationClearOpen(false); // Close the modal
   };
 
   const handleCloseConfirmation = () => {
