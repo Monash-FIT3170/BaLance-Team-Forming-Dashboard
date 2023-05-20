@@ -576,7 +576,14 @@ function ImportPage() {
               >
               </IconButton>
 
-      <Button marginLeft="2em"   colorScheme="red" onClick={() => handleDeleteInactiveProfiles(profiles)}>Delete All Inactive Profiles</Button>
+            <Button marginLeft="2em"   colorScheme="red" onClick={() => handleDeleteInactiveProfiles(profiles)}>Delete All Inactive Profiles</Button>
+            <Button
+                ml={4}
+                colorScheme="blue"
+                //onClick={() => handleAddProfilesToUnit()}
+              >
+                Add Profiles To Unit
+              </Button>
             </Box>
           </TableContainer>
         </Box>
