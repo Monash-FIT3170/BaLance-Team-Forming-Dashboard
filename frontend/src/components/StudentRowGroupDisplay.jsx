@@ -18,7 +18,7 @@ function StudentRow(props) {
             </Td>
             <Td>{studentInfo.studentFirstName}</Td>
             <Td>{studentInfo.studentEmailAddress}</Td>
-            <Td>{studentInfo.wam}</Td>
+            <Td>{studentInfo.wamAverage}</Td>
             <Td>{studentInfo.status}</Td>
             <Td>{studentInfo.discPersonality}</Td>
         </Tr>
