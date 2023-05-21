@@ -79,7 +79,7 @@ function ImportPage() {
 
   const unitID = 'FIT2099_CL_S1_ON-CAMPUS'; // TODO: should get from database or state management
 
-  const handleAssignGroupsClick = () => {
+  const handleAddProfilesClick = () => {
     // Get currrent values
     const groupStrategy = document.getElementById("groupStrategy").value;
     const groupSize = document.getElementById("groupSize").value;
