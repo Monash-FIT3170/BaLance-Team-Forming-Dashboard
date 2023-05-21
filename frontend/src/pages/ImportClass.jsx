@@ -136,7 +136,7 @@ function ImportPage() {
       // Handle the error from the API if needed
     }); */
     
-
+    console.log(profiles);
     // send data to backend
     console.log(unitID);
     fetch('http://localhost:8080/api/students/' + unitID, {

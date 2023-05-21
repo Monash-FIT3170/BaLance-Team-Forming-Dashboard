@@ -47,6 +47,7 @@ function Groups() {
       ).catch(err => setHasError(true))
   }, [])
 
+  console.log(state);
   const handleShuffleGroups= () => {
     // API call to create groups from scratch - will automatically delete existing groups first
     
