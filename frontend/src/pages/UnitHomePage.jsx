@@ -67,33 +67,32 @@ function UnitPage() {
   const handleSubmitUnit = (event)=>{
     event.preventDefault();
 
+    console.log('POSTING data')
     const unitObject = {
       "unitCode":unitCode,
       "unitFaculty":unitName,
-      "labs":[],
-      "groups":[],
-      "students":[],
-      "teachers":[]
     }
-    try {
-      const response = fetch("http://localhost:8080/api/units/",{
+
+    console.log(unitObject);
+
+    fetch("/api/units/", {
         method:'POST',
-        body:JSON.stringify(unitObject)
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(unitObject)
       }
-    )}
+    )
 
-      catch(err) {
-        setHasError(true);
-        console.error("Error fetching units:", err);
-      };
-
+    let answer = window.confirm("Unit created successfully");
+    if (answer){
+      onCloseAdd();
+    }
   }
 
-
-
-
   useEffect(() => {
-    fetch("http://localhost:8080/api/units/")
+    fetch("/api/units/")
       .then((res) => res.json())
       .then((data) => {
         setUnits(data);
@@ -103,8 +102,6 @@ function UnitPage() {
         console.error("Error fetching units:", err);
       });
   }, []);
-  
-
 
   return(
     <div>
@@ -134,20 +131,19 @@ function UnitPage() {
                 <ModalBody pb={10}>
                   <form 
                   id='create-unit'
-                  onSubmit={
-                    (event) => {
-                      event.preventDefault();
-                      let answer = window.confirm("Unit created successfully");    
-                      if (answer){
-                        onCloseAdd();
-                      }           
-                  }}>
+                  onSubmit={handleSubmitUnit}
+                  >
                     <br></br>
-                    <FormControl isRequired onSubmit={handleSubmitUnit}>
+                    <FormControl isRequired>
                       <FormLabel>Unit Code </FormLabel>
                       <Input mb='5'
                       value = {unitCode}
-                      onChange = {(event) => setUnitCode(event.target.value)}/>                     
+                      onChange = {(event) => {
+                        console.log('AAAAAA')
+                        console.log(event.target.value)
+                        setUnitCode(event.target.value)
+                      }
+                      }/>
                       <FormLabel>Unit Name</FormLabel>
                       <Input mb='5'
                       value = {unitName}
