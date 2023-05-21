@@ -111,6 +111,8 @@ const addAllStudents = async (req, res) => {
                 studentEmailAddress: student.studentEmailAddress,
                 wamAverage: student.wamAverage,
                 gender: student.gender,
+                status: student.enrolmentStatus,
+                discPersonality: student.discPersonality,
                 units: [unitDetails]
             }
             unit.students.push(student.studentId)

@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
+import { FiUploadCloud } from "react-icons/fi";
 import axios from 'axios';
+import { useParams } from 'react-router';
 
 
 import { 
@@ -35,6 +37,9 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
+  Icon,
+  InputGroup,
+  IconButton
 } from "@chakra-ui/react";
 import {
   AddIcon,
@@ -58,25 +63,54 @@ const customTheme = extendTheme({
 
 function ImportPage() {
 
+  const [isFileChosen, setIsFileChosen] = useState(false);
   const [csvData, setCsvData] = useState("");
   const [csvFile, setCsvFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [showAddProfileForm, setShowAddProfileForm] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isConfirmationClearOpen, setIsConfirmationClearOpen] = useState(false);
+  
 // Define state for the current sort order and column
-  // Define state for the current sort order and column
+// Define state for the current sort order and column
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
   const [profileToDelete, setProfileToDelete] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [profiles, setProfiles] = useState([]);
-
   const navigate = useNavigate();
 
+  //const unitID = 'FIT2099_CL_S1_ON-CAMPUS'; // TODO: should get from database or state management
+  const {unitID}  = useParams();
+  //console.log(unitID);
   const handleAssignGroupsClick = () => {
-    //create unit for new students
+    // Get currrent values
+    const groupStrategy = document.getElementById("groupStrategy").value;
+    const groupSize = document.getElementById("groupSize").value;
+    const variance = document.getElementById("variance").value;
+    // Make API call
+    fetch('http://localhost:8080/api/groups/' + unitID, 
+    {
+      method: 'POST', 
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({groupSize: groupSize, variance: variance, strategy: groupStrategy})
+    }).
+   then(
+    res => res.json().then(
+      res => console.log(res)
+    )
+   )
+    // Go to groups page
+    navigate(`/groups/${unitID}/${groupStrategy}/${groupSize}/${variance}`);
 
-    const unit = {
-      "unitCode": "FIT3170", //need to dynamically set this still
+
+  };
+
+    //create unit for new students
+  const handleAddProfilesClick = () => {
+    /*const unit = {
+      "unitCode": unitID, //need to dynamically set this still
       "unitFaculty": "Science",
       "labs": [],
       "groups": [],
@@ -102,11 +136,12 @@ function ImportPage() {
     .catch(error => {
       console.error('Error sending data to the REST API:', error);
       // Handle the error from the API if needed
-    });
+    }); */
     
-
+    console.log(profiles);
     // send data to backend
-    fetch('http://localhost:8080/api/students/FIT3170', {
+    console.log(unitID);
+    fetch('http://localhost:8080/api/students/' + unitID, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -126,13 +161,10 @@ function ImportPage() {
       // Handle the error from the API if needed
     });
 
-
-    //return user to home page
-    navigate('/groups');
   };
 
   const headers = [
-    ['studentId', "Student ID"], ['studentFirstName', 'First Name'], ['studentLastName', "Last Name"], ['studentEmailAddress', "Email Address"], ['wamAverage', "WAM"], ['gender', "Gender"], ['labId', "Lab ID"]];
+    ['studentId', "Student ID"], ['studentFirstName', 'First Name'], ['studentLastName', "Last Name"], ['studentEmailAddress', "Email Address"], ['wamAverage', "WAM"], ['gender', "Gender"], ['labId', "Lab ID"], ['enrolmentStatus', "Enrolment Status"], ['discPersonality', "DISC Personality"]];
   
   const headerMapping = {
     'SHORT_CODE' : 'labId',
@@ -169,8 +201,19 @@ function ImportPage() {
       const csvDict = csvToDict(csvString);
       setCsvFile(file);
       setErrorMessage("");
-      setCsvData(csvDict); 
-      setProfiles(csvDict);
+      setCsvData(csvDict);
+
+      // Add default value to enrollmentStatus
+      // Add default values to enrollmentStatus and discPersonality
+      const profilesWithDefaultValues = csvDict.map((profile) => {
+        return {
+          ...profile,
+          enrolmentStatus: "ACTIVE",
+          discPersonality: "DOMINANT",
+        };
+      });
+      
+      setProfiles(profilesWithDefaultValues);
     };
 
     function csvToDict(csvStr) {
@@ -222,24 +265,30 @@ function ImportPage() {
     }
   };
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [wam, setWam] = useState("");
-  const [status, setStatus] = useState("");
-  const [role, setRole] = useState("");
+  const [studentId, setStudentId] = useState("");
+  const [studentFirstName, setStudentFirstName] = useState("");
+  const [studentLastName, setStudentLastName] = useState("");
+  const [studentEmailAddress, setStudentEmailAddress] = useState("");
+  const [wamAverage, setWamAverage] = useState("");
+  const [gender, setGender] = useState("");
+  const [labId, setLabId] = useState("");
+  const [enrolmentStatus, setEnrolmentStatus] = useState("");
+  const [discPersonality, setDiscPersonality] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newProfile = { firstName, lastName, emailAddress: email, wam, status, role };
+    const newProfile = { studentId, studentFirstName, studentLastName, studentEmailAddress, wamAverage, gender, labId, enrolmentStatus, discPersonality };
     setProfiles([...profiles, newProfile]);
     setShowAddProfileForm(false);
-    setFirstName("");
-    setLastName("");
-    setEmail("");
-    setWam("");
-    setStatus("");
-    setRole("");
+    setStudentId("");
+    setStudentFirstName("");
+    setStudentLastName("");
+    setStudentEmailAddress("");
+    setWamAverage("");
+    setGender("");
+    setLabId("");
+    setEnrolmentStatus("Active"); // TODO: with new CSV input, Default 'Active' for now
+    setDiscPersonality("");
   };
 
 
@@ -284,41 +333,67 @@ function ImportPage() {
 //   setProfiles(newProfiles);
 // };
 
+  // Profile Editing functions
    const handleDeleteProfile = (studentEmailAddress) => {
-    const newProfiles = profiles.filter(
-      (profile) => profile.studentEmailAddress !== studentEmailAddress
+    const selectedProfile = profiles.find(
+      (profile) => profile.studentEmailAddress === studentEmailAddress
     );
-    setProfileToDelete(newProfiles);
+    setProfileToDelete(selectedProfile);
     setIsModalOpen(true);
-    setProfiles(newProfiles);
    };
   
   const handleDeleteInactiveProfiles = (profiles) => {
-    const newProfiles = profiles.filter((profile) => profile.status.toLowerCase() !== "active");
+    console.log(profiles);
+    const newProfiles = profiles.filter((profile) => profile.enrolmentStatus.toLowerCase() !== "active");
     setProfileToDelete(newProfiles);
     setIsModalOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    setProfiles(profileToDelete);
-    setProfileToDelete(null);
-    setIsModalOpen(false);
+    if (profileToDelete !== null) {
+      const newProfiles = profiles.filter(
+        (profile) => profile.studentEmailAddress !== profileToDelete.studentEmailAddress
+      );
+      setProfiles(newProfiles);
+      setProfileToDelete(null);
+      setIsModalOpen(false);
+    }
   };
+  
 
   const handleCancelDelete = () => {
     setProfileToDelete(null);
     setIsModalOpen(false);
   };
 
+  // Clear CSV file selection
+  const handleClearSelection = () => {
+    setIsConfirmationClearOpen(true);
+  };
+
+  const handleConfirmClearSelection = () => {
+    setCsvFile(null); // Reset the file selection
+    setProfiles([]); // Clear the table data
+    setIsFileChosen(false); // Reset the file chosen state
+    setIsConfirmationClearOpen(false); // Close the modal
+  };
+
+  const handleCloseConfirmation = () => {
+    setIsConfirmationClearOpen(false);
+  };
+
   return (
     <>
-           {profileToDelete && (
+      {profileToDelete !== null && (
         <Modal isOpen={isModalOpen} onClose={handleCancelDelete}>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>Delete Profile</ModalHeader>
             <ModalBody>
-              Are you sure you want to delete these records?
+              <p>Are you sure you want to delete the following profile?</p> <br />
+              <b>Name: </b> <p>{profileToDelete.studentFirstName} {profileToDelete.studentLastName}</p>
+              <b>Email Address: </b> <p> {profileToDelete.studentEmailAddress} </p>
+              <b>WAM: </b> <p>{profileToDelete.wamAverage}</p>
             </ModalBody>
             <ModalFooter>
               <Button colorScheme="red" mr={3} onClick={handleConfirmDelete}>
@@ -329,6 +404,7 @@ function ImportPage() {
           </ModalContent>
         </Modal>
       )}
+
       <Box as="header" p="4" textAlign="center">
         <Text fontSize="2xl" fontWeight="bold">
           Upload Profiles
@@ -345,7 +421,6 @@ function ImportPage() {
         <Box
           width="50%"
           height="175px"
-          border="2px dashed black"
           borderRadius="md"
           display="flex"
           flexDirection="column"
@@ -362,33 +437,69 @@ function ImportPage() {
             Drag and Drop CSV file here
           </Text>
           <Box
-            bg="white"
+            bg={isFileChosen ? "#00ADB5" : "white"}
             borderRadius="md"
             width="80%"
             p={4}
             mb={4}
             fontWeight="bold"
+            display="flex"
+            flexDirection="column"
+            justifyContent="center" // Center the content horizontally
+            alignItems="center" // Center the content vertically
+            border="2px dashed #00ADB5"
+            color="#00ADB5"
+            transition="color 0.3s ease"
+            _hover={{ color: "#fff", bg: "#00ADB5", cursor: "pointer" }}
+            _focus={{ outline: "none" }}
+            cursor="pointer"
           >
             {csvFile ? (
-              <Text>No file chosen: {csvFile.name}</Text>
-            ) : (
-              <>
-                <input
-                  type="file"
-                  onChange={handleUpload}
-                />
+               <>
+               <Text color="white" mb={2}>File: {csvFile.name} </Text>
+                <Button mb={2} colorScheme="red" onClick={handleClearSelection}>
+                  Clear Selection
+                </Button>
               </>
+            ) : (
+              <Flex  justifyContent="center" mx="auto">
+                  <Icon as={FiUploadCloud} boxSize={6} mr={2} />
+                  <Text> Upload </Text>
+                  <Input
+                    textColor="white"
+                    type="file"
+                    onChange={(e) => {
+                      handleUpload(e);
+                      setIsFileChosen(true);
+                    }}
+                    opacity={0}
+                    width="100%"
+                    height="100%"
+                    left={0}
+                    top={0}
+                    cursor="pointer"
+                  />
+            </Flex>
             )}
           </Box>
-          {errorMessage && (
-            <Alert status="error" mb={4}>
-              <AlertIcon />
-              <Box flex="1">
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>{errorMessage}</AlertDescription>
-              </Box>
-            </Alert>
-          )}
+          <Modal isOpen={isConfirmationClearOpen} onClose={handleCloseConfirmation}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Confirm Clear Selection</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                Are you sure you want to clear the selection?
+              </ModalBody>
+              <ModalFooter>
+                <Button colorScheme="red" onClick={handleConfirmClearSelection}>
+                  Clear Selection
+                </Button>
+                <Button variant="ghost" onClick={handleCloseConfirmation}>
+                  Cancel
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
         </Box>
         <Box
           width="80%"
@@ -404,18 +515,18 @@ function ImportPage() {
         </Box>
           <TableContainer borderWidth="2px" borderColor="black">
             <Table variant="striped">
-   <thead>
-        <tr>
-            {headers.map((header) => (
-              <th key={header[0]} onClick={() => handleSort(header)}>
-              {header[1]}
-              {sortConfig.key === header[0] && (
-                <span>{sortConfig.direction === 'ascending' ? '▲' : '▼'}</span>
-              )}
-            </th>
-          ))}
-        </tr>
-      </thead>
+            <thead>
+                  <tr>
+                      {headers.map((header) => (
+                        <th key={header[0]} onClick={() => handleSort(header)}>
+                        {header[1]}
+                        {sortConfig.key === header[0] && (
+                          <span>{sortConfig.direction === 'ascending' ? '▲' : '▼'}</span>
+                        )}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
               <Tbody>
                 
   {sortedProfiles.map((profile) => (
@@ -427,6 +538,8 @@ function ImportPage() {
       <Td>{profile.wamAverage}</Td>
       <Td>{profile.gender}</Td>
       <Td>{profile.labId}</Td>
+      <Td>{profile.enrolmentStatus}</Td>
+      <Td>{profile.discPersonality}</Td>
 
       <Td>
       <EditIcon
@@ -452,6 +565,18 @@ function ImportPage() {
               <ModalContent>
                 <ModalHeader>Edit Profile</ModalHeader>
                 <ModalBody>
+                <FormControl>
+                    <FormLabel>Student ID</FormLabel>
+                    <Input
+                      value={profileToEdit?.studentId}
+                      onChange={(e) =>
+                        setProfileToEdit({
+                          ...profileToEdit,
+                          studentId: e.target.value,
+                        })
+                      }
+                    />
+                  </FormControl>
                   <FormControl>
                     <FormLabel>First Name</FormLabel>
                     <Input
@@ -491,8 +616,8 @@ function ImportPage() {
                   </FormControl>
                   <FormControl>
                     <FormLabel>WAM</FormLabel>
-                    <Select
-                      placeholder="Select WAM"
+                    <Input
+                      placeholder="WAM"
                       value={profileToEdit?.wamAverage}
                       onChange={(e) =>
                         setProfileToEdit({
@@ -500,14 +625,71 @@ function ImportPage() {
                           wamAverage: e.target.value,
                         })
                       }
+                    />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Gender</FormLabel>
+                    <Select
+                      placeholder="Select Gender"
+                      value={profileToEdit?.gender}
+                      onChange={(e) =>
+                        setProfileToEdit({
+                          ...profileToEdit,
+                          gender: e.target.value,
+                        })
+                      }
                     >
-                      <option value="HD">HD</option>
-                      <option value="D">D</option>
-                      <option value="P">P</option>
-                      <option value="N">N</option>
+                      <option value="M">M</option>
+                      <option value="F">F</option>
                     </Select>
                   </FormControl>
-                  
+                  <FormControl>
+                    <FormLabel>Lab ID</FormLabel>
+                    <Input
+                      placeholder="Lab ID"
+                      value={profileToEdit?.labId}
+                      onChange={(e) =>
+                        setProfileToEdit({
+                          ...profileToEdit,
+                          labId: e.target.value,
+                        })
+                      }
+                    />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Enrolment Status</FormLabel>
+                    <Select
+                      placeholder="Select Enrolment Status"
+                      value={profileToEdit?.enrolmentStatus}
+                      onChange={(e) =>
+                        setProfileToEdit({
+                          ...profileToEdit,
+                          enrolmentStatus: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="ACTIVE">Active</option>
+                      <option value="INACTIVE">Inactive</option>
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>DISC Personality</FormLabel>
+                    <Select
+                      placeholder="Select Personality Type"
+                      value={profileToEdit?.discPersonality}
+                      onChange={(e) =>
+                        setProfileToEdit({
+                          ...profileToEdit,
+                          discPersonality: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="DOMINANT">Dominant</option>
+                      <option value="INFLUENCE">Influence</option>
+                      <option value="STEADINESS">Steadiness</option>
+                      <option value="CONSCIENTIOUSNESS">Conscientiousness</option>
+                    </Select>
+                  </FormControl>
                   </ModalBody>
                   <ModalFooter>
                     <Button onClick={() => handleSaveProfile(profileToEdit)} type="submit" colorScheme="green" mr={3}>
@@ -519,30 +701,41 @@ function ImportPage() {
             </Modal>
 
             <Box textAlign="center">
-              <Button
+              <IconButton
                 mt={4}
                 mb={4}
                 colorScheme="green"
-                leftIcon={<AddIcon />}
+                icon={<AddIcon />}
                 onClick={() => setShowAddProfileForm(true)}
               >
-                Add Profile
-              </Button>
+              </IconButton>
 
-      <Button marginLeft="2em"   colorScheme="red" onClick={() => handleDeleteInactiveProfiles(profiles)}>Delete All Inactive Profiles</Button>
+            <Button marginLeft="2em"   colorScheme="red" onClick={() => handleDeleteInactiveProfiles(profiles)}>Delete All Inactive Profiles</Button>
+            <Button
+                ml={4}
+                colorScheme="blue"
+                onClick={() => handleAddProfilesClick()}
+              >
+                Add Profiles To Unit
+              </Button>
             </Box>
           </TableContainer>
         </Box>
         <Box mt={8} display="flex" justifyContent="space-between" alignItems="center">
-              <Select placeholder="Select strategy" w="40%" mr={4}>
+              <Select placeholder="Select strategy" w="40%" mr={4} id="groupStrategy">
                 <option value="random">Random</option>
               </Select>
-              <Select placeholder="No. per team" w="40%" mr={4}>
+              <Select placeholder="No. per team" w="40%" mr={4} id="groupSize">
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
               </Select>
-              <Button onClick={handleAssignGroupsClick} colorScheme="blue">Assign groups</Button>
+              <Select placeholder="Team variance" w="40%" mr={4} id="variance">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </Select>
+              <Button onClick={handleAssignGroupsClick} w="25%" colorScheme="blue">Assign groups</Button>
           </Box>
       </Flex>
       {showAddProfileForm && (
@@ -576,41 +769,65 @@ function ImportPage() {
             </Flex>
             <Divider my={4} />
             <Box as="form" onSubmit={handleSubmit} onCancel={() => setShowAddProfileForm(false)}>
+            <FormControl mb={4}>
+                <FormLabel>Student ID</FormLabel>
+                <Input placeholder="Enter Student ID" value={studentId} onChange={e => setStudentId(e.target.value)} />
+              </FormControl>
               <FormControl mb={4}>
                 <FormLabel>First Name</FormLabel>
-                <Input placeholder="Enter first name" value={firstName} onChange={e => setFirstName(e.target.value)} />
+                <Input placeholder="Enter first name" value={studentFirstName} onChange={e => setStudentFirstName(e.target.value)} />
               </FormControl>
               <FormControl mb={4}>
                 <FormLabel>Last Name</FormLabel>
-                <Input placeholder="Enter last name" value={lastName} onChange={e => setLastName(e.target.value)} />
+                <Input placeholder="Enter last name" value={studentLastName} onChange={e => setStudentLastName(e.target.value)} />
               </FormControl>
               <FormControl mb={4}>
                 <FormLabel>Email</FormLabel>
-                <Input type="email" placeholder="Enter email" value={email} onChange={e => setEmail(e.target.value)} />
+                <Input type="email" placeholder="Enter email" value={studentEmailAddress} onChange={e => setStudentEmailAddress(e.target.value)} />
               </FormControl>
               <FormControl mb={4}>
                 <FormLabel>WAM</FormLabel>
-                <Select placeholder="Select WAM" value={wam} onChange={e => setWam(e.target.value)}>
-                  <option value="HD">HD</option>
-                  <option value="D">D</option>
-                  <option value="P">P</option>
-                  <option value="N">N</option>
+                <Input placeholder="Enter WAM" value={wamAverage} onChange={e => setWamAverage(e.target.value)} />
+              </FormControl>
+              <FormControl mb={4}>
+                <FormLabel>Gender</FormLabel>
+                <Select placeholder="Select gender" value={gender} onChange={e => setGender(e.target.value)} >
+                  <option value="M">M</option>
+                  <option value="F">F</option>
                 </Select>
               </FormControl>
               <FormControl mb={4}>
-                <FormLabel>Status</FormLabel>
-                <Select placeholder="Select Status" value={status} onChange={e => setStatus(e.target.value)}>
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-                </Select>
+                <FormLabel>Lab ID</FormLabel>
+                <Input placeholder="Enter Lab ID" value={labId} onChange={e => setLabId(e.target.value)} />
               </FormControl>
-              <FormControl mb={4}>
-                <FormLabel>Role</FormLabel>
-                <Select placeholder="Select Role" value={role} onChange={e => setRole(e.target.value)}>
-                <option value="Student">Student</option>
-                <option value="Inactive">Teacher</option>
-                </Select>
-              </FormControl>
+              <FormControl>
+                    <FormLabel>Enrolment Status</FormLabel>
+                    <Select
+                      placeholder="Select Enrolment Status"
+                      value={enrolmentStatus}
+                      onChange={(e) =>
+                        setEnrolmentStatus(e.target.value)
+                      }
+                    >
+                      <option value="ACTIVE">Active</option>
+                      <option value="INACTIVE">Inactive</option>
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>DISC Personality</FormLabel>
+                    <Select
+                      placeholder="Select Personality Type"
+                      value={discPersonality}
+                      onChange={(e) =>
+                        setDiscPersonality(e.target.value)
+                      }
+                    >
+                      <option value="DOMINANT">Dominant</option>
+                      <option value="INFLUENCE">Influence</option>
+                      <option value="STEADINESS">Steadiness</option>
+                      <option value="CONSCIENTIOUSNESS">Conscientiousness</option>
+                    </Select>
+                  </FormControl>
               <Button type="submit" colorScheme="blue" mr={3}>Save</Button>
               <Button onClick={() => setShowAddProfileForm(false)}>Cancel</Button>
             </Box>

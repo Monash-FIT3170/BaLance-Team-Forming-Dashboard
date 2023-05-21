@@ -4,7 +4,7 @@ import ChangeStudentGroupModal from "./ChangeStudentGroupModal";
 const StudentRow2=(props)=> {
     /*HTML component for each student in each group in the 'List Students' View*/
     // desctructure the content of props
-    const {studentId,studentFirstName, studentEmail,group} = props.props
+    const {studentId,studentFirstName, studentEmailAddress,group} = props.props
     const {studentInfo} = props
     const { allLabs} = props;
 
@@ -21,7 +21,7 @@ const StudentRow2=(props)=> {
     return (
         <Tr>
             <Td>{studentFirstName}</Td>
-            <Td>{studentEmail}</Td>
+            <Td>{studentEmailAddress}</Td>
             <Td>{labId}</Td>
             <Td>{group.groupNumber}</Td>
             <Td>

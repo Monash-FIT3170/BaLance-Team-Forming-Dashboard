@@ -7,10 +7,12 @@ import {BiShuffle} from 'react-icons/bi'
 import NavBar from "../components/NavBar";
 import { Link, useNavigate } from "react-router-dom";
 
-const unitID = 'FIT2099_CL_S1_ON-CAMPUS';
+const unitID = 'FIT2099_CL_S1_ON-CAMPUS'; // TODO: should get from database or state management
 
 function Groups() {
-  const {unitID}  = useParams();
+  
+  // Retrieve route parameters
+  const { groupStrategy, groupSize, variance, unitID } = useParams();
 
   const navigate = useNavigate();
 
@@ -19,7 +21,7 @@ function Groups() {
   const cancelRef = React.useRef()
 
   const handleUploadClick = () => {
-    navigate('/uploadStudents');
+    navigate('/uploadStudents/' + unitID);
   };
 
 
@@ -47,26 +49,32 @@ function Groups() {
       ).catch(err => setHasError(true))
   }, [])
 
-  const handleShuffleGroups= () => {
-    // API call to create groups from scratch - will automatically delete existing groups first
-    
-    fetch('http://localhost:8080/api/groups/' + unitID, 
-      {
-        method: 'POST', 
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({groupSize: 2, variance: 1})
-      }).
-     then(
-      res => res.json().then(
-        res => console.log(res)
-      )
-     )
-
+  const handleShuffleGroups = () => {
     // Close confirmation dialog
     onClose();
-  }
+  
+    // API call to create groups from scratch - will automatically delete existing groups first
+    fetch('http://localhost:8080/api/groups/' + unitID, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ groupSize: groupSize, variance: variance, strategy: groupStrategy })
+    })
+      .then(res =>
+        res.json().then(res => {
+          console.log(res);
+        })
+      )
+      .catch(error => {
+        console.error('Error:', error);
+      })
+      .finally(() => {
+        // Reload the page
+        window.location.reload();
+      });
+  };
+  
 
 
   return (

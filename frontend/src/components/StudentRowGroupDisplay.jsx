@@ -5,9 +5,9 @@ import ChangeStudentGroupModal from "./ChangeStudentGroupModal"
 
 function StudentRow(props) {
     /*HTML component for each student in each group in the 'View Groups' View*/
-    // desctructure the content of props 
+    // desctructure the content of props
+    console.log(props);
     const { studentInfo, classNum, groupNum, key, allIds, groupId } = props;
-
 
     return (
         <Tr>
@@ -17,8 +17,8 @@ function StudentRow(props) {
                 </HStack>
             </Td>
             <Td>{studentInfo.studentFirstName}</Td>
-            <Td>{studentInfo.studentEmail}</Td>
-            <Td>{studentInfo.wam}</Td>
+            <Td>{studentInfo.studentEmailAddress}</Td>
+            <Td>{studentInfo.wamAverage}</Td>
             <Td>{studentInfo.status}</Td>
             <Td>{studentInfo.discPersonality}</Td>
         </Tr>
