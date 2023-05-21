@@ -57,16 +57,7 @@ function Students() {
                     <Spacer />
                 </HStack>
 
-                <Spacer /><Spacer /><Spacer /><Spacer /><Spacer /><Spacer />
-
-                <HStack >
-                    <Spacer />
-                    <Button colorScheme='gray' >
-                        Filter Properties<Icon margin="0px 0px 0px 10px" as={MdFilterAlt}></Icon>
-                    </Button>
-                </HStack>
-
-                <Spacer />
+                <Spacer /><Spacer /><Spacer /><Spacer /><Spacer /><Spacer /><Spacer /><Spacer /><Spacer />
 
             </HStack>
 
