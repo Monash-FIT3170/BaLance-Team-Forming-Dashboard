@@ -1,0 +1,12 @@
+.units {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .unit {
+    width: calc(100% / 3);
+    height: auto;
+    object-fit: cover;
+    object-position: center;
+  }
+  
