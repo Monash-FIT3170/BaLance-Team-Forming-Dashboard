@@ -75,7 +75,7 @@ function UnitPage() {
 
     console.log(unitObject);
 
-    fetch("/api/units/", {
+    fetch("http://localhost:8080/api/units/", {
         method:'POST',
         headers: {
           'Accept': 'application/json',
@@ -92,7 +92,7 @@ function UnitPage() {
   }
 
   useEffect(() => {
-    fetch("/api/units/")
+    fetch("http://localhost:8080/api/units/")
       .then((res) => res.json())
       .then((data) => {
         setUnits(data);

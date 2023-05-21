@@ -43,7 +43,7 @@ const UnitCard = (unit) => {
     const navigate = useNavigate();
 
     const handleUnitClick = () => {
-        navigate('/groups');
+        navigate('/groups/' + unitCode);
       };
     return (
         <Flex 

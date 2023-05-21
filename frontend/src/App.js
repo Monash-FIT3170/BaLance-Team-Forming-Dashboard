@@ -30,8 +30,6 @@ function App() {
         <div className="App">
           <Routes>
             <Route path="/" element={<UnitHomePage />}/>
-            <Route path="/DisplayUnitGroups" element={<DisplayUnitGroups />}/>
-            <Route path="/home" element={<Home />}/>
             <Route path="/groups/:unitID" element={<Groups />}/>
             <Route path="/students/:unitID" element={<Students />}/>
             <Route path="/uploadStudents" element={<ImportClass/>}/>
