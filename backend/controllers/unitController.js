@@ -60,6 +60,7 @@ const getUnit = async (req, res) => {
 
 const addUnit = async (req, res) => {
     // get the req body
+
     const newUnit = {
         unitCode,
         unitFaculty,
