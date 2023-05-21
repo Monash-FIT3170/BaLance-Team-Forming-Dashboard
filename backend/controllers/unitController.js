@@ -59,20 +59,19 @@ const getUnit = async (req, res) => {
 }
 
 const addUnit = async (req, res) => {
+    console.log(req.body)
     // get the req body
+
     const newUnit = {
         unitCode,
-        unitFaculty,
-        labs,
-        groups: [],
-        students: [],
-        teachers
+        unitFaculty
     } = req.body
     const file = './db/units.json';
 
-
-
-    // get the items from the file
+    newUnit.labs = []
+    newUnit.groups = []
+    newUnit.students = []
+    newUnit.teachers = []
 
     // read file
     fs.readFile(file, 'utf-8', (err, unitsData) => {
