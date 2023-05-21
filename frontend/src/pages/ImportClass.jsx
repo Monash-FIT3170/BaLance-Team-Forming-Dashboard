@@ -3,6 +3,7 @@ import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 import { FiUploadCloud } from "react-icons/fi";
 import axios from 'axios';
+import { useParams } from 'react-router';
 
 
 import { 
@@ -76,12 +77,12 @@ function ImportPage() {
   const [profileToDelete, setProfileToDelete] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [profiles, setProfiles] = useState([]);
-
   const navigate = useNavigate();
 
-  const unitID = 'FIT2099_CL_S1_ON-CAMPUS'; // TODO: should get from database or state management
+  //const unitID = 'FIT2099_CL_S1_ON-CAMPUS'; // TODO: should get from database or state management
+  const {unitID}  = useParams();
 
-  const handleAddProfilesClick = () => {
+  const handleAssignGroupsClick = () => {
     // Get currrent values
     const groupStrategy = document.getElementById("groupStrategy").value;
     const groupSize = document.getElementById("groupSize").value;
@@ -101,10 +102,13 @@ function ImportPage() {
     )
    )
     // Go to groups page
-    //create unit for new students
+    navigate('/groups');
+  };
 
-    const unit = {
-      "unitCode": "FIT3170", //need to dynamically set this still
+    //create unit for new students
+  const handleAddProfilesClick = () => {
+    /*const unit = {
+      "unitCode": unitID, //need to dynamically set this still
       "unitFaculty": "Science",
       "labs": [],
       "groups": [],
@@ -130,11 +134,11 @@ function ImportPage() {
     .catch(error => {
       console.error('Error sending data to the REST API:', error);
       // Handle the error from the API if needed
-    });
+    }); */
     
 
     // send data to backend
-    fetch('http://localhost:8080/api/students/FIT3170', {
+    fetch('http://localhost:8080/api/students/' + unitID, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -658,7 +662,7 @@ function ImportPage() {
             <Button
                 ml={4}
                 colorScheme="blue"
-                //onClick={() => handleAddProfilesToUnit()}
+                onClick={() => handleAddProfilesClick()}
               >
                 Add Profiles To Unit
               </Button>
