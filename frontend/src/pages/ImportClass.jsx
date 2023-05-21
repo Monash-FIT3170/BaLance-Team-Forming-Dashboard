@@ -102,7 +102,9 @@ function ImportPage() {
     )
    )
     // Go to groups page
-    navigate('/groups/' + unitID);
+    navigate(`/groups/${unitID}/${groupStrategy}/${groupSize}/${variance}`);
+
+
   };
 
     //create unit for new students
