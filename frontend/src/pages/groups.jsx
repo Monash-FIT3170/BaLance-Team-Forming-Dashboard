@@ -6,7 +6,7 @@ import {BiShuffle} from 'react-icons/bi'
 import NavBar from "../components/NavBar";
 import { Link, useNavigate } from "react-router-dom";
 
-const unitID = 'FIT2099_CL_S1_ON-CAMPUS';
+const unitID = 'FIT2099_CL_S1_ON-CAMPUS'; // TODO: should get from database or state management
 
 function Groups() {
   const navigate = useNavigate();
@@ -27,9 +27,7 @@ function Groups() {
         method: 'POST', 
         headers: {
           "Content-Type": "application/json",
-        },
-        body: JSON.stringify({groupSize: 2, variance: 1})
-      }).
+        }}).
      then(
       res => res.json().then(
         res => console.log(res)

@@ -77,7 +77,28 @@ function ImportPage() {
 
   const navigate = useNavigate();
 
+  const unitID = 'FIT2099_CL_S1_ON-CAMPUS'; // TODO: should get from database or state management
+
   const handleAssignGroupsClick = () => {
+    // Get currrent values
+    const groupStrategy = document.getElementById("groupStrategy").value;
+    const groupSize = document.getElementById("groupSize").value;
+    const variance = document.getElementById("variance").value;
+    // Make API call
+    fetch('http://localhost:8080/api/groups/' + unitID, 
+    {
+      method: 'POST', 
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({groupSize: groupSize, variance: variance, strategy: groupStrategy})
+    }).
+   then(
+    res => res.json().then(
+      res => console.log(res)
+    )
+   )
+    // Go to groups page
     navigate('/groups');
   };
 
@@ -588,15 +609,20 @@ function ImportPage() {
           </TableContainer>
         </Box>
         <Box mt={8} display="flex" justifyContent="space-between" alignItems="center">
-              <Select placeholder="Select strategy" w="40%" mr={4}>
+              <Select placeholder="Select strategy" w="40%" mr={4} id="groupStrategy">
                 <option value="random">Random</option>
               </Select>
-              <Select placeholder="No. per team" w="40%" mr={4}>
+              <Select placeholder="No. per team" w="40%" mr={4} id="groupSize">
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
               </Select>
-              <Button onClick={handleAssignGroupsClick} colorScheme="blue">Assign groups</Button>
+              <Select placeholder="Team variance" w="40%" mr={4} id="variance">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </Select>
+              <Button onClick={handleAssignGroupsClick} w="25%" colorScheme="blue">Assign groups</Button>
           </Box>
       </Flex>
       {showAddProfileForm && (
