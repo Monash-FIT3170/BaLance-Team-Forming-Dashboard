@@ -162,7 +162,7 @@ function ImportPage() {
   };
 
   const headers = [
-    ['studentId', "Student ID"], ['studentFirstName', 'First Name'], ['studentLastName', "Last Name"], ['studentEmailAddress', "Email Address"], ['wamAverage', "WAM"], ['gender', "Gender"], ['labId', "Lab ID"]];
+    ['studentId', "Student ID"], ['studentFirstName', 'First Name'], ['studentLastName', "Last Name"], ['studentEmailAddress', "Email Address"], ['wamAverage', "WAM"], ['gender', "Gender"], ['labId', "Lab ID"], ['enrolmentStatus', "Enrolment Status"], ['discPersonality', "DISC Personality"]];
   
   const headerMapping = {
     'SHORT_CODE' : 'labId',
@@ -199,8 +199,19 @@ function ImportPage() {
       const csvDict = csvToDict(csvString);
       setCsvFile(file);
       setErrorMessage("");
-      setCsvData(csvDict); 
-      setProfiles(csvDict);
+      setCsvData(csvDict);
+
+      // Add default value to enrollmentStatus
+      // Add default values to enrollmentStatus and discPersonality
+      const profilesWithDefaultValues = csvDict.map((profile) => {
+        return {
+          ...profile,
+          enrolmentStatus: "ACTIVE",
+          discPersonality: "DOMINANT",
+        };
+      });
+      
+      setProfiles(profilesWithDefaultValues);
     };
 
     function csvToDict(csvStr) {
@@ -259,10 +270,12 @@ function ImportPage() {
   const [wamAverage, setWamAverage] = useState("");
   const [gender, setGender] = useState("");
   const [labId, setLabId] = useState("");
+  const [enrolmentStatus, setEnrolmentStatus] = useState("");
+  const [discPersonality, setDiscPersonality] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newProfile = { studentId, studentFirstName, studentLastName, studentEmailAddress, wamAverage, gender, labId };
+    const newProfile = { studentId, studentFirstName, studentLastName, studentEmailAddress, wamAverage, gender, labId, enrolmentStatus, discPersonality };
     setProfiles([...profiles, newProfile]);
     setShowAddProfileForm(false);
     setStudentId("");
@@ -272,6 +285,8 @@ function ImportPage() {
     setWamAverage("");
     setGender("");
     setLabId("");
+    setEnrolmentStatus("Active"); // TODO: with new CSV input, Default 'Active' for now
+    setDiscPersonality("");
   };
 
 
@@ -326,7 +341,8 @@ function ImportPage() {
    };
   
   const handleDeleteInactiveProfiles = (profiles) => {
-    const newProfiles = profiles.filter((profile) => profile.status.toLowerCase() !== "active");
+    console.log(profiles);
+    const newProfiles = profiles.filter((profile) => profile.enrolmentStatus.toLowerCase() !== "active");
     setProfileToDelete(newProfiles);
     setIsModalOpen(true);
   };
@@ -520,6 +536,8 @@ function ImportPage() {
       <Td>{profile.wamAverage}</Td>
       <Td>{profile.gender}</Td>
       <Td>{profile.labId}</Td>
+      <Td>{profile.enrolmentStatus}</Td>
+      <Td>{profile.discPersonality}</Td>
 
       <Td>
       <EditIcon
@@ -636,6 +654,40 @@ function ImportPage() {
                       }
                     />
                   </FormControl>
+                  <FormControl>
+                    <FormLabel>Enrolment Status</FormLabel>
+                    <Select
+                      placeholder="Select Enrolment Status"
+                      value={profileToEdit?.enrolmentStatus}
+                      onChange={(e) =>
+                        setProfileToEdit({
+                          ...profileToEdit,
+                          enrolmentStatus: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="ACTIVE">Active</option>
+                      <option value="INACTIVE">Inactive</option>
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>DISC Personality</FormLabel>
+                    <Select
+                      placeholder="Select Personality Type"
+                      value={profileToEdit?.discPersonality}
+                      onChange={(e) =>
+                        setProfileToEdit({
+                          ...profileToEdit,
+                          discPersonality: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="DOMINANT">Dominant</option>
+                      <option value="INFLUENCE">Influence</option>
+                      <option value="STEADINESS">Steadiness</option>
+                      <option value="CONSCIENTIOUSNESS">Conscientiousness</option>
+                    </Select>
+                  </FormControl>
                   </ModalBody>
                   <ModalFooter>
                     <Button onClick={() => handleSaveProfile(profileToEdit)} type="submit" colorScheme="green" mr={3}>
@@ -746,6 +798,34 @@ function ImportPage() {
                 <FormLabel>Lab ID</FormLabel>
                 <Input placeholder="Enter Lab ID" value={labId} onChange={e => setLabId(e.target.value)} />
               </FormControl>
+              <FormControl>
+                    <FormLabel>Enrolment Status</FormLabel>
+                    <Select
+                      placeholder="Select Enrolment Status"
+                      value={enrolmentStatus}
+                      onChange={(e) =>
+                        setEnrolmentStatus(e.target.value)
+                      }
+                    >
+                      <option value="ACTIVE">Active</option>
+                      <option value="INACTIVE">Inactive</option>
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>DISC Personality</FormLabel>
+                    <Select
+                      placeholder="Select Personality Type"
+                      value={discPersonality}
+                      onChange={(e) =>
+                        setDiscPersonality(e.target.value)
+                      }
+                    >
+                      <option value="DOMINANT">Dominant</option>
+                      <option value="INFLUENCE">Influence</option>
+                      <option value="STEADINESS">Steadiness</option>
+                      <option value="CONSCIENTIOUSNESS">Conscientiousness</option>
+                    </Select>
+                  </FormControl>
               <Button type="submit" colorScheme="blue" mr={3}>Save</Button>
               <Button onClick={() => setShowAddProfileForm(false)}>Cancel</Button>
             </Box>
