@@ -18,6 +18,7 @@ const getAllGroups = async (req, res) => {
     }).map((group) => { // remove unwanted attributes from group data
         return {
             groupId: group["groupId"],
+            labId: group["labId"],
             groupNumber: group["groupNumber"],
             members: group["members"]
         }
@@ -292,6 +293,58 @@ const updateGroup = async (req, res) => {
     }
 }
 
+const moveStudent = async (req, res) => {
+
+    const { unitId, studentId } = req.params;
+
+    let previousGroup = req.body.previousGroup;
+    let newGroup = req.body.newGroup;
+
+    let groups = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/groups.json', 'utf8'));
+
+    let student;
+
+    for (let i = 0; i < groups.length; i++){
+        let group = groups[i];
+
+        if (group.groupId == previousGroup){
+            let members = group.members;
+
+            for (let j = 0; j < members.length; j++){
+
+                if (members[j].studentId == studentId){
+
+                    student = members[j];
+
+                    group.members.splice(j, 1);
+
+                    groups[i] = group ;
+                    break;
+                }
+
+            }
+        }
+    }
+
+
+    for (let i = 0; i < groups.length; i++){
+        let group = groups[i];
+    
+        if (group.groupId == newGroup){
+                
+            groups[i].members.push(student);
+            break;
+
+        }
+    }
+
+
+    fs.writeFileSync(path.join(__dirname, '../db') + '/groups.json', JSON.stringify(groups));
+
+    res.sendStatus(200)
+
+}
+
 function shuffle(array) {
     // Fisher-Yates shuffle algorithm from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
     let currentIndex = array.length, randomIndex;
@@ -317,5 +370,6 @@ module.exports = {
     addGroup,
     deleteGroup,
     updateGroup,
-    createUnitGroups
+    createUnitGroups,
+    moveStudent
 }

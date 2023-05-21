@@ -8,7 +8,45 @@ const fs = require('fs');
 const path = require('path')
 
 // gets all students for a unit
-const getAllStudents = async (req, res) => { }
+const getAllStudents = async (req, res) => {
+
+    let unitId = req.params.unitId;
+    let groupsData = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/groups.json', 'utf8'));
+
+    let students = [];
+
+    for (let i = 0; i < groupsData.length; i++){
+        
+        let group = groupsData[i]
+
+        
+
+        if (group.unitCode == unitId){
+
+            let members = group.members;
+            let groupId = group.groupId
+            let groupNumber = group.groupNumber
+
+            for (let j = 0; j < members.length; j++){
+
+                let student = members[j]
+                student.group = {
+                    "groupdId": groupId,
+                    "groupNumber": groupNumber,
+                    "labId": group.labId
+                }
+
+                students.push(student)
+
+            }
+        }
+
+
+    }
+
+    res.status(200).send(students);
+
+ }
 
 // get a single student for a unit
 const getStudent = async (req, res) => { }

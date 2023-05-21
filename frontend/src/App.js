@@ -32,8 +32,8 @@ function App() {
             <Route path="/" element={<UnitHomePage />}/>
             <Route path="/DisplayUnitGroups" element={<DisplayUnitGroups />}/>
             <Route path="/home" element={<Home />}/>
-            <Route path="/groups" element={<Groups />}/>
-            <Route path="/students" element={<Students />}/>
+            <Route path="/groups/:unitID" element={<Groups />}/>
+            <Route path="/students/:unitID" element={<Students />}/>
             <Route path="/uploadStudents" element={<ImportClass/>}/>
             <Route path="/assigningPage" element={<AssigningPage/>}/>
           </Routes>
