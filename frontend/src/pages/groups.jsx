@@ -19,7 +19,7 @@ function Groups() {
   const cancelRef = React.useRef()
 
   const handleUploadClick = () => {
-    navigate('/uploadStudents');
+    navigate('/uploadStudents/' + unitID);
   };
 
 

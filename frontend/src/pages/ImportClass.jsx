@@ -81,7 +81,7 @@ function ImportPage() {
 
   //const unitID = 'FIT2099_CL_S1_ON-CAMPUS'; // TODO: should get from database or state management
   const {unitID}  = useParams();
-
+  //console.log(unitID);
   const handleAssignGroupsClick = () => {
     // Get currrent values
     const groupStrategy = document.getElementById("groupStrategy").value;
@@ -102,7 +102,7 @@ function ImportPage() {
     )
    )
     // Go to groups page
-    navigate('/groups');
+    navigate('/groups/' + unitID);
   };
 
     //create unit for new students
@@ -138,6 +138,7 @@ function ImportPage() {
     
 
     // send data to backend
+    console.log(unitID);
     fetch('http://localhost:8080/api/students/' + unitID, {
     method: 'POST',
     headers: {
@@ -158,9 +159,6 @@ function ImportPage() {
       // Handle the error from the API if needed
     });
 
-
-    //return user to home page
-    navigate('/groups');
   };
 
   const headers = [
