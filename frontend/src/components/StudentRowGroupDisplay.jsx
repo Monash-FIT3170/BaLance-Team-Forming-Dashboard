@@ -17,7 +17,7 @@ function StudentRow(props) {
                 </HStack>
             </Td>
             <Td>{studentInfo.studentFirstName}</Td>
-            <Td>{studentInfo.studentEmail}</Td>
+            <Td>{studentInfo.studentEmailAddress}</Td>
             <Td>{studentInfo.wam}</Td>
             <Td>{studentInfo.status}</Td>
             <Td>{studentInfo.discPersonality}</Td>
