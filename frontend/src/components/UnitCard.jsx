@@ -20,7 +20,8 @@ import {
     Input,
     Select,
     FormErrorMessage,
-    Container
+    Container,
+    Spacer
   } from "@chakra-ui/react";
   import { AddIcon,EditIcon } from '@chakra-ui/icons'
   import { IoEllipsisHorizontalSharp,IoTrashOutline } from "react-icons/io5";
@@ -51,7 +52,7 @@ const UnitCard = (unit) => {
         bg={boxBg}
         p='20px'
         h='345px'
-        w={{ base: "315px", md: "345px" }}
+        w={{ base: "345px", md: "375px" }}
         alignItems='center'
         direction='column'>  
 
@@ -75,7 +76,7 @@ const UnitCard = (unit) => {
               me='auto'>
                 <Button onClick={handleUnitClick} style={{fontWeight: 'bold', fontSize: '20px'}}>{unitCode}</Button>
             </Text>
-            
+            <Spacer />
             <Button
               w='38px'
               h='38px'

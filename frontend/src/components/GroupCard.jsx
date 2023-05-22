@@ -20,7 +20,7 @@ const GroupCard = (props) => {
         <Card border="1px" margin="20px">
             <CardHeader>
                 <HStack>
-                    <Heading>Lab: {labId} Group: {groupNumber}</Heading>
+                    <Heading>Lab: {labId}, Group: {groupNumber}</Heading>
                     <Spacer />
                 </HStack>
             </CardHeader>

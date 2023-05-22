@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 import { FiUploadCloud } from "react-icons/fi";
-import axios from 'axios';
 import { useParams } from 'react-router';
 
 
