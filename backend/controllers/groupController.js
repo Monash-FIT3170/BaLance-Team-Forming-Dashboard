@@ -51,9 +51,9 @@ const getGroup = async (req, res) => {
 // create all the groups (based on csv)
 const createUnitGroups = async (req, res) => {
     let unitId = req.params.unitId;
-    let groupSize = req.body.groupSize;
+    let groupSize = parseInt(req.body.groupSize);
     let strategy = req.body.strategy;
-    let variance = req.body.variance;
+    let variance = parseInt(req.body.variance);
 
     if (groupSize == null) {groupSize = defaultGroupSize;}
     if (strategy == null) {strategy = defaultStrategy;}
@@ -88,8 +88,9 @@ const createUnitGroups = async (req, res) => {
         }
     }
 
-    unitStudents.sort((a, b) => a[1] - b[1]);
+    
     uniStudents = shuffle(unitStudents);
+    unitStudents.sort((a, b) => a[1] - b[1]);
     
     let createdGroups = [];
     unassignedStudents = [];

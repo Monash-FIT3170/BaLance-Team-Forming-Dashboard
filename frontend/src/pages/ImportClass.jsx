@@ -101,7 +101,7 @@ function ImportPage() {
     )
    )
     // Go to groups page
-    navigate(`/groups/${unitID}/${groupStrategy}/${groupSize}/${variance}`);
+    navigate(`/groups/${unitID}`);
 
 
   };

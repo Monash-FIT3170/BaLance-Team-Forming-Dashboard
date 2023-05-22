@@ -5,11 +5,12 @@
  * */
 
 const fs = require('fs');
+const path = require('path')
 
 // gets all units for a user
 const getAllUnits = async (req, res) => {
     // open units.json and read
-    const file = './db/units.json';
+    const file = path.join(__dirname, '../db') + '/units.json';
 
     // read file
     fs.readFile(file, 'utf-8', (err, unitsData) => {
@@ -32,7 +33,7 @@ const getAllUnits = async (req, res) => {
 // get a single unit for a user
 const getUnit = async (req, res) => {
     // open units.json and read
-    const file = './db/units.json';
+    const file = path.join(__dirname, '../db') + '/units.json';
     const { unitId } = req.params;
 
     // read file
@@ -66,7 +67,7 @@ const addUnit = async (req, res) => {
         unitCode,
         unitFaculty
     } = req.body
-    const file = './db/units.json';
+    const file = path.join(__dirname, '../db') + '/units.json';
 
     newUnit.labs = []
     newUnit.groups = []
@@ -91,7 +92,7 @@ const addUnit = async (req, res) => {
 
 deleteUnit = async function (req, res) {
     const { unitId } = req.params;
-    const file = './db/units.json';
+    const file = path.join(__dirname, '../db') + '/units.json';
 
     // get the items from the file
 
@@ -127,7 +128,7 @@ updateUnit = async function (req, res){
     // write this to the units.json file
     // send a res status of 200 and send the unit updated
     const updatedUnitData = req.body;
-    const file = './db/units.json';
+    const file = path.join(__dirname, '../db') + '/units.json';
 
     fs.readFile(file, 'utf-8', (err, unitsData) => {
         const units = JSON.parse(unitsData);

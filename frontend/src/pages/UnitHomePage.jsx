@@ -89,6 +89,7 @@ function UnitPage() {
     if (answer){
       onCloseAdd();
     }
+    window.location.reload(false);
   }
 
   useEffect(() => {
