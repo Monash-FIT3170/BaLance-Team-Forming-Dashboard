@@ -69,6 +69,7 @@ function ImportPage() {
   const [showAddProfileForm, setShowAddProfileForm] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isConfirmationClearOpen, setIsConfirmationClearOpen] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
   
 // Define state for the current sort order and column
 // Define state for the current sort order and column
@@ -107,7 +108,7 @@ function ImportPage() {
   };
 
     //create unit for new students
-  const handleAddProfilesClick = () => {
+  const handleAddProfilesClick = async () => {
     /*const unit = {
       "unitCode": unitID, //need to dynamically set this still
       "unitFaculty": "Science",
@@ -159,6 +160,9 @@ function ImportPage() {
       console.error('Error sending data to the REST API:', error);
       // Handle the error from the API if needed
     });
+
+    // After successful creation
+    setShowAlert(true);
 
   };
 
@@ -717,6 +721,25 @@ function ImportPage() {
               >
                 Add Profiles To Unit
               </Button>
+              {showAlert && (
+                <Alert
+                status='success'
+                variant='subtle'
+                flexDirection='column'
+                alignItems='center'
+                justifyContent='center'
+                textAlign='center'
+                height='200px'
+              >
+                <AlertIcon boxSize='40px' mr={0} />
+                <AlertTitle mt={4} mb={1} fontSize='lg'>
+                  Profiles Added Successfully
+                </AlertTitle>
+                <AlertDescription maxWidth='sm'>
+                  You can now assign groups using the menu below!
+                </AlertDescription>
+              </Alert>
+              )}
             </Box>
           </TableContainer>
         </Box>
