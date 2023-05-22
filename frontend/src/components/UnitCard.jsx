@@ -52,7 +52,7 @@ const UnitCard = (unit) => {
         bg={boxBg}
         p='20px'
         h='345px'
-        w={{ base: "315px", md: "345px" }}
+        w={{ base: "345px", md: "375px" }}
         alignItems='center'
         direction='column'>  
 
