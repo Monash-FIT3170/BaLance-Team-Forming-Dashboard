@@ -91,10 +91,7 @@ const UnitCard = (unit) => {
           closeOnOverlayClick={false}
           isOpen={isOpenDetails}
           onClose={onCloseDetails}
-          onClick={
-            <Link to={this} onClick={isOpenDetails}>
-            </Link>
-          }
+          onClick={<Link to={this} onClick={isOpenDetails}></Link>}
         >
           <ModalOverlay />
           <ModalContent>

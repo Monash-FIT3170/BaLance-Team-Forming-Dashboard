@@ -32,12 +32,7 @@ import {
 } from '@chakra-ui/react';
 
 import { MdFilterList } from 'react-icons/md';
-import {
-  DragHandleIcon,
-  CloseIcon,
-  AddIcon,
-  ChevronDownIcon,
-} from '@chakra-ui/icons';
+import { DragHandleIcon, CloseIcon, AddIcon, ChevronDownIcon } from '@chakra-ui/icons';
 
 import NavBar from '../components/NavBar.jsx';
 

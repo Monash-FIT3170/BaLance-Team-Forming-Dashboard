@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiUploadCloud } from 'react-icons/fi';
 import { useParams } from 'react-router';
+import { DeleteProfile } from '../components/DeleteProfile';
+import { ConfirmClearSelection } from '../components/ConfirmClearSelection';
+import { UploadCSV } from '../components/UploadCSV';
+import { FormField } from '../components/FormField';
 
 import {
   Box,
@@ -35,47 +38,58 @@ import {
   Icon,
   IconButton,
 } from '@chakra-ui/react';
-import { AddIcon, CloseIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
-import NavBar from '../components/NavBar';
-
-const customTheme = extendTheme({
-  fonts: {
-    heading: 'Montserrat, sans-serif',
-    body: 'Montserrat, sans-serif',
-  },
-  fontWeights: {
-    normal: 400,
-    medium: 600,
-    bold: 700,
-  },
-});
+import { AddIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
 
 function ImportPage() {
+  // State hooks for this page
   const [isFileChosen, setIsFileChosen] = useState(false);
   const [csvData, setCsvData] = useState('');
   const [csvFile, setCsvFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
-  const [showAddProfileForm, setShowAddProfileForm] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isConfirmationClearOpen, setIsConfirmationClearOpen] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [studentId, setStudentId] = useState('');
+  const [studentFirstName, setStudentFirstName] = useState('');
+  const [studentLastName, setStudentLastName] = useState('');
+  const [studentEmailAddress, setStudentEmailAddress] = useState('');
+  const [wamAverage, setWamAverage] = useState('');
+  const [gender, setGender] = useState('');
+  const [labId, setLabId] = useState('');
+  const [enrolmentStatus, setEnrolmentStatus] = useState('');
+  const [discPersonality, setDiscPersonality] = useState('');
 
-  // Define state for the current sort order and column
   // Define state for the current sort order and column
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
   const [profileToDelete, setProfileToDelete] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [profiles, setProfiles] = useState([]);
   const navigate = useNavigate();
 
-  //const unitID = 'FIT2099_CL_S1_ON-CAMPUS'; // TODO: should get from database or state management
+  // UseDisclosure variables for modals
+  const {
+    isOpen: isDeleteProfileOpen,
+    onOpen: onDeleteProfileOpen,
+    onClose: onDeleteProfileClose,
+  } = useDisclosure();
+  const {
+    isOpen: isAddProfileOpen,
+    onOpen: onAddProfileOpen,
+    onClose: onAddProfileClose,
+  } = useDisclosure();
+  const {
+    isOpen: isEditProfileOpen,
+    onOpen: onEditProfileOpen,
+    onClose: onEditProfileClose,
+  } = useDisclosure();
+
   const { unitID } = useParams();
-  //console.log(unitID);
+
   const handleAssignGroupsClick = () => {
     // Get currrent values
     const groupStrategy = document.getElementById('groupStrategy').value;
     const groupSize = document.getElementById('groupSize').value;
     const variance = document.getElementById('variance').value;
+
     // Make API call
     fetch('http://localhost:8080/api/groups/' + unitID, {
       method: 'POST',
@@ -94,38 +108,7 @@ function ImportPage() {
 
   //create unit for new students
   const handleAddProfilesClick = async () => {
-    /*const unit = {
-      "unitCode": unitID, //need to dynamically set this still
-      "unitFaculty": "Science",
-      "labs": [],
-      "groups": [],
-      "students": [],
-      "teachers": []
-    }
-
-    fetch('http://localhost:8080/api/units/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(unit),
-  })
-    .then(response => {
-      if (response.ok) {
-        console.log('Data successfully sent to the REST API');
-        // Handle the response from the API if needed
-      } else {
-        throw new Error('Error sending data to the REST API');
-      }
-    })
-    .catch(error => {
-      console.error('Error sending data to the REST API:', error);
-      // Handle the error from the API if needed
-    }); */
-
-    console.log(profiles);
-    // send data to backend
-    console.log(unitID);
+    // Make API call
     fetch('http://localhost:8080/api/students/' + unitID, {
       method: 'POST',
       headers: {
@@ -150,6 +133,7 @@ function ImportPage() {
     setShowAlert(true);
   };
 
+  // Formatted headers for different possible variables
   const headers = [
     ['studentId', 'Student ID'],
     ['studentFirstName', 'First Name'],
@@ -162,6 +146,7 @@ function ImportPage() {
     ['discPersonality', 'DISC Personality'],
   ];
 
+  // Mapping for CSV headers to database headers
   const headerMapping = {
     SHORT_CODE: 'labId',
     STUDENT_CODE: 'studentId',
@@ -172,6 +157,7 @@ function ImportPage() {
     GENDER: 'gender',
   };
 
+  // Logic for table sorting by column
   const handleSort = (header) => {
     const key = header[0];
     if (sortConfig.key === key) {
@@ -191,6 +177,7 @@ function ImportPage() {
     }
   };
 
+  // Logic for processing a file upload
   const handleFile = (file) => {
     if (!file.type.match('csv.*')) {
       setErrorMessage('Please select a CSV file');
@@ -207,8 +194,8 @@ function ImportPage() {
       setErrorMessage('');
       setCsvData(csvDict);
 
-      // Add default value to enrollmentStatus
       // Add default values to enrollmentStatus and discPersonality
+      // TODO: expect this info from CSV file
       const profilesWithDefaultValues = csvDict.map((profile) => {
         return {
           ...profile,
@@ -220,6 +207,7 @@ function ImportPage() {
       setProfiles(profilesWithDefaultValues);
     };
 
+    // Convert CSV string to dictionary
     function csvToDict(csvStr) {
       // From http://techslides.com/convert-csv-to-json-in-javascript
       var lines = csvStr.split('\r\n');
@@ -265,15 +253,12 @@ function ImportPage() {
     }
   };
 
-  const [studentId, setStudentId] = useState('');
-  const [studentFirstName, setStudentFirstName] = useState('');
-  const [studentLastName, setStudentLastName] = useState('');
-  const [studentEmailAddress, setStudentEmailAddress] = useState('');
-  const [wamAverage, setWamAverage] = useState('');
-  const [gender, setGender] = useState('');
-  const [labId, setLabId] = useState('');
-  const [enrolmentStatus, setEnrolmentStatus] = useState('');
-  const [discPersonality, setDiscPersonality] = useState('');
+  const handleAttributeChange = (key, value) => {
+    setProfileToEdit({
+      ...profileToEdit,
+      [key]: value,
+    });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -289,7 +274,6 @@ function ImportPage() {
       discPersonality,
     };
     setProfiles([...profiles, newProfile]);
-    setShowAddProfileForm(false);
     setStudentId('');
     setStudentFirstName('');
     setStudentLastName('');
@@ -299,6 +283,7 @@ function ImportPage() {
     setLabId('');
     setEnrolmentStatus('Active'); // TODO: with new CSV input, Default 'Active' for now
     setDiscPersonality('');
+    onAddProfileClose();
   };
 
   const sortedProfiles = [...profiles].sort((a, b) => {
@@ -312,11 +297,8 @@ function ImportPage() {
   });
 
   const [profileToEdit, setProfileToEdit] = useState(null);
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleSaveProfile = (updatedProfile) => {
-    console.log(updatedProfile);
-
     if (!profileToEdit) {
       // handle error - profileToEdit is not defined
       return;
@@ -335,7 +317,7 @@ function ImportPage() {
     setProfiles(updatedProfiles);
 
     // Close the edit modal
-    onClose();
+    onEditProfileClose();
   };
 
   // const handleDeleteProfile = (emailAddress) => {
@@ -349,7 +331,7 @@ function ImportPage() {
       (profile) => profile.studentEmailAddress === studentEmailAddress
     );
     setProfileToDelete(selectedProfile);
-    setIsModalOpen(true);
+    onDeleteProfileOpen();
   };
 
   const handleDeleteInactiveProfiles = (profiles) => {
@@ -358,7 +340,7 @@ function ImportPage() {
       (profile) => profile.enrolmentStatus.toLowerCase() !== 'active'
     );
     setProfileToDelete(newProfiles);
-    setIsModalOpen(true);
+    onDeleteProfileOpen();
   };
 
   const handleConfirmDelete = () => {
@@ -368,13 +350,13 @@ function ImportPage() {
       );
       setProfiles(newProfiles);
       setProfileToDelete(null);
-      setIsModalOpen(false);
+      onDeleteProfileClose();
     }
   };
 
   const handleCancelDelete = () => {
     setProfileToDelete(null);
-    setIsModalOpen(false);
+    onDeleteProfileClose();
   };
 
   // Clear CSV file selection
@@ -395,35 +377,21 @@ function ImportPage() {
 
   return (
     <>
-      {profileToDelete !== null && (
-        <Modal isOpen={isModalOpen} onClose={handleCancelDelete}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Delete Profile</ModalHeader>
-            <ModalBody>
-              <p>Are you sure you want to delete the following profile?</p> <br />
-              <b>Name: </b>{' '}
-              <p>
-                {profileToDelete.studentFirstName} {profileToDelete.studentLastName}
-              </p>
-              <b>Email Address: </b> <p> {profileToDelete.studentEmailAddress} </p>
-              <b>WAM: </b> <p>{profileToDelete.wamAverage}</p>
-            </ModalBody>
-            <ModalFooter>
-              <Button colorScheme="red" mr={3} onClick={handleConfirmDelete}>
-                Delete
-              </Button>
-              <Button onClick={handleCancelDelete}>Cancel</Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      )}
-
       <Box as="header" p="4" textAlign="center">
         <Text fontSize="2xl" fontWeight="bold">
           Upload Profiles
         </Text>
       </Box>
+
+      {profileToDelete != null && (
+        <DeleteProfile
+          isModalOpen={isDeleteProfileOpen}
+          student={profileToDelete}
+          handleCancelDelete={handleCancelDelete}
+          handleConfirmDelete={handleConfirmDelete}
+        />
+      )}
+
       <Flex
         height="100%"
         flexDirection="column"
@@ -432,89 +400,18 @@ function ImportPage() {
         textAlign="center"
         margin="20px"
       >
-        <Box
-          width="50%"
-          height="175px"
-          borderRadius="md"
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-          textAlign="center"
-        >
-          <Text
-            fontFamily="Montserrat, sans-serif"
-            fontWeight="bold"
-            fontSize="2xl"
-            mb={4}
-          >
-            Drag and Drop CSV file here
-          </Text>
-          <Box
-            bg={isFileChosen ? '#00ADB5' : 'white'}
-            borderRadius="md"
-            width="80%"
-            p={4}
-            mb={4}
-            fontWeight="bold"
-            display="flex"
-            flexDirection="column"
-            justifyContent="center" // Center the content horizontally
-            alignItems="center" // Center the content vertically
-            border="2px dashed #00ADB5"
-            color="#00ADB5"
-            transition="color 0.3s ease"
-            _hover={{ color: '#fff', bg: '#00ADB5', cursor: 'pointer' }}
-            _focus={{ outline: 'none' }}
-            cursor="pointer"
-          >
-            {csvFile ? (
-              <>
-                <Text color="white" mb={2}>
-                  File: {csvFile.name}{' '}
-                </Text>
-                <Button mb={2} colorScheme="red" onClick={handleClearSelection}>
-                  Clear Selection
-                </Button>
-              </>
-            ) : (
-              <Flex justifyContent="center" mx="auto">
-                <Icon as={FiUploadCloud} boxSize={6} mr={2} />
-                <Text> Upload </Text>
-                <Input
-                  textColor="white"
-                  type="file"
-                  onChange={(e) => {
-                    handleUpload(e);
-                    setIsFileChosen(true);
-                  }}
-                  opacity={0}
-                  width="100%"
-                  height="100%"
-                  left={0}
-                  top={0}
-                  cursor="pointer"
-                />
-              </Flex>
-            )}
-          </Box>
-          <Modal isOpen={isConfirmationClearOpen} onClose={handleCloseConfirmation}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>Confirm Clear Selection</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>Are you sure you want to clear the selection?</ModalBody>
-              <ModalFooter>
-                <Button colorScheme="red" onClick={handleConfirmClearSelection}>
-                  Clear Selection
-                </Button>
-                <Button variant="ghost" onClick={handleCloseConfirmation}>
-                  Cancel
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-        </Box>
+        <UploadCSV
+          isFileChosen={isFileChosen}
+          csvFile={csvFile}
+          handleClearSelection={handleClearSelection}
+          handleUpload={handleUpload}
+          setIsFileChosen={setIsFileChosen}
+        />
+        <ConfirmClearSelection
+          isConfirmationClearOpen={isConfirmationClearOpen}
+          handleConfirmClearSelection={handleConfirmClearSelection}
+          handleCloseConfirmation={handleCloseConfirmation}
+        />
         <Box width="80%" borderWidth="1px" borderRadius="lg" overflow="hidden" mt={8}>
           <Box borderWidth="2px" borderColor="black" as="header" p="4">
             <Text fontSize="2xl" fontWeight="bold">
@@ -553,7 +450,7 @@ function ImportPage() {
                         style={{ cursor: 'pointer' }}
                         onClick={() => {
                           setProfileToEdit(profile);
-                          onOpen();
+                          onEditProfileOpen();
                         }}
                       />
                     </Td>
@@ -567,136 +464,86 @@ function ImportPage() {
                 ))}
               </Tbody>
             </Table>
-            <Modal isOpen={isOpen} onClose={onClose}>
+            <Modal isOpen={isEditProfileOpen} onClose={onEditProfileClose}>
               <ModalOverlay />
               <ModalContent>
                 <ModalHeader>Edit Profile</ModalHeader>
                 <ModalBody>
-                  <FormControl>
-                    <FormLabel>Student ID</FormLabel>
-                    <Input
-                      value={profileToEdit?.studentId}
-                      onChange={(e) =>
-                        setProfileToEdit({
-                          ...profileToEdit,
-                          studentId: e.target.value,
-                        })
-                      }
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>First Name</FormLabel>
-                    <Input
-                      value={profileToEdit?.studentFirstName}
-                      onChange={(e) =>
-                        setProfileToEdit({
-                          ...profileToEdit,
-                          studentFirstName: e.target.value,
-                        })
-                      }
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>Last Name</FormLabel>
-                    <Input
-                      value={profileToEdit?.studentLastName}
-                      onChange={(e) =>
-                        setProfileToEdit({
-                          ...profileToEdit,
-                          studentLastName: e.target.value,
-                        })
-                      }
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>Email Address</FormLabel>
-                    <Input
-                      type="email"
-                      value={profileToEdit?.studentEmailAddress}
-                      onChange={(e) =>
-                        setProfileToEdit({
-                          ...profileToEdit,
-                          studentEmailAddress: e.target.value,
-                        })
-                      }
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>WAM</FormLabel>
-                    <Input
-                      placeholder="WAM"
-                      value={profileToEdit?.wamAverage}
-                      onChange={(e) =>
-                        setProfileToEdit({
-                          ...profileToEdit,
-                          wamAverage: e.target.value,
-                        })
-                      }
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>Gender</FormLabel>
-                    <Select
-                      placeholder="Select Gender"
-                      value={profileToEdit?.gender}
-                      onChange={(e) =>
-                        setProfileToEdit({
-                          ...profileToEdit,
-                          gender: e.target.value,
-                        })
-                      }
-                    >
-                      <option value="M">M</option>
-                      <option value="F">F</option>
-                    </Select>
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>Lab ID</FormLabel>
-                    <Input
-                      placeholder="Lab ID"
-                      value={profileToEdit?.labId}
-                      onChange={(e) =>
-                        setProfileToEdit({
-                          ...profileToEdit,
-                          labId: e.target.value,
-                        })
-                      }
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>Enrolment Status</FormLabel>
-                    <Select
-                      placeholder="Select Enrolment Status"
-                      value={profileToEdit?.enrolmentStatus}
-                      onChange={(e) =>
-                        setProfileToEdit({
-                          ...profileToEdit,
-                          enrolmentStatus: e.target.value,
-                        })
-                      }
-                    >
-                      <option value="ACTIVE">Active</option>
-                      <option value="INACTIVE">Inactive</option>
-                    </Select>
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>DISC Personality</FormLabel>
-                    <Select
-                      placeholder="Select Personality Type"
-                      value={profileToEdit?.discPersonality}
-                      onChange={(e) =>
-                        setProfileToEdit({
-                          ...profileToEdit,
-                          discPersonality: e.target.value,
-                        })
-                      }
-                    >
-                      <option value="DOMINANT">Dominant</option>
-                      <option value="INFLUENCE">Influence</option>
-                      <option value="STEADINESS">Steadiness</option>
-                      <option value="CONSCIENTIOUSNESS">Conscientiousness</option>
-                    </Select>
-                  </FormControl>
+                  <FormField
+                    label="Student ID"
+                    value={profileToEdit?.studentId}
+                    onChange={(e) => handleAttributeChange('studentId', e.target.value)}
+                  />
+                  <FormField
+                    label="First Name"
+                    value={profileToEdit?.studentFirstName}
+                    onChange={(e) =>
+                      handleAttributeChange('studentFirstName', e.target.value)
+                    }
+                  />
+                  <FormField
+                    label="Last Name"
+                    value={profileToEdit?.studentLastName}
+                    onChange={(e) =>
+                      handleAttributeChange('studentLastName', e.target.value)
+                    }
+                  />
+                  <FormField
+                    label="Email Address"
+                    placeholder="Email Address"
+                    value={profileToEdit?.studentEmailAddress}
+                    onChange={(e) =>
+                      handleAttributeChange('studentEmailAddress', e.target.value)
+                    }
+                  />
+                  <FormField
+                    label="WAM"
+                    placeholder="WAM"
+                    value={profileToEdit?.wamAverage}
+                    onChange={(e) => handleAttributeChange('wamAverage', e.target.value)}
+                  />
+                  <FormField
+                    label="Gender"
+                    placeholder="Select Gender"
+                    value={profileToEdit?.gender}
+                    onChange={(e) => handleAttributeChange('gender', e.target.value)}
+                    options={[
+                      { label: 'M', value: 'M' },
+                      { label: 'F', value: 'F' },
+                    ]}
+                  />
+                  <FormField
+                    label="Lab ID"
+                    placeholder="Lab ID"
+                    value={profileToEdit?.labId}
+                    onChange={(e) => handleAttributeChange('labId', e.target.value)}
+                  />
+                  <FormField
+                    label="Enrolment Status"
+                    placeholder="Select Enrolment Status"
+                    value={profileToEdit?.enrolmentStatus}
+                    onChange={(e) =>
+                      handleAttributeChange('enrolmentStatus', e.target.value)
+                    }
+                    options={[
+                      { label: 'Active', value: 'ACTIVE' },
+                      { label: 'Inactive', value: 'INACTIVE' },
+                    ]}
+                  />
+                  <FormField
+                    label="DISC Personality"
+                    placeholder="Select Personality Type"
+                    value={profileToEdit?.discPersonality}
+                    onChange={(e) =>
+                      handleAttributeChange('discPersonality', e.target.value)
+                    }
+                    options={[
+                      { label: 'Dominant', value: 'DOMINANT' },
+                      { label: 'Influence', value: 'INFLUENCE' },
+                      { label: 'Steadiness', value: 'STEADINESS' },
+                      { label: 'Conscientiousness', value: 'CONSCIENTIOUSNESS' },
+                    ]}
+                  />
                 </ModalBody>
                 <ModalFooter>
                   <Button
@@ -710,7 +557,7 @@ function ImportPage() {
                   <Button
                     onClick={() => {
                       setIsEditing(false);
-                      onClose();
+                      onEditProfileClose();
                     }}
                   >
                     Cancel
@@ -725,7 +572,7 @@ function ImportPage() {
                 mb={4}
                 colorScheme="green"
                 icon={<AddIcon />}
-                onClick={() => setShowAddProfileForm(true)}
+                onClick={onAddProfileOpen}
               ></IconButton>
 
               <Button
@@ -779,133 +626,92 @@ function ImportPage() {
           </Button>
         </Box>
       </Flex>
-      {showAddProfileForm && (
-        <Box
-          position="fixed"
-          top="0"
-          left="0"
-          width="100vw"
-          height="100vh"
-          bg="rgba(0, 0, 0, 0.6)"
-          zIndex="modal"
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Box
-            bg="white"
-            p={6}
-            borderRadius="md"
-            boxShadow="md"
-            width={{ base: '90vw', sm: '50vw', md: '30vw' }}
-          >
-            <Flex justifyContent="space-between" alignItems="center">
-              <Text fontSize="xl" fontWeight="bold">
-                Add Profile
-              </Text>
-              <CloseButton
-                aria-label="Close"
-                onClick={() => setShowAddProfileForm(false)}
-              />
-            </Flex>
+
+      <Modal isOpen={isAddProfileOpen} onClose={onAddProfileClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Add Profile</ModalHeader>
+          <ModalBody>
             <Divider my={4} />
-            <Box
-              as="form"
-              onSubmit={handleSubmit}
-              onCancel={() => setShowAddProfileForm(false)}
-            >
-              <FormControl mb={4}>
-                <FormLabel>Student ID</FormLabel>
-                <Input
-                  placeholder="Enter Student ID"
-                  value={studentId}
-                  onChange={(e) => setStudentId(e.target.value)}
-                />
-              </FormControl>
-              <FormControl mb={4}>
-                <FormLabel>First Name</FormLabel>
-                <Input
-                  placeholder="Enter first name"
-                  value={studentFirstName}
-                  onChange={(e) => setStudentFirstName(e.target.value)}
-                />
-              </FormControl>
-              <FormControl mb={4}>
-                <FormLabel>Last Name</FormLabel>
-                <Input
-                  placeholder="Enter last name"
-                  value={studentLastName}
-                  onChange={(e) => setStudentLastName(e.target.value)}
-                />
-              </FormControl>
-              <FormControl mb={4}>
-                <FormLabel>Email</FormLabel>
-                <Input
-                  type="email"
-                  placeholder="Enter email"
-                  value={studentEmailAddress}
-                  onChange={(e) => setStudentEmailAddress(e.target.value)}
-                />
-              </FormControl>
-              <FormControl mb={4}>
-                <FormLabel>WAM</FormLabel>
-                <Input
-                  placeholder="Enter WAM"
-                  value={wamAverage}
-                  onChange={(e) => setWamAverage(e.target.value)}
-                />
-              </FormControl>
-              <FormControl mb={4}>
-                <FormLabel>Gender</FormLabel>
-                <Select
-                  placeholder="Select gender"
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
-                >
-                  <option value="M">M</option>
-                  <option value="F">F</option>
-                </Select>
-              </FormControl>
-              <FormControl mb={4}>
-                <FormLabel>Lab ID</FormLabel>
-                <Input
-                  placeholder="Enter Lab ID"
-                  value={labId}
-                  onChange={(e) => setLabId(e.target.value)}
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel>Enrolment Status</FormLabel>
-                <Select
-                  placeholder="Select Enrolment Status"
-                  value={enrolmentStatus}
-                  onChange={(e) => setEnrolmentStatus(e.target.value)}
-                >
-                  <option value="ACTIVE">Active</option>
-                  <option value="INACTIVE">Inactive</option>
-                </Select>
-              </FormControl>
-              <FormControl>
-                <FormLabel>DISC Personality</FormLabel>
-                <Select
-                  placeholder="Select Personality Type"
-                  value={discPersonality}
-                  onChange={(e) => setDiscPersonality(e.target.value)}
-                >
-                  <option value="DOMINANT">Dominant</option>
-                  <option value="INFLUENCE">Influence</option>
-                  <option value="STEADINESS">Steadiness</option>
-                  <option value="CONSCIENTIOUSNESS">Conscientiousness</option>
-                </Select>
-              </FormControl>
-              <Button type="submit" colorScheme="blue" mr={3}>
-                Save
-              </Button>
-              <Button onClick={() => setShowAddProfileForm(false)}>Cancel</Button>
+            <Box as="form" onSubmit={handleSubmit} onCancel={onAddProfileClose}>
+              <FormField
+                label="Student ID"
+                placeholder="Enter Student ID"
+                value={studentId}
+                onChange={(e) => setStudentId(e.target.value)}
+              />
+              <FormField
+                label="First Name"
+                placeholder="Enter first name"
+                value={studentFirstName}
+                onChange={(e) => setStudentFirstName(e.target.value)}
+              />
+              <FormField
+                label="Last Name"
+                placeholder="Enter last name"
+                value={studentLastName}
+                onChange={(e) => setStudentLastName(e.target.value)}
+              />
+              <FormField
+                label="Email"
+                placeholder="Enter email"
+                value={studentEmailAddress}
+                onChange={(e) => setStudentEmailAddress(e.target.value)}
+              />
+              <FormField
+                label="WAM"
+                placeholder="Enter WAM"
+                value={wamAverage}
+                onChange={(e) => setWamAverage(e.target.value)}
+              />
+              <FormField
+                label="Gender"
+                placeholder="Select gender"
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                options={[
+                  { label: 'M', value: 'M' },
+                  { label: 'F', value: 'F' },
+                ]}
+              />
+              <FormField
+                label="Lab ID"
+                placeholder="Enter Lab ID"
+                value={labId}
+                onChange={(e) => setLabId(e.target.value)}
+              />
+              <FormField
+                label="Enrolment Status"
+                placeholder="Select Enrolment Status"
+                value={enrolmentStatus}
+                onChange={(e) => setEnrolmentStatus(e.target.value)}
+                options={[
+                  { label: 'Active', value: 'ACTIVE' },
+                  { label: 'Inactive', value: 'INACTIVE' },
+                ]}
+              />
+              <FormField
+                label="DISC Personality"
+                placeholder="Select Personality Type"
+                value={discPersonality}
+                onChange={(e) => setDiscPersonality(e.target.value)}
+                options={[
+                  { label: 'Dominant', value: 'DOMINANT' },
+                  { label: 'Influence', value: 'INFLUENCE' },
+                  { label: 'Steadiness', value: 'STEADINESS' },
+                  { label: 'Conscientiousness', value: 'CONSCIENTIOUSNESS' },
+                ]}
+              />
             </Box>
-          </Box>
-        </Box>
-      )}
+          </ModalBody>
+          <ModalFooter>
+            <Button type="submit" colorScheme="blue" mr={3} onClick={handleSubmit}>
+              Save
+            </Button>
+            <Button onClick={onAddProfileClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 }
