@@ -93,7 +93,6 @@ const UnitCard = (unit) => {
           onClose={onCloseDetails}
           onClick={
             <Link to={this} onClick={isOpenDetails}>
-              './DisplayUnitGroups'
             </Link>
           }
         >

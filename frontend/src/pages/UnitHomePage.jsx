@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import createUnitGroups from './DisplayUnitGroups';
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import UnitCard from '../components/UnitCard';
 import '../pages/UnitHomePage.css';
-import { useParams } from 'react-router';
 
 // Chakra imports
 import {
@@ -25,21 +23,15 @@ import {
   Select,
   Container,
 } from '@chakra-ui/react';
+
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { Center, Heading } from '@chakra-ui/react';
-import NavBar from '../components/NavBar.jsx';
 
 function UnitPage() {
-  let boxBg = useColorModeValue('white !important', '#111c44 !important');
-  let mainText = useColorModeValue('gray.800', 'white');
-  let secondaryText = useColorModeValue('gray.600', 'gray.600');
-  let iconBox = useColorModeValue('gray.100', 'whiteAlpha.200');
   let iconColor = useColorModeValue('brand.200', 'white');
   const { isOpen: isOpenAdd, onOpen: onOpenAdd, onClose: onCloseAdd } = useDisclosure();
 
-  // setting up navigation
-  const navigate = useNavigate();
-
+  // useState hooks for this page
   const [units, setUnits] = useState([]);
 
   const [hasError, setHasError] = useState(false);

@@ -1,15 +1,12 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
-import Home from './pages/Home';
 import ImportClass from './pages/ImportClass';
 
-import DisplayUnitGroups from './pages/DisplayUnitGroups';
 import UnitHomePage from './pages/UnitHomePage';
 import NavBar from './components/NavBar';
 import Groups from './pages/groups';
 import Students from './pages/students';
 import AssigningPage from './pages/AssigningPage';
-//import logo from './assets/logo.png';
 
 const theme = extendTheme({
   colors: {

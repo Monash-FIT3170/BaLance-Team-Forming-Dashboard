@@ -2,50 +2,32 @@ import { React, useState } from 'react';
 
 // Chakra imports
 import {
-  Flex,
   Button,
   Icon,
-  Image,
   Text,
   useColorModeValue,
-  Modal,
-  ModalBody,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalCloseButton,
   Input,
-  useDisclosure,
   Select,
   Card,
   CardBody,
   CardHeader,
-  CardFooter,
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
-  TableCaption,
   TableContainer,
   SimpleGrid,
   Heading,
   Center,
   Spacer,
   HStack,
-  Checkbox,
-  CheckboxGroup,
   Menu,
   MenuButton,
   MenuList,
-  MenuItem,
   MenuItemOption,
-  MenuGroup,
   MenuOptionGroup,
-  MenuDivider,
   Box,
 } from '@chakra-ui/react';
 
@@ -54,7 +36,6 @@ import {
   DragHandleIcon,
   CloseIcon,
   AddIcon,
-  ArrowBackIcon,
   ChevronDownIcon,
 } from '@chakra-ui/icons';
 
@@ -66,34 +47,14 @@ function AssigningPage() {
   let secondaryText = useColorModeValue('gray.600', 'gray.600');
   let iconBox = useColorModeValue('gray.100', 'whiteAlpha.200');
   let iconColor = useColorModeValue('brand.200', 'white');
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [isChecked1, setIsChecked1] = useState(false);
-  const [isChecked2, setIsChecked2] = useState(false);
   const [checkedValues1, setCheckedValues1] = useState([]);
   const [checkedValues2, setCheckedValues2] = useState([]);
   const [checkedValues3, setCheckedValues3] = useState([]);
   const [checkedValues4, setCheckedValues4] = useState([]);
 
-  function handleCheckboxChange1(values) {
-    setCheckedValues1(values);
-  }
-  function handleCheckboxChange2(values) {
-    setCheckedValues2(values);
-  }
-  function handleCheckboxChange3(values) {
-    setCheckedValues3(values);
-  }
-  function handleCheckboxChange4(values) {
-    setCheckedValues4(values);
-  }
-
   return (
     <div>
-      {/* <Spacer></Spacer>
-            <Button colorScheme='gray' variant='ghost'>
-                <ArrowBackIcon boxSize={7}/>
-            </Button> */}
       <Center margin="30px">
         <Heading>Assigning Page</Heading>
       </Center>
@@ -164,7 +125,7 @@ function AssigningPage() {
                           <MenuOptionGroup
                             type="checkbox"
                             value={checkedValues1}
-                            onChange={handleCheckboxChange1}
+                            onChange={setCheckedValues1}
                           >
                             <MenuItemOption value="lab1">Lab 1</MenuItemOption>
                             <MenuItemOption value="lab2">Lab 2</MenuItemOption>
@@ -221,7 +182,7 @@ function AssigningPage() {
                           <MenuOptionGroup
                             type="checkbox"
                             value={checkedValues2}
-                            onChange={handleCheckboxChange2}
+                            onChange={setCheckedValues2}
                           >
                             <MenuItemOption value="lab1">Lab 1</MenuItemOption>
                             <MenuItemOption value="lab2">Lab 2</MenuItemOption>
@@ -278,7 +239,7 @@ function AssigningPage() {
                           <MenuOptionGroup
                             type="checkbox"
                             value={checkedValues3}
-                            onChange={handleCheckboxChange3}
+                            onChange={setCheckedValues3}
                           >
                             <MenuItemOption value="lab1">Lab 1</MenuItemOption>
                             <MenuItemOption value="lab2">Lab 2</MenuItemOption>
@@ -335,7 +296,7 @@ function AssigningPage() {
                           <MenuOptionGroup
                             type="checkbox"
                             value={checkedValues4}
-                            onChange={handleCheckboxChange4}
+                            onChange={setCheckedValues4}
                           >
                             <MenuItemOption value="lab1">Lab 1</MenuItemOption>
                             <MenuItemOption value="lab2">Lab 2</MenuItemOption>
