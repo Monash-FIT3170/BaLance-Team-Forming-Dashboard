@@ -9,8 +9,8 @@ If you do not have npm, please install node js first (npm is included inside the
 In the project directory, you can run:
 
 ### 'npm install'
-Install packages for the first time when this project is cloned 
 
+Install packages for the first time when this project is cloned
 
 ### `npm start`
 
@@ -74,3 +74,8 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+# Linting and Formatting
+
+## Prettier
+To use prettier for formatting your files, cd to `frontend` directory and then run `npx prettier --write src/`.
