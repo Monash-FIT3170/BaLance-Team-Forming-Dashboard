@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import logo from '../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 import { FiUploadCloud } from 'react-icons/fi';
-import axios from 'axios';
 import { useParams } from 'react-router';
 
 import {
@@ -17,10 +15,8 @@ import {
   AlertDescription,
   Button,
   Table,
-  Thead,
   Tbody,
   Tr,
-  Th,
   Td,
   TableContainer,
   Divider,
@@ -37,7 +33,6 @@ import {
   ModalCloseButton,
   useDisclosure,
   Icon,
-  InputGroup,
   IconButton,
 } from '@chakra-ui/react';
 import { AddIcon, CloseIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';

@@ -14,12 +14,6 @@ import {
   ModalCloseButton,
   useColorModeValue,
   useDisclosure,
-  FormControl,
-  FormLabel,
-  Input,
-  Select,
-  FormErrorMessage,
-  Container,
 } from '@chakra-ui/react';
 import { AddIcon, EditIcon } from '@chakra-ui/icons';
 import { IoEllipsisHorizontalSharp, IoTrashOutline } from 'react-icons/io5';

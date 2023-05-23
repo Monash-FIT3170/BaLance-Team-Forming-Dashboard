@@ -7,12 +7,9 @@ import { useParams } from 'react-router';
 
 // Chakra imports
 import {
-  Link,
   Flex,
   Button,
   Icon,
-  Image,
-  Text,
   Modal,
   ModalBody,
   ModalOverlay,
@@ -26,12 +23,10 @@ import {
   FormLabel,
   Input,
   Select,
-  FormErrorMessage,
   Container,
 } from '@chakra-ui/react';
-import { PlusSquareIcon, EditIcon } from '@chakra-ui/icons';
+import { PlusSquareIcon } from '@chakra-ui/icons';
 import { Center, Heading } from '@chakra-ui/react';
-import { IoEllipsisHorizontalSharp, IoTrashOutline } from 'react-icons/io5';
 import NavBar from '../components/NavBar.jsx';
 
 function UnitPage() {
@@ -40,19 +35,11 @@ function UnitPage() {
   let secondaryText = useColorModeValue('gray.600', 'gray.600');
   let iconBox = useColorModeValue('gray.100', 'whiteAlpha.200');
   let iconColor = useColorModeValue('brand.200', 'white');
-  const {
-    isOpen: isOpenDetails,
-    onOpen: onOpenDetails,
-    onClose: onCloseDetails,
-  } = useDisclosure();
   const { isOpen: isOpenAdd, onOpen: onOpenAdd, onClose: onCloseAdd } = useDisclosure();
 
   // setting up navigation
   const navigate = useNavigate();
 
-  const handleUnitClick = () => {
-    navigate('/groups');
-  };
   const [units, setUnits] = useState([]);
 
   const [hasError, setHasError] = useState(false);

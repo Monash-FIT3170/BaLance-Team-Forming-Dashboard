@@ -16,15 +16,11 @@ import {
   Tbody,
   Tr,
   Th,
-  Td,
   TableContainer,
   Heading,
-  Center,
   Spacer,
   HStack,
-  useDisclosure,
 } from '@chakra-ui/react';
-import { AddIcon } from '@chakra-ui/icons';
 import StudentRow from './StudentRowGroupDisplay';
 
 const GroupCard = (props) => {
