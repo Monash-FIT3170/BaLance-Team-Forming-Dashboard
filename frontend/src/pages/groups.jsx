@@ -2,9 +2,7 @@ import GroupCard from "../components/GroupCard";
 import { useParams } from 'react-router';
 import React, { useState, useEffect } from "react";
 import { Button, ButtonGroup, HStack, Spacer, Container, Heading, Center, Icon, useDisclosure, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, AlertDialogCloseButton, } from "@chakra-ui/react"
-import { MdFilterAlt } from 'react-icons/md'
 import { BiShuffle } from 'react-icons/bi'
-import NavBar from "../components/NavBar";
 import { Link, useNavigate } from "react-router-dom";
 
 const unitID = 'FIT2099_CL_S1_ON-CAMPUS'; // TODO: should get from database or state management
