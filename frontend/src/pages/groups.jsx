@@ -17,11 +17,8 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
-  AlertDialogCloseButton,
 } from '@chakra-ui/react';
-import { MdFilterAlt } from 'react-icons/md';
 import { BiShuffle } from 'react-icons/bi';
-import NavBar from '../components/NavBar';
 import { Link, useNavigate } from 'react-router-dom';
 
 const unitID = 'FIT2099_CL_S1_ON-CAMPUS'; // TODO: should get from database or state management
@@ -98,27 +95,22 @@ function Groups() {
 
   return (
     <div>
-      <Heading alignContent={'center'}>
+      <Heading alignContent={"center"}>
         <Center margin="10">{unitID}</Center>
       </Heading>
 
-      <HStack margin="0px 0px 5vh 0px">
-        <Spacer />
-        <Button onClick={handleUploadClick} colorScheme="gray">
+      <HStack margin="0px 20vw 5vh 20vw">
+
+        <Button onClick={handleUploadClick} colorScheme='gray' margin-left="20">
           Upload Students
         </Button>
+
         <Spacer />
-        <Spacer />
-        <Spacer />
-        <Spacer />
-        <Spacer />
-        <Spacer />
+
         <HStack m="40px">
           <Spacer />
-          <ButtonGroup colorScheme="#282c34" variant="outline" size="lg">
-            <Button margin="0px 2px" isDisabled={true}>
-              Groups
-            </Button>
+          <ButtonGroup colorScheme='#282c34' variant='outline' size='lg'>
+            <Button margin="0px 2px" isDisabled={true}>Groups</Button>
             <Link to={'/students/' + unitID}>
               <Button margin="0px 2px">Students</Button>
             </Link>
@@ -127,54 +119,38 @@ function Groups() {
         </HStack>
 
         <Spacer />
-        <Spacer />
-        <Spacer />
-        <Spacer />
-        <Spacer />
-        <Spacer />
-        <Spacer />
-        <Spacer />
-        <Spacer />
 
-        <Spacer />
-        <Spacer />
+        <Button colorScheme='gray' onClick={onOpen}>
+          Shuffle Groups<Icon margin="0px 0px 0px 10px" as={BiShuffle}></Icon>
+        </Button>
 
-        <HStack>
-          <Spacer />
+        <AlertDialog
+          isOpen={isOpen}
+          leastDestructiveRef={cancelRef}
+          onClose={onClose}
+        >
+          <AlertDialogOverlay>
+            <AlertDialogContent>
+              <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                Shuffle Groups
+              </AlertDialogHeader>
 
-          <Button colorScheme="gray" onClick={onOpen}>
-            Shuffle Groups<Icon margin="0px 0px 0px 10px" as={BiShuffle}></Icon>
-          </Button>
+              <AlertDialogBody>
+                Are you sure? This will delete all existing groups.
+              </AlertDialogBody>
 
-          <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
-            <AlertDialogOverlay>
-              <AlertDialogContent>
-                <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                  Shuffle Groups
-                </AlertDialogHeader>
+              <AlertDialogFooter>
+                <Button ref={cancelRef} onClick={onClose}>
+                  Cancel
+                </Button>
+                <Button colorScheme='green' onClick={handleShuffleGroups} ml={3}>
+                  Shuffle
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialogOverlay>
+        </AlertDialog>
 
-                <AlertDialogBody>
-                  Are you sure? This will delete all existing groups.
-                </AlertDialogBody>
-
-                <AlertDialogFooter>
-                  <Button ref={cancelRef} onClick={onClose}>
-                    Cancel
-                  </Button>
-                  <Button colorScheme="green" onClick={handleShuffleGroups} ml={3}>
-                    Shuffle
-                  </Button>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialogOverlay>
-          </AlertDialog>
-
-          <Button colorScheme="gray">
-            Filter Properties<Icon margin="0px 0px 0px 10px" as={MdFilterAlt}></Icon>
-          </Button>
-        </HStack>
-
-        <Spacer />
       </HStack>
 
       <Container className="groups" maxW="80vw">
