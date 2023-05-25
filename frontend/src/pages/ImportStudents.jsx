@@ -86,9 +86,10 @@ function ImportPage() {
 
   const handleAssignGroupsClick = () => {
     // Get currrent values
-    const groupStrategy = document.getElementById('groupStrategy').value;
-    const groupSize = document.getElementById('groupSize').value;
-    const variance = document.getElementById('variance').value;
+    const groupStrategy =
+      document.getElementById('groupStrategy').value || defaultStrategy;
+    const groupSize = document.getElementById('groupSize').value || defaultGroupSize;
+    const variance = document.getElementById('variance').value || defaultVariance;
 
     // Make API call
     fetch('http://localhost:8080/api/groups/' + unitID, {
@@ -132,6 +133,11 @@ function ImportPage() {
     // After successful creation
     setShowAlert(true);
   };
+
+  // Defaults for assigning groups
+  const defaultGroupSize = 4;
+  const defaultVariance = 1;
+  const defaultStrategy = 'random';
 
   // Formatted headers for different possible variables
   const headers = [

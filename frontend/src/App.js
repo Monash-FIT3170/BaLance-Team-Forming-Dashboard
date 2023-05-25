@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
-import ImportClass from './pages/ImportClass';
+import ImportStudents from './pages/ImportStudents';
 
 import UnitHomePage from './pages/UnitHomePage';
 import NavBar from './components/NavBar';
-import Groups from './pages/groups';
-import Students from './pages/students';
+import Groups from './pages/Groups';
+import Students from './pages/Students';
 import AssigningPage from './pages/AssigningPage';
 
 const theme = extendTheme({
@@ -27,7 +27,7 @@ function App() {
             <Route path="/" element={<UnitHomePage />} />
             <Route path="/groups/:unitID/*" element={<Groups />} />
             <Route path="/students/:unitID" element={<Students />} />
-            <Route path="/uploadStudents/:unitID" element={<ImportClass />} />
+            <Route path="/uploadStudents/:unitID" element={<ImportStudents />} />
             <Route path="/assigningPage" element={<AssigningPage />} />
           </Routes>
         </div>
