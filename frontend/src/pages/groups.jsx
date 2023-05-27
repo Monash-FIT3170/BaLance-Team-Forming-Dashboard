@@ -101,7 +101,7 @@ function Groups() {
 
       <HStack margin="0px 20vw 5vh 20vw">
 
-        <Button onClick={handleUploadClick} colorScheme='gray' margin-left="20">
+        <Button onClick={handleUploadClick} colorScheme='gray' margin-left="20" size={"lg"}>
           Upload Students
         </Button>
 
@@ -109,7 +109,7 @@ function Groups() {
 
         <HStack m="40px">
           <Spacer />
-          <ButtonGroup colorScheme='#282c34' variant='outline' size='lg'>
+          <ButtonGroup colorScheme='#282c34' variant='outline' size={"lg"}>
             <Button margin="0px 2px" isDisabled={true}>Groups</Button>
             <Link to={'/students/' + unitID}>
               <Button margin="0px 2px">Students</Button>
@@ -120,7 +120,7 @@ function Groups() {
 
         <Spacer />
 
-        <Button colorScheme='gray' onClick={onOpen}>
+        <Button colorScheme='gray' onClick={onOpen} size={"lg"}>
           Shuffle Groups<Icon margin="0px 0px 0px 10px" as={BiShuffle}></Icon>
         </Button>
 
