@@ -47,13 +47,10 @@ function UnitPage() {
   const handleSubmitUnit = (event) => {
     event.preventDefault();
 
-    console.log('POSTING data');
     const unitObject = {
       unitCode: unitCode,
       unitFaculty: unitName,
     };
-
-    console.log(unitObject);
 
     fetch('http://localhost:8080/api/units/', {
       method: 'POST',
@@ -118,8 +115,6 @@ function UnitPage() {
                     mb="5"
                     value={unitCode}
                     onChange={(event) => {
-                      console.log('AAAAAA');
-                      console.log(event.target.value);
                       setUnitCode(event.target.value);
                     }}
                   />
@@ -165,7 +160,6 @@ function UnitPage() {
       </Center>
 
       <Container className="units" maxW="80vw">
-        {console.log(units)}
         {units &&
           units.map((unit) => (
             <UnitCard {...unit} key={unit.unitCode} className="unit" />

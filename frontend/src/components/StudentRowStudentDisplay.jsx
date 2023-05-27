@@ -9,7 +9,6 @@ const StudentRow2 = (props) => {
   const { allLabs } = props;
 
   let labId = 0;
-  //console.log(allLabs);
   for (let i = 0; i < allLabs.length; i++) {
     for (let j = 0; j < allLabs[i].members.length; j++) {
       if (studentId === allLabs[i].members[j].studentId) {

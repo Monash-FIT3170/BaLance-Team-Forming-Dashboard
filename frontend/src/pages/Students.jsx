@@ -71,11 +71,6 @@ function Students() {
         strategy: groupStrategy,
       }),
     })
-      .then((res) =>
-        res.json().then((res) => {
-          console.log(res);
-        })
-      )
       .catch((error) => {
         console.error('Error:', error);
       })

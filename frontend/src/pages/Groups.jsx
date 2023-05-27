@@ -15,8 +15,6 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { ShuffleGroups } from '../components/ShuffleGroups';
 
-const unitID = 'FIT2099_CL_S1_ON-CAMPUS'; // TODO: should get from database or state management
-
 function Groups() {
   // Retrieve route parameters
   const { groupStrategy, groupSize, variance, unitID } = useParams();
@@ -73,11 +71,7 @@ function Groups() {
         strategy: groupStrategy,
       }),
     })
-      .then((res) =>
-        res.json().then((res) => {
-          console.log(res);
-        })
-      )
+      .then((res) => res.json())
       .catch((error) => {
         console.error('Error:', error);
       })
