@@ -31,7 +31,6 @@ function Groups() {
 
   const [state, setState] = useState([]);
   const [allGroups, setAllGroups] = useState([]);
-  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     const summary = [];
@@ -52,7 +51,7 @@ function Groups() {
           setAllGroups(summary);
         })
       )
-      .catch((err) => setHasError(true));
+      .catch((err) => console.error(err));
   }, []);
 
   const handleShuffleGroups = () => {

@@ -21,7 +21,6 @@ import { ShuffleGroups } from '../components/ShuffleGroups';
 function Students() {
   const [allStudents, setStudents] = useState([]);
   const [allGroups, setAllGroups] = useState([]);
-  const [hasError, setHasError] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
   const navigate = useNavigate();
@@ -36,7 +35,7 @@ function Students() {
 
     fetch('http://localhost:8080/api/students/' + unitID)
       .then((res) => res.json().then((res) => setStudents(res)))
-      .catch((err) => setHasError(true));
+      .catch((err) => console.error(err));
 
     fetch('http://localhost:8080/api/groups/' + unitID)
       .then((res) =>
@@ -52,7 +51,7 @@ function Students() {
           setAllGroups(labs);
         })
       )
-      .catch((err) => setHasError(true));
+      .catch((err) => console.error(err));
   }, []);
 
   const handleShuffleGroups = () => {

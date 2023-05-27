@@ -37,12 +37,6 @@ import { DragHandleIcon, CloseIcon, AddIcon, ChevronDownIcon } from '@chakra-ui/
 import NavBar from '../components/NavBar.jsx';
 
 function AssigningPage() {
-  let boxBg = useColorModeValue('white !important', '#111c44 !important');
-  let mainText = useColorModeValue('gray.800', 'white');
-  let secondaryText = useColorModeValue('gray.600', 'gray.600');
-  let iconBox = useColorModeValue('gray.100', 'whiteAlpha.200');
-  let iconColor = useColorModeValue('brand.200', 'white');
-
   const [checkedValues1, setCheckedValues1] = useState([]);
   const [checkedValues2, setCheckedValues2] = useState([]);
   const [checkedValues3, setCheckedValues3] = useState([]);

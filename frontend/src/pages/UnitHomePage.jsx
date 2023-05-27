@@ -33,15 +33,9 @@ function UnitPage() {
 
   // useState hooks for this page
   const [units, setUnits] = useState([]);
-
-  const [hasError, setHasError] = useState(false);
-
   const [unitCode, setUnitCode] = useState('');
-
   const [unitName, setUnitName] = useState('');
-
   const [unitYearOffering, setUnitYearOffering] = useState('');
-
   const [unitSemesterOffering, setUnitSemesterOffering] = useState('');
 
   const handleSubmitUnit = (event) => {
@@ -74,7 +68,6 @@ function UnitPage() {
         setUnits(data);
       })
       .catch((err) => {
-        setHasError(true);
         console.error('Error fetching units:', err);
       });
   }, []);
