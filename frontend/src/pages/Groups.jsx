@@ -9,19 +9,11 @@ import {
   Container,
   Heading,
   Center,
-  Icon,
   useDisclosure,
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogOverlay,
 } from '@chakra-ui/react';
-import { BiShuffle } from 'react-icons/bi';
-import { Link, useNavigate } from 'react-router-dom';
 
-const unitID = 'FIT2099_CL_S1_ON-CAMPUS'; // TODO: should get from database or state management
+import { Link, useNavigate } from 'react-router-dom';
+import { ShuffleGroups } from '../components/ShuffleGroups';
 
 function Groups() {
   // Retrieve route parameters
@@ -39,7 +31,6 @@ function Groups() {
 
   const [state, setState] = useState([]);
   const [allGroups, setAllGroups] = useState([]);
-  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     const summary = [];
@@ -60,7 +51,7 @@ function Groups() {
           setAllGroups(summary);
         })
       )
-      .catch((err) => setHasError(true));
+      .catch((err) => console.error(err));
   }, []);
 
   const handleShuffleGroups = () => {
@@ -79,11 +70,7 @@ function Groups() {
         strategy: groupStrategy,
       }),
     })
-      .then((res) =>
-        res.json().then((res) => {
-          console.log(res);
-        })
-      )
+      .then((res) => res.json())
       .catch((error) => {
         console.error('Error:', error);
       })
@@ -95,13 +82,12 @@ function Groups() {
 
   return (
     <div>
-      <Heading alignContent={"center"}>
+      <Heading alignContent={'center'}>
         <Center margin="10">{unitID}</Center>
       </Heading>
 
       <HStack margin="0px 20vw 5vh 20vw">
-
-        <Button onClick={handleUploadClick} colorScheme='gray' margin-left="20" size={"lg"}>
+        <Button onClick={handleUploadClick} colorScheme="gray" margin-left="20">
           Upload Students
         </Button>
 
@@ -109,48 +95,24 @@ function Groups() {
 
         <HStack m="40px">
           <Spacer />
-          <ButtonGroup colorScheme='#282c34' variant='outline' size={"lg"}>
-            <Button margin="0px 2px" isDisabled={true}>Groups</Button>
+          <ButtonGroup colorScheme="#282c34" variant="outline" size="lg">
+            <Button margin="0px 2px" isDisabled={true}>
+              Groups
+            </Button>
             <Link to={'/students/' + unitID}>
               <Button margin="0px 2px">Students</Button>
             </Link>
           </ButtonGroup>
           <Spacer />
         </HStack>
-
         <Spacer />
-
-        <Button colorScheme='gray' onClick={onOpen} size={"lg"}>
-          Shuffle Groups<Icon margin="0px 0px 0px 10px" as={BiShuffle}></Icon>
-        </Button>
-
-        <AlertDialog
-          isOpen={isOpen}
-          leastDestructiveRef={cancelRef}
+        <ShuffleGroups
+          onOpen={onOpen}
           onClose={onClose}
-        >
-          <AlertDialogOverlay>
-            <AlertDialogContent>
-              <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-                Shuffle Groups
-              </AlertDialogHeader>
-
-              <AlertDialogBody>
-                Are you sure? This will delete all existing groups.
-              </AlertDialogBody>
-
-              <AlertDialogFooter>
-                <Button ref={cancelRef} onClick={onClose}>
-                  Cancel
-                </Button>
-                <Button colorScheme='green' onClick={handleShuffleGroups} ml={3}>
-                  Shuffle
-                </Button>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialogOverlay>
-        </AlertDialog>
-
+          isOpen={isOpen}
+          cancelRef={cancelRef}
+          handleShuffleGroups={handleShuffleGroups}
+        />
       </HStack>
 
       <Container className="groups" maxW="80vw">

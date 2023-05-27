@@ -1,7 +1,7 @@
 import { EditIcon } from '@chakra-ui/icons';
 import { useState } from 'react';
 import { useParams } from 'react-router';
-import { useNavigate } from 'react-router-dom';
+
 import {
   Button,
   HStack,
@@ -27,7 +27,6 @@ export default function ChangeStudentGroupModal(props) {
     newGroupId: groupId,
   });
 
-  console.log(allIds);
   let options = [];
 
   for (let i = 0; i < allIds.length; i++) {
@@ -41,12 +40,6 @@ export default function ChangeStudentGroupModal(props) {
 
   const handleConfirmClick = () => {
     onClose();
-
-    console.log({
-      student: studentInfo,
-      initialGroupId: changeGroupObj.initialGroupId,
-      newGroupId: changeGroupObj.newGroupId,
-    });
 
     fetch(
       'http://localhost:8080/api/groups/' +

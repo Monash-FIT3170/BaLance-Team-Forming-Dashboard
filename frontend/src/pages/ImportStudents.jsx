@@ -10,11 +10,9 @@ import {
   Box,
   Text,
   Flex,
-  Input,
   Alert,
   AlertIcon,
   AlertTitle,
-  extendTheme,
   AlertDescription,
   Button,
   Table,
@@ -23,115 +21,49 @@ import {
   Td,
   TableContainer,
   Divider,
-  CloseButton,
   Select,
-  FormControl,
-  FormLabel,
   Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
   ModalFooter,
   ModalBody,
-  ModalCloseButton,
   useDisclosure,
-  Icon,
   IconButton,
 } from '@chakra-ui/react';
 import { AddIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
 
 function ImportPage() {
-  // State hooks for this page
-  const [isFileChosen, setIsFileChosen] = useState(false);
-  const [csvData, setCsvData] = useState('');
-  const [csvFile, setCsvFile] = useState(null);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
-  const [isConfirmationClearOpen, setIsConfirmationClearOpen] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
-  const [studentId, setStudentId] = useState('');
-  const [studentFirstName, setStudentFirstName] = useState('');
-  const [studentLastName, setStudentLastName] = useState('');
-  const [studentEmailAddress, setStudentEmailAddress] = useState('');
-  const [wamAverage, setWamAverage] = useState('');
-  const [gender, setGender] = useState('');
-  const [labId, setLabId] = useState('');
-  const [enrolmentStatus, setEnrolmentStatus] = useState('');
-  const [discPersonality, setDiscPersonality] = useState('');
+  class Student {
+    constructor(
+      studentId,
+      studentFirstName,
+      studentLastName,
+      studentEmailAddress,
+      wamAverage,
+      gender,
+      labId,
+      enrolmentStatus,
+      discPersonality
+    ) {
+      this.studentId = studentId;
+      this.studentFirstName = studentFirstName;
+      this.studentLastName = studentLastName;
+      this.studentEmailAddress = studentEmailAddress;
+      this.wamAverage = wamAverage;
+      this.gender = gender;
+      this.labId = labId;
+      this.enrolmentStatus = enrolmentStatus;
+      this.discPersonality = discPersonality;
+    }
+  }
 
-  // Define state for the current sort order and column
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
-  const [profileToDelete, setProfileToDelete] = useState(null);
-  const [profiles, setProfiles] = useState([]);
-  const navigate = useNavigate();
+  const blankStudent = new Student('', '', '', '', '', '', '', '', '');
 
-  // UseDisclosure variables for modals
-  const {
-    isOpen: isDeleteProfileOpen,
-    onOpen: onDeleteProfileOpen,
-    onClose: onDeleteProfileClose,
-  } = useDisclosure();
-  const {
-    isOpen: isAddProfileOpen,
-    onOpen: onAddProfileOpen,
-    onClose: onAddProfileClose,
-  } = useDisclosure();
-  const {
-    isOpen: isEditProfileOpen,
-    onOpen: onEditProfileOpen,
-    onClose: onEditProfileClose,
-  } = useDisclosure();
-
-  const { unitID } = useParams();
-
-  const handleAssignGroupsClick = () => {
-    // Get currrent values
-    const groupStrategy = document.getElementById('groupStrategy').value;
-    const groupSize = document.getElementById('groupSize').value;
-    const variance = document.getElementById('variance').value;
-
-    // Make API call
-    fetch('http://localhost:8080/api/groups/' + unitID, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        groupSize: groupSize,
-        variance: variance,
-        strategy: groupStrategy,
-      }),
-    }).then((res) => res.json().then((res) => console.log(res)));
-    // Go to groups page
-    navigate(`/groups/${unitID}/${groupStrategy}/${groupSize}/${variance}`);
-  };
-
-  //create unit for new students
-  const handleAddProfilesClick = async () => {
-    // Make API call
-    fetch('http://localhost:8080/api/students/' + unitID, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(profiles),
-    })
-      .then((response) => {
-        if (response.ok) {
-          console.log('Data successfully sent to the REST API');
-          // Handle the response from the API if needed
-        } else {
-          throw new Error('Error sending data to the REST API');
-        }
-      })
-      .catch((error) => {
-        console.error('Error sending data to the REST API:', error);
-        // Handle the error from the API if needed
-      });
-
-    // After successful creation
-    setShowAlert(true);
-  };
+  // Defaults for assigning groups
+  const defaultGroupSize = 4;
+  const defaultVariance = 1;
+  const defaultStrategy = 'random';
 
   // Formatted headers for different possible variables
   const headers = [
@@ -157,6 +89,87 @@ function ImportPage() {
     GENDER: 'gender',
   };
 
+  // State hooks for this page
+  const [isFileChosen, setIsFileChosen] = useState(false);
+  const [csvFile, setCsvFile] = useState(null);
+  const [isConfirmationClearOpen, setIsConfirmationClearOpen] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [currProfile, setCurrProfile] = useState(blankStudent);
+
+  // Define state for the current sort order and column
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
+  const [profileToDelete, setProfileToDelete] = useState(null);
+  const [profiles, setProfiles] = useState([]);
+  const navigate = useNavigate();
+
+  // UseDisclosure variables for modals
+  const {
+    isOpen: isDeleteProfileOpen,
+    onOpen: onDeleteProfileOpen,
+    onClose: onDeleteProfileClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isAddProfileOpen,
+    onOpen: onAddProfileOpen,
+    onClose: onAddProfileClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isEditProfileOpen,
+    onOpen: onEditProfileOpen,
+    onClose: onEditProfileClose,
+  } = useDisclosure();
+
+  const { unitID } = useParams();
+
+  const handleAssignGroupsClick = () => {
+    // Get currrent values
+    const groupStrategy =
+      document.getElementById('groupStrategy').value || defaultStrategy;
+    const groupSize = document.getElementById('groupSize').value || defaultGroupSize;
+    const variance = document.getElementById('variance').value || defaultVariance;
+
+    // Make API call
+    fetch('http://localhost:8080/api/groups/' + unitID, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        groupSize: groupSize,
+        variance: variance,
+        strategy: groupStrategy,
+      }),
+    });
+    // Go to groups page
+    navigate(`/groups/${unitID}/${groupStrategy}/${groupSize}/${variance}`);
+  };
+
+  //create unit for new students
+  const handleAddProfilesClick = async () => {
+    // Make API call
+    fetch('http://localhost:8080/api/students/' + unitID, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(profiles),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error sending data to the REST API');
+        }
+      })
+      .catch((error) => {
+        console.error('Error sending data to the REST API:', error);
+        // Handle the error from the API if needed
+      });
+
+    // After successful creation
+    setShowAlert(true);
+  };
+
   // Logic for table sorting by column
   const handleSort = (header) => {
     const key = header[0];
@@ -165,13 +178,6 @@ function ImportPage() {
         ...sortConfig,
         direction: sortConfig.direction === 'ascending' ? 'descending' : 'ascending',
       });
-      console.log('current sortConfig key: ', sortConfig.key);
-      console.log(
-        'current sortConfig key: ',
-        key,
-        'current direction: ',
-        sortConfig.direction
-      );
     } else {
       setSortConfig({ key, direction: 'ascending' });
     }
@@ -180,7 +186,7 @@ function ImportPage() {
   // Logic for processing a file upload
   const handleFile = (file) => {
     if (!file.type.match('csv.*')) {
-      setErrorMessage('Please select a CSV file');
+      console.error('Please select a CSV file');
       return;
     }
 
@@ -191,8 +197,6 @@ function ImportPage() {
       const csvString = event.target.result;
       const csvDict = csvToDict(csvString);
       setCsvFile(file);
-      setErrorMessage('');
-      setCsvData(csvDict);
 
       // Add default values to enrollmentStatus and discPersonality
       // TODO: expect this info from CSV file
@@ -228,9 +232,6 @@ function ImportPage() {
         }
         result.push(obj);
       }
-
-      console.log(result);
-
       return result;
     }
   };
@@ -254,35 +255,16 @@ function ImportPage() {
   };
 
   const handleAttributeChange = (key, value) => {
-    setProfileToEdit({
-      ...profileToEdit,
+    setCurrProfile({
+      ...currProfile,
       [key]: value,
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newProfile = {
-      studentId,
-      studentFirstName,
-      studentLastName,
-      studentEmailAddress,
-      wamAverage,
-      gender,
-      labId,
-      enrolmentStatus,
-      discPersonality,
-    };
-    setProfiles([...profiles, newProfile]);
-    setStudentId('');
-    setStudentFirstName('');
-    setStudentLastName('');
-    setStudentEmailAddress('');
-    setWamAverage('');
-    setGender('');
-    setLabId('');
-    setEnrolmentStatus('Active'); // TODO: with new CSV input, Default 'Active' for now
-    setDiscPersonality('');
+    setProfiles([...profiles, currProfile]);
+    setCurrProfile(blankStudent);
     onAddProfileClose();
   };
 
@@ -296,17 +278,10 @@ function ImportPage() {
     return 0;
   });
 
-  const [profileToEdit, setProfileToEdit] = useState(null);
-
   const handleSaveProfile = (updatedProfile) => {
-    if (!profileToEdit) {
-      // handle error - profileToEdit is not defined
-      return;
-    }
-
     // Find the index of the profile in the profiles array
     const index = profiles.findIndex(
-      (profile) => profile.studentEmailAddress === profileToEdit.studentEmailAddress
+      (profile) => profile.studentEmailAddress === currProfile.studentEmailAddress
     );
 
     // Update the profile object with the new values
@@ -315,15 +290,11 @@ function ImportPage() {
 
     // Update the profiles state with the updated profile object
     setProfiles(updatedProfiles);
+    setCurrProfile(blankStudent);
 
     // Close the edit modal
     onEditProfileClose();
   };
-
-  // const handleDeleteProfile = (emailAddress) => {
-  //   const newProfiles = profiles.filter((profile) => profile.emailAddress !== emailAddress);
-  //   setProfiles(newProfiles);
-  // };
 
   // Profile Editing functions
   const handleDeleteProfile = (studentEmailAddress) => {
@@ -335,7 +306,6 @@ function ImportPage() {
   };
 
   const handleDeleteInactiveProfiles = (profiles) => {
-    console.log(profiles);
     const newProfiles = profiles.filter(
       (profile) => profile.enrolmentStatus.toLowerCase() !== 'active'
     );
@@ -449,7 +419,7 @@ function ImportPage() {
                       <EditIcon
                         style={{ cursor: 'pointer' }}
                         onClick={() => {
-                          setProfileToEdit(profile);
+                          setCurrProfile(profile);
                           onEditProfileOpen();
                         }}
                       />
@@ -471,19 +441,19 @@ function ImportPage() {
                 <ModalBody>
                   <FormField
                     label="Student ID"
-                    value={profileToEdit?.studentId}
+                    value={currProfile?.studentId}
                     onChange={(e) => handleAttributeChange('studentId', e.target.value)}
                   />
                   <FormField
                     label="First Name"
-                    value={profileToEdit?.studentFirstName}
+                    value={currProfile?.studentFirstName}
                     onChange={(e) =>
                       handleAttributeChange('studentFirstName', e.target.value)
                     }
                   />
                   <FormField
                     label="Last Name"
-                    value={profileToEdit?.studentLastName}
+                    value={currProfile?.studentLastName}
                     onChange={(e) =>
                       handleAttributeChange('studentLastName', e.target.value)
                     }
@@ -491,7 +461,7 @@ function ImportPage() {
                   <FormField
                     label="Email Address"
                     placeholder="Email Address"
-                    value={profileToEdit?.studentEmailAddress}
+                    value={currProfile?.studentEmailAddress}
                     onChange={(e) =>
                       handleAttributeChange('studentEmailAddress', e.target.value)
                     }
@@ -499,13 +469,13 @@ function ImportPage() {
                   <FormField
                     label="WAM"
                     placeholder="WAM"
-                    value={profileToEdit?.wamAverage}
+                    value={currProfile?.wamAverage}
                     onChange={(e) => handleAttributeChange('wamAverage', e.target.value)}
                   />
                   <FormField
                     label="Gender"
                     placeholder="Select Gender"
-                    value={profileToEdit?.gender}
+                    value={currProfile?.gender}
                     onChange={(e) => handleAttributeChange('gender', e.target.value)}
                     options={[
                       { label: 'M', value: 'M' },
@@ -515,13 +485,13 @@ function ImportPage() {
                   <FormField
                     label="Lab ID"
                     placeholder="Lab ID"
-                    value={profileToEdit?.labId}
+                    value={currProfile?.labId}
                     onChange={(e) => handleAttributeChange('labId', e.target.value)}
                   />
                   <FormField
                     label="Enrolment Status"
                     placeholder="Select Enrolment Status"
-                    value={profileToEdit?.enrolmentStatus}
+                    value={currProfile?.enrolmentStatus}
                     onChange={(e) =>
                       handleAttributeChange('enrolmentStatus', e.target.value)
                     }
@@ -533,7 +503,7 @@ function ImportPage() {
                   <FormField
                     label="DISC Personality"
                     placeholder="Select Personality Type"
-                    value={profileToEdit?.discPersonality}
+                    value={currProfile?.discPersonality}
                     onChange={(e) =>
                       handleAttributeChange('discPersonality', e.target.value)
                     }
@@ -547,7 +517,7 @@ function ImportPage() {
                 </ModalBody>
                 <ModalFooter>
                   <Button
-                    onClick={() => handleSaveProfile(profileToEdit)}
+                    onClick={() => handleSaveProfile(currProfile)}
                     type="submit"
                     colorScheme="green"
                     mr={3}
@@ -556,7 +526,6 @@ function ImportPage() {
                   </Button>
                   <Button
                     onClick={() => {
-                      setIsEditing(false);
                       onEditProfileClose();
                     }}
                   >
@@ -637,38 +606,50 @@ function ImportPage() {
               <FormField
                 label="Student ID"
                 placeholder="Enter Student ID"
-                value={studentId}
-                onChange={(e) => setStudentId(e.target.value)}
+                value={currProfile.studentId}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, studentId: e.target.value })
+                }
               />
               <FormField
                 label="First Name"
                 placeholder="Enter first name"
-                value={studentFirstName}
-                onChange={(e) => setStudentFirstName(e.target.value)}
+                value={currProfile.studentFirstName}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, studentFirstName: e.target.value })
+                }
               />
               <FormField
                 label="Last Name"
                 placeholder="Enter last name"
-                value={studentLastName}
-                onChange={(e) => setStudentLastName(e.target.value)}
+                value={currProfile.studentLastName}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, studentLastName: e.target.value })
+                }
               />
               <FormField
                 label="Email"
                 placeholder="Enter email"
-                value={studentEmailAddress}
-                onChange={(e) => setStudentEmailAddress(e.target.value)}
+                value={currProfile.studentEmailAddress}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, studentEmailAddress: e.target.value })
+                }
               />
               <FormField
                 label="WAM"
                 placeholder="Enter WAM"
-                value={wamAverage}
-                onChange={(e) => setWamAverage(e.target.value)}
+                value={currProfile.wamAverage}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, wamAverage: e.target.value })
+                }
               />
               <FormField
                 label="Gender"
                 placeholder="Select gender"
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
+                value={currProfile.gender}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, gender: e.target.value })
+                }
                 options={[
                   { label: 'M', value: 'M' },
                   { label: 'F', value: 'F' },
@@ -677,14 +658,18 @@ function ImportPage() {
               <FormField
                 label="Lab ID"
                 placeholder="Enter Lab ID"
-                value={labId}
-                onChange={(e) => setLabId(e.target.value)}
+                value={currProfile.labId}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, labId: e.target.value })
+                }
               />
               <FormField
                 label="Enrolment Status"
                 placeholder="Select Enrolment Status"
-                value={enrolmentStatus}
-                onChange={(e) => setEnrolmentStatus(e.target.value)}
+                value={currProfile.enrolmentStatus}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, enrolmentStatus: e.target.value })
+                }
                 options={[
                   { label: 'Active', value: 'ACTIVE' },
                   { label: 'Inactive', value: 'INACTIVE' },
@@ -693,8 +678,10 @@ function ImportPage() {
               <FormField
                 label="DISC Personality"
                 placeholder="Select Personality Type"
-                value={discPersonality}
-                onChange={(e) => setDiscPersonality(e.target.value)}
+                value={currProfile.discPersonality}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, discPersonality: e.target.value })
+                }
                 options={[
                   { label: 'Dominant', value: 'DOMINANT' },
                   { label: 'Influence', value: 'INFLUENCE' },

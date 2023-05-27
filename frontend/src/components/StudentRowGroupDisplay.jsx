@@ -5,7 +5,6 @@ import ChangeStudentGroupModal from './ChangeStudentGroupModal';
 function StudentRow(props) {
   /*HTML component for each student in each group in the 'View Groups' View*/
   // desctructure the content of props
-  console.log(props);
   const { studentInfo, classNum, groupNum, key, allIds, groupId } = props;
 
   return (

@@ -33,27 +33,18 @@ function UnitPage() {
 
   // useState hooks for this page
   const [units, setUnits] = useState([]);
-
-  const [hasError, setHasError] = useState(false);
-
   const [unitCode, setUnitCode] = useState('');
-
   const [unitName, setUnitName] = useState('');
-
   const [unitYearOffering, setUnitYearOffering] = useState('');
-
   const [unitSemesterOffering, setUnitSemesterOffering] = useState('');
 
   const handleSubmitUnit = (event) => {
     event.preventDefault();
 
-    console.log('POSTING data');
     const unitObject = {
       unitCode: unitCode,
       unitFaculty: unitName,
     };
-
-    console.log(unitObject);
 
     fetch('http://localhost:8080/api/units/', {
       method: 'POST',
@@ -77,7 +68,6 @@ function UnitPage() {
         setUnits(data);
       })
       .catch((err) => {
-        setHasError(true);
         console.error('Error fetching units:', err);
       });
   }, []);
@@ -118,8 +108,6 @@ function UnitPage() {
                     mb="5"
                     value={unitCode}
                     onChange={(event) => {
-                      console.log('AAAAAA');
-                      console.log(event.target.value);
                       setUnitCode(event.target.value);
                     }}
                   />
@@ -165,7 +153,6 @@ function UnitPage() {
       </Center>
 
       <Container className="units" maxW="80vw">
-        {console.log(units)}
         {units &&
           units.map((unit) => (
             <UnitCard {...unit} key={unit.unitCode} className="unit" />

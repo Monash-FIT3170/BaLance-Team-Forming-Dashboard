@@ -78,4 +78,5 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 # Linting and Formatting
 
 ## Prettier
+
 To use prettier for formatting your files, cd to `frontend` directory and then run `npx prettier --write src/*`.
