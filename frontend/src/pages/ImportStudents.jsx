@@ -94,8 +94,7 @@ function ImportPage() {
   const [csvFile, setCsvFile] = useState(null);
   const [isConfirmationClearOpen, setIsConfirmationClearOpen] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [student, setStudent] = useState(blankStudent);
-  const [profileToEdit, setProfileToEdit] = useState(null);
+  const [currProfile, setCurrProfile] = useState(blankStudent);
 
   // Define state for the current sort order and column
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
@@ -256,16 +255,16 @@ function ImportPage() {
   };
 
   const handleAttributeChange = (key, value) => {
-    setProfileToEdit({
-      ...profileToEdit,
+    setCurrProfile({
+      ...currProfile,
       [key]: value,
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setProfiles([...profiles, student]);
-    setStudent(blankStudent);
+    setProfiles([...profiles, currProfile]);
+    setCurrProfile(blankStudent);
     onAddProfileClose();
   };
 
@@ -280,14 +279,9 @@ function ImportPage() {
   });
 
   const handleSaveProfile = (updatedProfile) => {
-    if (!profileToEdit) {
-      // handle error - profileToEdit is not defined
-      return;
-    }
-
     // Find the index of the profile in the profiles array
     const index = profiles.findIndex(
-      (profile) => profile.studentEmailAddress === profileToEdit.studentEmailAddress
+      (profile) => profile.studentEmailAddress === currProfile.studentEmailAddress
     );
 
     // Update the profile object with the new values
@@ -296,15 +290,11 @@ function ImportPage() {
 
     // Update the profiles state with the updated profile object
     setProfiles(updatedProfiles);
+    setCurrProfile(blankStudent);
 
     // Close the edit modal
     onEditProfileClose();
   };
-
-  // const handleDeleteProfile = (emailAddress) => {
-  //   const newProfiles = profiles.filter((profile) => profile.emailAddress !== emailAddress);
-  //   setProfiles(newProfiles);
-  // };
 
   // Profile Editing functions
   const handleDeleteProfile = (studentEmailAddress) => {
@@ -429,7 +419,7 @@ function ImportPage() {
                       <EditIcon
                         style={{ cursor: 'pointer' }}
                         onClick={() => {
-                          setProfileToEdit(profile);
+                          setCurrProfile(profile);
                           onEditProfileOpen();
                         }}
                       />
@@ -451,19 +441,19 @@ function ImportPage() {
                 <ModalBody>
                   <FormField
                     label="Student ID"
-                    value={profileToEdit?.studentId}
+                    value={currProfile?.studentId}
                     onChange={(e) => handleAttributeChange('studentId', e.target.value)}
                   />
                   <FormField
                     label="First Name"
-                    value={profileToEdit?.studentFirstName}
+                    value={currProfile?.studentFirstName}
                     onChange={(e) =>
                       handleAttributeChange('studentFirstName', e.target.value)
                     }
                   />
                   <FormField
                     label="Last Name"
-                    value={profileToEdit?.studentLastName}
+                    value={currProfile?.studentLastName}
                     onChange={(e) =>
                       handleAttributeChange('studentLastName', e.target.value)
                     }
@@ -471,7 +461,7 @@ function ImportPage() {
                   <FormField
                     label="Email Address"
                     placeholder="Email Address"
-                    value={profileToEdit?.studentEmailAddress}
+                    value={currProfile?.studentEmailAddress}
                     onChange={(e) =>
                       handleAttributeChange('studentEmailAddress', e.target.value)
                     }
@@ -479,13 +469,13 @@ function ImportPage() {
                   <FormField
                     label="WAM"
                     placeholder="WAM"
-                    value={profileToEdit?.wamAverage}
+                    value={currProfile?.wamAverage}
                     onChange={(e) => handleAttributeChange('wamAverage', e.target.value)}
                   />
                   <FormField
                     label="Gender"
                     placeholder="Select Gender"
-                    value={profileToEdit?.gender}
+                    value={currProfile?.gender}
                     onChange={(e) => handleAttributeChange('gender', e.target.value)}
                     options={[
                       { label: 'M', value: 'M' },
@@ -495,13 +485,13 @@ function ImportPage() {
                   <FormField
                     label="Lab ID"
                     placeholder="Lab ID"
-                    value={profileToEdit?.labId}
+                    value={currProfile?.labId}
                     onChange={(e) => handleAttributeChange('labId', e.target.value)}
                   />
                   <FormField
                     label="Enrolment Status"
                     placeholder="Select Enrolment Status"
-                    value={profileToEdit?.enrolmentStatus}
+                    value={currProfile?.enrolmentStatus}
                     onChange={(e) =>
                       handleAttributeChange('enrolmentStatus', e.target.value)
                     }
@@ -513,7 +503,7 @@ function ImportPage() {
                   <FormField
                     label="DISC Personality"
                     placeholder="Select Personality Type"
-                    value={profileToEdit?.discPersonality}
+                    value={currProfile?.discPersonality}
                     onChange={(e) =>
                       handleAttributeChange('discPersonality', e.target.value)
                     }
@@ -527,7 +517,7 @@ function ImportPage() {
                 </ModalBody>
                 <ModalFooter>
                   <Button
-                    onClick={() => handleSaveProfile(profileToEdit)}
+                    onClick={() => handleSaveProfile(currProfile)}
                     type="submit"
                     colorScheme="green"
                     mr={3}
@@ -616,44 +606,44 @@ function ImportPage() {
               <FormField
                 label="Student ID"
                 placeholder="Enter Student ID"
-                value={student.studentId}
-                onChange={(e) => setStudent({ ...student, studentId: e.target.value })}
+                value={currProfile.studentId}
+                onChange={(e) => setCurrProfile({ ...currProfile, studentId: e.target.value })}
               />
               <FormField
                 label="First Name"
                 placeholder="Enter first name"
-                value={student.studentFirstName}
+                value={currProfile.studentFirstName}
                 onChange={(e) =>
-                  setStudent({ ...student, studentFirstName: e.target.value })
+                  setCurrProfile({ ...currProfile, studentFirstName: e.target.value })
                 }
               />
               <FormField
                 label="Last Name"
                 placeholder="Enter last name"
-                value={student.studentLastName}
+                value={currProfile.studentLastName}
                 onChange={(e) =>
-                  setStudent({ ...student, studentLastName: e.target.value })
+                  setCurrProfile({ ...currProfile, studentLastName: e.target.value })
                 }
               />
               <FormField
                 label="Email"
                 placeholder="Enter email"
-                value={student.studentEmailAddress}
+                value={currProfile.studentEmailAddress}
                 onChange={(e) =>
-                  setStudent({ ...student, studentEmailAddress: e.target.value })
+                  setCurrProfile({ ...currProfile, studentEmailAddress: e.target.value })
                 }
               />
               <FormField
                 label="WAM"
                 placeholder="Enter WAM"
-                value={student.wamAverage}
-                onChange={(e) => setStudent({ ...student, wamAverage: e.target.value })}
+                value={currProfile.wamAverage}
+                onChange={(e) => setCurrProfile({ ...currProfile, wamAverage: e.target.value })}
               />
               <FormField
                 label="Gender"
                 placeholder="Select gender"
-                value={student.gender}
-                onChange={(e) => setStudent({ ...student, gender: e.target.value })}
+                value={currProfile.gender}
+                onChange={(e) => setCurrProfile({ ...currProfile, gender: e.target.value })}
                 options={[
                   { label: 'M', value: 'M' },
                   { label: 'F', value: 'F' },
@@ -662,15 +652,15 @@ function ImportPage() {
               <FormField
                 label="Lab ID"
                 placeholder="Enter Lab ID"
-                value={student.labId}
-                onChange={(e) => setStudent({ ...student, labId: e.target.value })}
+                value={currProfile.labId}
+                onChange={(e) => setCurrProfile({ ...currProfile, labId: e.target.value })}
               />
               <FormField
                 label="Enrolment Status"
                 placeholder="Select Enrolment Status"
-                value={student.enrolmentStatus}
+                value={currProfile.enrolmentStatus}
                 onChange={(e) =>
-                  setStudent({ ...student, enrolmentStatus: e.target.value })
+                  setCurrProfile({ ...currProfile, enrolmentStatus: e.target.value })
                 }
                 options={[
                   { label: 'Active', value: 'ACTIVE' },
@@ -680,9 +670,9 @@ function ImportPage() {
               <FormField
                 label="DISC Personality"
                 placeholder="Select Personality Type"
-                value={student.discPersonality}
+                value={currProfile.discPersonality}
                 onChange={(e) =>
-                  setStudent({ ...student, discPersonality: e.target.value })
+                  setCurrProfile({ ...currProfile, discPersonality: e.target.value })
                 }
                 options={[
                   { label: 'Dominant', value: 'DOMINANT' },
