@@ -79,7 +79,7 @@ function Students() {
 
             <HStack margin="0px 20vw 5vh 20vw">
 
-        <Button onClick={handleUploadClick} colorScheme='gray' margin-left="20">
+        <Button onClick={handleUploadClick} colorScheme='gray' margin-left="20" size={"lg"}>
           Upload Students
         </Button>
 
@@ -87,7 +87,7 @@ function Students() {
 
         <HStack m="40px">
           <Spacer />
-          <ButtonGroup colorScheme='#282c34' variant='outline' size='lg'>
+          <ButtonGroup colorScheme='#282c34' variant='outline' size={"lg"}>
             <Link to={'/groups/' + unitID}>
                 <Button margin="0px 2px">Groups</Button>
             </Link>
@@ -98,7 +98,7 @@ function Students() {
 
         <Spacer />
 
-        <Button colorScheme='gray' onClick={onOpen}>
+        <Button colorScheme='gray' onClick={onOpen} size={"lg"}>
           Shuffle Groups<Icon margin="0px 0px 0px 10px" as={BiShuffle}></Icon>
         </Button>
 
