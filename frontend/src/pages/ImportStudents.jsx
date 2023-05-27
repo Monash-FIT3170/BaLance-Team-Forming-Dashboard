@@ -607,7 +607,9 @@ function ImportPage() {
                 label="Student ID"
                 placeholder="Enter Student ID"
                 value={currProfile.studentId}
-                onChange={(e) => setCurrProfile({ ...currProfile, studentId: e.target.value })}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, studentId: e.target.value })
+                }
               />
               <FormField
                 label="First Name"
@@ -637,13 +639,17 @@ function ImportPage() {
                 label="WAM"
                 placeholder="Enter WAM"
                 value={currProfile.wamAverage}
-                onChange={(e) => setCurrProfile({ ...currProfile, wamAverage: e.target.value })}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, wamAverage: e.target.value })
+                }
               />
               <FormField
                 label="Gender"
                 placeholder="Select gender"
                 value={currProfile.gender}
-                onChange={(e) => setCurrProfile({ ...currProfile, gender: e.target.value })}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, gender: e.target.value })
+                }
                 options={[
                   { label: 'M', value: 'M' },
                   { label: 'F', value: 'F' },
@@ -653,7 +659,9 @@ function ImportPage() {
                 label="Lab ID"
                 placeholder="Enter Lab ID"
                 value={currProfile.labId}
-                onChange={(e) => setCurrProfile({ ...currProfile, labId: e.target.value })}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, labId: e.target.value })
+                }
               />
               <FormField
                 label="Enrolment Status"

@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import {Box, ChakraProvider, extendTheme} from '@chakra-ui/react';
+import { Box, ChakraProvider, extendTheme } from '@chakra-ui/react';
 import ImportStudents from './pages/ImportStudents';
 
 import UnitHomePage from './pages/UnitHomePage';
@@ -22,7 +22,7 @@ function App() {
     <ChakraProvider theme={theme}>
       <BrowserRouter>
         <NavBar />
-        <Box pt="12vh"/>
+        <Box pt="12vh" />
         <div className="App">
           <Routes>
             <Route path="/" element={<UnitHomePage />} />
