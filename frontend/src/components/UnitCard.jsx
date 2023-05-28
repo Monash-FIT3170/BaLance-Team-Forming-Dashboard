@@ -1,3 +1,5 @@
+
+//imports
 import {
   Link,
   Flex,
@@ -20,6 +22,8 @@ import { IoEllipsisHorizontalSharp, IoTrashOutline } from 'react-icons/io5';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 
 const UnitCard = (unit) => {
+
+  //setting the colors of the card
   let boxBg = useColorModeValue('white !important', '#111c44 !important');
   let mainText = useColorModeValue('gray.800', 'white');
   let secondaryText = useColorModeValue('gray.600', 'gray.600');
@@ -31,11 +35,13 @@ const UnitCard = (unit) => {
     onClose: onCloseDetails,
   } = useDisclosure();
 
+  //getting the unit details from the unit object
   const unitCode = unit.unitCode;
   const unitName = unit.unitFaculty;
 
   const navigate = useNavigate();
 
+  //navigate to the froups for the current unit if it is clicked
   const handleUnitClick = () => {
     navigate('/groups/' + unitCode);
   };
@@ -67,6 +73,7 @@ const UnitCard = (unit) => {
           fontSize="xl"
           me="auto"
         >
+          {/* the unit name button */}
           <Button
             onClick={handleUnitClick}
             style={{ fontWeight: 'bold', fontSize: '20px' }}
@@ -75,6 +82,7 @@ const UnitCard = (unit) => {
           </Button>
         </Text>
 
+        {/* the 3 dots button */}
         <Button
           w="38px"
           h="38px"
@@ -87,6 +95,8 @@ const UnitCard = (unit) => {
         >
           <Icon w="24px" h="24px" as={IoEllipsisHorizontalSharp} color={iconColor} />
         </Button>
+
+        {/* the popup when the 3 dots button is clicked, shows the unit details */}
         <Modal
           closeOnOverlayClick={false}
           isOpen={isOpenDetails}
@@ -122,6 +132,8 @@ const UnitCard = (unit) => {
           </ModalContent>
         </Modal>
       </Flex>
+
+      {/* the button with the image and the faculty, when clicked will also bring to the groups for this unit */}
       <Button
         onClick={handleUnitClick}
         style={{ display: 'inline-block', width: 'auto', height: 'auto' }}

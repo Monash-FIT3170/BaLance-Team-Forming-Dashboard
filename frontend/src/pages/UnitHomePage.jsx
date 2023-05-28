@@ -38,6 +38,7 @@ function UnitPage() {
   const [unitYearOffering, setUnitYearOffering] = useState('');
   const [unitSemesterOffering, setUnitSemesterOffering] = useState('');
 
+  //handle submit unit and posting it to the backend
   const handleSubmitUnit = (event) => {
     event.preventDefault();
 
@@ -76,6 +77,9 @@ function UnitPage() {
     <div>
       <Center margin="40px">
         <Heading>Unit Home Page</Heading>
+
+        {/* new unit button */}
+
         <Button
           w="40px"
           h="40px"
@@ -93,6 +97,9 @@ function UnitPage() {
             onClick={onOpenAdd}
           />
         </Button>
+
+        {/* pop up when adding a new unit */}
+
         <Modal closeOnOverlayClick={false} isOpen={isOpenAdd} onClose={onCloseAdd}>
           <ModalOverlay />
           <ModalContent>
@@ -104,6 +111,9 @@ function UnitPage() {
                 <br></br>
                 <FormControl isRequired>
                   <FormLabel>Unit Code </FormLabel>
+
+                  {/* setting the unit details which uses the setter from the use state functions */}
+
                   <Input
                     mb="5"
                     value={unitCode}
@@ -151,6 +161,8 @@ function UnitPage() {
           </ModalContent>
         </Modal>
       </Center>
+
+      {/* display the units from the data fetched from the backend */}
 
       <Container className="units" maxW="80vw">
         {units &&
