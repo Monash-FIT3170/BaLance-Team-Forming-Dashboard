@@ -38,13 +38,15 @@ function UnitPage() {
   const [unitYearOffering, setUnitYearOffering] = useState('');
   const [unitSemesterOffering, setUnitSemesterOffering] = useState('');
 
-  // handle submit unit and posting it to the backend TODO update to MySQL schema
+  // handle submit unit and posting it to the backend
   const handleSubmitUnit = (event) => {
     event.preventDefault();
 
     const unitObject = {
       unitCode: unitCode,
-      unitFaculty: unitName,
+      unitName: unitName,
+      year: unitYearOffering,
+      period: unitSemesterOffering
     };
 
     fetch('http://localhost:8080/api/units/', {
@@ -62,6 +64,7 @@ function UnitPage() {
     }
   };
 
+  // fetch unit data from the backend
   useEffect(() => {
     fetch('http://localhost:8080/api/units/')
       .then((res) => res.json())
@@ -143,9 +146,9 @@ function UnitPage() {
                       value={unitSemesterOffering}
                       onChange={(event) => setUnitSemesterOffering(event.target.value)}
                     >
-                      <option value="option1">Semester 1</option>
-                      <option value="option2">Semester 2</option>
-                      <option value="option3">Full-Year</option>
+                      <option value="option1">S1</option>
+                      <option value="option2">S2</option>
+                      <option value="option3">FY</option>
                     </Select>
                   </Flex>
                 </FormControl>
@@ -168,7 +171,11 @@ function UnitPage() {
       <Container className="units" maxW="80vw">
         {units &&
           units.map((unit) => (
-            <UnitCard {...unit} key={unit.unitCode} className="unit" />
+            <UnitCard
+                {...unit}
+                key={`${unit.unit_code}/${unit.unit_off_year}/${unit.unit_off_period}`}
+                className="unit"
+            />
           ))}
       </Container>
     </div>

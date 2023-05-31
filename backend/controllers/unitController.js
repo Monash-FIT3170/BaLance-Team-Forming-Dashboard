@@ -54,6 +54,8 @@ const addUnit = async (req, res) => {
         period,
     } = req.body
 
+    console.log(newUnit)
+
     // note: unique id has auto_increment enabled thus not provided
     db_connection.query(
         'INSERT INTO unit_offering ' +
