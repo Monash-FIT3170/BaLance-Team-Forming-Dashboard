@@ -38,7 +38,7 @@ function UnitPage() {
   const [unitYearOffering, setUnitYearOffering] = useState('');
   const [unitSemesterOffering, setUnitSemesterOffering] = useState('');
 
-  //handle submit unit and posting it to the backend
+  // handle submit unit and posting it to the backend TODO update to MySQL schema
   const handleSubmitUnit = (event) => {
     event.preventDefault();
 
@@ -66,11 +66,12 @@ function UnitPage() {
     fetch('http://localhost:8080/api/units/')
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         setUnits(data);
       })
       .catch((err) => {
-        console.error('Error fetching units:', err);
-      });
+        console.error('Error fetching units:', err)
+      })
   }, []);
 
   return (

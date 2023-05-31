@@ -4,8 +4,6 @@
  *
  * */
 
-const fs = require('fs');
-const mysql = require('mysql2');
 const db_connection = require('../db_connection');
 
 // TODO error handling
@@ -25,7 +23,7 @@ const getAllUnits = async (req, res) => {
 
 // get a single unit for a user
 const getUnit = async (req, res) => {
-    const { // get the URL params
+    const { // get the URL params for DB querying
         unitCode,
         year,
         period
