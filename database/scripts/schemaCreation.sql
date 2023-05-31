@@ -1,0 +1,122 @@
+/* The following file implements the initial creation
+   and setup of the application database and components
+   relating to unit, student, lab and groups
+*/
+
+-- START FROM CLEAN SLATE
+DROP SCHEMA IF EXISTS student_group_db;
+
+-- DATABASE CREATION AND SPECIFICATION todo consider encryption options
+CREATE DATABASE IF NOT EXISTS student_group_db;
+USE student_group_db;
+
+-- TABLE CREATION
+CREATE TABLE IF NOT EXISTS unit_offering (
+    unit_off_id INT AUTO_INCREMENT COMMENT 'unique identifier for a unit offering',
+    unit_code VARCHAR(50) COMMENT 'code used by an institute to refer to an offering',
+    unit_name VARCHAR(50),
+    unit_off_year INTEGER COMMENT 'the year in which the offering is made',
+    unit_off_period VARCHAR(20) COMMENT 'the term which the offering is held e.g. S2',
+    enrollment_count INT,
+    CONSTRAINT pk_unit_off PRIMARY KEY (unit_off_id),
+    CONSTRAINT ck_unit_off UNIQUE (unit_code, unit_off_year, unit_off_period)
+);
+ALTER TABLE unit_offering AUTO_INCREMENT=100000000;
+
+CREATE TABLE IF NOT EXISTS staff (
+    staff_unique_id INT COMMENT 'unique identifier used by database for staff',
+    staff_code VARCHAR(50) COMMENT 'staff code used internally by an institute',
+    preferred_name VARCHAR(50),
+    last_name VARCHAR(50),
+    email_address VARCHAR(256) CHECK (email_address LIKE '%@%'),
+    CONSTRAINT pk_staff PRIMARY KEY (staff_unique_id)
+);
+
+CREATE TABLE IF NOT EXISTS student (
+    stud_unique_id INT AUTO_INCREMENT COMMENT 'unique identifier used by database for staff',
+    student_id VARCHAR(50) COMMENT 'student code used internally by an institute',
+    preferred_name VARCHAR(50),
+    last_name VARCHAR(50),
+    email_address VARCHAR(256) CHECK (email_address LIKE '%@%'),
+    wam_display VARCHAR(50), -- todo is this necessary?
+    wam_val INT,
+    gender ENUM('M', 'F'),
+    CONSTRAINT pk_student PRIMARY KEY (stud_unique_id)
+);
+ALTER TABLE student AUTO_INCREMENT=100000000;
+
+CREATE TABLE IF NOT EXISTS unit_off_lab (
+    unit_off_lab_id INT COMMENT 'unique identifier for a lab part of a unit offering',
+    unit_off_id INT,
+    lab_short_code VARCHAR(50) COMMENT 'the code used internally by an institute to refer to a lab',
+    CONSTRAINT pk_lab PRIMARY KEY (unit_off_lab_id)
+);
+
+CREATE TABLE IF NOT EXISTS lab_group ( -- todo a group_id used internally by a unit offering?
+    lab_group_id INT COMMENT 'unique identifier for a group part of a unit offering''s lab',
+    unit_off_lab_id INT,
+    CONSTRAINT pk_group PRIMARY KEY (lab_group_id)
+);
+
+CREATE TABLE IF NOT EXISTS unit_enrolment ( -- connection between student and unit offering
+    enrolment_id INT AUTO_INCREMENT COMMENT 'unique identifier to refer to a students enrolment to a unit offering',
+    stud_unique_id INT,
+    unit_off_id INT,
+    enrolment_status ENUM('active', 'inactive'),
+    CONSTRAINT pk_unit_enrollment PRIMARY KEY (enrolment_id)
+);
+ALTER TABLE unit_enrolment AUTO_INCREMENT=100000000;
+
+CREATE TABLE IF NOT EXISTS student_lab_allocation ( -- connection between student and unit offering lab
+    stud_lab_alloc_id INT COMMENT 'unique identifier referring to students allocation to a lab',
+    unit_off_lab_id INT,
+    stud_unique_id INT,
+    CONSTRAINT pk_stud_lab_alloc PRIMARY KEY (stud_lab_alloc_id)
+);
+
+CREATE TABLE IF NOT EXISTS group_allocation ( -- connection between student and group
+    group_alloc_id INT COMMENT 'unique identifier for a student allocation to a group',
+    stud_unique_id INT,
+    lab_group_id INT,
+    CONSTRAINT pk_group_alloc PRIMARY KEY (group_alloc_id)
+);
+
+CREATE TABLE IF NOT EXISTS unit_employment ( -- connection between staff and unit offering
+    employment_id INT COMMENT 'unique identifier for a staff employment to a unit oferring',
+    staff_unique_id INT,
+    unit_off_id INT,
+    employment_status ENUM('active', 'inactive'),
+    CONSTRAINT pk_staff_employment PRIMARY KEY (employment_id)
+);
+
+CREATE TABLE IF NOT EXISTS staff_lab_allocation ( -- connection between staff and unit offering lab
+    staff_lab_alloc_id INT,
+    unit_off_lab_id INT,
+    staff_unique_id INT,
+    staff_role ENUM('super admin', 'admin', 'default')
+        COMMENT 'indicator of staff privilege levels',
+    CONSTRAINT pk_staff_lab_alloc PRIMARY KEY (staff_lab_alloc_id)
+);
+
+-- FOREIGN KEY CREATION
+-- student to enrolment, group allocation, lab allocation
+ALTER TABLE unit_enrolment ADD FOREIGN KEY (stud_unique_id) REFERENCES student(stud_unique_id);
+ALTER TABLE group_allocation ADD FOREIGN KEY (stud_unique_id) REFERENCES student(stud_unique_id);
+ALTER TABLE student_lab_allocation ADD FOREIGN KEY (stud_unique_id) REFERENCES student(stud_unique_id);
+
+-- staff to employment and lab allocation
+ALTER TABLE unit_employment ADD FOREIGN KEY (staff_unique_id) REFERENCES staff(staff_unique_id);
+ALTER TABLE staff_lab_allocation ADD FOREIGN KEY (staff_unique_id) REFERENCES staff(staff_unique_id);
+
+-- units to student enrolment, staff employment, unit labs
+ALTER TABLE unit_enrolment ADD FOREIGN KEY (unit_off_id) REFERENCES unit_offering(unit_off_id);
+ALTER TABLE unit_employment ADD FOREIGN KEY (unit_off_id) REFERENCES unit_offering(unit_off_id);
+ALTER TABLE unit_off_lab ADD FOREIGN KEY (unit_off_id) REFERENCES unit_offering(unit_off_id);
+
+-- labs to student allocations, group allocations, staff allocations
+ALTER TABLE student_lab_allocation ADD FOREIGN KEY (unit_off_lab_id) REFERENCES unit_off_lab(unit_off_lab_id);
+ALTER TABLE lab_group ADD FOREIGN KEY (unit_off_lab_id) REFERENCES unit_off_lab(unit_off_lab_id);
+ALTER TABLE staff_lab_allocation ADD FOREIGN KEY (unit_off_lab_id) REFERENCES unit_off_lab(unit_off_lab_id);
+
+-- groups to group allocations
+ALTER TABLE group_allocation ADD FOREIGN KEY (lab_group_id) REFERENCES lab_group(lab_group_id);
