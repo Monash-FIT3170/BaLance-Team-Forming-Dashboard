@@ -6,6 +6,7 @@
 
 const fs = require('fs');
 const path = require('path')
+const db_connection = require("../db_connection");
 
 // gets all students for a unit
 const getAllStudents = async (req, res) => {
@@ -16,10 +17,10 @@ const getAllStudents = async (req, res) => {
     let students = [];
 
     for (let i = 0; i < groupsData.length; i++){
-        
+
         let group = groupsData[i]
 
-        
+
 
         if (group.unitCode == unitId){
 
@@ -46,87 +47,71 @@ const getAllStudents = async (req, res) => {
 
     res.status(200).send(students);
 
- }
+}
 
 // get a single student for a unit
 const getStudent = async (req, res) => { }
 
 // add an array of students to a unit
 const addAllStudents = async (req, res) => {
+    const { // get the URL params
+        unitCode,
+        year,
+        period
+    } = req.params
+    const studentData = req.body
 
-    let students = req.body;
-    let unitId = req.params.unitId;
+    // remove labId attribute and filter out object keys in prep for SQL query
+    //      e.g. {id: 5, name: 'jim'} becomes [5, 'jim']
+    const studentQueryData = studentData.map(({ labId, ...rest }) => Object.values(rest));
+    const studentEmails = studentData.map((student) => student.studentEmailAddress);
 
-    let studentJSON = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/students.json', 'utf8'));
-    let units = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/units.json', 'utf8'));
-
-    let unit;
-    for (let i = 0; i < units.length; i++){
-        if (units[i].unitCode == unitId){
-            unit = units[i];
-            units.splice(i, 1);
-            break;
-        }
-    }
-    
-    for (let i = 0; i < students.length; i++){
-        let student = students[i];
-        let unitDetails = [unitId, student.labId, true];
-        let exists = false;
-
-        for (let j = 0; j < studentJSON.length; j++){
-
-            if (studentJSON[j].studentId == student.studentId){
-
-                student = studentJSON[j]
-                let unitExists = false
-
-                for (let k = 0; k < student.units.length; k++){
-                    if (unitDetails[0] == student.units[k][0]){
-                        if (unitDetails[1] != student.units[k][1]){
-                            student.units[k][1] = unitDetails[1];
-                        }
-                        unitExists = true;
-                        break;
-                    }
-                }
-
-                if (!unitExists){
-                    unit.students.push(student.studentId)
-                    student.units.push(unitDetails);
-                }
-                exists = true
-                break;
-
+    // TODO checks to ensure a student does not already exist
+    db_connection.query(
+        'INSERT INTO student ' +
+        '(student_id, last_name, preferred_name, email_address, wam_val, gender) ' +
+        'VALUES ?;',
+        [studentQueryData],
+        (err, results, fields) => {
+            if(err) { console.log(err.stack); }
+            else {
+                //console.log(results);
+                //res.status(200).json(results);
             }
-
         }
+    )
 
-        if (!exists){
+    // retrieve these students by email and get their pk, form a unit enrollment with the unit
+    const studentKeys = await promiseBasedQuery(
+        'SELECT stud_unique_id FROM student WHERE email_address IN ?;',
+        [[studentEmails]]
+    )
 
-            studentObject = {
-                studentId: student.studentId,
-                studentFirstName: student.studentFirstName,
-                studentLastName: student.studentLastName,
-                studentEmailAddress: student.studentEmailAddress,
-                wamAverage: student.wamAverage,
-                gender: student.gender,
-                status: student.enrolmentStatus,
-                discPersonality: student.discPersonality,
-                units: [unitDetails]
+    // get the unique identifier for the unit offering
+    const [{unit_off_id}] = await promiseBasedQuery(
+        'SELECT unit_off_id FROM unit_offering WHERE ' +
+        'unit_code=? AND unit_off_year=? AND unit_off_period=?;',
+        [unitCode, year, period]
+    )
+
+    // get arrays of [stud id, unitOffId]
+    const enrolmentQueryData = studentKeys.map((student) => {
+        return [student.stud_unique_id, unit_off_id]
+    })
+
+    db_connection.query(
+        'INSERT INTO unit_enrolment ' +
+        '(stud_unique_id, unit_off_id) ' +
+        'VALUES ?;',
+        [enrolmentQueryData],
+        (err, results, fields) => {
+            if(err) { console.log(err.stack); }
+            else {
+                res.status(200).json(results);
             }
-            unit.students.push(student.studentId)
-            studentJSON.push(studentObject)
         }
-    }
-
-    units.push(unit);
-
-    fs.writeFileSync(path.join(__dirname, '../db') + '/units.json', JSON.stringify(units));
-    fs.writeFileSync(path.join(__dirname, '../db') + '/students.json', JSON.stringify(studentJSON));
-
-    res.sendStatus(200);
- }
+    )
+}
 
 // add a single student to a unit
 const addStudent = async (req, res) => { }
@@ -136,6 +121,19 @@ const deleteStudent = (req, res) => { }
 
 // update a student's details
 const updateStudent = async (req, res) => { }
+
+// wraps a query in a promise so that we can use await
+const promiseBasedQuery = (query, values) => {
+    return new Promise((resolve, reject) => {
+        db_connection.query(query, values, (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+};
 
 module.exports = {
     getAllStudents,

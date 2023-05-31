@@ -5,157 +5,134 @@
  * */
 
 const fs = require('fs');
+const mysql = require('mysql2');
+const db_connection = require('../db_connection');
 
+// TODO error handling
 // gets all units for a user
 const getAllUnits = async (req, res) => {
-    // open units.json and read
-    const file = './db/units.json';
-
-    // read file
-    fs.readFile(file, 'utf-8', (err, unitsData) => {
-        // convert to JSON
-        let units = JSON.parse(unitsData);
-
-        // filter data to get desired attributes
-        let resData = units.map((unit) => {
-            return {
-                unitCode: unit["unitCode"],
-                unitFaculty: unit["unitFaculty"]
+    db_connection.query(
+        'SELECT * FROM unit_offering;',
+        (err, results, fields) => {
+            if(err) { console.error(err.stack); }
+            else {
+                console.log(results);
+                res.status(200).json(results);
             }
-        })
-
-        // send to frontend
-        res.status(200).send(resData);
-    });
+        }
+    )
 }
 
 // get a single unit for a user
 const getUnit = async (req, res) => {
-    // open units.json and read
-    const file = './db/units.json';
-    const { unitId } = req.params;
+    const { // get the URL params
+        unitCode,
+        year,
+        period
+    } = req.params
 
-    // read file
-    fs.readFile(file, 'utf-8', (err, unitsData) => {
-        const units = JSON.parse(unitsData);
-
-        // extract the desired unit from the list of units
-        const unit = units.filter((unit) => {
-            return unit.unitCode === unitId;
-        })[0];
-
-        // filter desired fields from the unit
-        let resData = { };
-        const resFields = ["unitCode", "unitFaculty", "labs", "teachers"];
-        for(const field in unit) {
-            if(resFields.includes(field)) {
-                resData[field] = unit[field];
+    db_connection.query(
+        'SELECT * ' +
+        'FROM unit_offering ' +
+        'WHERE unit_code=? AND unit_off_year=? AND unit_off_period=?;',
+        [unitCode, Number(year), period],
+        (err, results, fields) => {
+            if(err) { console.error(err.stack); }
+            else {
+                [unitData] = results; // extract unit object from array
+                console.log(unitData);
+                res.status(200).json(unitData);
             }
         }
-
-        // send to frontend
-        res.status(200).send(resData);
-    });
+    )
 }
 
 const addUnit = async (req, res) => {
-    console.log(req.body)
     // get the req body
-
     const newUnit = {
         unitCode,
-        unitFaculty
+        unitName,
+        year,
+        period,
     } = req.body
-    const file = './db/units.json';
 
-    newUnit.labs = []
-    newUnit.groups = []
-    newUnit.students = []
-    newUnit.teachers = []
-
-    // read file
-    fs.readFile(file, 'utf-8', (err, unitsData) => {
-        // append the new unit to the file
-        const units = JSON.parse(unitsData);
-        units.push(newUnit);
-
-        // write to the file
-        fs.writeFile(file, JSON.stringify(units), (err) => {
-            console.log(err);
-        });
-
-        // send response status
-        res.status(200).send(newUnit);
-    });
+    // note: unique id has auto_increment enabled thus not provided
+    db_connection.query(
+        'INSERT INTO unit_offering ' +
+        '(unit_code, unit_name, unit_off_year, unit_off_period, enrollment_count) ' +
+        'VALUES (?, ?, ?, ?, ?);',
+        [unitCode, unitName, Number(year), period, 0],
+        (err, results, fields) => {
+            if(err) { console.log(err.stack); }
+            else {
+                console.log(results);
+                res.status(200).json(results);
+            }
+        }
+    )
 }
 
 deleteUnit = async function (req, res) {
-    const { unitId } = req.params;
-    const file = './db/units.json';
+    const { // get the URL params
+        unitCode,
+        year,
+        period
+    } = req.params;
 
-    // get the items from the file
-
-    // read file
-    fs.readFile(file, 'utf-8', (err, unitsData) => {
-        // append the new unit to the file
-        const units = JSON.parse(unitsData);
-
-        // filter the units
-        const remainingUnits = units.filter((unit) => {
-            return unit.unitCode !== unitId;
-        });
-        const deletedUnit = units.filter((unit) => {
-            return unit.unitCode === unitId;
-        });
-
-        // write to the file
-        fs.writeFile(file, JSON.stringify(remainingUnits), (err) => {
-            console.log(err);
-        });
-
-        // send response status
-        res.status(200).send(deletedUnit);
-    });
+    db_connection.query(
+        'DELETE FROM unit_offering WHERE ' +
+        'unit_code=? AND unit_off_year=? AND unit_off_period=?;',
+        [unitCode, Number(year), period],
+        (err, results, fields) => {
+            if(err) { console.log(err.stack); }
+            else {
+                console.log(results);
+                res.status(200).json(results);
+            }
+        }
+    )
 }
 
 updateUnit = async function (req, res){
-    const { unitId } = req.params;
+    const urlParamValues = { // URL params
+        unitCode,
+        year,
+        period
+    } = req.params;
+    const newValues = req.body;
 
-    // Have a look at the above code for adding a unit
-    // Read the units.json file and store in a variable
-    // Update the unit with unitCode matchin unitId
-    // write this to the units.json file
-    // send a res status of 200 and send the unit updated
-    const updatedUnitData = req.body;
-    const file = './db/units.json';
+    // contains the right format for referencing table attributes
+    const table_attributes = {
+        unitCode: "unit_code",
+        unitName: "unit_name",
+        year: "unit_off_year",
+        period: "unit_off_period"
+    };
 
-    fs.readFile(file, 'utf-8', (err, unitsData) => {
-        const units = JSON.parse(unitsData);
+    // building the query string from scratch
+    let query_string = 'UPDATE unit_offering SET ';
+    let query_params = [];
+    for (const key in newValues) { // add where clauses only for columns specified in req.body
+        query_string += `${table_attributes[key]}=?, `;
+        query_params.push(newValues[key]);
+    }
+    query_string += `WHERE unit_code=? AND unit_off_year=? AND unit_off_period=?;`;
+    query_params = [...query_params, ...Object.values(urlParamValues)];
 
-        const updatedUnits = units.map((unit) => {
-            if (unit.unitCode === unitId) {
-                // Update the unit data
-                for (const key in updatedUnitData) {
-                    if (unit.hasOwnProperty(key)) {
-                        unit[key] = updatedUnitData[key];
-                    }
-                }
-                return unit;
+    console.log(query_string);
+    console.log(query_params);
+
+    db_connection.query(
+        query_string,
+        query_params,
+        (err, results, fields) => {
+            if(err) { console.log(err.stack); }
+            else {
+                console.log(results);
+                res.status(200).json(results);
             }
-            return unit;
-        });
-
-        fs.writeFile(file, JSON.stringify(updatedUnits), (err) => {
-            if (err) {
-                console.log(err);
-                res.status(500).send({ error: 'Error updating unit' });
-            } else {
-                res.send(`${unitId} has been updated`);
-                res.status(200).send({ message: `${unitId} has been updated` });
-            }
-        });
-    });
-
+        }
+    )
 }
 
 module.exports = {
