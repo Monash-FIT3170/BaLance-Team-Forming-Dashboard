@@ -47,27 +47,7 @@ const addAllStudents = async (req, res) => {
     await insertStudentEnrolment(studentKeys, unit_off_id);
 
     /* CREATE THE LABS ASSOCIATED WITH THE UNIT ENROLMENT */
-    // get the highest lab number N and create N labs for this unit
-    // where labs are in the format n_activity where n is the lab no.
-    console.log("Determining number of labs to create");
-    // [unit_off_id, short_code,] todo can i make lab enrolment here
-    let numLabs = 0
-    for(student in requestBody) {
-        let labId = student.labId;
-        let split = labId.split("_");
-        let labNum = Number(split[0]);
-        numLabs = (labNum > numLabs) ? labNum : numLabs;
-    }
-    console.log(`Create ${numLabs} labs`);
-
-    let labInsertData = []
-    for (let i=1; i<=numLabs; i++) {
-        let lab = [unit_off_id, i];
-        labInsertData.push(lab);
-    }
-
-    console.log(labInsertData)
-    await promiseBasedQuery('INSERT INTO unit_off_lab (unit_off_id, lab_number) VALUES ?', labInsertData)
+    await insertUnitOffLabs(requestBody, unit_off_id);
 
     /* todo ALLOCATE STUDENTS TO THEIR RESPECTIVE LABS */
     // we need [unit_off_lab_id, student_unique_id] and the link is with student lab in student data
@@ -142,11 +122,10 @@ const selectStudentsKeys = async (studentEmails) => {
      * result is used to form enrolment data for a unit offering
      */
     try {
-        const studentKeys = await promiseBasedQuery(
+        return promiseBasedQuery(
             'SELECT stud_unique_id FROM student WHERE email_address IN ?;',
             [[studentEmails]]
         );
-        return studentKeys;
     } catch(error) {
         throw error;
     }
@@ -175,17 +154,45 @@ const insertStudentEnrolment = async (studentKeys, unit_off_id) => {
      */
     try {
         const enrolmentInsertData = studentKeys.map((student) => {return [student.stud_unique_id, unit_off_id]})
-        const result = await promiseBasedQuery(
+        return promiseBasedQuery(
             'INSERT INTO unit_enrolment (stud_unique_id, unit_off_id) VALUES ?;',
             [enrolmentInsertData]
         )
-        return result;
     } catch(error) {
         throw error
     }
 }
 
-const insertUnitOffLabs = (labInsertData) => {}
+const insertUnitOffLabs = (requestBody, unit_off_id) => {
+    /**
+     * Given a list of students from a request body, determines the number of labs
+     * in an offering and creates them in the database
+     */
+    try {
+        // get the highest lab number N and create N labs for this unit
+        // where labs are in the format n_activity where n is the lab no.
+        let numLabs = 0
+        for(let student in requestBody) {
+            let labId = student.labId;
+            let split = labId.split("_");
+            let labNum = Number(split[0]);
+            numLabs = (labNum > numLabs) ? labNum : numLabs;
+        }
+        console.log(`Create ${numLabs} labs`);
+
+        // formulate data into the desired format: [unit_off_id, lab_number]
+        let labInsertData = []
+        for (let i=1; i<=numLabs; i++) {
+            let lab = [unit_off_id, i];
+            labInsertData.push(lab);
+        }
+
+        console.log(labInsertData)
+        return promiseBasedQuery('INSERT INTO unit_off_lab (unit_off_id, lab_number) VALUES ?', labInsertData)
+    } catch(error) {
+        throw error
+    }
+}
 
 
 module.exports = {
