@@ -47,10 +47,9 @@ CREATE TABLE IF NOT EXISTS student (
 ALTER TABLE student AUTO_INCREMENT=100000000;
 
 CREATE TABLE IF NOT EXISTS unit_off_lab (
-    unit_off_lab_id INT AUTO_INCREMENT COMMENT 'unique identifier for a lab part of a unit offering',
+    unit_off_lab_id INT AUTO_INCREMENT COMMENT 'unique identifier for a lab that is part of some unit offering',
     unit_off_id INT,
-    lab_short_code VARCHAR(50) COMMENT 'the code used internally by an institute to refer to a unit lab',
-    lab_number INT COMMENT 'the numerical component of the lab short code',
+    lab_number INT COMMENT 'a generic identifier for a lab within a specific offering',
     CONSTRAINT pk_lab PRIMARY KEY (unit_off_lab_id)
 );
 ALTER TABLE unit_off_lab AUTO_INCREMENT=100000000;

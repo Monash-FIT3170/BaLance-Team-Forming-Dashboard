@@ -6,7 +6,6 @@
 
 const db_connection = require('../db_connection');
 
-// TODO error handling
 // gets all units for a user
 const getAllUnits = async (req, res) => {
     db_connection.query(
@@ -72,6 +71,7 @@ const addUnit = async (req, res) => {
     )
 }
 
+// TODO delete associated enrolments, labs etc
 deleteUnit = async function (req, res) {
     const { // get the URL params
         unitCode,
@@ -93,6 +93,7 @@ deleteUnit = async function (req, res) {
     )
 }
 
+// FIXME SQL query not working
 updateUnit = async function (req, res){
     const urlParamValues = { // URL params
         unitCode,

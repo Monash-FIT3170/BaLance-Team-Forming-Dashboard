@@ -25,22 +25,26 @@ const addAllStudents = async (req, res) => {
     } = req.params
     const studentData = req.body
 
+    // TODO remove after implementation is complete
+    db_connection.query('DELETE FROM students;', (err, res, fields) => { })
+
     /* INSERT STUDENTS INTO DATABASE */
     // remove the labId attribute from students and filter out object keys in prep for SQL queries
     //      e.g. {id: 5, name: 'jim'} becomes [5, 'jim'] to comply with mysql2 API
-    const studentQueryData = studentData.map(({ labId, ...rest }) => Object.values(rest));
+    // FIXME: bring up data sent to backend as the keys shouldn't change or else its breaking
+    const studentInsertData = studentData.map(({ labId, enrolmentStatus, discPersonality, ...rest }) => {
+        console.log(rest)
+        return Object.values(rest);
+    });
     const studentEmails = studentData.map((student) => student.studentEmailAddress);
 
+    console.log(studentInsertData)
     console.log("Inserting students into [student] table")
-    db_connection.query( // TODO ensure a student does not already exist as the system is centralised
+    await promiseBasedQuery( // TODO ensure a student does not already exist as the system is centralised
         'INSERT INTO student ' +
         '(student_id, last_name, preferred_name, email_address, wam_val, gender) ' +
         'VALUES ?;',
-        [studentQueryData],
-        (err, results, fields) => {
-            if(err) { console.log(err.stack); }
-            else { console.log(`${results.affectedRows} affected rows`) }
-        }
+        [studentInsertData]
     )
 
     /* CREATE UNIT ENROLMENT BETWEEN STUDENTS AND UNIT */
@@ -58,36 +62,39 @@ const addAllStudents = async (req, res) => {
     )
 
     // create a list of unit_enrollment data in the form [stud id, unitOffId] to insert into unit_enrolment table
-    const enrolmentQueryData = studentKeys.map((student) => {return [student.stud_unique_id, unit_off_id]})
-
+    const enrolmentInsertData = studentKeys.map((student) => {return [student.stud_unique_id, unit_off_id]})
     console.log("Inserting student enrolments into [unit_enrolment]")
-    db_connection.query(
-        'INSERT INTO unit_enrolment ' +
-        '(stud_unique_id, unit_off_id) ' +
-        'VALUES ?;',
-        [enrolmentQueryData],
-        (err, results, fields) => {
-            if(err) { console.log(err.stack); }
-            else { console.log(`${results.affectedRows} affected rows`) }
-        }
+    await promiseBasedQuery(
+        'INSERT INTO unit_enrolment (stud_unique_id, unit_off_id) VALUES ?;',
+        [enrolmentInsertData]
     )
 
-    /* todo CREATE THE LABS ASSOCIATED WITH THE UNIT ENROLMENT */
+    /* CREATE THE LABS ASSOCIATED WITH THE UNIT ENROLMENT */
     // get the highest lab number N and create N labs for this unit
     // where labs are in the format n_activity where n is the lab no.
     console.log("Determining number of labs to create");
-    const labs = studentData.map((student) => Number(student.labId.split("-")[0]));
-    const numLabs = Math.max(...labs);
-    console.log(`Create ${labs} labs`);
+    // [unit_off_id, short_code,] todo can i make lab enrolment here
+    let numLabs = 0
+    for(student in studentData) {
+        let labId = student.labId;
+        let split = labId.split("_");
+        let labNum = Number(split[0]);
+        numLabs = (labNum > numLabs) ? labNum : numLabs;
+    }
+    console.log(`Create ${numLabs} labs`);
 
+    let labInsertData = []
+    for (let i=1; i<=numLabs; i++) {
+        let lab = [unit_off_id, i];
+        labInsertData.push(lab);
+    }
 
-    //
-
-
+    console.log(labInsertData)
+    await promiseBasedQuery('INSERT INTO unit_off_lab (unit_off_id, lab_number) VALUES ?', labInsertData)
 
     /* todo ALLOCATE STUDENTS TO THEIR RESPECTIVE LABS */
-    // get the PK for each of the N labs and for each student, using their pk previously obtained
-    // assign to the right lab using a dict {no: labPK}
+    // we need [unit_off_lab_id, student_unique_id] and the link is with student lab in student data
+    const unit_off_labs = await promiseBasedQuery('SELECT * FROM unit_off_lab WHERE unit_off_id=?;', [unit_off_id])
 
     /* todo UPDATE ENROLMENT COUNT */
     // can we count enrollment count before? e.g. updated rows? or do a new query?
@@ -123,6 +130,7 @@ const promiseBasedQuery = (query, values) => {
             if (error) {
                 reject(error);
             } else {
+                console.log(`${results.affectedRows} affected rows`)
                 resolve(results);
             }
         });

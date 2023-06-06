@@ -124,7 +124,7 @@ function ImportPage() {
   const { unitCode, year, period } = useParams();
 
   const handleAssignGroupsClick = () => {
-    // Get currrent values
+    // Get current values
     const groupStrategy =
       document.getElementById('groupStrategy').value || defaultStrategy;
     const groupSize = document.getElementById('groupSize').value || defaultGroupSize;
