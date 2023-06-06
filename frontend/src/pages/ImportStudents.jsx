@@ -121,7 +121,7 @@ function ImportPage() {
     onClose: onEditProfileClose,
   } = useDisclosure();
 
-  const { unitID } = useParams();
+  const { unitCode, year, period } = useParams();
 
   const handleAssignGroupsClick = () => {
     // Get currrent values
@@ -131,7 +131,7 @@ function ImportPage() {
     const variance = document.getElementById('variance').value || defaultVariance;
 
     // Make API call
-    fetch('http://localhost:8080/api/groups/' + unitID, {
+    fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -143,13 +143,13 @@ function ImportPage() {
       }),
     });
     // Go to groups page
-    navigate(`/groups/${unitID}/${groupStrategy}/${groupSize}/${variance}`);
+    navigate(`/groups/${unitCode}/${year}/${period}`);
   };
 
   //create unit for new students
   const handleAddProfilesClick = async () => {
     // Make API call
-    fetch('http://localhost:8080/api/students/' + unitID, {
+    fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

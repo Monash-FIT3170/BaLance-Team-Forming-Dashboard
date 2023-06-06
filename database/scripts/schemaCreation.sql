@@ -24,13 +24,14 @@ CREATE TABLE IF NOT EXISTS unit_offering (
 ALTER TABLE unit_offering AUTO_INCREMENT=100000000;
 
 CREATE TABLE IF NOT EXISTS staff (
-    staff_unique_id INT COMMENT 'unique identifier used by database for staff',
+    staff_unique_id INT AUTO_INCREMENT COMMENT 'unique identifier used by database for staff',
     staff_code VARCHAR(50) COMMENT 'staff code used internally by an institute',
     preferred_name VARCHAR(50),
     last_name VARCHAR(50),
     email_address VARCHAR(256) CHECK (email_address LIKE '%@%'),
     CONSTRAINT pk_staff PRIMARY KEY (staff_unique_id)
 );
+ALTER TABLE staff AUTO_INCREMENT=100000000;
 
 CREATE TABLE IF NOT EXISTS student (
     stud_unique_id INT AUTO_INCREMENT COMMENT 'unique identifier used by database for staff',
@@ -46,17 +47,20 @@ CREATE TABLE IF NOT EXISTS student (
 ALTER TABLE student AUTO_INCREMENT=100000000;
 
 CREATE TABLE IF NOT EXISTS unit_off_lab (
-    unit_off_lab_id INT COMMENT 'unique identifier for a lab part of a unit offering',
+    unit_off_lab_id INT AUTO_INCREMENT COMMENT 'unique identifier for a lab part of a unit offering',
     unit_off_id INT,
-    lab_short_code VARCHAR(50) COMMENT 'the code used internally by an institute to refer to a lab',
+    lab_short_code VARCHAR(50) COMMENT 'the code used internally by an institute to refer to a unit lab',
+    lab_number INT COMMENT 'the numerical component of the lab short code',
     CONSTRAINT pk_lab PRIMARY KEY (unit_off_lab_id)
 );
+ALTER TABLE unit_off_lab AUTO_INCREMENT=100000000;
 
 CREATE TABLE IF NOT EXISTS lab_group ( -- todo a group_id used internally by a unit offering?
-    lab_group_id INT COMMENT 'unique identifier for a group part of a unit offering''s lab',
+    lab_group_id INT AUTO_INCREMENT COMMENT 'unique identifier for a group part of a unit offering''s lab',
     unit_off_lab_id INT,
     CONSTRAINT pk_group PRIMARY KEY (lab_group_id)
 );
+ALTER TABLE lab_group AUTO_INCREMENT=100000000;
 
 CREATE TABLE IF NOT EXISTS unit_enrolment ( -- connection between student and unit offering
     enrolment_id INT AUTO_INCREMENT COMMENT 'unique identifier to refer to a students enrolment to a unit offering',
@@ -68,35 +72,39 @@ CREATE TABLE IF NOT EXISTS unit_enrolment ( -- connection between student and un
 ALTER TABLE unit_enrolment AUTO_INCREMENT=100000000;
 
 CREATE TABLE IF NOT EXISTS student_lab_allocation ( -- connection between student and unit offering lab
-    stud_lab_alloc_id INT COMMENT 'unique identifier referring to students allocation to a lab',
+    stud_lab_alloc_id INT AUTO_INCREMENT COMMENT 'unique identifier referring to students allocation to a lab',
     unit_off_lab_id INT,
     stud_unique_id INT,
     CONSTRAINT pk_stud_lab_alloc PRIMARY KEY (stud_lab_alloc_id)
 );
+ALTER TABLE student_lab_allocation AUTO_INCREMENT=100000000;
 
 CREATE TABLE IF NOT EXISTS group_allocation ( -- connection between student and group
-    group_alloc_id INT COMMENT 'unique identifier for a student allocation to a group',
+    group_alloc_id INT AUTO_INCREMENT COMMENT 'unique identifier for a student allocation to a group',
     stud_unique_id INT,
     lab_group_id INT,
     CONSTRAINT pk_group_alloc PRIMARY KEY (group_alloc_id)
 );
+ALTER TABLE group_allocation AUTO_INCREMENT=100000000;
 
 CREATE TABLE IF NOT EXISTS unit_employment ( -- connection between staff and unit offering
-    employment_id INT COMMENT 'unique identifier for a staff employment to a unit oferring',
+    employment_id INT AUTO_INCREMENT COMMENT 'unique identifier for a staff employment to a unit oferring',
     staff_unique_id INT,
     unit_off_id INT,
     employment_status ENUM('active', 'inactive'),
     CONSTRAINT pk_staff_employment PRIMARY KEY (employment_id)
 );
+ALTER TABLE unit_employment AUTO_INCREMENT=100000000;
 
 CREATE TABLE IF NOT EXISTS staff_lab_allocation ( -- connection between staff and unit offering lab
-    staff_lab_alloc_id INT,
+    staff_lab_alloc_id INT AUTO_INCREMENT,
     unit_off_lab_id INT,
     staff_unique_id INT,
     staff_role ENUM('super admin', 'admin', 'default')
         COMMENT 'indicator of staff privilege levels',
     CONSTRAINT pk_staff_lab_alloc PRIMARY KEY (staff_lab_alloc_id)
 );
+ALTER TABLE student_lab_allocation AUTO_INCREMENT=100000000;
 
 -- FOREIGN KEY CREATION
 -- student to enrolment, group allocation, lab allocation
