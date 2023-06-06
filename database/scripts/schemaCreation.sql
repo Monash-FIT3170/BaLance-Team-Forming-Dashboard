@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS staff_lab_allocation ( -- connection between staff an
         COMMENT 'indicator of staff privilege levels',
     CONSTRAINT pk_staff_lab_alloc PRIMARY KEY (staff_lab_alloc_id)
 );
-ALTER TABLE student_lab_allocation AUTO_INCREMENT=100000000;
+ALTER TABLE staff_lab_allocation AUTO_INCREMENT=100000000;
 
 -- FOREIGN KEY CREATION
 -- student to enrolment, group allocation, lab allocation

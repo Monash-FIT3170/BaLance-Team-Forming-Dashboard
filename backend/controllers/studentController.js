@@ -5,7 +5,9 @@
  * */
 
 const db_connection = require("../db_connection");
+const {query} = require("express");
 
+/* CONTROLLER FUNCTIONS */
 // gets all students for a unit
 const getAllStudents = async (req, res) => {
     res.status(200).send({wip: "test"});
@@ -23,51 +25,26 @@ const addAllStudents = async (req, res) => {
         year,
         period
     } = req.params
-    const studentData = req.body
+    const requestBody = req.body
 
-    // TODO remove after implementation is complete
-    db_connection.query('DELETE FROM students;', (err, res, fields) => { })
+    // TODO these remove related data for easy testing without needing to set up db from scratch
+    //   delete these after implementation is complete
+    db_connection.query('DELETE FROM student;', (err, res, fields) => { })
+    db_connection.query('DELETE FROM unit_enrolment;', (err, res, fields) => { })
+    db_connection.query('DELETE FROM unit_off_lab;', (err, res, fields) => { })
+    db_connection.query('DELETE FROM lab_allocation;', (err, res, fields) => { })
 
     /* INSERT STUDENTS INTO DATABASE */
     // remove the labId attribute from students and filter out object keys in prep for SQL queries
     //      e.g. {id: 5, name: 'jim'} becomes [5, 'jim'] to comply with mysql2 API
-    // FIXME: bring up data sent to backend as the keys shouldn't change or else its breaking
-    const studentInsertData = studentData.map(({ labId, enrolmentStatus, discPersonality, ...rest }) => {
-        console.log(rest)
-        return Object.values(rest);
-    });
-    const studentEmails = studentData.map((student) => student.studentEmailAddress);
-
-    console.log(studentInsertData)
-    console.log("Inserting students into [student] table")
-    await promiseBasedQuery( // TODO ensure a student does not already exist as the system is centralised
-        'INSERT INTO student ' +
-        '(student_id, last_name, preferred_name, email_address, wam_val, gender) ' +
-        'VALUES ?;',
-        [studentInsertData]
-    )
+    const studentInsertData = requestBody.map(({ labId, enrolmentStatus, discPersonality, ...rest }) => {return Object.values(rest);});
+    await insertStudents(studentInsertData)
 
     /* CREATE UNIT ENROLMENT BETWEEN STUDENTS AND UNIT */
-    // retrieve student primary key from the database
-    const studentKeys = await promiseBasedQuery(
-        'SELECT stud_unique_id FROM student WHERE email_address IN ?;',
-        [[studentEmails]]
-    )
-
-    // get unit offering primary key from the database
-    const [{unit_off_id}] = await promiseBasedQuery(
-        'SELECT unit_off_id FROM unit_offering WHERE ' +
-        'unit_code=? AND unit_off_year=? AND unit_off_period=?;',
-        [unitCode, year, period]
-    )
-
-    // create a list of unit_enrollment data in the form [stud id, unitOffId] to insert into unit_enrolment table
-    const enrolmentInsertData = studentKeys.map((student) => {return [student.stud_unique_id, unit_off_id]})
-    console.log("Inserting student enrolments into [unit_enrolment]")
-    await promiseBasedQuery(
-        'INSERT INTO unit_enrolment (stud_unique_id, unit_off_id) VALUES ?;',
-        [enrolmentInsertData]
-    )
+    const studentEmails = requestBody.map((student) => student.studentEmailAddress);
+    const studentKeys = await selectStudentsKeys(studentEmails);
+    const unit_off_id = await selectUnitOffKey(unitCode, year, period);
+    await insertStudentEnrolment(studentKeys, unit_off_id);
 
     /* CREATE THE LABS ASSOCIATED WITH THE UNIT ENROLMENT */
     // get the highest lab number N and create N labs for this unit
@@ -75,7 +52,7 @@ const addAllStudents = async (req, res) => {
     console.log("Determining number of labs to create");
     // [unit_off_id, short_code,] todo can i make lab enrolment here
     let numLabs = 0
-    for(student in studentData) {
+    for(student in requestBody) {
         let labId = student.labId;
         let split = labId.split("_");
         let labNum = Number(split[0]);
@@ -123,8 +100,12 @@ const updateStudent = async (req, res) => {
     res.status(200).send({wip: "test"});
 }
 
-// wraps a query in a promise so that we can use await
+/* SUPPLEMENTARY QUERY FUNCTIONS */
+/* ----------------------------- */
 const promiseBasedQuery = (query, values) => {
+    /**
+     * wraps a mysql2 query around a promise so that we can use await with queries
+     */
     return new Promise((resolve, reject) => {
         db_connection.query(query, values, (error, results) => {
             if (error) {
@@ -135,7 +116,77 @@ const promiseBasedQuery = (query, values) => {
             }
         });
     });
-};
+}
+
+const insertStudents = async (studentInsertData) => {
+    /**
+     * given a list of student data in the form of an array, uploads the data
+     * taking into consideration if a student already exists on the database or not
+     */
+    try {
+        // TODO ensure a student does not already exist as the system is centralised
+        const result = await promiseBasedQuery(
+            'INSERT INTO student ' +
+            '(student_id, last_name, preferred_name, email_address, wam_val, gender) ' +
+            'VALUES ?;',
+            [studentInsertData]
+        )
+        return result;
+    } catch(error) {
+        throw error
+    }
+}
+const selectStudentsKeys = async (studentEmails) => {
+    /**
+     * obtains the list of primary keys for the students associated with the list of emails provided
+     * result is used to form enrolment data for a unit offering
+     */
+    try {
+        const studentKeys = await promiseBasedQuery(
+            'SELECT stud_unique_id FROM student WHERE email_address IN ?;',
+            [[studentEmails]]
+        );
+        return studentKeys;
+    } catch(error) {
+        throw error;
+    }
+}
+
+const selectUnitOffKey = async (unitCode, year, period) => {
+    /**
+     * obtains the primary key for a unit offering
+     * result is used to form enrolment fata for that unit offering
+     */
+    try {
+        const [{unit_off_id}] = await promiseBasedQuery(
+            'SELECT unit_off_id FROM unit_offering WHERE ' +
+            'unit_code=? AND unit_off_year=? AND unit_off_period=?;',
+            [unitCode, year, period]
+        )
+        return unit_off_id;
+    } catch(error) {
+        throw error
+    }
+}
+
+const insertStudentEnrolment = async (studentKeys, unit_off_id) => {
+    /**
+     * adds enrolment data given an array of student keys and a unit offering id,
+     */
+    try {
+        const enrolmentInsertData = studentKeys.map((student) => {return [student.stud_unique_id, unit_off_id]})
+        const result = await promiseBasedQuery(
+            'INSERT INTO unit_enrolment (stud_unique_id, unit_off_id) VALUES ?;',
+            [enrolmentInsertData]
+        )
+        return result;
+    } catch(error) {
+        throw error
+    }
+}
+
+const insertUnitOffLabs = (labInsertData) => {}
+
 
 module.exports = {
     getAllStudents,
