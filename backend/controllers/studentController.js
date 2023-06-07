@@ -35,9 +35,11 @@ const addAllStudents = async (req, res) => {
     db_connection.query('DELETE FROM lab_allocation;', (err, res, fields) => { })
 
     /* INSERT STUDENTS INTO DATABASE */
-    // remove the labId attribute from students and filter out object keys in prep for SQL queries
+    // get the attributes we need and their values in prep for SQL queries
     //      e.g. {id: 5, name: 'jim'} becomes [5, 'jim'] to comply with mysql2 API
-    const studentInsertData = requestBody.map(({ labId, enrolmentStatus, discPersonality, ...rest }) => {return Object.values(rest);});
+    const studentInsertData = requestBody.map(
+        ({ labId, enrolmentStatus, discPersonality, ...rest }) => {return Object.values(rest);}
+    );
     await insertStudents(studentInsertData)
 
     /* CREATE UNIT ENROLMENT BETWEEN STUDENTS AND UNIT */
@@ -52,6 +54,7 @@ const addAllStudents = async (req, res) => {
     /* todo ALLOCATE STUDENTS TO THEIR RESPECTIVE LABS */
     // we need [unit_off_lab_id, student_unique_id] and the link is with student lab in student data
     const unit_off_labs = await promiseBasedQuery('SELECT * FROM unit_off_lab WHERE unit_off_id=?;', [unit_off_id])
+
 
     /* todo UPDATE ENROLMENT COUNT */
     // can we count enrollment count before? e.g. updated rows? or do a new query?

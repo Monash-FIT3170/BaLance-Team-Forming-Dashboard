@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS unit_enrolment ( -- connection between student and un
     enrolment_id INT AUTO_INCREMENT COMMENT 'unique identifier to refer to a students enrolment to a unit offering',
     stud_unique_id INT,
     unit_off_id INT,
-    enrolment_status ENUM('active', 'inactive'),
+    enrolment_status ENUM('active', 'inactive'), -- todo ask Rio if we still store and maintain this
     CONSTRAINT pk_unit_enrollment PRIMARY KEY (enrolment_id)
 );
 ALTER TABLE unit_enrolment AUTO_INCREMENT=100000000;
