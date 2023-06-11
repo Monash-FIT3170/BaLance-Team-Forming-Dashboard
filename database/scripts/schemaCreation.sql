@@ -42,7 +42,8 @@ CREATE TABLE IF NOT EXISTS student (
     wam_display VARCHAR(50), -- todo is this necessary?
     wam_val INT,
     gender ENUM('M', 'F'),
-    CONSTRAINT pk_student PRIMARY KEY (stud_unique_id)
+    CONSTRAINT pk_student PRIMARY KEY (stud_unique_id),
+    CONSTRAINT ck_student_email UNIQUE (email_address)
 );
 ALTER TABLE student AUTO_INCREMENT=100000000;
 
