@@ -53,11 +53,32 @@ const addAllStudents = async (req, res) => {
 
     /* todo ALLOCATE STUDENTS TO THEIR RESPECTIVE LABS */
     // we need [unit_off_lab_id, student_unique_id] and the link is with student lab in student data
+    /* SELECT labs and create a dictionary of form
+    * {
+    *   01: pk,
+    *   02: pk,
+    *   03: pk
+    * }
+    * */
     const unit_off_labs = await promiseBasedQuery('SELECT * FROM unit_off_lab WHERE unit_off_id=?;', [unit_off_id])
+    console.log(unit_off_labs)
+
+    /* SORT students by lab number as
+    * {
+    *   01: [students in this lab]
+    *   02: [students in this lab]
+    *   03: [students in this lab]
+    * }
+    * */
 
 
-    /* todo UPDATE ENROLMENT COUNT */
-    // can we count enrollment count before? e.g. updated rows? or do a new query?
+    /*
+    * for (each lab in students dictionary) {
+    *     SELECT these students via email and get their PK
+    *     Combine with the PK in labs dictionary
+    *     INSERT into lab_allocation
+    * }
+    * */
 }
 
 // add a single student to a unit
@@ -119,6 +140,7 @@ const insertStudents = async (studentInsertData) => {
         throw error
     }
 }
+
 const selectStudentsKeys = async (studentEmails) => {
     /**
      * obtains the list of primary keys for the students associated with the list of emails provided
@@ -175,7 +197,7 @@ const insertUnitOffLabs = (requestBody, unit_off_id) => {
         // get the highest lab number N and create N labs for this unit
         // where labs are in the format n_activity where n is the lab no.
         let numLabs = 0
-        for(let student in requestBody) {
+        for(student of requestBody) {
             let labId = student.labId;
             let split = labId.split("_");
             let labNum = Number(split[0]);
@@ -191,7 +213,7 @@ const insertUnitOffLabs = (requestBody, unit_off_id) => {
         }
 
         console.log(labInsertData)
-        return promiseBasedQuery('INSERT INTO unit_off_lab (unit_off_id, lab_number) VALUES ?', labInsertData)
+        return promiseBasedQuery('INSERT INTO unit_off_lab (unit_off_id, lab_number) VALUES ?;', [labInsertData])
     } catch(error) {
         throw error
     }
