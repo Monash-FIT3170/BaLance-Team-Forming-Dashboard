@@ -5,7 +5,6 @@
  * */
 
 const db_connection = require("../db_connection");
-const {query} = require("express");
 
 /* CONTROLLER FUNCTIONS */
 // gets all students for a unit
@@ -16,14 +15,19 @@ const getAllStudents = async (req, res) => {
         period
     } = req.params
 
-    // get the unit offering ID
-    // todo consider adding unitCode, year, period to enrollment to avoid multiple queries
+    // todo assess improvements from student enrolment containing code, year, period
+    const studentsData = await promiseBasedQuery(
+        "SELECT student_id, preferred_name, last_name, email_address FROM student " +
+        "INNER JOIN unit_enrolment ON student.stud_unique_id=unit_enrolment.stud_unique_id " +
+        "INNER JOIN unit_offering ON unit_offering.unit_off_id=unit_enrolment.unit_off_id " +
+        "WHERE " +
+        "unit_offering.unit_code=? " +
+        "AND unit_offering.unit_off_year=? " +
+        "AND unit_offering.unit_off_period=?; ",
+        [unitCode, year, period]
+    )
 
-    // get the student ID off all students
-
-    // join
-
-    res.status(200).send({wip: "test"});
+    res.status(200).json(studentsData);
 }
 
 // get a single student for a unit
@@ -39,13 +43,6 @@ const addAllStudents = async (req, res) => {
         period
     } = req.params
     const requestBody = req.body
-
-    // Remove related data for easy testing without needing to set up db from scratch
-    //   delete these after implementation is complete
-    db_connection.query('DELETE FROM student;', (err, res, fields) => { })
-    db_connection.query('DELETE FROM unit_enrolment;', (err, res, fields) => { })
-    db_connection.query('DELETE FROM unit_off_lab;', (err, res, fields) => { })
-    db_connection.query('DELETE FROM student_lab_allocation;', (err, res, fields) => { })
 
     /* INSERT STUDENTS INTO DATABASE */
     // get the attributes we need and their values in prep for SQL queries
@@ -117,7 +114,7 @@ const insertStudents = async (studentInsertData) => {
     try {
         // TODO ensure a student does not already exist as the system is centralised
         return promiseBasedQuery(
-            'INSERT INTO student ' +
+            'INSERT IGNORE INTO student ' +
             '(student_id, last_name, preferred_name, email_address, wam_val, gender) ' +
             'VALUES ?;',
             [studentInsertData]
@@ -166,7 +163,7 @@ const insertStudentEnrolment = async (studentKeys, unit_off_id) => {
     try {
         const enrolmentInsertData = studentKeys.map((student) => {return [student.stud_unique_id, unit_off_id]})
         return promiseBasedQuery(
-            'INSERT INTO unit_enrolment (stud_unique_id, unit_off_id) VALUES ?;',
+            'INSERT IGNORE INTO unit_enrolment (stud_unique_id, unit_off_id) VALUES ?;',
             [enrolmentInsertData]
         )
     } catch(error) {
@@ -197,7 +194,7 @@ const insertUnitOffLabs = async (requestBody, unit_off_id) => {
             labInsertData.push(lab);
         }
 
-        return promiseBasedQuery('INSERT INTO unit_off_lab (unit_off_id, lab_number) VALUES ?;', [labInsertData])
+        return promiseBasedQuery('INSERT IGNORE INTO unit_off_lab (unit_off_id, lab_number) VALUES ?;', [labInsertData])
     } catch(error) {
         throw error
     }
@@ -255,7 +252,7 @@ const insertStudentLabAllocations = async (requestBody, unit_off_id) => {
             // combine data into a form compatible with the database schema
             const insertData = labStudentKeys.map((studentKey) => { return [labPrimaryKey, studentKey.stud_unique_id] });
             // insert the data into the database
-            await promiseBasedQuery("INSERT INTO student_lab_allocation (unit_off_lab_id, stud_unique_id) VALUES ?;", [insertData]);
+            await promiseBasedQuery("INSERT IGNORE INTO student_lab_allocation (unit_off_lab_id, stud_unique_id) VALUES ?;", [insertData]);
         }
     } catch(error) {
         throw error;

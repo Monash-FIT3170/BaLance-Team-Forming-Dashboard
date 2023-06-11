@@ -120,19 +120,20 @@ function Students() {
         <Table variant="striped" width="80vw">
           <Thead>
             <Tr>
-              <Th>Name</Th>
+              <Th>ID</Th>
+              <Th>Preferred Name</Th>
+              <Th>Last Name</Th>
               <Th>Email Address</Th>
-              <Th>Class Number</Th>
               <Th>Group Number</Th>
             </Tr>
           </Thead>
           <Tbody>
             {allStudents.map((student) => (
               <StudentRow2
-                props={student}
-                studentInfo={student}
+                studentData={student}
+                studentLab={1}
+                studentGroup={undefined}
                 key={student.id}
-                allLabs={allGroups}
               />
             ))}
           </Tbody>
