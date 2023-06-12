@@ -19,24 +19,25 @@ const { // import controller functions for route handlers
 // Api Structure /api/groups/{unitId}/{groupId}
 
 // get all groups for a specific unit
-router.get('/:unitId', getAllGroups);
+router.get('/:unitCode/:year/:period', getAllGroups);
 
 // get a specific group for a specific unit
-router.get('/:unitId/:groupId', getGroup);
+router.get('/:unitCode/:year/:period/:groupNumber', getGroup);
 
 // create unit groups
-router.post('/:unitId/', createUnitGroups);
+router.post('/:unitCode/:year/:period', createUnitGroups);
 
 // add a new group to a unit
-router.post('/:unitId/new', addGroup);
+router.post('/:unitCode/:year/:period/new', addGroup);
 
 // delete a specific group from a unit
-router.delete('/:unitId/:groupId', deleteGroup);
+router.delete('/:unitCode/:year/:period/:groupNumber', deleteGroup);
 
 // update a specific group from a unit
-router.patch('/:unitId/:groupId', updateGroup);
+router.patch('/:unitCode/:year/:period/:groupNumber', updateGroup);
 
-router.patch('/:unitId/move/:studentId/', moveStudent)
+// move a student between two groups
+router.patch('/:unitCode/:year/:period/move/:studentId/', moveStudent)
 
 // export this router for external use
 module.exports = router;
