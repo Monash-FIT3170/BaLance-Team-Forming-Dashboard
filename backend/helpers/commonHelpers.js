@@ -16,6 +16,24 @@ const promiseBasedQuery = (query, values) => {
     });
 }
 
+const selectUnitOffKey = async (unitCode, year, period) => {
+    /**
+     * obtains the primary key for a unit offering
+     * result is used to form enrolment fata for that unit offering
+     */
+    try {
+        const [{unit_off_id}] = await promiseBasedQuery(
+            'SELECT unit_off_id FROM unit_offering WHERE ' +
+            'unit_code=? AND unit_off_year=? AND unit_off_period=?;',
+            [unitCode, year, period]
+        )
+        return unit_off_id;
+    } catch(error) {
+        throw error
+    }
+}
+
 module.exports = {
-    promiseBasedQuery
+    promiseBasedQuery,
+    selectUnitOffKey
 }

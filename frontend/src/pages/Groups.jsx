@@ -35,10 +35,10 @@ function Groups() {
   useEffect(() => {
     const summary = [];
 
-    // TODO url must be updated for fetch to work /api/groups/unitCode/year/period
     fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`)
       .then((res) =>
         res.json().then(function (res) {
+          console.log(res)
           setState(res);
 
           for (let i = 0; i < res.length; i++) {

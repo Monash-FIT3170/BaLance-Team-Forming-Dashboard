@@ -67,5 +67,6 @@ function shuffle(array) {
 }
 
 module.exports = {
-    groupFormationStrategies
+    groupFormationStrategies,
+    shuffle
 }

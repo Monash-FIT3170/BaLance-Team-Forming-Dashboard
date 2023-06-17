@@ -4,11 +4,14 @@
  *
  * */
 
-const {promiseBasedQuery} = require("../helpers/commonHelpers");
+const {
+    promiseBasedQuery,
+    selectUnitOffKey
+} = require("../helpers/commonHelpers");
+
 const {
     insertStudents,
     selectStudentsKeys,
-    selectUnitOffKey,
     insertStudentEnrolment,
     insertUnitOffLabs,
     insertStudentLabAllocations
@@ -63,12 +66,12 @@ const addAllStudents = async (req, res) => {
     /* CREATE UNIT ENROLMENT BETWEEN STUDENTS AND UNIT */
     const studentEmails = requestBody.map((student) => student.studentEmailAddress);
     const studentKeys = await selectStudentsKeys(studentEmails);
-    const unit_off_id = await selectUnitOffKey(unitCode, year, period);
-    await insertStudentEnrolment(studentKeys, unit_off_id);
+    const unitOffId = await selectUnitOffKey(unitCode, year, period);
+    await insertStudentEnrolment(studentKeys, unitOffId);
 
     /* CREATE THE LABS ASSOCIATED WITH THE UNIT ENROLMENT AND ALLOCATE THE STUDENTS */
-    await insertUnitOffLabs(requestBody, unit_off_id); // ensure only 1 lab number of value n, per unit offering
-    await insertStudentLabAllocations(requestBody, unit_off_id);
+    await insertUnitOffLabs(requestBody, unitOffId); // ensure only 1 lab number of value n, per unit offering
+    await insertStudentLabAllocations(requestBody, unitOffId);
 
     res.status(200).send();
 }

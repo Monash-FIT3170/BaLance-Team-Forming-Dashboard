@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS unit_offering (
     unit_name VARCHAR(50),
     unit_off_year INTEGER COMMENT 'the year in which the offering is made',
     unit_off_period VARCHAR(20) COMMENT 'the term which the offering is held e.g. S2',
-    enrollment_count INT,
+    enrolment_count INT,
     CONSTRAINT pk_unit_off PRIMARY KEY (unit_off_id),
     CONSTRAINT ck_unit_off UNIQUE (unit_code, unit_off_year, unit_off_period)
 );

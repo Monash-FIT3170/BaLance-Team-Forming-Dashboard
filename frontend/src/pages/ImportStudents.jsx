@@ -123,7 +123,7 @@ function ImportPage() {
 
   const { unitCode, year, period } = useParams();
 
-  const handleAssignGroupsClick = () => {
+  const handleAssignGroupsClick = async () => {
     // Get current values
     const groupStrategy =
       document.getElementById('groupStrategy').value || defaultStrategy;
@@ -131,7 +131,7 @@ function ImportPage() {
     const variance = document.getElementById('variance').value || defaultVariance;
 
     // Make API call
-    fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`, {
+    await fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -579,6 +579,8 @@ function ImportPage() {
         <Box mt={8} display="flex" justifyContent="space-between" alignItems="center">
           <Select placeholder="Select strategy" w="40%" mr={4} id="groupStrategy">
             <option value="random">Random</option>
+            <option value="DISC">DISC</option>
+            <option value="OCEAN">OCEAN</option>
           </Select>
           <Select placeholder="No. per team" w="40%" mr={4} id="groupSize">
             <option value="2">2</option>
