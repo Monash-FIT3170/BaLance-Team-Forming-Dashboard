@@ -1,5 +1,8 @@
 /* The following file is for testing random queries against the database.
 */
+
+USE student_group_db;
+
 SELECT * FROM unit_offering;
 SELECT * FROM student;
 SELECT * FROM unit_enrolment;
@@ -12,12 +15,12 @@ FROM student
 INNER JOIN unit_enrolment ON student.stud_unique_id=unit_enrolment.stud_unique_id
 INNER JOIN unit_offering ON unit_offering.unit_off_id=unit_enrolment.unit_off_id
 WHERE 
-	unit_offering.unit_code="FIT2099"
+	unit_offering.unit_code="FIT3175"
 	AND unit_offering.unit_off_year=2023
-	AND unit_offering.unit_off_period='S1';
+	AND unit_offering.unit_off_period='S2';
     
 -- select student, stud id, lab number,
-SELECT stud.stud_unique_id, alloc.unit_off_lab_id
+SELECT stud.stud_unique_id, alloc.unit_off_lab_id, unit.unit_off_id
 FROM student stud
 INNER JOIN student_lab_allocation alloc ON stud.stud_unique_id=alloc.stud_unique_id
 INNER JOIN unit_off_lab lab ON lab.unit_off_lab_id=alloc.unit_off_lab_id
@@ -26,7 +29,7 @@ WHERE
 	unit.unit_code="FIT2099"
 	AND unit.unit_off_year=2023
 	AND unit.unit_off_period='S1'
-ORDER BY unit_off_lab_id;
+ORDER BY unit_off_lab_id DESC;
 
 
 

@@ -21,7 +21,7 @@ const defaultStrategy = "random";
 const getAllGroups = async (req, res) => {
     /* GET ALL GROUPS */
     // '/:unitCode/:year/:period'
-    res.status(200);
+    res.status(200).send([]);
 }
 
 // get a single group from a unit
@@ -35,12 +35,12 @@ const createUnitGroups = async (req, res) => {
         unitCode,
         year,
         period
-    } = req.params
+    } = req.params;
     const {
         groupSize,
         variance,
         strategy,
-    } = req.body
+    } = req.body;
 
     /* GET ALL OF THE STUDENTS ASSOCIATED WITH THIS UNIT SORTED BY LAB */
     const unitOffId = await selectUnitOffKey(unitCode, year, period);
@@ -63,7 +63,7 @@ const createUnitGroups = async (req, res) => {
     console.log(`group size: ${groupSize}, variance: ${variance}, strat: ${strategy}`);
 
     /* SPLIT BY LAB | labStudents = [ lab_id: [student_unique_ids], lab_id: [student_unique_ids] ] */
-    const labStudents = { }
+    const labStudents = { };
     students.forEach((student) => {
         if(!labStudents[student.unit_off_lab_id]) { labStudents[student.unit_off_lab_id] = []; }
         labStudents[student.unit_off_lab_id].push(student.stud_unique_id);
@@ -71,34 +71,63 @@ const createUnitGroups = async (req, res) => {
 
     /* RANDOMISE THE, STUDENTS WITHIN EACH LAB NUMBER todo randomise first or get random index when assigning? */
     for(let lab in labStudents) { labStudents[lab] = shuffle(labStudents[lab]); }
-    console.log(labStudents)
 
     /* SPLIT THE RANDOMISED LIST INTO GROUPS OF n AS SPECIFIED IN REQ */
     for(let lab in labStudents) {
         labStudents[lab] = createGroupsRandom(unitOffId, lab, labStudents[lab], groupSize, variance);
     }
 
-    /* INSERT GROUPS AND THEIR ALLOCATIONS INTO THE DATABASE  */
+    /* INSERT THE NEW GROUPS INTO THE DATABASE */
     // determine the number of groups to be inserted to database -> inserted as [unit_off_lab_id, group_number]
-    console.log(labStudents);
     const groupInsertData = [];
-    let numGroups = 0
+    let numGroups = 0;
     for(let lab in labStudents) {
         labStudents[lab].forEach((student) => {
             numGroups++;
             groupInsertData.push([lab, numGroups]);
         })
     }
-    console.log(groupInsertData);
+
     await promiseBasedQuery(
-        'INSERT INTO lab_group (unit_off_lab_id, group_number) VALUES ?;',
+        'INSERT IGNORE INTO lab_group (unit_off_lab_id, group_number) VALUES ?;',
         [groupInsertData]
-    )
+    );
+
+    /* INSERT THE ALLOCATIONS TO GROUPS INTO THE DATABASE */
+    // get all groups in this unit as [ >> group_id <<, lab_id]
+    const groupAllocInsertData = [];
+    const groupData = await promiseBasedQuery(
+        'SELECT g.lab_group_id, g.unit_off_lab_id ' +
+        'FROM lab_group g ' +
+        'INNER JOIN unit_off_lab l ON g.unit_off_lab_id=l.unit_off_lab_id ' +
+        'INNER JOIN unit_offering u ON u.unit_off_id=l.unit_off_id ' +
+        'WHERE ' +
+        '   u.unit_code=? ' +
+        '   AND u.unit_off_year=? ' +
+        '   AND u.unit_off_period=?;',
+        [unitCode, year, period]
+    );
+    console.log(labStudents);
+    console.log(groupInsertData);
+    console.log(groupData);
+    console.log(`numGroups: ${numGroups}`);
+
+    // for each group, pop a group from the lab key in object and form the allocation
+    for(let i=0; i<numGroups; i++) {
+        const group = groupData.pop();
+        const groupStudents = labStudents[group.unit_off_lab_id].pop()
+        groupStudents.forEach((studentId) => { groupAllocInsertData.push([studentId, group.lab_group_id]) })
+    }
+
+    console.log(groupAllocInsertData);
 
     // student allocations are created as [~~group_alloc_id~~, stud_unique_id, lab_group_id]
+    await promiseBasedQuery(
+        'INSERT IGNORE INTO group_allocation (stud_unique_id, lab_group_id) VALUES ?;',
+        [groupAllocInsertData]
+    );
 
-
-    res.status(200).send({wip: "test"});
+    res.status(200).send();
 }
 
 // add a new group to a unit
@@ -119,6 +148,7 @@ const updateGroup = async (req, res) => {
     res.status(200).send({wip: "test"});
 }
 
+// move a student from one group to another
 const moveStudent = async (req, res) => {
     /* REQUIRES OFFERING, STUDENT, OLD GROUP, NEW GROUP */
     res.status(200).send({wip: "test"});
