@@ -142,8 +142,8 @@ function ImportPage() {
         strategy: groupStrategy,
       }),
     });
-    // Go to groups page
-    navigate(`/groups/${unitCode}/${year}/${period}`);
+    // Go to groups page todo
+    // navigate(`/groups/${unitCode}/${year}/${period}`);
   };
 
   //create unit for new students

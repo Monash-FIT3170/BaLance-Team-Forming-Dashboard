@@ -41,10 +41,8 @@ const createUnitGroups = async (req, res) => {
         strategy,
     } = req.body
 
-    console.log("-----------------\n", unitCode, year, period);
-    console.log(`group size: ${groupSize}, variance: ${variance}, strat: ${strategy}`);
-
-    /* GET ALL OF THE STUDENTS ASSOCIATED WITH THIS UNIT SORTED BY LAB*/
+    /* GET ALL OF THE STUDENTS ASSOCIATED WITH THIS UNIT SORTED BY LAB */
+    const unitOffId = await selectUnitOffKey(unitCode, year, period);
     const students = await promiseBasedQuery(
         'SELECT stud.stud_unique_id, alloc.unit_off_lab_id ' +
         'FROM student stud ' +
@@ -59,36 +57,29 @@ const createUnitGroups = async (req, res) => {
         [unitCode, year, period]
     );
 
-    const unit_off_id = selectUnitOffKey(unitCode, year, period);
-
     // students = [{stud_unique_id: INT},{stud_unique_id: INT}]
+    // console.log("-----------------\n", unitCode, year, period);
+    console.log(`group size: ${groupSize}, variance: ${variance}, strat: ${strategy}`);
 
-    /* SPLIT BY LAB */
+    /* SPLIT BY LAB | labStudents = [ lab_id: [student_unique_ids], lab_id: [student_unique_ids] ] */
     const labStudents = { }
     students.forEach((student) => {
         if(!labStudents[student.unit_off_lab_id]) { labStudents[student.unit_off_lab_id] = []; }
         labStudents[student.unit_off_lab_id].push(student.stud_unique_id);
     });
 
-    /* RANDOMISE THE, STUDENTS WITHIN EACH LAB NUMBER */
+    /* RANDOMISE THE, STUDENTS WITHIN EACH LAB NUMBER todo randomise first or get random index when assigning? */
     for(let lab in labStudents) { labStudents[lab] = shuffle(labStudents[lab]); }
     console.log(labStudents)
 
-    /*
-    labStudents = [
-        lab_id: [student_unique_ids],
-        lab_id: [student_unique_ids],
-        lab_id: [student_unique_ids],
-        lab_id: [student_unique_ids],
-    ]
-    */
-
     /* SPLIT THE RANDOMISED LIST INTO GROUPS OF n AS SPECIFIED IN REQ */
-    for(let lab in labStudents) { labStudents[lab] = createGroupsRandom(lab, labStudents[lab]); }
+    for(let lab in labStudents) {
+        labStudents[lab] = createGroupsRandom(unitOffId, lab, labStudents[lab], groupSize, variance);
+    }
 
-    // create the groups
-    /* FOR EACH GROUP,  */
-    // create the group allocations
+
+
+    /* INSERT GROUP AND ALLOCATIONS INTO THE DATABASE  */
 
     res.status(200).send({wip: "test"});
 }
@@ -117,9 +108,49 @@ const moveStudent = async (req, res) => {
 }
 
 /* SUPPLEMENTARY FUNCTIONS. TO BE REFACTORED */
-const createGroupsRandom = (unitOffId, labId, studentsList) => {
-    console.log(`unit id: ${unitOffId}, lab id: ${labId}, students: ${studentsList}`);
-    const groups = [];
+const createGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) => {
+    // console.log(`| unit id: ${unitOffId} | lab id: ${labId} | students: ${studentsList} |`);
+    let groups = [];
+    for (let i = 0; i < studentsList.length; i += groupSize) {
+        const group = studentsList.slice(i, i + groupSize);
+        groups.push(group);
+    }
+
+    const numFullGroups = studentsList.length / groupSize;
+    const numRemStud = studentsList.length % groupSize; // students who didn't end up in full groups i.e. remainder
+    const lastGroup = groups[groups.length - 1]
+
+    // if we cannot form even groups from all students or the last group is not within variance limits
+    if (numRemStud !== 0 && numRemStud < groupSize - variance) {
+        // can the students not in a full group be shared between full groups?
+        if (numRemStud / numFullGroups <= variance) {
+            // todo consider variance > 1, enclose in a for(i=0 i<variance) or do i%variance
+            // students not in a full group are distributed amongst the full groups until no more remain
+            let lastGroupLen = lastGroup.length; // defined here to avoid re-evaluation of value in loop condition
+            for (let i = 0; i < lastGroupLen; i++) {
+                groups[i].push(lastGroup.pop());
+            }
+            groups.pop();
+        }
+        // can the remainder borrow from full groups without validating size constraints?
+        else if (numRemStud + variance * numFullGroups >= groupSize - variance) { // todo don't overestimate borrow
+            // borrow from full groups until last group is within size constraints
+            for (let i = 0; i <= (groups.length - 1) * variance; i++) {
+                // borrow from full group only if it doesnt break size constraints
+                if (groups[i % variance].length - variance >= groupSize - variance) {
+                    lastGroup.push(groups[i].pop());
+                }
+            }
+            groups.pop();
+        }
+        // split the groups as evenly as possible
+        else {
+            return createGroupsRandom(unitOffId, labId, studentsList, groupSize - 1, variance)
+        }
+    }
+
+    console.log(groups)
+
     return groups;
 }
 
