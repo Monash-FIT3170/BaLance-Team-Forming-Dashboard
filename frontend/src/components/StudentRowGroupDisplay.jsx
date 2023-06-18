@@ -2,7 +2,7 @@ import { Tr, Td, HStack, Spacer } from '@chakra-ui/react';
 import { DragHandleIcon, CloseIcon } from '@chakra-ui/icons';
 import ChangeStudentGroupModal from './ChangeStudentGroupModal';
 
-function StudentRow(props) {
+function StudentRowGroupDisplay(props) {
   /*HTML component for each student in each group in the 'View Groups' View*/
   // desctructure the content of props
   const { studentInfo, classNum, groupNum, key, allIds, groupId } = props;
@@ -29,4 +29,4 @@ function StudentRow(props) {
   );
 }
 
-export default StudentRow;
+export default StudentRowGroupDisplay;

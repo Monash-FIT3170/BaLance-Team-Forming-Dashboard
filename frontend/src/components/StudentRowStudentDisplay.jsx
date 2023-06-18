@@ -1,7 +1,7 @@
 import { Tr, Td, HStack, Select, Icon } from '@chakra-ui/react';
 import ChangeStudentGroupModal from './ChangeStudentGroupModal';
 
-const StudentRow2 = ({studentData, studentLab, studentGroup}) => {
+const StudentRowStudentDisplay = ({studentData, studentLab, studentGroup}) => {
     /*HTML component for each student in each group in the 'List Students' View*/
     const {
         student_id,
@@ -30,4 +30,4 @@ const StudentRow2 = ({studentData, studentLab, studentGroup}) => {
     );
 };
 
-export default StudentRow2;
+export default StudentRowStudentDisplay;

@@ -21,7 +21,7 @@ import {
   Spacer,
   HStack,
 } from '@chakra-ui/react';
-import StudentRow from './StudentRowGroupDisplay';
+import StudentRowGroupDisplay from './StudentRowGroupDisplay';
 
 const GroupCard = (props) => {
   const { labNumber, groupId, groupNumber, members } = props.props;
@@ -53,7 +53,7 @@ const GroupCard = (props) => {
             </Thead>
             <Tbody>
               {members.map((student) => (
-                <StudentRow
+                <StudentRowGroupDisplay
                   studentInfo={student}
                   classNum={labId}
                   groupNum={groupNumber}

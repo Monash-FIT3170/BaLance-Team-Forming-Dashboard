@@ -14,7 +14,7 @@ import {
   Center,
   useDisclosure,
 } from '@chakra-ui/react';
-import StudentRow2 from '../components/StudentRowStudentDisplay';
+import StudentRowStudentDisplay from '../components/StudentRowStudentDisplay';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShuffleGroups } from '../components/ShuffleGroups';
 
@@ -129,7 +129,7 @@ function Students() {
           </Thead>
           <Tbody>
             {allStudents.map((student) => (
-              <StudentRow2
+              <StudentRowStudentDisplay
                 studentData={student}
                 studentLab={1}
                 studentGroup={undefined}

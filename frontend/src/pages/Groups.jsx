@@ -29,27 +29,14 @@ function Groups() {
     navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
   };
 
-  const [state, setState] = useState([]);
-  const [allGroups, setAllGroups] = useState([]);
+  const [groups, setGroups] = useState([]);
 
   useEffect(() => {
-    const summary = [];
-
     fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`)
       .then((res) =>
         res.json().then(function (res) {
           console.log(res)
-          setState(res);
-
-          for (let i = 0; i < res.length; i++) {
-            summary.push({
-              labId: res[i].labId,
-              groupNumber: res[i].groupNumber,
-              groupId: res[i].groupId,
-            });
-          }
-
-          setAllGroups(summary);
+          setGroups(res);
         })
       )
       .catch((err) => console.error(err));
@@ -118,8 +105,8 @@ function Groups() {
       </HStack>
 
       <Container className="groups" maxW="80vw">
-        {state.map((group) => (
-          <GroupCard props={group} key={group.id} allIds={allGroups} />
+        {groups.map((group) => (
+          <GroupCard props={group} key={group.id} allIds={groups} />
         ))}
       </Container>
     </div>
