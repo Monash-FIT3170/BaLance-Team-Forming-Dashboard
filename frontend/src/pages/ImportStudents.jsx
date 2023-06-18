@@ -143,7 +143,7 @@ function ImportPage() {
       }),
     });
     // Go to groups page todo
-    // navigate(`/groups/${unitCode}/${year}/${period}`);
+    navigate(`/groups/${unitCode}/${year}/${period}`);
   };
 
   //create unit for new students

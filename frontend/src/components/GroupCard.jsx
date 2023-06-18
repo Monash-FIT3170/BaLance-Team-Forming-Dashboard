@@ -24,7 +24,7 @@ import {
 import StudentRow from './StudentRowGroupDisplay';
 
 const GroupCard = (props) => {
-  const { labId, groupId, groupNumber, members } = props.props;
+  const { labNumber, groupId, groupNumber, members } = props.props;
   const { allIds } = props;
 
   return (
@@ -32,7 +32,7 @@ const GroupCard = (props) => {
       <CardHeader>
         <HStack>
           <Heading>
-            Lab: {labId} Group: {groupNumber}
+            Lab: {labNumber} Group: {groupNumber}
           </Heading>
           <Spacer />
         </HStack>
@@ -44,11 +44,11 @@ const GroupCard = (props) => {
             <Thead>
               <Tr>
                 <Th></Th>
-                <Th>Name</Th>
+                <Th>ID</Th>
+                <Th>Preferred Name</Th>
+                <Th>Last Name</Th>
                 <Th>Email Address</Th>
-                <Th>WAM average</Th>
-                <Th>Enrolment Status</Th>
-                <Th>DISC Personality</Th>
+                <Th>WAM</Th>
               </Tr>
             </Thead>
             <Tbody>

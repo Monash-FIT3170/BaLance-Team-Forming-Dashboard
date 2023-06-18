@@ -19,9 +19,61 @@ const defaultStrategy = "random";
 
 // get all groups from a unit
 const getAllGroups = async (req, res) => {
+    const {
+        unitCode,
+        year,
+        period
+    } = req.params;
+
     /* GET ALL GROUPS */
-    // '/:unitCode/:year/:period'
-    res.status(200).send([]);
+    const studentData = await promiseBasedQuery(
+        'SELECT stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val, l_group.group_number, lab.lab_number ' +
+        'FROM student stud ' +
+        'INNER JOIN group_allocation g_alloc ON stud.stud_unique_id=g_alloc.stud_unique_id ' +
+        'INNER JOIN lab_group l_group ON g_alloc.lab_group_id=l_group.lab_group_id ' +
+        'INNER JOIN unit_off_lab lab ON lab.unit_off_lab_id=l_group.unit_off_lab_id ' +
+        'INNER JOIN unit_offering unit ON unit.unit_off_id=lab.unit_off_id ' +
+        'WHERE' +
+        '   unit.unit_code=? ' +
+        '   AND unit.unit_off_year=? ' +
+        '   AND unit.unit_off_period=?' +
+        'ORDER BY l_group.group_number;',
+        [unitCode, year, period]
+    );
+
+    const responseData = [];
+    let group = {students: []}
+    for(let i=0; i<studentData.length; i++) {
+        // check if this is a new group we are handling
+        if (group['groupNumber'] !== studentData[i].group_number) {
+            group = {groupNumber: studentData[i].group_number, labNumber: studentData[i].lab_number, students: []}
+        }
+
+        // add student to the groups list of students
+        const {
+            student_id,
+            preferred_name,
+            last_name,
+            email_address,
+            wam_val
+        } = studentData[i];
+
+        group.students.push({
+            studentId: student_id,
+            preferredName: preferred_name,
+            lastName: last_name,
+            emailAddress: email_address,
+            wamVal: wam_val
+        })
+
+        // if the next student is in a new group or this is the last student, push this group
+        //console.log(i, studentData[i+1]['groupNumber'], studentData[i]['groupNumber'])
+        if(i+1 === studentData.length || studentData[i+1].group_number !== studentData[i].group_number) {
+            responseData.push(group);
+        }
+    }
+
+    res.status(200).send(responseData);
 }
 
 // get a single group from a unit
@@ -70,9 +122,8 @@ const createUnitGroups = async (req, res) => {
     });
 
     /* RANDOMISE THE, STUDENTS WITHIN EACH LAB NUMBER todo randomise first or get random index when assigning? */
+    /* THEN SPLIT THE RANDOMISED LIST INTO GROUPS OF n AS SPECIFIED IN REQ */
     for(let lab in labStudents) { labStudents[lab] = shuffle(labStudents[lab]); }
-
-    /* SPLIT THE RANDOMISED LIST INTO GROUPS OF n AS SPECIFIED IN REQ */
     for(let lab in labStudents) {
         labStudents[lab] = createGroupsRandom(unitOffId, lab, labStudents[lab], groupSize, variance);
     }
@@ -107,10 +158,6 @@ const createUnitGroups = async (req, res) => {
         '   AND u.unit_off_period=?;',
         [unitCode, year, period]
     );
-    console.log(labStudents);
-    console.log(groupInsertData);
-    console.log(groupData);
-    console.log(`numGroups: ${numGroups}`);
 
     // for each group, pop a group from the lab key in object and form the allocation
     for(let i=0; i<numGroups; i++) {
@@ -118,8 +165,6 @@ const createUnitGroups = async (req, res) => {
         const groupStudents = labStudents[group.unit_off_lab_id].pop()
         groupStudents.forEach((studentId) => { groupAllocInsertData.push([studentId, group.lab_group_id]) })
     }
-
-    console.log(groupAllocInsertData);
 
     // student allocations are created as [~~group_alloc_id~~, stud_unique_id, lab_group_id]
     await promiseBasedQuery(
