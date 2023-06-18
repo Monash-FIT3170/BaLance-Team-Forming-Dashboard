@@ -106,7 +106,7 @@ function Groups() {
 
       <Container className="groups" maxW="80vw">
         {groups.map((group) => (
-          <GroupCard props={group} key={group.id} allIds={groups} />
+          <GroupCard groupData={group} key={group.id} />
         ))}
       </Container>
     </div>

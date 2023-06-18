@@ -23,9 +23,13 @@ import {
 } from '@chakra-ui/react';
 import StudentRowGroupDisplay from './StudentRowGroupDisplay';
 
-const GroupCard = (props) => {
-  const { labNumber, groupId, groupNumber, members } = props.props;
-  const { allIds } = props;
+const GroupCard = ({groupData}) => {
+  // console.log(groupData)
+  const {
+    labNumber,
+    groupNumber,
+    students
+  } = groupData;
 
   return (
     <Card border="1px" margin="20px">
@@ -52,14 +56,10 @@ const GroupCard = (props) => {
               </Tr>
             </Thead>
             <Tbody>
-              {members.map((student) => (
+              {students.map((student) => (
                 <StudentRowGroupDisplay
-                  studentInfo={student}
-                  classNum={labId}
-                  groupNum={groupNumber}
-                  key={student._id}
-                  groupId={groupId}
-                  allIds={allIds}
+                  studentData={student}
+                  key={student.studentId}
                 />
               ))}
             </Tbody>

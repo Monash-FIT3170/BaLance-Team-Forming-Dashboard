@@ -220,6 +220,7 @@ const createGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance)
             // students not in a full group are distributed amongst the full groups until no more remain
             let lastGroupLen = lastGroup.length; // defined here to avoid re-evaluation of value in loop condition
             for (let i = 0; i < lastGroupLen; i++) {
+                console.log(groups[i])
                 groups[i].push(lastGroup.pop());
             }
             groups.pop();
