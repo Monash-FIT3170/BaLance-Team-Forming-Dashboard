@@ -11,6 +11,7 @@ const {
     groupFormationStrategies,
     shuffle
 } = require("../helpers/groupControllerHelpers")
+const {insertUnitOffLabs} = require("../helpers/studentControllerHelpers");
 
 const defaultGroupSize = 3;
 const defaultVariance = 1;
@@ -77,9 +78,25 @@ const createUnitGroups = async (req, res) => {
         labStudents[lab] = createGroupsRandom(unitOffId, lab, labStudents[lab], groupSize, variance);
     }
 
+    /* INSERT GROUPS AND THEIR ALLOCATIONS INTO THE DATABASE  */
+    // determine the number of groups to be inserted to database -> inserted as [unit_off_lab_id, group_number]
+    console.log(labStudents);
+    const groupInsertData = [];
+    let numGroups = 0
+    for(let lab in labStudents) {
+        labStudents[lab].forEach((student) => {
+            numGroups++;
+            groupInsertData.push([lab, numGroups]);
+        })
+    }
+    console.log(groupInsertData);
+    await promiseBasedQuery(
+        'INSERT INTO lab_group (unit_off_lab_id, group_number) VALUES ?;',
+        [groupInsertData]
+    )
 
+    // student allocations are created as [~~group_alloc_id~~, stud_unique_id, lab_group_id]
 
-    /* INSERT GROUP AND ALLOCATIONS INTO THE DATABASE  */
 
     res.status(200).send({wip: "test"});
 }

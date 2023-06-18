@@ -137,3 +137,5 @@ ALTER TABLE staff_lab_allocation ADD FOREIGN KEY (unit_off_lab_id) REFERENCES un
 
 -- groups to group allocations
 ALTER TABLE group_allocation ADD FOREIGN KEY (lab_group_id) REFERENCES lab_group(lab_group_id);
+
+-- todo PERSONALITY QUIZ IMPLEMENTATION
