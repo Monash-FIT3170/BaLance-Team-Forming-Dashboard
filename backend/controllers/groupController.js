@@ -212,6 +212,10 @@ const createGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance)
     const numRemStud = studentsList.length % groupSize; // students who didn't end up in full groups i.e. remainder
     const lastGroup = groups[groups.length - 1]
 
+    console.log(`size: ${groupSize}, variance: ${variance}`)
+    console.log("Full groups before adjustment")
+    console.log(groups);
+
     // if we cannot form even groups from all students or the last group is not within variance limits
     if (numRemStud !== 0 && numRemStud < groupSize - variance) {
         // can the students not in a full group be shared between full groups?
@@ -220,6 +224,7 @@ const createGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance)
             // students not in a full group are distributed amongst the full groups until no more remain
             let lastGroupLen = lastGroup.length; // defined here to avoid re-evaluation of value in loop condition
             for (let i = 0; i < lastGroupLen; i++) {
+                console.log("group that is to be distributed")
                 console.log(groups[i])
                 groups[i].push(lastGroup.pop());
             }
@@ -242,6 +247,7 @@ const createGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance)
         }
     }
 
+    console.log("Groups after adjustments")
     console.log(groups)
 
     return groups;

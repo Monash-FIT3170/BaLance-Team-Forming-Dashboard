@@ -41,7 +41,7 @@ function UnitPage() {
   // handle submit unit and posting it to the backend
   const handleSubmitUnit = (event) => {
     event.preventDefault();
-
+    console.log("adding unit")
     const unitObject = {
       unitCode: unitCode,
       unitName: unitName,
@@ -146,9 +146,9 @@ function UnitPage() {
                       value={unitSemesterOffering}
                       onChange={(event) => setUnitSemesterOffering(event.target.value)}
                     >
-                      <option value="option1">S1</option>
-                      <option value="option2">S2</option>
-                      <option value="option3">FY</option>
+                      <option value="S1">S1</option>
+                      <option value="S2">S2</option>
+                      <option value="FY">FY</option>
                     </Select>
                   </Flex>
                 </FormControl>
