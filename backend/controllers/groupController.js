@@ -13,9 +13,6 @@ const {
 } = require("../helpers/groupControllerHelpers")
 const {insertUnitOffLabs} = require("../helpers/studentControllerHelpers");
 
-const defaultGroupSize = 3;
-const defaultVariance = 1;
-const defaultStrategy = "random";
 
 // get all groups from a unit
 const getAllGroups = async (req, res) => {
@@ -212,7 +209,7 @@ const createGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance)
     const numRemStud = studentsList.length % groupSize; // students who didn't end up in full groups i.e. remainder
     const lastGroup = groups[groups.length - 1]
 
-    console.log(`size: ${groupSize}, variance: ${variance}`)
+    console.log(`size: ${groupSize}, ${typeof groupSize} variance: ${variance}, ${typeof variance}`)
     console.log("Full groups before adjustment")
     console.log(groups);
 

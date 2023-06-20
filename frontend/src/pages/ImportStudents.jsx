@@ -137,10 +137,10 @@ function ImportPage() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        groupSize: groupSize,
-        variance: variance,
-        strategy: groupStrategy,
-      }),
+        groupSize: Number(groupSize),
+        variance: Number(variance),
+        strategy: groupStrategy
+      })
     });
     // Go to groups page todo
     navigate(`/groups/${unitCode}/${year}/${period}`);
