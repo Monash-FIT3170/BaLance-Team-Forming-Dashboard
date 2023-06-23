@@ -26,9 +26,9 @@ function App() {
         <div className="App">
           <Routes>
             <Route path="/" element={<UnitHomePage />} />
-            <Route path="/groups/:unitID/*" element={<Groups />} />
-            <Route path="/students/:unitID" element={<Students />} />
-            <Route path="/uploadStudents/:unitID" element={<ImportStudents />} />
+            <Route path="/groups/:unitCode/:year/:period" element={<Groups />} />
+            <Route path="/students/:unitCode/:year/:period" element={<Students />} />
+            <Route path="/uploadStudents/:unitCode/:year/:period" element={<ImportStudents />} />
             <Route path="/assigningPage" element={<AssigningPage />} />
           </Routes>
         </div>

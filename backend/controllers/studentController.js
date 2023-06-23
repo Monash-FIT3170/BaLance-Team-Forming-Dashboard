@@ -4,138 +4,99 @@
  *
  * */
 
-const fs = require('fs');
-const path = require('path')
+const {
+    promiseBasedQuery,
+    selectUnitOffKey
+} = require("../helpers/commonHelpers");
 
+const {
+    insertStudents,
+    selectStudentsKeys,
+    insertStudentEnrolment,
+    insertUnitOffLabs,
+    insertStudentLabAllocations
+} = require("../helpers/studentControllerHelpers");
+
+/* CONTROLLER FUNCTIONS */
 // gets all students for a unit
 const getAllStudents = async (req, res) => {
+    const { // get the URL params
+        unitCode,
+        year,
+        period
+    } = req.params
 
-    let unitId = req.params.unitId;
-    let groupsData = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/groups.json', 'utf8'));
+    // todo assess improvements from student enrolment containing code, year, period
+    const studentsData = await promiseBasedQuery(
+        "SELECT student_id, preferred_name, last_name, email_address FROM student " +
+        "INNER JOIN unit_enrolment ON student.stud_unique_id=unit_enrolment.stud_unique_id " +
+        "INNER JOIN unit_offering ON unit_offering.unit_off_id=unit_enrolment.unit_off_id " +
+        "WHERE " +
+        "unit_offering.unit_code=? " +
+        "AND unit_offering.unit_off_year=? " +
+        "AND unit_offering.unit_off_period=?; ",
+        [unitCode, year, period]
+    )
 
-    let students = [];
-
-    for (let i = 0; i < groupsData.length; i++){
-        
-        let group = groupsData[i]
-
-        
-
-        if (group.unitCode == unitId){
-
-            let members = group.members;
-            let groupId = group.groupId
-            let groupNumber = group.groupNumber
-
-            for (let j = 0; j < members.length; j++){
-
-                let student = members[j]
-                student.group = {
-                    "groupdId": groupId,
-                    "groupNumber": groupNumber,
-                    "labId": group.labId
-                }
-
-                students.push(student)
-
-            }
-        }
-
-
-    }
-
-    res.status(200).send(students);
-
- }
+    res.status(200).json(studentsData);
+}
 
 // get a single student for a unit
-const getStudent = async (req, res) => { }
+const getStudent = async (req, res) => {
+    res.status(200).send({wip: "test"});
+}
 
-// add an array of students to a unit
+// enroll an array of students to a unit
 const addAllStudents = async (req, res) => {
+    const { // get the URL params
+        unitCode,
+        year,
+        period
+    } = req.params
+    const requestBody = req.body
 
-    let students = req.body;
-    let unitId = req.params.unitId;
+    /* INSERT STUDENTS INTO DATABASE */
+    // get the attributes we need and their values in prep for SQL queries
+    //   e.g. {id: 5, name: 'jim'} becomes [5, 'jim'] to comply with mysql2 API
+    const studentInsertData = requestBody.map(
+        ({ labId, enrolmentStatus, discPersonality, ...rest }) => {return Object.values(rest);}
+    );
+    await insertStudents(studentInsertData)
 
-    let studentJSON = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/students.json', 'utf8'));
-    let units = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/units.json', 'utf8'));
+    /* CREATE UNIT ENROLMENT BETWEEN STUDENTS AND UNIT */
+    const studentEmails = requestBody.map((student) => student.studentEmailAddress);
+    const studentKeys = await selectStudentsKeys(studentEmails);
+    const unitOffId = await selectUnitOffKey(unitCode, year, period);
+    await insertStudentEnrolment(studentKeys, unitOffId);
 
-    let unit;
-    for (let i = 0; i < units.length; i++){
-        if (units[i].unitCode == unitId){
-            unit = units[i];
-            units.splice(i, 1);
-            break;
-        }
-    }
-    
-    for (let i = 0; i < students.length; i++){
-        let student = students[i];
-        let unitDetails = [unitId, student.labId, true];
-        let exists = false;
+    /* CREATE THE LABS ASSOCIATED WITH THE UNIT ENROLMENT AND ALLOCATE THE STUDENTS */
+    await insertUnitOffLabs(requestBody, unitOffId); // ensure only 1 lab number of value n, per unit offering
+    await insertStudentLabAllocations(requestBody, unitOffId);
 
-        for (let j = 0; j < studentJSON.length; j++){
-
-            if (studentJSON[j].studentId == student.studentId){
-
-                student = studentJSON[j]
-                let unitExists = false
-
-                for (let k = 0; k < student.units.length; k++){
-                    if (unitDetails[0] == student.units[k][0]){
-                        if (unitDetails[1] != student.units[k][1]){
-                            student.units[k][1] = unitDetails[1];
-                        }
-                        unitExists = true;
-                        break;
-                    }
-                }
-
-                if (!unitExists){
-                    unit.students.push(student.studentId)
-                    student.units.push(unitDetails);
-                }
-                exists = true
-                break;
-
-            }
-
-        }
-
-        if (!exists){
-
-            studentObject = {
-                studentId: student.studentId,
-                studentFirstName: student.studentFirstName,
-                studentLastName: student.studentLastName,
-                studentEmailAddress: student.studentEmailAddress,
-                wamAverage: student.wamAverage,
-                gender: student.gender,
-                status: student.enrolmentStatus,
-                discPersonality: student.discPersonality,
-                units: [unitDetails]
-            }
-            unit.students.push(student.studentId)
-            studentJSON.push(studentObject)
-        }
-    }
-
-    units.push(unit);
-
-    fs.writeFileSync(path.join(__dirname, '../db') + '/units.json', JSON.stringify(units));
-    fs.writeFileSync(path.join(__dirname, '../db') + '/students.json', JSON.stringify(studentJSON));
-
-    res.sendStatus(200);
- }
+    res.status(200).send();
+}
 
 // add a single student to a unit
-const addStudent = async (req, res) => { }
+const addStudent = async (req, res) => {
+    /* todo ADD STUDENT IF NOT EXISTS */
+    /* todo ADD STUDENT TO UNIT */
+    /* todo ADD STUDENT TO LAB */
+    /* todo UPDATE UNIT ENROLMENT COUNT */
+    res.status(200).send({wip: "test"});
+}
 
 // delete a single student from a unit
-const deleteStudent = (req, res) => { }
+const deleteStudent = (req, res) => {
+    /* todo DON'T DELETE STUDENT FROM student TABLE AS THEY MIGHT BE IN OTHER UNITS */
+    /* todo REMOVE STUDENT FROM THIS UNIT */
+    /* todo REMOVE STUDENT FROM GROUPS AND LABS */
+    res.status(200).send({wip: "test"});
+}
 
 // update a student's details
-const updateStudent = async (req, res) => { }
+const updateStudent = async (req, res) => {
+    res.status(200).send({wip: "test"});
+}
 
 module.exports = {
     getAllStudents,

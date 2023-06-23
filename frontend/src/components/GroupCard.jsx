@@ -21,18 +21,22 @@ import {
   Spacer,
   HStack,
 } from '@chakra-ui/react';
-import StudentRow from './StudentRowGroupDisplay';
+import StudentRowGroupDisplay from './StudentRowGroupDisplay';
 
-const GroupCard = (props) => {
-  const { labId, groupId, groupNumber, members } = props.props;
-  const { allIds } = props;
+const GroupCard = ({groupData}) => {
+  // console.log(groupData)
+  const {
+    labNumber,
+    groupNumber,
+    students
+  } = groupData;
 
   return (
     <Card border="1px" margin="20px">
       <CardHeader>
         <HStack>
           <Heading>
-            Lab: {labId} Group: {groupNumber}
+            Lab: {labNumber} Group: {groupNumber}
           </Heading>
           <Spacer />
         </HStack>
@@ -44,22 +48,18 @@ const GroupCard = (props) => {
             <Thead>
               <Tr>
                 <Th></Th>
-                <Th>Name</Th>
+                <Th>ID</Th>
+                <Th>Preferred Name</Th>
+                <Th>Last Name</Th>
                 <Th>Email Address</Th>
-                <Th>WAM average</Th>
-                <Th>Enrolment Status</Th>
-                <Th>DISC Personality</Th>
+                <Th>WAM</Th>
               </Tr>
             </Thead>
             <Tbody>
-              {members.map((student) => (
-                <StudentRow
-                  studentInfo={student}
-                  classNum={labId}
-                  groupNum={groupNumber}
-                  key={student._id}
-                  groupId={groupId}
-                  allIds={allIds}
+              {students.map((student) => (
+                <StudentRowGroupDisplay
+                  studentData={student}
+                  key={student.studentId}
                 />
               ))}
             </Tbody>

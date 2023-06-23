@@ -3,374 +3,253 @@
  * group data within a unit.
  *
  */
+const {
+    promiseBasedQuery,
+    selectUnitOffKey
+} = require("../helpers/commonHelpers");
+const {
+    groupFormationStrategies,
+    shuffle
+} = require("../helpers/groupControllerHelpers")
+const {insertUnitOffLabs} = require("../helpers/studentControllerHelpers");
 
-const fs = require('fs');
-const path = require('path')
-const { UUID } = require('sequelize');
-
-const defaultGroupSize = 3;
-const defaultVariance = 1;
-const defaultStrategy = "random";
 
 // get all groups from a unit
 const getAllGroups = async (req, res) => {
-    let { unitId } = req.params;
-    let groupsData = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/groups.json', 'utf8'));
+    const {
+        unitCode,
+        year,
+        period
+    } = req.params;
 
-    const resData = groupsData.filter((group) => { // filter the groups by unitId
-        return group.unitCode === unitId;
-    }).map((group) => { // remove unwanted attributes from group data
-        return {
-            groupId: group["groupId"],
-            labId: group["labId"],
-            groupNumber: group["groupNumber"],
-            members: group["members"]
+    /* GET ALL GROUPS */
+    const studentData = await promiseBasedQuery(
+        'SELECT stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val, l_group.group_number, lab.lab_number ' +
+        'FROM student stud ' +
+        'INNER JOIN group_allocation g_alloc ON stud.stud_unique_id=g_alloc.stud_unique_id ' +
+        'INNER JOIN lab_group l_group ON g_alloc.lab_group_id=l_group.lab_group_id ' +
+        'INNER JOIN unit_off_lab lab ON lab.unit_off_lab_id=l_group.unit_off_lab_id ' +
+        'INNER JOIN unit_offering unit ON unit.unit_off_id=lab.unit_off_id ' +
+        'WHERE' +
+        '   unit.unit_code=? ' +
+        '   AND unit.unit_off_year=? ' +
+        '   AND unit.unit_off_period=?' +
+        'ORDER BY l_group.group_number;',
+        [unitCode, year, period]
+    );
+
+    const responseData = [];
+    let group = {students: []}
+    for(let i=0; i<studentData.length; i++) {
+        // check if this is a new group we are handling
+        if (group['groupNumber'] !== studentData[i].group_number) {
+            group = {groupNumber: studentData[i].group_number, labNumber: studentData[i].lab_number, students: []}
         }
-    });
 
-    res.status(200).send(resData);
+        // add student to the groups list of students
+        const {
+            student_id,
+            preferred_name,
+            last_name,
+            email_address,
+            wam_val
+        } = studentData[i];
+
+        group.students.push({
+            studentId: student_id,
+            preferredName: preferred_name,
+            lastName: last_name,
+            emailAddress: email_address,
+            wamVal: wam_val
+        })
+
+        // if the next student is in a new group or this is the last student, push this group
+        //console.log(i, studentData[i+1]['groupNumber'], studentData[i]['groupNumber'])
+        if(i+1 === studentData.length || studentData[i+1].group_number !== studentData[i].group_number) {
+            responseData.push(group);
+        }
+    }
+
+    res.status(200).send(responseData);
 }
 
 // get a single group from a unit
 const getGroup = async (req, res) => {
-    let unitId = req.params.unitId;
-    let groupId = req.params.group
-
-    let groups = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/groups.json', 'utf8'));
-    let group;
-
-    for (let i = 0; i < groups.length; i++){
-        if (groups[i].groupdId === groupId){
-            group = groups[i]
-        }
-    }
-
-    res.send(group);
+    res.status(200).send({wip: "test"});
 }
 
 // create all the groups (based on csv)
 const createUnitGroups = async (req, res) => {
-    let unitId = req.params.unitId;
-    let groupSize = req.body.groupSize;
-    let strategy = req.body.strategy;
-    let variance = req.body.variance;
+    const {
+        unitCode,
+        year,
+        period
+    } = req.params;
+    const {
+        groupSize,
+        variance,
+        strategy,
+    } = req.body;
 
-    if (groupSize == null) {groupSize = defaultGroupSize;}
-    if (strategy == null) {strategy = defaultStrategy;}
-    if (variance == null) {variance = defaultVariance;}
+    /* GET ALL OF THE STUDENTS ASSOCIATED WITH THIS UNIT SORTED BY LAB */
+    const unitOffId = await selectUnitOffKey(unitCode, year, period);
+    const students = await promiseBasedQuery(
+        'SELECT stud.stud_unique_id, alloc.unit_off_lab_id ' +
+        'FROM student stud ' +
+        'INNER JOIN student_lab_allocation alloc ON stud.stud_unique_id=alloc.stud_unique_id ' +
+        'INNER JOIN unit_off_lab lab ON lab.unit_off_lab_id=alloc.unit_off_lab_id ' +
+        'INNER JOIN unit_offering unit ON unit.unit_off_id=lab.unit_off_id ' +
+        'WHERE ' +
+        '   unit.unit_code=? ' +
+        '   AND unit.unit_off_year=? ' +
+        '   AND unit.unit_off_period=? ' +
+        'ORDER BY unit_off_lab_id;',
+        [unitCode, year, period]
+    );
 
-    let students = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/students.json', 'utf8'));
-    let units = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/units.json', 'utf8'));
-    let groups = []; // start with no groups even if there are groups already - we will overwrite them in db
+    // students = [{stud_unique_id: INT},{stud_unique_id: INT}]
+    // console.log("-----------------\n", unitCode, year, period);
+    console.log(`group size: ${groupSize}, variance: ${variance}, strat: ${strategy}`);
 
-    let unit;
-    for (let i = 0; i < units.length; i++){
-        if (units[i].unitCode == unitId){
-            unit = units[i];
-            units.splice(i, 1);
-            break;
-        }
+    /* SPLIT BY LAB | labStudents = [ lab_id: [student_unique_ids], lab_id: [student_unique_ids] ] */
+    const labStudents = { };
+    students.forEach((student) => {
+        if(!labStudents[student.unit_off_lab_id]) { labStudents[student.unit_off_lab_id] = []; }
+        labStudents[student.unit_off_lab_id].push(student.stud_unique_id);
+    });
+
+    /* RANDOMISE THE, STUDENTS WITHIN EACH LAB NUMBER todo randomise first or get random index when assigning? */
+    /* THEN SPLIT THE RANDOMISED LIST INTO GROUPS OF n AS SPECIFIED IN REQ */
+    for(let lab in labStudents) { labStudents[lab] = shuffle(labStudents[lab]); }
+    for(let lab in labStudents) {
+        labStudents[lab] = createGroupsRandom(unitOffId, lab, labStudents[lab], groupSize, variance);
     }
 
-    let unitStudents = []
-    for (let i = 0; i < unit.students.length; i++){
-        for (let j = 0; j < students.length; j++){
-            if (students[j].studentId == unit.students[i]){
-                let lab;
-
-                for (let k = 0; k < students[j].units.length; k++){
-                    if (students[j].units[k][0] == unit.unitCode){
-                        lab = students[j].units[k][1];
-                    }
-                }
-                unitStudents.push([students[j], lab]);
-            }
-        }
+    /* INSERT THE NEW GROUPS INTO THE DATABASE */
+    // determine the number of groups to be inserted to database -> inserted as [unit_off_lab_id, group_number]
+    const groupInsertData = [];
+    let numGroups = 0;
+    for(let lab in labStudents) {
+        labStudents[lab].forEach((student) => {
+            numGroups++;
+            groupInsertData.push([lab, numGroups]);
+        })
     }
 
-    unitStudents.sort((a, b) => a[1] - b[1]);
-    uniStudents = shuffle(unitStudents);
-    
-    let createdGroups = [];
-    unassignedStudents = [];
+    await promiseBasedQuery(
+        'INSERT IGNORE INTO lab_group (unit_off_lab_id, group_number) VALUES ?;',
+        [groupInsertData]
+    );
 
-    for (let i = 0; i < unitStudents.length; i = i + groupSize){
-        let groupIndex = Math.floor(i/groupSize) + 1;
+    /* INSERT THE ALLOCATIONS TO GROUPS INTO THE DATABASE */
+    // get all groups in this unit as [ >> group_id <<, lab_id]
+    const groupAllocInsertData = [];
+    const groupData = await promiseBasedQuery(
+        'SELECT g.lab_group_id, g.unit_off_lab_id ' +
+        'FROM lab_group g ' +
+        'INNER JOIN unit_off_lab l ON g.unit_off_lab_id=l.unit_off_lab_id ' +
+        'INNER JOIN unit_offering u ON u.unit_off_id=l.unit_off_id ' +
+        'WHERE ' +
+        '   u.unit_code=? ' +
+        '   AND u.unit_off_year=? ' +
+        '   AND u.unit_off_period=?;',
+        [unitCode, year, period]
+    );
 
-        if (i + groupSize - 1 < unitStudents.length && unitStudents[i][1] == unitStudents[i + groupSize - 1][1]){
-            let groupStudents = unitStudents.slice(i, i + groupSize)
-
-            let newGroup = {
-                groupId: unit.unitCode + "00" + groupIndex,
-                groupNumber: groupIndex,
-                unitCode: unitId,
-                labId: "",
-                members: []
-            }
-
-            newGroup.labId = unitStudents[i][1];
-
-            for (let j = 0; j < groupStudents.length; j++){
-                newGroup.members.push(groupStudents[j][0])
-            }
-
-            createdGroups.push(newGroup);
-
-        }
-        else {
-            let groupStudents = unitStudents.slice(i, i + groupSize)
-            for (let j = 0; j < groupStudents.length; j++){
-                unassignedStudents.push(groupStudents[j])
-            }
-        }
+    // for each group, pop a group from the lab key in object and form the allocation
+    for(let i=0; i<numGroups; i++) {
+        const group = groupData.pop();
+        const groupStudents = labStudents[group.unit_off_lab_id].pop()
+        groupStudents.forEach((studentId) => { groupAllocInsertData.push([studentId, group.lab_group_id]) })
     }
 
-    for (let i = 0; i < unassignedStudents.length; i++){
-        let lab = unassignedStudents[i][1];
-        let groupFound = false;
+    // student allocations are created as [~~group_alloc_id~~, stud_unique_id, lab_group_id]
+    await promiseBasedQuery(
+        'INSERT IGNORE INTO group_allocation (stud_unique_id, lab_group_id) VALUES ?;',
+        [groupAllocInsertData]
+    );
 
-        for (let j = 0; j < createdGroups.length; j++){
-            if (createdGroups[j].labId == lab && createdGroups[j].members.length < groupSize + variance){
-                createdGroups[j].members.push(unassignedStudents[i][0]);
-                groupFound = true;
-                break;
-            }
-        }
-
-        if (!groupFound){
-            let groupIndex = createdGroups.length + 1;
-            let newGroup = {
-                groupId: unit.unitCode + "00" + groupIndex,
-                groupNumber: groupIndex,
-                unitCode: unitId,
-                labId: "",
-                members: []
-            }
-
-            newGroup.labId = lab;
-            newGroup.members.push(unassignedStudents[i][0]);
-            createdGroups.push(newGroup);
-        }
-    }
-
-    for (let i = 0; i < createdGroups.length; i++){
-        unit.groups.push(createdGroups[i]);
-    }
-
-    units.push(unit);
-    groups = groups.concat(createdGroups);
-
-    fs.writeFileSync(path.join(__dirname, '../db') + '/groups.json', JSON.stringify(groups));
-    fs.writeFileSync(path.join(__dirname, '../db') + '/units.json', JSON.stringify(units));
-
-    res.send(createdGroups);
+    res.status(200).send();
 }
 
 // add a new group to a unit
 const addGroup = async (req, res) => {
-    const unitsFile = './db/units.json';
-    const groupsFile = './db/groups.json';
-    // takes the group info from the req body and creates the group document
-    const newGroup = {
-        groupId,
-        groupNumber,
-        unitCode,
-        members,
-        labId
-    } = req.body;
-
-    // read both files and update them
-
-    // read files
-    try {
-        // read files
-        let groupsData = await fs.promises.readFile(groupsFile, 'utf-8');
-        let unitsData = await fs.promises.readFile(unitsFile, 'utf-8');
-
-        // parse file data for use
-        groupsData = JSON.parse(groupsData);
-        unitsData = JSON.parse(unitsData);
-
-        // add the new group to both groupsData and unitsData
-        let unitIdx = unitsData.findIndex(unit => unit["unitCode"] === newGroup["unitCode"]);
-        unitsData[unitIdx]["groups"].push(newGroup);
-        groupsData.push(newGroup);
-
-        // write data to files
-        fs.writeFile(unitsFile, JSON.stringify(unitsData), (err) => {console.log(err);});
-        fs.writeFile(groupsFile, JSON.stringify(groupsData), (err) => {console.log(err);});
-
-        res.status(200).send(newGroup);
-    } catch (readFileErr) {
-        console.log(readFileErr);
-        res.status(500).json({ err: readFileErr })
-    }
+    res.status(200).send({wip: "test"});
 }
 
 // delete a specific group from a unit
 const deleteGroup = async (req, res) => {
-    const unitsFile = './db/units.json';
-    const groupsFile = './db/groups.json';
-    // takes the group info from the req body and creates the group document
-    const { unitId, groupId } = req.params;
-
-    // read files
-    try {
-        // read files
-        let groupsData = await fs.promises.readFile(groupsFile, 'utf-8');
-        let unitsData = await fs.promises.readFile(unitsFile, 'utf-8');
-
-        // parse file data for use
-        groupsData = JSON.parse(groupsData);
-        unitsData = JSON.parse(unitsData);
-
-        // filter the item to delete from the groups DB
-        const remainingGroups = groupsData.filter((group) => {
-            return !(group.unitCode === unitId && group.groupId === groupId);
-        });
-        // store the deleted group to res.send() back as confirmation
-        const deletedGroup = groupsData.filter((group) => {
-            return group.unitCode === unitId && group.groupId === groupId;
-        });
-
-        // get the index of this unit
-        let unitIdx = unitsData.findIndex((unit) => {
-            return unit.unitCode === unitId;
-        });
-        // get the units groups and remove the deleted unit
-        unitsData[unitIdx].groups = unitsData[unitIdx].groups.filter((group) => {
-            return !(group.unitCode === unitId && group.groupId === groupId);
-        });
-
-        // write data to files
-        fs.writeFile(unitsFile, JSON.stringify(unitsData), (err) => {console.log(err);});
-        fs.writeFile(groupsFile, JSON.stringify(remainingGroups), (err) => {console.log(err);});
-
-        res.status(200).send(deletedGroup);
-    } catch (readFileErr) {
-        res.status(500).json({ err: readFileErr })
-    }
-
+    /* DELETE THE STUDENT ALLOCATIONS BUT NOT STUDENTS */
+    /* DELETE THE GROUP ASSOCIATION WITH LAB/UNIT */
+    /* DELETE THE GROUP ITSELF */
+    res.status(200).send({wip: "test"});
 }
 
 // update a specific group from a unit
 const updateGroup = async (req, res) => {
-    const groupsFile = './db/groups.json';
-    const { unitId, groupId } = req.params;
-    const updatedGroupData = req.body;
-
-    try {
-        // Read the groups file
-        let groupsData = await fs.promises.readFile(groupsFile, 'utf-8');
-
-        // Parse the file data for use
-        groupsData = JSON.parse(groupsData);
-
-        // Find the index of the group to update
-        let groupIdx = groupsData.findIndex(group => group.unitCode === unitId && group.groupId === groupId);
-
-        // Check if group exists
-        if (groupIdx === -1) {
-            res.status(404).send({ message: 'Group not found' });
-            return;
-        }
-
-        // Update the group data
-        for (const key in updatedGroupData) {
-            if (groupsData[groupIdx].hasOwnProperty(key)) {
-                groupsData[groupIdx][key] = updatedGroupData[key];
-            }
-        }
-
-        // Write the updated data to the groups file
-        fs.writeFile(groupsFile, JSON.stringify(groupsData), (err) => {
-            if (err) {
-                console.log(err);
-                res.status(500).send({ message: 'Error updating group data' });
-            } else {
-                res.status(200).send(groupsData[groupIdx]);
-                res.status(200).json({
-                    group: "group updated"
-                })
-            }
-        });
-
-    } catch (readFileErr) {
-        console.log(readFileErr);
-        res.status(500).json({ err: readFileErr })
-    }
+    res.status(200).send({wip: "test"});
 }
 
+// move a student from one group to another
 const moveStudent = async (req, res) => {
-
-    const { unitId, studentId } = req.params;
-
-    let previousGroup = req.body.previousGroup;
-    let newGroup = req.body.newGroup;
-
-    let groups = JSON.parse(fs.readFileSync(path.join(__dirname, '../db') + '/groups.json', 'utf8'));
-
-    let student;
-
-    for (let i = 0; i < groups.length; i++){
-        let group = groups[i];
-
-        if (group.groupId == previousGroup){
-            let members = group.members;
-
-            for (let j = 0; j < members.length; j++){
-
-                if (members[j].studentId == studentId){
-
-                    student = members[j];
-
-                    group.members.splice(j, 1);
-
-                    groups[i] = group ;
-                    break;
-                }
-
-            }
-        }
-    }
-
-
-    for (let i = 0; i < groups.length; i++){
-        let group = groups[i];
-    
-        if (group.groupId == newGroup){
-                
-            groups[i].members.push(student);
-            break;
-
-        }
-    }
-
-
-    fs.writeFileSync(path.join(__dirname, '../db') + '/groups.json', JSON.stringify(groups));
-
-    res.sendStatus(200)
-
+    /* REQUIRES OFFERING, STUDENT, OLD GROUP, NEW GROUP */
+    res.status(200).send({wip: "test"});
 }
 
-function shuffle(array) {
-    // Fisher-Yates shuffle algorithm from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-    let currentIndex = array.length, randomIndex;
-  
-    // While there remain elements to shuffle.
-    while (currentIndex != 0) {
-  
-      // Pick a remaining element.
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-  
-      // And swap it with the current element.
-      [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex], array[currentIndex]];
+/* SUPPLEMENTARY FUNCTIONS. TO BE REFACTORED */
+const createGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) => {
+    // console.log(`| unit id: ${unitOffId} | lab id: ${labId} | students: ${studentsList} |`);
+    let groups = [];
+    for (let i = 0; i < studentsList.length; i += groupSize) {
+        const group = studentsList.slice(i, i + groupSize);
+        groups.push(group);
     }
-  
-    return array;
-  }
+
+    const numFullGroups = studentsList.length / groupSize;
+    const numRemStud = studentsList.length % groupSize; // students who didn't end up in full groups i.e. remainder
+    const lastGroup = groups[groups.length - 1]
+
+    console.log(`size: ${groupSize}, ${typeof groupSize} variance: ${variance}, ${typeof variance}`)
+    console.log("Full groups before adjustment")
+    console.log(groups);
+
+    // if we cannot form even groups from all students or the last group is not within variance limits
+    if (numRemStud !== 0 && numRemStud < groupSize - variance) {
+        // can the students not in a full group be shared between full groups?
+        if (numRemStud / numFullGroups <= variance) {
+            // todo consider variance > 1, enclose in a for(i=0 i<variance) or do i%variance
+            // students not in a full group are distributed amongst the full groups until no more remain
+            let lastGroupLen = lastGroup.length; // defined here to avoid re-evaluation of value in loop condition
+            for (let i = 0; i < lastGroupLen; i++) {
+                console.log("group that is to be distributed")
+                console.log(groups[i])
+                groups[i].push(lastGroup.pop());
+            }
+            groups.pop();
+        }
+        // can the remainder borrow from full groups without validating size constraints?
+        else if (numRemStud + variance * numFullGroups >= groupSize - variance) { // todo don't overestimate borrow
+            // borrow from full groups until last group is within size constraints
+            for (let i = 0; i <= (groups.length - 1) * variance; i++) {
+                // borrow from full group only if it doesnt break size constraints
+                if (groups[i % variance].length - variance >= groupSize - variance) {
+                    lastGroup.push(groups[i].pop());
+                }
+            }
+            groups.pop();
+        }
+        // split the groups as evenly as possible
+        else {
+            return createGroupsRandom(unitOffId, labId, studentsList, groupSize - 1, variance)
+        }
+    }
+
+    console.log("Groups after adjustments")
+    console.log(groups)
+
+    return groups;
+}
+
 
 module.exports = {
     getAllGroups,

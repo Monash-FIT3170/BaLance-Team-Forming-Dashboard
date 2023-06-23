@@ -14,7 +14,7 @@ import {
   Center,
   useDisclosure,
 } from '@chakra-ui/react';
-import StudentRow2 from '../components/StudentRowStudentDisplay';
+import StudentRowStudentDisplay from '../components/StudentRowStudentDisplay';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShuffleGroups } from '../components/ShuffleGroups';
 
@@ -24,20 +24,20 @@ function Students() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
   const navigate = useNavigate();
-  const { groupStrategy, groupSize, variance, unitID } = useParams();
+  const { groupStrategy, groupSize, variance, unitCode, year, period } = useParams();
 
   const handleUploadClick = () => {
-    navigate('/uploadStudents/' + unitID);
+    navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
   };
 
   useEffect(() => {
     const labs = [];
 
-    fetch('http://localhost:8080/api/students/' + unitID)
+    fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}`)
       .then((res) => res.json().then((res) => setStudents(res)))
       .catch((err) => console.error(err));
 
-    fetch('http://localhost:8080/api/groups/' + unitID)
+    fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`)
       .then((res) =>
         res.json().then(function (res) {
           for (let i = 0; i < res.length; i++) {
@@ -59,7 +59,7 @@ function Students() {
     onClose();
 
     // API call to create groups from scratch - will automatically delete existing groups first
-    fetch('http://localhost:8080/api/groups/' + unitID, {
+    fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ function Students() {
   return (
     <div>
       <Heading alignContent={'center'}>
-        <Center margin="10">{unitID}</Center>
+        <Center margin="10">{unitCode}</Center>
       </Heading>
 
       <HStack margin="0px 20vw 5vh 20vw">
@@ -95,7 +95,7 @@ function Students() {
         <HStack m="40px">
           <Spacer />
           <ButtonGroup colorScheme="#282c34" variant="outline" size="lg">
-            <Link to={'/groups/' + unitID}>
+            <Link to={`/groups/${unitCode}/${year}/${period}`}>
               <Button margin="0px 2px">Groups</Button>
             </Link>
             <Button margin="0px 2px" isDisabled={true}>
@@ -120,19 +120,20 @@ function Students() {
         <Table variant="striped" width="80vw">
           <Thead>
             <Tr>
-              <Th>Name</Th>
+              <Th>ID</Th>
+              <Th>Preferred Name</Th>
+              <Th>Last Name</Th>
               <Th>Email Address</Th>
-              <Th>Class Number</Th>
               <Th>Group Number</Th>
             </Tr>
           </Thead>
           <Tbody>
             {allStudents.map((student) => (
-              <StudentRow2
-                props={student}
-                studentInfo={student}
+              <StudentRowStudentDisplay
+                studentData={student}
+                studentLab={1}
+                studentGroup={undefined}
                 key={student.id}
-                allLabs={allGroups}
               />
             ))}
           </Tbody>

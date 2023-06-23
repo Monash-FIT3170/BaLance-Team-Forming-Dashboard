@@ -17,7 +17,7 @@ import { ShuffleGroups } from '../components/ShuffleGroups';
 
 function Groups() {
   // Retrieve route parameters
-  const { groupStrategy, groupSize, variance, unitID } = useParams();
+  const { groupStrategy, groupSize, variance, unitCode, year, period } = useParams();
 
   const navigate = useNavigate();
 
@@ -26,29 +26,17 @@ function Groups() {
   const cancelRef = React.useRef();
 
   const handleUploadClick = () => {
-    navigate('/uploadStudents/' + unitID);
+    navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
   };
 
-  const [state, setState] = useState([]);
-  const [allGroups, setAllGroups] = useState([]);
+  const [groups, setGroups] = useState([]);
 
   useEffect(() => {
-    const summary = [];
-
-    fetch('http://localhost:8080/api/groups/' + unitID)
+    fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`)
       .then((res) =>
         res.json().then(function (res) {
-          setState(res);
-
-          for (let i = 0; i < res.length; i++) {
-            summary.push({
-              labId: res[i].labId,
-              groupNumber: res[i].groupNumber,
-              groupId: res[i].groupId,
-            });
-          }
-
-          setAllGroups(summary);
+          console.log(res)
+          setGroups(res);
         })
       )
       .catch((err) => console.error(err));
@@ -59,7 +47,8 @@ function Groups() {
     onClose();
 
     // API call to create groups from scratch - will automatically delete existing groups first
-    fetch('http://localhost:8080/api/groups/' + unitID, {
+    // TODO will the backend need to handle this differently given students aren't new?
+    fetch(`http://localhost:8080/api/groups/'${unitCode}/${year}/${period}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -83,7 +72,7 @@ function Groups() {
   return (
     <div>
       <Heading alignContent={'center'}>
-        <Center margin="10">{unitID}</Center>
+        <Center margin="10">{unitCode}</Center>
       </Heading>
 
       <HStack margin="0px 20vw 5vh 20vw">
@@ -99,7 +88,7 @@ function Groups() {
             <Button margin="0px 2px" isDisabled={true}>
               Groups
             </Button>
-            <Link to={'/students/' + unitID}>
+            <Link to={`/students/${unitCode}/${year}/${period}`}>
               <Button margin="0px 2px">Students</Button>
             </Link>
           </ButtonGroup>
@@ -116,8 +105,8 @@ function Groups() {
       </HStack>
 
       <Container className="groups" maxW="80vw">
-        {state.map((group) => (
-          <GroupCard props={group} key={group.id} allIds={allGroups} />
+        {groups.map((group) => (
+          <GroupCard groupData={group} key={group.id} />
         ))}
       </Container>
     </div>

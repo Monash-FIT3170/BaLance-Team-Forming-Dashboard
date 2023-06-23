@@ -36,15 +36,19 @@ const UnitCard = (unit) => {
   } = useDisclosure();
 
   //getting the unit details from the unit object
-  const unitCode = unit.unitCode;
-  const unitName = unit.unitFaculty;
+  const {
+    unit_code,
+    unit_name,
+    unit_off_year,
+    unit_off_period,
+    enrollment_count
+  } = unit
 
   const navigate = useNavigate();
 
-  //navigate to the froups for the current unit if it is clicked
-  const handleUnitClick = () => {
-    navigate('/groups/' + unitCode);
-  };
+  //navigate to the groups for the current unit if it is clicked
+  const handleUnitClick = () => navigate(`/groups/${unit_code}/${unit_off_year}/${unit_off_period}`);
+
   return (
     <Flex
       borderRadius="20px"
@@ -78,7 +82,7 @@ const UnitCard = (unit) => {
             onClick={handleUnitClick}
             style={{ fontWeight: 'bold', fontSize: '20px' }}
           >
-            {unitCode}
+            {unit_code}
           </Button>
         </Text>
 
@@ -107,7 +111,7 @@ const UnitCard = (unit) => {
           <ModalContent>
             <ModalHeader>FIT3170</ModalHeader>
             <ModalCloseButton />
-            <ModalBody pb={6}>150 Students enrolled</ModalBody>
+            <ModalBody pb={6}>{`${enrollment_count} students enrolled`}</ModalBody>
             <ModalFooter>
               <Text
                 my="auto"
@@ -156,7 +160,7 @@ const UnitCard = (unit) => {
           fontSize="l"
           w="80%"
         >
-          {unitName}
+          {unit_name}
         </Text>
       </Button>
     </Flex>

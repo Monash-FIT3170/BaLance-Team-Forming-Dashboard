@@ -1,5 +1,4 @@
 const express = require('express');
-const {Sequelize} = require('sequelize');
 const unitRoutes = require('./routes/units');
 const groupRoutes = require('./routes/groups');
 const studentRoutes = require('./routes/students');

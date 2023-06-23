@@ -1,41 +1,33 @@
 import { Tr, Td, HStack, Select, Icon } from '@chakra-ui/react';
 import ChangeStudentGroupModal from './ChangeStudentGroupModal';
 
-const StudentRow2 = (props) => {
-  /*HTML component for each student in each group in the 'List Students' View*/
-  // desctructure the content of props
-  const { studentId, studentFirstName, studentEmailAddress, group } = props.props;
-  const { studentInfo } = props;
-  const { allLabs } = props;
+const StudentRowStudentDisplay = ({studentData, studentLab, studentGroup}) => {
+    /* HTML component for each student in each group in the 'List Students' View */
+    const {
+        student_id,
+        preferred_name,
+        last_name,
+        email_address
+    } = studentData;
 
-  let labId = 0;
-  for (let i = 0; i < allLabs.length; i++) {
-    for (let j = 0; j < allLabs[i].members.length; j++) {
-      if (studentId === allLabs[i].members[j].studentId) {
-        labId = allLabs[i].labId;
-      }
-    }
-  }
-
-  return (
+    return (
     <Tr>
-      <Td>{studentFirstName}</Td>
-      <Td>{studentEmailAddress}</Td>
-      <Td>{labId}</Td>
-      <Td>{group.groupNumber}</Td>
-      <Td>
-        <HStack>
-          <ChangeStudentGroupModal
-            studentInfo={studentInfo}
-            classNum={labId}
-            groupNum={group.groupNumber}
-            groupId={studentInfo.group.groupdId}
-            allIds={allLabs}
-          />
-        </HStack>
-      </Td>
+        <Td>{student_id}</Td>
+        <Td>{preferred_name}</Td>
+        <Td>{last_name}</Td>
+        <Td>{email_address}</Td>
+        <Td>{studentGroup}</Td>
+        <Td>
+        {/*<HStack>*/}
+        {/*    <ChangeStudentGroupModal*/}
+        {/*    studentInfo={studentData}*/}
+        {/*    classNum={studentLab}*/}
+        {/*    groupNum={studentGroup}*/}
+        {/*    />*/}
+        {/*</HStack>*/}
+        </Td>
     </Tr>
-  );
+    );
 };
 
-export default StudentRow2;
+export default StudentRowStudentDisplay;

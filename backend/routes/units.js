@@ -18,16 +18,16 @@ const { // import controller functions for route handlers
 router.get('/', getAllUnits);
 
 // get a specific unit for a user
-router.get('/:unitId', getUnit);
+router.get('/:unitCode/:year/:period', getUnit);
 
 // add a new unit for the user
 router.post('/', addUnit);
 
 // delete a specific unit for a user
-router.delete('/:unitId', deleteUnit);
+router.delete('/:unitCode/:year/:period', deleteUnit);
 
 // update a specific unit for a user
-router.patch('/:unitId', updateUnit);
+router.patch('/:unitCode/:year/:period', updateUnit);
 
 // export this router for external use
 module.exports = router;
