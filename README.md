@@ -6,12 +6,15 @@ To run the project locally:
 
 Change you directory to the project backend
 ### `cd backend`
-Install if not already done so 
+Install dependencies if not already done so 
 ### `npm install`
-Open new terminal -> change current directory to the frontend
-### `cd frontend/src`
+Start up the backend
+###  `node server.js`
 
+Open new terminal -> change current directory to the frontend
+### `cd frontend`
+Install dependencies if not already done so
+### `npm install`
 Run locally 
 ### `npm start`
-
 
