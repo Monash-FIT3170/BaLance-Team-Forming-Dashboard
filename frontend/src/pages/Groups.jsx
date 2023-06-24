@@ -117,7 +117,7 @@ function Groups() {
       <Container className="groups" maxW="80vw">
         {groups.map((group) => {
           const cardKey = `${group.labNumber}_${group.groupNumber}`;
-          return (<GroupCard groupData={group} key={cardKey} />);
+          return (<GroupCard groupData={group} numberOfGroups={17} key={cardKey} />);
         })}
       </Container>
     </div>

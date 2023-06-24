@@ -37,6 +37,8 @@ export default function ChangeStudentGroupModal({studentData, numberOfGroups}) {
         group_number
     } = studentData;
 
+    console.log(preferred_name)
+
     const [group, setGroup] = useState(group_number);
 
     // an array of viable groups the student can be changed to

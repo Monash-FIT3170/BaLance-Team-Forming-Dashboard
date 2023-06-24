@@ -44,12 +44,17 @@ const GroupCard = ({groupData, numberOfGroups}) => {
               </Tr>
             </Thead>
             <Tbody>
-              {students.map((student) => (
-                <StudentRowGroupDisplay
-                  studentData={student}
-                  key={student.student_id}
-                />
-              ))}
+              {students.map((student) => {
+                student['group_number'] = groupNumber
+                console.log(student)
+                return (
+                  <StudentRowGroupDisplay
+                      studentData={student}
+                      numberOfGroups={numberOfGroups}
+                      key={student.student_id}
+                  />
+                );
+              })}
             </Tbody>
           </Table>
         </TableContainer>
