@@ -16,20 +16,28 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShuffleGroups } from '../components/ShuffleGroups';
 
 function Groups() {
-  // Retrieve route parameters
-  const { groupStrategy, groupSize, variance, unitCode, year, period } = useParams();
-
-  const navigate = useNavigate();
-
-  // Confirmation popup for shuffling groups
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
+  const navigate = useNavigate();
+  const [groups, setGroups] = useState([]);
+
+  const { // Confirmation popup for shuffling groups
+    isOpen,
+    onOpen,
+    onClose
+  } = useDisclosure();
+
+  const { // Retrieve route parameters
+    groupStrategy,
+    groupSize,
+    variance,
+    unitCode,
+    year,
+    period
+  } = useParams();
 
   const navigateToStudentUpload = () => {
     navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
   };
-
-  const [groups, setGroups] = useState([]);
 
   useEffect(() => {
     fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`)
@@ -94,7 +102,9 @@ function Groups() {
           </ButtonGroup>
           <Spacer />
         </HStack>
+
         <Spacer />
+
         <ShuffleGroups
           onOpen={onOpen}
           onClose={onClose}
@@ -105,9 +115,10 @@ function Groups() {
       </HStack>
 
       <Container className="groups" maxW="80vw">
-        {groups.map((group) => (
-          <GroupCard groupData={group} key={group.id} />
-        ))}
+        {groups.map((group) => {
+          const cardKey = `${group.labNumber}_${group.groupNumber}`;
+          return (<GroupCard groupData={group} key={cardKey} />);
+        })}
       </Container>
     </div>
   );

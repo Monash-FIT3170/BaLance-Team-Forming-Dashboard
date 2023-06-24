@@ -21,8 +21,8 @@ const StudentRowStudentDisplay = ({studentData, numberOfGroups}) => {
             <Td>
             <HStack>
                 <ChangeStudentGroupModal
-                studentData={studentData}
-                numberOfGroups={numberOfGroups}
+                    studentData={studentData}
+                    numberOfGroups={numberOfGroups}
                 />
             </HStack>
             </Td>
