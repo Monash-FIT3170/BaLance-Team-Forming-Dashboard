@@ -52,6 +52,7 @@ function Students() {
       })
       .catch((err) => console.error(err));
 
+    // determine the number of groups in this unit offering
     setNumberOfGroups(
         // convert each student object to just student.group_number then find the max
         Math.max(...students.map(student => student.group_number))
@@ -124,9 +125,10 @@ function Students() {
               <Th>Preferred Name</Th>
               <Th>Last Name</Th>
               <Th>Email Address</Th>
-              <Th>Group Number</Th>
+              <Th>Group</Th>
             </Tr>
           </Thead>
+
           <Tbody>
             {students.map((student) => (
               <StudentRowStudentDisplay
