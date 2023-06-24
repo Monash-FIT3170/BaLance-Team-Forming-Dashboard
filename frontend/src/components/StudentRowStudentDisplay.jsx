@@ -1,4 +1,4 @@
-import { Tr, Td, HStack, Select, Icon } from '@chakra-ui/react';
+import { Tr, Td, HStack } from '@chakra-ui/react';
 import ChangeStudentGroupModal from './ChangeStudentGroupModal';
 
 const StudentRowStudentDisplay = ({studentData, studentLab, studentGroup}) => {
@@ -11,22 +11,23 @@ const StudentRowStudentDisplay = ({studentData, studentLab, studentGroup}) => {
     } = studentData;
 
     return (
-    <Tr>
-        <Td>{student_id}</Td>
-        <Td>{preferred_name}</Td>
-        <Td>{last_name}</Td>
-        <Td>{email_address}</Td>
-        <Td>{studentGroup}</Td>
-        <Td>
-        {/*<HStack>*/}
-        {/*    <ChangeStudentGroupModal*/}
-        {/*    studentInfo={studentData}*/}
-        {/*    classNum={studentLab}*/}
-        {/*    groupNum={studentGroup}*/}
-        {/*    />*/}
-        {/*</HStack>*/}
-        </Td>
-    </Tr>
+        <Tr>
+            <Td>{student_id}</Td>
+            <Td>{preferred_name}</Td>
+            <Td>{last_name}</Td>
+            <Td>{email_address}</Td>
+            <Td>{studentGroup}</Td>
+            <Td>
+            <HStack>
+                <ChangeStudentGroupModal
+                studentData={studentData}
+                studentLab={studentLab}
+                studentGroup={studentGroup}
+                numberOfGroups={16}
+                />
+            </HStack>
+            </Td>
+        </Tr>
     );
 };
 

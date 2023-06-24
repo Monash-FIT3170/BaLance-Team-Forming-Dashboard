@@ -58,9 +58,9 @@ const addUnit = async (req, res) => {
     // note: unique id has auto_increment enabled thus not provided
     db_connection.query(
         'INSERT INTO unit_offering ' +
-        '(unit_code, unit_name, unit_off_year, unit_off_period) ' +
+        '(unit_code, unit_name, unit_off_year, unit_off_period, enrolment_count) ' +
         'VALUES (?, ?, ?, ?);',
-        [unitCode, unitName, Number(year), period],
+        [unitCode, unitName, Number(year), period, 0],
         (err, results, fields) => {
             if(err) { console.log(err.stack); }
             else {

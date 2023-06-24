@@ -19,12 +19,19 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShuffleGroups } from '../components/ShuffleGroups';
 
 function Students() {
-  const [allStudents, setStudents] = useState([]);
-  const [allGroups, setAllGroups] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [groups, setGroups] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
   const navigate = useNavigate();
-  const { groupStrategy, groupSize, variance, unitCode, year, period } = useParams();
+  const {
+    groupStrategy,
+    groupSize,
+    variance,
+    unitCode,
+    year,
+    period
+  } = useParams();
 
   const handleUploadClick = () => {
     navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
@@ -48,7 +55,7 @@ function Students() {
               members: res[i].members,
             });
           }
-          setAllGroups(labs);
+          setGroups(labs);
         })
       )
       .catch((err) => console.error(err));
@@ -128,11 +135,11 @@ function Students() {
             </Tr>
           </Thead>
           <Tbody>
-            {allStudents.map((student) => (
+            {students.map((student) => (
               <StudentRowStudentDisplay
                 studentData={student}
                 studentLab={1}
-                studentGroup={undefined}
+                studentGroup={'placeholder'}
                 key={student.id}
               />
             ))}

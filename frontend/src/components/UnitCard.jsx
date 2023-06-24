@@ -130,7 +130,7 @@ const UnitCard = (unit) => {
                 Cancel
               </Button>
               <Button colorScheme="blue" onClick={onCloseDetails}>
-                Save
+                OK
               </Button>
             </ModalFooter>
           </ModalContent>
