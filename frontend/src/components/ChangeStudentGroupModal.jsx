@@ -18,7 +18,7 @@ import {
     useDisclosure,
 } from '@chakra-ui/react';
 
-export default function ChangeStudentGroupModal({studentData, studentLab, studentGroup, numberOfGroups}) {
+export default function ChangeStudentGroupModal({studentData, numberOfGroups}) {
     const {
         unitCode,
         year,
@@ -34,9 +34,10 @@ export default function ChangeStudentGroupModal({studentData, studentLab, studen
     const {
         student_id,
         preferred_name,
+        group_number
     } = studentData;
 
-    const [group, setGroup] = useState(studentGroup);
+    const [group, setGroup] = useState(group_number);
 
     // an array of viable groups the student can be changed to
     const groupOptions = [];

@@ -26,15 +26,19 @@ const getAllStudents = async (req, res) => {
         period
     } = req.params
 
-    // todo assess improvements from student enrolment containing code, year, period
     const studentsData = await promiseBasedQuery(
-        "SELECT student_id, preferred_name, last_name, email_address FROM student " +
-        "INNER JOIN unit_enrolment ON student.stud_unique_id=unit_enrolment.stud_unique_id " +
-        "INNER JOIN unit_offering ON unit_offering.unit_off_id=unit_enrolment.unit_off_id " +
+        "SELECT stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val, " +
+        "   l_group.group_number, lab.lab_number " +
+        "FROM student stud " +
+        "INNER JOIN group_allocation g_alloc ON stud.stud_unique_id=g_alloc.stud_unique_id " +
+        "INNER JOIN lab_group l_group ON g_alloc.lab_group_id=l_group.lab_group_id " +
+        "INNER JOIN unit_off_lab lab ON lab.unit_off_lab_id=l_group.unit_off_lab_id " +
+        "INNER JOIN unit_offering unit ON unit.unit_off_id=lab.unit_off_id " +
         "WHERE " +
-        "unit_offering.unit_code=? " +
-        "AND unit_offering.unit_off_year=? " +
-        "AND unit_offering.unit_off_period=?; ",
+        "   unit.unit_code=? " +
+        "   AND unit.unit_off_year=? " +
+        "   AND unit.unit_off_period=? " +
+        "ORDER BY l_group.group_number;",
         [unitCode, year, period]
     )
 
@@ -88,8 +92,8 @@ const addStudent = async (req, res) => {
 // delete a single student from a unit
 const deleteStudent = (req, res) => {
     /* todo DON'T DELETE STUDENT FROM student TABLE AS THEY MIGHT BE IN OTHER UNITS */
-    /* todo REMOVE STUDENT FROM THIS UNIT */
-    /* todo REMOVE STUDENT FROM GROUPS AND LABS */
+    /* todo DELETE STUDENTS ENROLMENT FOR THIS UNIT */
+    /* todo DELETE STUDENT ALLOCATION TO THEIR GROUPS AND LABS IN THIS UNIT */
     res.status(200).send({wip: "test"});
 }
 

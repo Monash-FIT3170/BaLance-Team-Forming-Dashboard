@@ -20,10 +20,15 @@ import { ShuffleGroups } from '../components/ShuffleGroups';
 
 function Students() {
   const [students, setStudents] = useState([]);
-  const [groups, setGroups] = useState([]);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [numberOfGroups, setNumberOfGroups] = useState(0);
   const cancelRef = React.useRef();
   const navigate = useNavigate();
+  const {
+    isOpen,
+    onOpen,
+    onClose
+  } = useDisclosure();
+
   const {
     groupStrategy,
     groupSize,
@@ -37,28 +42,14 @@ function Students() {
     navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
   };
 
-  useEffect(() => {
-    const labs = [];
-
-    fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}`)
-      .then((res) => res.json().then((res) => setStudents(res)))
+  useEffect(async () => {
+    // fetch students from the backend
+    await fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}`)
+      .then((res) => res.json())
+      .then((res) => console.log(res))
+      .then((res) => setStudents(res))
       .catch((err) => console.error(err));
 
-    fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`)
-      .then((res) =>
-        res.json().then(function (res) {
-          for (let i = 0; i < res.length; i++) {
-            labs.push({
-              labId: res[i].labId,
-              groupNumber: res[i].groupNumber,
-              groupId: res[i].groupId,
-              members: res[i].members,
-            });
-          }
-          setGroups(labs);
-        })
-      )
-      .catch((err) => console.error(err));
   }, []);
 
   const handleShuffleGroups = () => {
@@ -68,23 +59,16 @@ function Students() {
     // API call to create groups from scratch - will automatically delete existing groups first
     fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         groupSize: groupSize,
         variance: variance,
         strategy: groupStrategy,
-      }),
-    })
-      .catch((error) => {
-        console.error('Error:', error);
       })
-      .finally(() => {
-        // Reload the page
-        window.location.reload();
-      });
-  };
+    })
+    .catch((error) => {console.error('Error:', error);})
+    .finally(() => {window.location.reload();});
+  }
 
   return (
     <div>
@@ -141,8 +125,7 @@ function Students() {
             {students.map((student) => (
               <StudentRowStudentDisplay
                 studentData={student}
-                studentLab={1}
-                studentGroup={'placeholder'}
+                numberOfGroups={numberOfGroups}
                 key={student.id}
               />
             ))}

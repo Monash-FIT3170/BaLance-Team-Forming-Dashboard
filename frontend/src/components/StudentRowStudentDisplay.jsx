@@ -1,13 +1,14 @@
 import { Tr, Td, HStack } from '@chakra-ui/react';
 import ChangeStudentGroupModal from './ChangeStudentGroupModal';
 
-const StudentRowStudentDisplay = ({studentData, studentLab, studentGroup}) => {
+const StudentRowStudentDisplay = ({studentData, numberOfGroups}) => {
     /* HTML component for each student in each group in the 'List Students' View */
     const {
         student_id,
         preferred_name,
         last_name,
-        email_address
+        email_address,
+        group_number
     } = studentData;
 
     return (
@@ -16,14 +17,12 @@ const StudentRowStudentDisplay = ({studentData, studentLab, studentGroup}) => {
             <Td>{preferred_name}</Td>
             <Td>{last_name}</Td>
             <Td>{email_address}</Td>
-            <Td>{studentGroup}</Td>
+            <Td>{group_number}</Td>
             <Td>
             <HStack>
                 <ChangeStudentGroupModal
                 studentData={studentData}
-                studentLab={studentLab}
-                studentGroup={studentGroup}
-                numberOfGroups={16}
+                numberOfGroups={numberOfGroups}
                 />
             </HStack>
             </Td>
