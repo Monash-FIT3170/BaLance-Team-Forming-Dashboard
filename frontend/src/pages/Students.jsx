@@ -42,14 +42,20 @@ function Students() {
     navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
   };
 
-  useEffect(async () => {
+  useEffect(() => {
     // fetch students from the backend
-    await fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}`)
+    fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}`)
       .then((res) => res.json())
-      .then((res) => console.log(res))
-      .then((res) => setStudents(res))
+      .then((res) => {
+        console.log(res);
+        setStudents(res);
+      })
       .catch((err) => console.error(err));
 
+    setNumberOfGroups(
+        // convert each student object to just student.group_number then find the max
+        Math.max(...students.map(student => student.group_number))
+    )
   }, []);
 
   const handleShuffleGroups = () => {
@@ -126,7 +132,7 @@ function Students() {
               <StudentRowStudentDisplay
                 studentData={student}
                 numberOfGroups={numberOfGroups}
-                key={student.id}
+                key={student.student_id}
               />
             ))}
           </Tbody>
