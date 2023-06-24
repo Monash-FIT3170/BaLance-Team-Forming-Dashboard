@@ -5,9 +5,10 @@ import { useNavigate } from 'react-router-dom';
 export default function NavBar() {
   const navigate = useNavigate();
 
-  const handleClick = () => {
+  const navigateToHomePage = () => {
     navigate('/');
   };
+
   return (
     <Container
       as="header"
@@ -24,7 +25,7 @@ export default function NavBar() {
       overflow="hidden"
       zIndex={999}
     >
-      <button onClick={handleClick}>
+      <button onClick={navigateToHomePage}>
         {' '}
         <Image height="8vh" src={logo} alt="BaLance: Team Forming Dashboard" />
       </button>

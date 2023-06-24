@@ -25,7 +25,7 @@ function Groups() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
 
-  const handleUploadClick = () => {
+  const navigateToStudentUpload = () => {
     navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
   };
 
@@ -76,7 +76,7 @@ function Groups() {
       </Heading>
 
       <HStack margin="0px 20vw 5vh 20vw">
-        <Button onClick={handleUploadClick} colorScheme="gray" margin-left="20">
+        <Button onClick={navigateToStudentUpload} colorScheme="gray" margin-left="20">
           Upload Students
         </Button>
 
