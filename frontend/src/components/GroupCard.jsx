@@ -16,16 +16,17 @@ import StudentRowGroupDisplay from './StudentRowGroupDisplay';
 
 const GroupCard = ({groupData, numberOfGroups}) => {
   const {
-    labNumber,
-    groupNumber,
+    lab_number,
+    group_number,
     students
   } = groupData;
 
+  console.log(groupData)
   return (
     <Card border="1px" margin="20px">
       <CardHeader>
         <Heading>
-          Lab: {labNumber} Group: {groupNumber}
+          Lab: {lab_number} Group: {group_number}
         </Heading>
         <Spacer />
       </CardHeader>
@@ -45,8 +46,8 @@ const GroupCard = ({groupData, numberOfGroups}) => {
             </Thead>
             <Tbody>
               {students.map((student) => {
-                student['group_number'] = groupNumber
-                console.log(student)
+                student['group_number'] = group_number
+                // console.log(student)
                 return (
                   <StudentRowGroupDisplay
                       studentData={student}

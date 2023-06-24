@@ -42,8 +42,8 @@ const getAllGroups = async (req, res) => {
     let group = {students: []}
     for(let i=0; i<studentData.length; i++) {
         // check if this is a new group we are handling
-        if (group['groupNumber'] !== studentData[i].group_number) {
-            group = {groupNumber: studentData[i].group_number, labNumber: studentData[i].lab_number, students: []}
+        if (group['group_number'] !== studentData[i].group_number) {
+            group = {group_number: studentData[i].group_number, lab_number: studentData[i].lab_number, students: []}
         }
 
         // add student to the groups list of students
@@ -56,11 +56,11 @@ const getAllGroups = async (req, res) => {
         } = studentData[i];
 
         group.students.push({
-            studentId: student_id,
-            preferredName: preferred_name,
-            lastName: last_name,
-            emailAddress: email_address,
-            wamVal: wam_val
+            student_id: student_id,
+            preferred_name: preferred_name,
+            last_name: last_name,
+            email_address: email_address,
+            wam_val: wam_val
         })
 
         // if the next student is in a new group or this is the last student, push this group
