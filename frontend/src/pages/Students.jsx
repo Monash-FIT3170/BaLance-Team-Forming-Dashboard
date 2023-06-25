@@ -64,7 +64,7 @@ function Students() {
     onClose();
 
     // API call to create groups from scratch - will automatically delete existing groups first
-    fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`, {
+    fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({

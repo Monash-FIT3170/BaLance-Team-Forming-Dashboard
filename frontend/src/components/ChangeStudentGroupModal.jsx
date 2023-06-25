@@ -51,9 +51,8 @@ export default function ChangeStudentGroupModal({studentData, numberOfGroups}) {
     }
 
     // handles modal confirmation for changing a students group
-    const handleConfirmClick = async () => {
+    const handleStudentGroupChange = async () => {
         onClose();
-
         await fetch(
             `http://localhost:8080/api/groups/${unitCode}/${year}/${period}/move/${student_id}/`, {
                 method: 'PATCH',
@@ -61,7 +60,6 @@ export default function ChangeStudentGroupModal({studentData, numberOfGroups}) {
                 headers: {'Content-type': 'application/json; charset=UTF-8'}
             }
         );
-
         window.location.reload();
     };
 
@@ -73,7 +71,6 @@ export default function ChangeStudentGroupModal({studentData, numberOfGroups}) {
 
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
-
                 <ModalContent>
                     <ModalHeader>Change Student's Group</ModalHeader>
                     <ModalCloseButton />
@@ -102,7 +99,7 @@ export default function ChangeStudentGroupModal({studentData, numberOfGroups}) {
                                     Cancel
                                 </Button>
                                 <Button
-                                    onClick={handleConfirmClick}
+                                    onClick={handleStudentGroupChange}
                                     margin="0px 5px"
                                     colorScheme="blue"
                                     mr={3}

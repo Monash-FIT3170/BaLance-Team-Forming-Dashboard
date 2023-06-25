@@ -55,17 +55,17 @@ function Groups() {
     onClose();
 
     // API call to create groups from scratch - will automatically delete existing groups first
-    // TODO will the backend need to handle this differently given students aren't new?
-    fetch(`http://localhost:8080/api/groups/'${unitCode}/${year}/${period}`, {
+    // then call createUnitGroups under the hood
+    fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         groupSize: groupSize,
         variance: variance,
         strategy: groupStrategy,
-      }),
+      })
     })
       .then((res) => res.json())
       .catch((error) => {
