@@ -87,11 +87,21 @@ const createUnitGroups = async (req, res) => {
         year,
         period
     } = req.params;
-    const {
+    let {
         groupSize,
         variance,
         strategy,
     } = req.body;
+
+    if (!groupSize) {
+        groupSize=4;
+    }
+    if (!variance) {
+        variance=1;
+    }
+    if (!strategy) {
+        strategy='random';
+    }
 
     /* GET ALL OF THE STUDENTS ASSOCIATED WITH THIS UNIT SORTED BY LAB */
     const unitOffId = await selectUnitOffKey(unitCode, year, period);
