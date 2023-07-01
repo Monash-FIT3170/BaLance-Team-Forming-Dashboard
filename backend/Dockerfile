@@ -1,4 +1,5 @@
 FROM ubuntu:latest
-LABEL authors="ferip"
+LABEL authors="s.a.baaset.moslih@gmail.com"
 
-ENTRYPOINT ["top", "-b"]
+WORKDIR /balance_backend
+

@@ -1,0 +1,16 @@
+# version of docker-compose
+version: "3.8"
+
+# the services we are dockerizing
+services:
+  backend:
+    build: ./backend
+    container_name: balance_backend_cont
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./backend:/balance_backend
+      - ./backend/node_modules
+
+  # TODO frontend:
+  # TODO database:
