@@ -5,12 +5,21 @@ version: "3.8"
 services:
   backend:
     build: ./backend
-    container_name: balance_backend_cont
+    container_name: balance_backend_container
     ports:
       - '8080:8080'
     volumes:
       - ./backend:/balance_backend
       - ./backend/node_modules
 
-  # TODO frontend:
-  # TODO database:
+  frontend:
+    build: ./frontend
+    container_name: balance_frontend_container
+    ports:
+      - '3000:3000'
+
+  database:
+    build: ./database
+    container_name: balance_database_container
+    ports:
+      - '3306:3306'
