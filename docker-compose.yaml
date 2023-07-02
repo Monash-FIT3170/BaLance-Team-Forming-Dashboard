@@ -1,7 +1,7 @@
 # version of docker-compose
 version: "3.8"
 
-# the services we are dockerizing
+# the services we want dockerized
 services:
   backend:
     build: ./backend
