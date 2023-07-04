@@ -36,7 +36,7 @@ import { DragHandleIcon, CloseIcon, AddIcon, ChevronDownIcon } from '@chakra-ui/
 
 import NavBar from '../components/NavBar.jsx';
 
-function AssigningPage() {
+function Teachers() {
   const [checkedValues1, setCheckedValues1] = useState([]);
   const [checkedValues2, setCheckedValues2] = useState([]);
   const [checkedValues3, setCheckedValues3] = useState([]);
@@ -321,4 +321,4 @@ function AssigningPage() {
   );
 }
 
-export default AssigningPage;
+export default Teachers;

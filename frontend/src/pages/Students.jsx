@@ -19,39 +19,44 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShuffleGroups } from '../components/ShuffleGroups';
 
 function Students() {
-  const [allStudents, setStudents] = useState([]);
-  const [allGroups, setAllGroups] = useState([]);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [students, setStudents] = useState([]);
+  const [numberOfGroups, setNumberOfGroups] = useState(0);
   const cancelRef = React.useRef();
   const navigate = useNavigate();
-  const { groupStrategy, groupSize, variance, unitCode, year, period } = useParams();
+  const {
+    isOpen,
+    onOpen,
+    onClose
+  } = useDisclosure();
 
-  const handleUploadClick = () => {
+  const {
+    groupStrategy,
+    groupSize,
+    variance,
+    unitCode,
+    year,
+    period
+  } = useParams();
+
+  const navigateToStudentUpload = () => {
     navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
   };
 
   useEffect(() => {
-    const labs = [];
-
+    // fetch students from the backend
     fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}`)
-      .then((res) => res.json().then((res) => setStudents(res)))
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        setStudents(res);
+      })
       .catch((err) => console.error(err));
 
-    fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`)
-      .then((res) =>
-        res.json().then(function (res) {
-          for (let i = 0; i < res.length; i++) {
-            labs.push({
-              labId: res[i].labId,
-              groupNumber: res[i].groupNumber,
-              groupId: res[i].groupId,
-              members: res[i].members,
-            });
-          }
-          setAllGroups(labs);
-        })
-      )
-      .catch((err) => console.error(err));
+    // determine the number of groups in this unit offering
+    setNumberOfGroups(
+        // convert each student object to just student.group_number then find the max
+        Math.max(...students.map(student => student.group_number))
+    )
   }, []);
 
   const handleShuffleGroups = () => {
@@ -59,25 +64,18 @@ function Students() {
     onClose();
 
     // API call to create groups from scratch - will automatically delete existing groups first
-    fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`, {
+    fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         groupSize: groupSize,
         variance: variance,
         strategy: groupStrategy,
-      }),
-    })
-      .catch((error) => {
-        console.error('Error:', error);
       })
-      .finally(() => {
-        // Reload the page
-        window.location.reload();
-      });
-  };
+    })
+    .catch((error) => {console.error('Error:', error);})
+    .finally(() => {window.location.reload();});
+  }
 
   return (
     <div>
@@ -86,7 +84,10 @@ function Students() {
       </Heading>
 
       <HStack margin="0px 20vw 5vh 20vw">
-        <Button onClick={handleUploadClick} colorScheme="gray" margin-left="20">
+        <Button
+          onClick={navigateToStudentUpload}
+          colorScheme="gray"
+          margin-left="20">
           Upload Students
         </Button>
 
@@ -124,16 +125,16 @@ function Students() {
               <Th>Preferred Name</Th>
               <Th>Last Name</Th>
               <Th>Email Address</Th>
-              <Th>Group Number</Th>
+              <Th>Group</Th>
             </Tr>
           </Thead>
+
           <Tbody>
-            {allStudents.map((student) => (
+            {students.map((student) => (
               <StudentRowStudentDisplay
                 studentData={student}
-                studentLab={1}
-                studentGroup={undefined}
-                key={student.id}
+                numberOfGroups={numberOfGroups}
+                key={student.student_id}
               />
             ))}
           </Tbody>

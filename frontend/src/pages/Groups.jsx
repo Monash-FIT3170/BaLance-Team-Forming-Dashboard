@@ -16,20 +16,28 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShuffleGroups } from '../components/ShuffleGroups';
 
 function Groups() {
-  // Retrieve route parameters
-  const { groupStrategy, groupSize, variance, unitCode, year, period } = useParams();
-
-  const navigate = useNavigate();
-
-  // Confirmation popup for shuffling groups
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
+  const navigate = useNavigate();
+  const [groups, setGroups] = useState([]);
 
-  const handleUploadClick = () => {
+  const { // Confirmation popup for shuffling groups
+    isOpen,
+    onOpen,
+    onClose
+  } = useDisclosure();
+
+  const { // Retrieve route parameters
+    groupStrategy,
+    groupSize,
+    variance,
+    unitCode,
+    year,
+    period
+  } = useParams();
+
+  const navigateToStudentUpload = () => {
     navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
   };
-
-  const [groups, setGroups] = useState([]);
 
   useEffect(() => {
     fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`)
@@ -47,17 +55,17 @@ function Groups() {
     onClose();
 
     // API call to create groups from scratch - will automatically delete existing groups first
-    // TODO will the backend need to handle this differently given students aren't new?
-    fetch(`http://localhost:8080/api/groups/'${unitCode}/${year}/${period}`, {
+    // then call createUnitGroups under the hood
+    fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         groupSize: groupSize,
         variance: variance,
         strategy: groupStrategy,
-      }),
+      })
     })
       .then((res) => res.json())
       .catch((error) => {
@@ -76,7 +84,7 @@ function Groups() {
       </Heading>
 
       <HStack margin="0px 20vw 5vh 20vw">
-        <Button onClick={handleUploadClick} colorScheme="gray" margin-left="20">
+        <Button onClick={navigateToStudentUpload} colorScheme="gray" margin-left="20">
           Upload Students
         </Button>
 
@@ -94,7 +102,9 @@ function Groups() {
           </ButtonGroup>
           <Spacer />
         </HStack>
+
         <Spacer />
+
         <ShuffleGroups
           onOpen={onOpen}
           onClose={onClose}
@@ -105,9 +115,10 @@ function Groups() {
       </HStack>
 
       <Container className="groups" maxW="80vw">
-        {groups.map((group) => (
-          <GroupCard groupData={group} key={group.id} />
-        ))}
+        {groups.map((group) => {
+          const cardKey = `${group.lab_number}_${group.group_number}`;
+          return (<GroupCard groupData={group} numberOfGroups={17} key={cardKey} />);
+        })}
       </Container>
     </div>
   );

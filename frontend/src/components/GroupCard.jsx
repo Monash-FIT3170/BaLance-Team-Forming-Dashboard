@@ -1,12 +1,3 @@
-/* 
-Group card needs to:
-    - import StudentRow
-    - extract from its props the group data
-    - loop through each student in the group  
-    - for each student, a Student Row component needs to be instantiated 
-    - the student's details (found from the group data) need to be passed into the StudentRow component via props
-        - e.g. <Student firstName=_firstName email=_email classNum=_classNum wamAverage=_wamAverage enrolmentStatus=_enrolmentStatus discPersonality=_discPersonality > 
-*/
 import {
   Card,
   CardBody,
@@ -23,23 +14,21 @@ import {
 } from '@chakra-ui/react';
 import StudentRowGroupDisplay from './StudentRowGroupDisplay';
 
-const GroupCard = ({groupData}) => {
-  // console.log(groupData)
+const GroupCard = ({groupData, numberOfGroups}) => {
   const {
-    labNumber,
-    groupNumber,
+    lab_number,
+    group_number,
     students
   } = groupData;
 
+  console.log(groupData)
   return (
     <Card border="1px" margin="20px">
       <CardHeader>
-        <HStack>
-          <Heading>
-            Lab: {labNumber} Group: {groupNumber}
-          </Heading>
-          <Spacer />
-        </HStack>
+        <Heading>
+          Lab: {lab_number} Group: {group_number}
+        </Heading>
+        <Spacer />
       </CardHeader>
 
       <CardBody margin="15px">
@@ -56,12 +45,17 @@ const GroupCard = ({groupData}) => {
               </Tr>
             </Thead>
             <Tbody>
-              {students.map((student) => (
-                <StudentRowGroupDisplay
-                  studentData={student}
-                  key={student.studentId}
-                />
-              ))}
+              {students.map((student) => {
+                student['group_number'] = group_number
+                // console.log(student)
+                return (
+                  <StudentRowGroupDisplay
+                      studentData={student}
+                      numberOfGroups={numberOfGroups}
+                      key={student.student_id}
+                  />
+                );
+              })}
             </Tbody>
           </Table>
         </TableContainer>

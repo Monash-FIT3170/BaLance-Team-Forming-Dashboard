@@ -1,37 +1,33 @@
 import { Tr, Td, HStack, Spacer } from '@chakra-ui/react';
-import { DragHandleIcon, CloseIcon } from '@chakra-ui/icons';
 import ChangeStudentGroupModal from './ChangeStudentGroupModal';
 
-function StudentRowGroupDisplay({studentData}) {
+function StudentRowGroupDisplay({studentData, numberOfGroups}) {
   /* HTML component for each student in each group in the 'View Groups' View */
-  const {
-    studentId,
-    preferredName,
-    lastName,
-    emailAddress,
-    wamVal
-  } = studentData;
+    const {
+        student_id,
+        preferred_name,
+        last_name,
+        email_address,
+        wam_val
+    } = studentData;
 
-  return (
-    <Tr>
-      <Td>
-        {/*<HStack>*/}
-        {/*  <ChangeStudentGroupModal*/}
-        {/*    studentInfo={studentInfo}*/}
-        {/*    classNum={classNum}*/}
-        {/*    groupNum={groupNum}*/}
-        {/*    groupId={groupId}*/}
-        {/*    allIds={allIds}*/}
-        {/*  />*/}
-        {/*</HStack>*/}
-      </Td>
-      <Td>{studentId}</Td>
-      <Td>{preferredName}</Td>
-      <Td>{lastName}</Td>
-      <Td>{emailAddress}</Td>
-      <Td>{wamVal}</Td>
-    </Tr>
-  );
+    return (
+        <Tr>
+            <Td>
+            <HStack>
+                <ChangeStudentGroupModal
+                    studentData={studentData}
+                    numberOfGroups={numberOfGroups}
+                />
+            </HStack>
+            </Td>
+            <Td>{student_id}</Td>
+            <Td>{preferred_name}</Td>
+            <Td>{last_name}</Td>
+            <Td>{email_address}</Td>
+            <Td>{wam_val}</Td>
+        </Tr>
+    );
 }
 
 export default StudentRowGroupDisplay;

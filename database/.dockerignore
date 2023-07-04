@@ -1,0 +1,4 @@
+databasePopulation.sql
+testQueries.sql
+.dockerignore
+Dockerfile

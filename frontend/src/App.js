@@ -6,7 +6,7 @@ import UnitHomePage from './pages/UnitHomePage';
 import NavBar from './components/NavBar';
 import Groups from './pages/Groups';
 import Students from './pages/Students';
-import AssigningPage from './pages/AssigningPage';
+import Teachers from './pages/Teachers';
 
 const theme = extendTheme({
   colors: {
@@ -29,7 +29,7 @@ function App() {
             <Route path="/groups/:unitCode/:year/:period" element={<Groups />} />
             <Route path="/students/:unitCode/:year/:period" element={<Students />} />
             <Route path="/uploadStudents/:unitCode/:year/:period" element={<ImportStudents />} />
-            <Route path="/assigningPage" element={<AssigningPage />} />
+            <Route path="/assigningPage" element={<Teachers />} />
           </Routes>
         </div>
       </BrowserRouter>

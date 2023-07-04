@@ -1,32 +1,32 @@
-import { Tr, Td, HStack, Select, Icon } from '@chakra-ui/react';
+import { Tr, Td, HStack } from '@chakra-ui/react';
 import ChangeStudentGroupModal from './ChangeStudentGroupModal';
 
-const StudentRowStudentDisplay = ({studentData, studentLab, studentGroup}) => {
+const StudentRowStudentDisplay = ({studentData, numberOfGroups}) => {
     /* HTML component for each student in each group in the 'List Students' View */
     const {
         student_id,
         preferred_name,
         last_name,
-        email_address
+        email_address,
+        group_number
     } = studentData;
 
     return (
-    <Tr>
-        <Td>{student_id}</Td>
-        <Td>{preferred_name}</Td>
-        <Td>{last_name}</Td>
-        <Td>{email_address}</Td>
-        <Td>{studentGroup}</Td>
-        <Td>
-        {/*<HStack>*/}
-        {/*    <ChangeStudentGroupModal*/}
-        {/*    studentInfo={studentData}*/}
-        {/*    classNum={studentLab}*/}
-        {/*    groupNum={studentGroup}*/}
-        {/*    />*/}
-        {/*</HStack>*/}
-        </Td>
-    </Tr>
+        <Tr>
+            <Td>{student_id}</Td>
+            <Td>{preferred_name}</Td>
+            <Td>{last_name}</Td>
+            <Td>{email_address}</Td>
+            <Td>{group_number}</Td>
+            <Td>
+            <HStack>
+                <ChangeStudentGroupModal
+                    studentData={studentData}
+                    numberOfGroups={numberOfGroups}
+                />
+            </HStack>
+            </Td>
+        </Tr>
     );
 };
 

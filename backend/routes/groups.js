@@ -13,6 +13,7 @@ const { // import controller functions for route handlers
     deleteGroup,
     updateGroup,
     createUnitGroups,
+    shuffleUnitGroups,
     moveStudent
 } = require('../controllers/groupController');
 
@@ -26,6 +27,9 @@ router.get('/:unitCode/:year/:period/:groupNumber', getGroup);
 
 // create unit groups
 router.post('/:unitCode/:year/:period', createUnitGroups);
+
+// shuffle unit groups
+router.post('/shuffle/:unitCode/:year/:period', shuffleUnitGroups);
 
 // add a new group to a unit
 router.post('/:unitCode/:year/:period/new', addGroup);

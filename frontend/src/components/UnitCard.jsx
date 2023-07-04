@@ -47,7 +47,7 @@ const UnitCard = (unit) => {
   const navigate = useNavigate();
 
   //navigate to the groups for the current unit if it is clicked
-  const handleUnitClick = () => navigate(`/groups/${unit_code}/${unit_off_year}/${unit_off_period}`);
+  const navigateToUnitOffering = () => navigate(`/groups/${unit_code}/${unit_off_year}/${unit_off_period}`);
 
   return (
     <Flex
@@ -79,7 +79,7 @@ const UnitCard = (unit) => {
         >
           {/* the unit name button */}
           <Button
-            onClick={handleUnitClick}
+            onClick={navigateToUnitOffering}
             style={{ fontWeight: 'bold', fontSize: '20px' }}
           >
             {unit_code}
@@ -130,7 +130,7 @@ const UnitCard = (unit) => {
                 Cancel
               </Button>
               <Button colorScheme="blue" onClick={onCloseDetails}>
-                Save
+                OK
               </Button>
             </ModalFooter>
           </ModalContent>
@@ -139,7 +139,7 @@ const UnitCard = (unit) => {
 
       {/* the button with the image and the faculty, when clicked will also bring to the groups for this unit */}
       <Button
-        onClick={handleUnitClick}
+        onClick={navigateToUnitOffering}
         style={{ display: 'inline-block', width: 'auto', height: 'auto' }}
       >
         <Image

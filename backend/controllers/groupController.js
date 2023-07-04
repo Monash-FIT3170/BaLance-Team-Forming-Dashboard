@@ -7,10 +7,12 @@ const {
     promiseBasedQuery,
     selectUnitOffKey
 } = require("../helpers/commonHelpers");
+
 const {
     groupFormationStrategies,
     shuffle
 } = require("../helpers/groupControllerHelpers")
+
 const {insertUnitOffLabs} = require("../helpers/studentControllerHelpers");
 
 
@@ -42,8 +44,8 @@ const getAllGroups = async (req, res) => {
     let group = {students: []}
     for(let i=0; i<studentData.length; i++) {
         // check if this is a new group we are handling
-        if (group['groupNumber'] !== studentData[i].group_number) {
-            group = {groupNumber: studentData[i].group_number, labNumber: studentData[i].lab_number, students: []}
+        if (group['group_number'] !== studentData[i].group_number) {
+            group = {group_number: studentData[i].group_number, lab_number: studentData[i].lab_number, students: []}
         }
 
         // add student to the groups list of students
@@ -56,11 +58,11 @@ const getAllGroups = async (req, res) => {
         } = studentData[i];
 
         group.students.push({
-            studentId: student_id,
-            preferredName: preferred_name,
-            lastName: last_name,
-            emailAddress: email_address,
-            wamVal: wam_val
+            student_id: student_id,
+            preferred_name: preferred_name,
+            last_name: last_name,
+            email_address: email_address,
+            wam_val: wam_val
         })
 
         // if the next student is in a new group or this is the last student, push this group
@@ -85,11 +87,21 @@ const createUnitGroups = async (req, res) => {
         year,
         period
     } = req.params;
-    const {
+    let {
         groupSize,
         variance,
         strategy,
     } = req.body;
+
+    if (!groupSize) {
+        groupSize=4;
+    }
+    if (!variance) {
+        variance=1;
+    }
+    if (!strategy) {
+        strategy='random';
+    }
 
     /* GET ALL OF THE STUDENTS ASSOCIATED WITH THIS UNIT SORTED BY LAB */
     const unitOffId = await selectUnitOffKey(unitCode, year, period);
@@ -172,6 +184,56 @@ const createUnitGroups = async (req, res) => {
     res.status(200).send();
 }
 
+// re-create (shuffle) unit groups
+const shuffleUnitGroups = async (req, res) => {
+    const {
+        unitCode,
+        year,
+        period
+    } = req.params;
+
+    /* DELETE ALL GROUP ALLOCATIONS */
+    await promiseBasedQuery(
+        'DELETE FROM group_allocation ' +
+        'WHERE group_alloc_id IN (' +
+        '  SELECT subquery.group_alloc_id ' +
+        '  FROM (' +
+        '    SELECT ga.group_alloc_id ' +
+        '    FROM lab_group g ' +
+        '    INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id ' +
+        '    INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id ' +
+        '    INNER JOIN group_allocation ga ON ga.lab_group_id = g.lab_group_id ' +
+        '    WHERE u.unit_code = ? ' +
+        '      AND u.unit_off_year = ? ' +
+        '      AND u.unit_off_period = ? ' +
+        '  ) AS subquery' +
+        ');',
+        [unitCode, year, period]
+    );
+
+    /* DELETE ALL GROUPS THEMSELVES */
+    await promiseBasedQuery(
+        'DELETE FROM lab_group ' +
+        'WHERE lab_group_id IN ( ' +
+        '  SELECT subquery.lab_group_id ' +
+        '  FROM ( ' +
+        '    SELECT g.lab_group_id ' +
+        '    FROM lab_group g ' +
+        '    INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id ' +
+        '    INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id ' +
+        '    WHERE ' +
+        '      u.unit_code = ? ' +
+        '      AND u.unit_off_year = ? ' +
+        '      AND u.unit_off_period = ? ' +
+        '  ) AS subquery' +
+        ');',
+        [unitCode, year, period]
+    );
+
+    /* RE-CREATE THE UNIT GROUPS */
+    await createUnitGroups(req, res);
+}
+
 // add a new group to a unit
 const addGroup = async (req, res) => {
     res.status(200).send({wip: "test"});
@@ -193,6 +255,20 @@ const updateGroup = async (req, res) => {
 // move a student from one group to another
 const moveStudent = async (req, res) => {
     /* REQUIRES OFFERING, STUDENT, OLD GROUP, NEW GROUP */
+    const {
+        unitCode,
+        year,
+        period,
+        studentId
+    } = req.params;
+    const { newGroup } = req.body;
+
+    console.log(unitCode, year, period, studentId, newGroup);
+
+    /* todo DELETE PREVIOUS GROUP ASSIGNMENT AND LAB IF NEW LAB */
+
+    /* todo CREATE NEW GROUP ASSIGNMENT AND LAB IF NEW LAB */
+
     res.status(200).send({wip: "test"});
 }
 
@@ -250,7 +326,6 @@ const createGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance)
     return groups;
 }
 
-
 module.exports = {
     getAllGroups,
     getGroup,
@@ -258,5 +333,6 @@ module.exports = {
     deleteGroup,
     updateGroup,
     createUnitGroups,
+    shuffleUnitGroups,
     moveStudent
 }
