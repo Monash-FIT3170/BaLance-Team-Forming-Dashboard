@@ -8,7 +8,7 @@ services:
       - '8080:8080'  # container:host
     volumes:
       - ./backend:/balance_backend
-    # - ./backend/node_modules todo
+      - /balance_backend/node_modules
     env_file:
       - ./backend/.env
 
@@ -17,10 +17,10 @@ services:
     container_name: balance_frontend_container
     ports:
       - '3000:3000'  # container: host
-    # volumes: todo
-    # need the following 2 for react container
-    #   opens an interactive shell, gotta look more into why it's needed
-    stdin_open: true
+    volumes:
+      - ./frontend:/balance_frontend
+      - /balance_frontend/node_modules
+    stdin_open: true  # these 2 open an interactive shell for react container --> need to look into y its needed
     tty: true
 
 #  database:
