@@ -20,6 +20,8 @@ services:
     volumes:
       - ./frontend:/balance_frontend
       - /balance_frontend/node_modules
+    environment:
+      - WATCHPACK_POLLING=true  # https://stackoverflow.com/a/72661752
     stdin_open: true  # these 2 open an interactive shell for react container --> need to look into y its needed
     tty: true
 
