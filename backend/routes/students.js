@@ -30,6 +30,8 @@ router.post('/:unitCode/:year/:period/new', addStudent);
 // delete a specific student from a unit
 router.delete('/:unitCode/:year/:period/:studId', deleteStudent);
 
+// todo @nethara add a delete route that takes in the new delete function here
+
 // update a student for a unit
 router.patch('/:unitCode/:year/:period/:studId', updateStudent);
 

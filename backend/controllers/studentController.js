@@ -90,11 +90,7 @@ const addStudent = async (req, res) => {
 }
 
 // delete a single student from a unit
-const deleteStudent = (req, res) => {
-    /* todo DON'T DELETE STUDENT FROM student TABLE AS THEY MIGHT BE IN OTHER UNITS */
-    /* todo DELETE STUDENTS ENROLMENT FOR THIS UNIT */
-    /* todo DELETE STUDENT ALLOCATION TO THEIR GROUPS AND LABS IN THIS UNIT */
-
+const deleteStudent = async (req, res) => {
     const { // get the URL params
         unitCode,
         year,
@@ -102,6 +98,11 @@ const deleteStudent = (req, res) => {
         studentId
     } = req.params;
 
+    // todo there should be 2 separate functions:
+    //  one function deletes a student from the unit including all labs and groups e.d. deleteStudentEnrolment()
+    //  one function deletes a student from the group only e.g. deleteStudentGroupAlloc()
+    //  this will allow for separation of concerns and cleaner code,
+    //  have a try creating the function signatures [keep this one and rename it and make a second one]
     // to either delete from the whole unit or only the group
     const { deleteStudentFromGroup } = req.query;
 
@@ -114,7 +115,7 @@ const deleteStudent = (req, res) => {
                 "AND unit_off_year=? AND unit_off_period=?);",
                 [studentId, unitCode, year, period]
             );
-            // Respond with success message
+            // Respond with success message todo later, look into best practices for res messages in DEL requests
             res.status(200).send({ message: "Student successfully deleted from lab allocations"});
         } else {
              // Delete the student from entire unit
