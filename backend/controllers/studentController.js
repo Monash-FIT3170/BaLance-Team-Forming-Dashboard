@@ -139,6 +139,7 @@ const updateStudent = async (req, res) => {
     const { studentId } = req.params // get the URL params
     const updateStudentDetails = req.body
 
+    // error handling for unexpected issues
     try {
         const updateQuery =
             "UPDATE student " +
