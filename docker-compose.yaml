@@ -9,6 +9,8 @@ services:
     volumes:
       - ./backend:/balance_backend
       - /balance_backend/node_modules
+    environment:
+      - WATCHPACK_POLLING=true  # https://stackoverflow.com/a/72661752
     env_file:
       - ./backend/.env
 
@@ -25,7 +27,7 @@ services:
     stdin_open: true  # these 2 open an interactive shell for react container --> need to look into y its needed
     tty: true
 
-#  database:
+#  database: todo WHY DOES THE DOCKERFILE NOT WORK!!!!
 #    build: ./database
 #    container_name: balance_database_container
 #    ports:
