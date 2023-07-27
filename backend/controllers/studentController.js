@@ -136,7 +136,26 @@ const deleteStudent = (req, res) => {
 
 // update a student's details
 const updateStudent = async (req, res) => {
-    res.status(200).send({wip: "test"});
+    const { studentId } = req.params // get the URL params
+    const updateStudentDetails = req.body
+
+    try {
+        const updateQuery =
+            "UPDATE student " +
+            "SET preferred_name=?, last_name=?, email_address=?, wam_val=? " +
+            "WHERE student_id=? ";
+        // updated values for the student
+        const { preferred_name, last_name, email_address, wam_val } = updateStudentDetails;
+
+        await promiseBasedQuery(updateQuery, [preferred_name, last_name, email_address, wam_val, studentId]);
+        // Respond with success message
+        res.status(200).send({ message: "Student details updated"});
+
+    } catch (err) {
+        // Respond with error message
+        console.log("Error while updating student ", err);
+        res.status(500).send({ error: "Error occurred while updating student details" })
+    }
 }
 
 module.exports = {
