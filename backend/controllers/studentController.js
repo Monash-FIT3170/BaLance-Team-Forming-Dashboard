@@ -94,7 +94,44 @@ const deleteStudent = (req, res) => {
     /* todo DON'T DELETE STUDENT FROM student TABLE AS THEY MIGHT BE IN OTHER UNITS */
     /* todo DELETE STUDENTS ENROLMENT FOR THIS UNIT */
     /* todo DELETE STUDENT ALLOCATION TO THEIR GROUPS AND LABS IN THIS UNIT */
-    res.status(200).send({wip: "test"});
+
+    const { // get the URL params
+        unitCode,
+        year,
+        period,
+        studentId
+    } = req.params;
+
+    // to either delete from the whole unit or only the group
+    const { deleteStudentFromGroup } = req.query;
+
+    // error handling for unexpected issues
+    try {
+        if (deleteStudentFromGroup) {
+            await promiseBasedQuery(
+                "DELETE FROM student_lab_allocation " +
+                "WHERE student_id=? AND unit_off_id=(SELECT unit_off_id FROM unit_offering WHERE unit_code=? " +
+                "AND unit_off_year=? AND unit_off_period=?);",
+                [studentId, unitCode, year, period]
+            );
+            // Respond with success message
+            res.status(200).send({ message: "Student successfully deleted from lab allocations"});
+        } else {
+             // Delete the student from entire unit
+             await promiseBasedQuery(
+                  "DELETE FROM unit_enrolment " +
+                  "WHERE student_id=? AND unit_off_id=(SELECT unit_off_id FROM unit_offering WHERE unit_code=? " +
+                  "AND unit_off_year=? AND unit_off_period=?);",
+                  [studentId, unitCode, year, period]
+             );
+             // Respond with success message
+             res.status(200).send({ message: "Student successfully deleted from specified unit"});
+        }
+    } catch (err) {
+        // Respond with error message
+        console.error("An error occurred while deleting", err);
+        res.status(500).send({ message: "An error occurred while deleting"});
+    }
 }
 
 // update a student's details
