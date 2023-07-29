@@ -10,7 +10,6 @@ const { // import controller functions for route handlers
     getAllStudents,
     getStudent,
     addAllStudents,
-    addStudent,
     deleteStudent,
     updateStudent
 } = require('../controllers/studentController');
@@ -23,9 +22,6 @@ router.get('/:unitCode/:year/:period/:studId', getStudent);
 
 // add an array of students to a unit
 router.post('/:unitCode/:year/:period', addAllStudents);
-
-// add a new student to a unit
-router.post('/:unitCode/:year/:period/new', addStudent);
 
 // delete a specific student from a unit
 router.delete('/:unitCode/:year/:period/:studId', deleteStudent);

@@ -241,14 +241,6 @@ const addGroup = async (req, res) => {
 
 // delete a specific group from a unit
 const deleteGroup = async (req, res) => {
-    /* DELETE THE STUDENT ALLOCATIONS BUT NOT STUDENTS */
-    /* DELETE THE GROUP ASSOCIATION WITH LAB/UNIT */
-    /* DELETE THE GROUP ITSELF */
-    res.status(200).send({wip: "test"});
-}
-
-// update a specific group from a unit
-const updateGroup = async (req, res) => {
     res.status(200).send({wip: "test"});
 }
 
@@ -377,7 +369,6 @@ module.exports = {
     getGroup,
     addGroup,
     deleteGroup,
-    updateGroup,
     createUnitGroups,
     shuffleUnitGroups,
     moveStudent

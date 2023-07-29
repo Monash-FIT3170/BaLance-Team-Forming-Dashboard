@@ -80,15 +80,6 @@ const addAllStudents = async (req, res) => {
     res.status(200).send();
 }
 
-// add a single student to a unit
-const addStudent = async (req, res) => {
-    /* todo ADD STUDENT IF NOT EXISTS */
-    /* todo ADD STUDENT TO UNIT */
-    /* todo ADD STUDENT TO LAB */
-    /* todo UPDATE UNIT ENROLMENT COUNT */
-    res.status(200).send({wip: "test"});
-}
-
 // delete a single student from a unit
 const deleteStudent = async (req, res) => {
     const { // get the URL params
@@ -164,7 +155,6 @@ module.exports = {
     getAllStudents,
     getStudent,
     addAllStudents,
-    addStudent,
     deleteStudent,
     updateStudent
 };

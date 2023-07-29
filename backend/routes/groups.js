@@ -11,7 +11,6 @@ const { // import controller functions for route handlers
     getGroup,
     addGroup,
     deleteGroup,
-    updateGroup,
     createUnitGroups,
     shuffleUnitGroups,
     moveStudent
@@ -37,11 +36,8 @@ router.post('/:unitCode/:year/:period/new', addGroup);
 // delete a specific group from a unit
 router.delete('/:unitCode/:year/:period/:groupNumber', deleteGroup);
 
-// update a specific group from a unit
-router.patch('/:unitCode/:year/:period/:groupNumber', updateGroup);
-
 // move a student between two groups
-router.patch('/:unitCode/:year/:period/move/:studentId/', moveStudent)
+router.patch('/:unitCode/:year/:period/move/:studentId/', moveStudent);
 
 // export this router for external use
 module.exports = router;
