@@ -281,7 +281,7 @@ const moveStudent = async (req, res) => {
 
     // get the id of the current group allocation and the id of the lab it is in
     const [currentGroupData] = await promiseBasedQuery(
-        "SELECT ga.group_alloc_id, l.unit_off_lab_id " +
+        "SELECT ga.group_alloc_id, l.unit_off_lab_id, s.stud_unique_id " +
         "FROM group_allocation ga " +
         "   INNER JOIN student s ON ga.stud_unique_id = s.stud_unique_id " +
         "   INNER JOIN unit_enrolment ue ON s.stud_unique_id = ue.stud_unique_id " +
@@ -304,20 +304,14 @@ const moveStudent = async (req, res) => {
         [newGroupData["lab_group_id"], currentGroupData["group_alloc_id"]]
     );
 
-    // change the student's lab and also the group allocation's lab to the new lab if different
+    // change the student's lab
     if(newGroupData["unit_off_lab_id"] !== currentGroupData["unit_off_lab_id"]) {
         await promiseBasedQuery(
-            "UPDATE lab_group " +
-            "SET unit_off_lab_id=? " +
-            "WHERE group_alloc_id=?;",
-            []
-        );
-
-        await promiseBasedQuery(
             "UPDATE student_lab_allocation " +
-            "   SET unit_off_lab_id=? " +
-            "   WHERE group_alloc_id=?;",
-            []
+            "SET unit_off_lab_id=? " +
+            "WHERE stud_unique_id=? " +
+            "AND unit_off_lab_id=?;",
+            [newGroupData["unit_off_lab_id"], currentGroupData["stud_unique_id"], currentGroupData["unit_off_lab_id"]]
         );
     }
 
