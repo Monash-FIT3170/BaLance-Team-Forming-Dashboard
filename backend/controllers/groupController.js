@@ -265,9 +265,36 @@ const moveStudent = async (req, res) => {
 
     console.log(unitCode, year, period, studentId, newGroup);
 
-    /* todo DELETE PREVIOUS GROUP ASSIGNMENT AND LAB IF NEW LAB */
+    /* todo UPDATE PREVIOUS LAB ALLOCATION IF NEW LAB */
+    // check if the new group is in another lab
+    // update student's lab alloc to new lab
 
-    /* todo CREATE NEW GROUP ASSIGNMENT AND LAB IF NEW LAB */
+    /* UPDATE NEW GROUP ASSIGNMENT */
+    const groupAllocId = promiseBasedQuery(
+        "SELECT ga.group_alloc_id " +
+        "FROM group_allocation ga " +
+        "   INNER JOIN student s ON ga.stud_unique_id = s.stud_unique_id " +
+        "   INNER JOIN unit_enrolment ue ON s.stud_unique_id = ue.stud_unique_id " +
+        "   INNER JOIN unit_offering u ON u.unit_off_id = ue.unit_off_id " +
+        "WHERE s.student_id=? " +
+        "   AND u.unit_code=? " +
+        "   AND u.unit_off_year=? " +
+        "   AND u.unit_off_period=?;",
+        [studentId, unitCode, year, period]
+    );
+
+    // get the id of the new group we are changing to
+    const newGroupsId = promiseBasedQuery(
+        "",
+        []
+    )
+
+    // promiseBasedQuery(
+    //     "UPDATE group_allocation " +
+    //     "   SET lab_group_id=? " +
+    //     "   WHERE group_alloc_id=?;",
+    //     [newGroupId, groupAllocId]
+    // );
 
     res.status(200).send({wip: "test"});
 }

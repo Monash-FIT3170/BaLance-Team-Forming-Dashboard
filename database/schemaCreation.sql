@@ -99,21 +99,10 @@ CREATE TABLE IF NOT EXISTS unit_off_employment ( -- connection between staff and
     staff_unique_id INT,
     unit_off_id INT,
     employment_status ENUM('active', 'inactive'),
-    staff_role ENUM('super admin', 'admin', 'default')
-        COMMENT 'indicator of staff privilege levels',
     CONSTRAINT pk_staff_employment PRIMARY KEY (employment_id),
     CONSTRAINT ck_staff_employment UNIQUE (staff_unique_id, unit_off_id)
 );
 ALTER TABLE unit_off_employment AUTO_INCREMENT=100000000;
-
-CREATE TABLE IF NOT EXISTS staff_lab_allocation ( -- connection between staff and unit offering lab
-    staff_lab_alloc_id INT AUTO_INCREMENT,
-    unit_off_lab_id INT,
-    staff_unique_id INT,
-    CONSTRAINT pk_staff_lab_alloc PRIMARY KEY (staff_lab_alloc_id),
-    CONSTRAINT ck_staff_lab_alloc UNIQUE (unit_off_lab_id, staff_unique_id)
-);
-ALTER TABLE staff_lab_allocation AUTO_INCREMENT=100000000;
 
 -- FOREIGN KEY CREATION
 -- student to enrolment, group allocation, lab allocation
@@ -123,17 +112,15 @@ ALTER TABLE student_lab_allocation ADD FOREIGN KEY (stud_unique_id) REFERENCES s
 
 -- staff to employment and lab allocation
 ALTER TABLE unit_off_employment ADD FOREIGN KEY (staff_unique_id) REFERENCES staff(staff_unique_id);
-ALTER TABLE staff_lab_allocation ADD FOREIGN KEY (staff_unique_id) REFERENCES staff(staff_unique_id);
 
 -- units to student enrolment, staff employment, unit labs
 ALTER TABLE unit_enrolment ADD FOREIGN KEY (unit_off_id) REFERENCES unit_offering(unit_off_id);
 ALTER TABLE unit_off_employment ADD FOREIGN KEY (unit_off_id) REFERENCES unit_offering(unit_off_id);
 ALTER TABLE unit_off_lab ADD FOREIGN KEY (unit_off_id) REFERENCES unit_offering(unit_off_id);
 
--- labs to student allocations, group allocations, staff allocations
+-- labs to student allocations, group allocations
 ALTER TABLE student_lab_allocation ADD FOREIGN KEY (unit_off_lab_id) REFERENCES unit_off_lab(unit_off_lab_id);
 ALTER TABLE lab_group ADD FOREIGN KEY (unit_off_lab_id) REFERENCES unit_off_lab(unit_off_lab_id);
-ALTER TABLE staff_lab_allocation ADD FOREIGN KEY (unit_off_lab_id) REFERENCES unit_off_lab(unit_off_lab_id);
 
 -- groups to group allocations
 ALTER TABLE group_allocation ADD FOREIGN KEY (lab_group_id) REFERENCES lab_group(lab_group_id);
