@@ -265,17 +265,29 @@ const moveStudent = async (req, res) => {
 
     console.log(unitCode, year, period, studentId, newGroup);
 
-    /* todo UPDATE PREVIOUS LAB ALLOCATION IF NEW LAB */
-    // check if the new group is in another lab
-    // update student's lab alloc to new lab
+    /* OBTAIN ALLOCATION AND ASSIGNMENT DATA REQUIRED FOR UPDATES */
+    // get the id of the new group we are changing to as well as the id of the lab it is in
+    const [newGroupData] = await promiseBasedQuery(
+        "SELECT g.lab_group_id, l.unit_off_lab_id " +
+        "FROM lab_group g " +
+        "   INNER JOIN unit_off_lab l ON l.unit_off_lab_id = g.unit_off_lab_id " +
+        "   INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " +
+        "WHERE g.group_number=? " +
+        "   AND u.unit_code=? " +
+        "   AND u.unit_off_year=? " +
+        "   AND u.unit_off_period=?;",
+        [newGroup, unitCode, year, period]
+    )
 
-    /* UPDATE NEW GROUP ASSIGNMENT */
-    const groupAllocId = promiseBasedQuery(
-        "SELECT ga.group_alloc_id " +
+    // get the id of the current group allocation and the id of the lab it is in
+    const [currentGroupData] = await promiseBasedQuery(
+        "SELECT ga.group_alloc_id, l.unit_off_lab_id " +
         "FROM group_allocation ga " +
         "   INNER JOIN student s ON ga.stud_unique_id = s.stud_unique_id " +
         "   INNER JOIN unit_enrolment ue ON s.stud_unique_id = ue.stud_unique_id " +
         "   INNER JOIN unit_offering u ON u.unit_off_id = ue.unit_off_id " +
+        "   INNER JOIN lab_group lg ON lg.lab_group_id = ga.lab_group_id " +
+        "   INNER JOIN unit_off_lab l ON l.unit_off_lab_id = lg.unit_off_lab_id " +
         "WHERE s.student_id=? " +
         "   AND u.unit_code=? " +
         "   AND u.unit_off_year=? " +
@@ -283,18 +295,31 @@ const moveStudent = async (req, res) => {
         [studentId, unitCode, year, period]
     );
 
-    // get the id of the new group we are changing to
-    const newGroupsId = promiseBasedQuery(
-        "",
-        []
-    )
+    /* UPDATE NEW GROUP ASSIGNMENT AND UPDATE LAB ALLOC IF NEEDED */
+    // change the group id of the current group allocation to the new group id
+    await promiseBasedQuery(
+        "UPDATE group_allocation " +
+        "   SET lab_group_id=? " +
+        "   WHERE group_alloc_id=?;",
+        [newGroupData["lab_group_id"], currentGroupData["group_alloc_id"]]
+    );
 
-    // promiseBasedQuery(
-    //     "UPDATE group_allocation " +
-    //     "   SET lab_group_id=? " +
-    //     "   WHERE group_alloc_id=?;",
-    //     [newGroupId, groupAllocId]
-    // );
+    // change the student's lab and also the group allocation's lab to the new lab if different
+    if(newGroupData["unit_off_lab_id"] !== currentGroupData["unit_off_lab_id"]) {
+        await promiseBasedQuery(
+            "UPDATE lab_group " +
+            "SET unit_off_lab_id=? " +
+            "WHERE group_alloc_id=?;",
+            []
+        );
+
+        await promiseBasedQuery(
+            "UPDATE student_lab_allocation " +
+            "   SET unit_off_lab_id=? " +
+            "   WHERE group_alloc_id=?;",
+            []
+        );
+    }
 
     res.status(200).send({wip: "test"});
 }
