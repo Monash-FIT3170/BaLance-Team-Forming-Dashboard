@@ -89,8 +89,15 @@ const addStudent = async (req, res) => {
     res.status(200).send({wip: "test"});
 }
 
-// delete a single student from a unit
-const deleteStudent = async (req, res) => {
+//  separate functions for DELETE functions:
+//  one function deletes a student from the unit including all labs and groups e.d. deleteStudentEnrolment()
+//  one function deletes a student from the group only e.g. deleteStudentGroupAlloc()
+//  this will allow for separation of concerns and cleaner code,
+//  have a try creating the function signatures [keep this one and rename it and make a second one
+//  to either delete from the whole unit or only the group
+
+// delete a single student from the unit
+const deleteStudentEnrolment = async (req, res) => {
     const { // get the URL params
         unitCode,
         year,
@@ -98,36 +105,42 @@ const deleteStudent = async (req, res) => {
         studentId
     } = req.params;
 
-    // todo there should be 2 separate functions:
-    //  one function deletes a student from the unit including all labs and groups e.d. deleteStudentEnrolment()
-    //  one function deletes a student from the group only e.g. deleteStudentGroupAlloc()
-    //  this will allow for separation of concerns and cleaner code,
-    //  have a try creating the function signatures [keep this one and rename it and make a second one]
-    // to either delete from the whole unit or only the group
-    const { deleteStudentFromGroup } = req.query;
-
     // error handling for unexpected issues
     try {
-        if (deleteStudentFromGroup) {
-            await promiseBasedQuery(
-                "DELETE FROM student_lab_allocation " +
-                "WHERE student_id=? AND unit_off_id=(SELECT unit_off_id FROM unit_offering WHERE unit_code=? " +
-                "AND unit_off_year=? AND unit_off_period=?);",
-                [studentId, unitCode, year, period]
-            );
-            // Respond with success message todo later, look into best practices for res messages in DEL requests
-            res.status(200).send({ message: "Student successfully deleted from lab allocations"});
-        } else {
-             // Delete the student from entire unit
-             await promiseBasedQuery(
-                  "DELETE FROM unit_enrolment " +
-                  "WHERE student_id=? AND unit_off_id=(SELECT unit_off_id FROM unit_offering WHERE unit_code=? " +
-                  "AND unit_off_year=? AND unit_off_period=?);",
-                  [studentId, unitCode, year, period]
-             );
-             // Respond with success message
-             res.status(200).send({ message: "Student successfully deleted from specified unit"});
-        }
+        // Delete the student from entire unit
+        await promiseBasedQuery(
+            "DELETE FROM unit_enrolment " +
+            "WHERE student_id=? AND unit_off_id=(SELECT unit_off_id FROM unit_offering WHERE unit_code=? " +
+            "AND unit_off_year=? AND unit_off_period=?);",
+            [studentId, unitCode, year, period]
+        );
+        // Respond with success message
+        res.status(200).send({ message: "Student successfully deleted from specified unit"});
+    } catch (err) {
+        // Respond with error message
+        console.error("An error occurred while deleting", err);
+        res.status(500).send({ message: "An error occurred while deleting"});
+    }
+}
+// delete a single student from group
+const deleteStudentGroupAlloc = async (req, res) => {
+    const { // get the URL params
+        unitCode,
+        year,
+        period,
+        studentId
+    } = req.params;
+    // error handling for unexpected issues
+    try {
+         // Delete student from group
+         await promiseBasedQuery(
+             "DELETE FROM student_lab_allocation " +
+             "WHERE student_id=? AND unit_off_id=(SELECT unit_off_id FROM unit_offering WHERE unit_code=? " +
+             "AND unit_off_year=? AND unit_off_period=?);",
+             [studentId, unitCode, year, period]
+         );
+         // Respond with success message todo later, look into best practices for res messages in DEL requests
+         res.status(200).send({ message: "Student successfully deleted from lab allocations"});
     } catch (err) {
         // Respond with error message
         console.error("An error occurred while deleting", err);
@@ -165,6 +178,7 @@ module.exports = {
     getStudent,
     addAllStudents,
     addStudent,
-    deleteStudent,
+    deleteStudentEnrolment,
+    deleteStudentGroupAlloc,
     updateStudent
 };
