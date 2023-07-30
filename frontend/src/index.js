@@ -10,8 +10,11 @@ root.render(
     <Auth0Provider
     domain='balance.au.auth0.com'
     clientId='pFIT5GPr6OsLiLsyBWGD5GNOBgEY6NbO'
-    redirectUri={window.location.origin}
-
+    authorizationParams={{
+      redirect_uri: window.location.origin,
+      audience: 'balance-api-endpoint',
+      scope: 'openid profile email'
+    }}
     >
     <App />
     </Auth0Provider>

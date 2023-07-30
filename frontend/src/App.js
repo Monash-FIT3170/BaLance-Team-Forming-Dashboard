@@ -21,7 +21,7 @@ const theme = extendTheme({
 
 function App() {
 
-  const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
+  const { loginWithRedirect, logout, user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 
   return (
     <ChakraProvider theme={theme}>
