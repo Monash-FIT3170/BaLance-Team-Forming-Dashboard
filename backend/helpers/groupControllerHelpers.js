@@ -9,7 +9,7 @@ const {promiseBasedQuery} = require("./commonHelpers");
 const createGroupsRandom = () => {
     /**
      * Given a list of students and the labs they are allocated to,
-     * forms groups within each lab randomly
+     * forms gr;poups within each lab randomly
      *
      */
 

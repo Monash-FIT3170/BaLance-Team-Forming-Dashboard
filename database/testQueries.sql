@@ -82,3 +82,14 @@ WHERE lab_group_id IN (
       AND u.unit_off_period = "S1"
   ) AS subquery
 );
+
+-- delete enrolments
+
+
+-- delete group allocations
+
+
+-- delete unif_off_labs
+
+
+-- delete student lab allocations
