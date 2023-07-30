@@ -79,18 +79,15 @@ deleteUnit = async function (req, res) {
         period
     } = req.params;
 
-    db_connection.query(
-        'DELETE FROM unit_offering WHERE ' +
-        'unit_code=? AND unit_off_year=? AND unit_off_period=?;',
-        [unitCode, Number(year), period],
-        (err, results, fields) => {
-            if(err) { console.log(err.stack); }
-            else {
-                console.log(results);
-                res.status(200).json(results);
-            }
-        }
-    )
+    /*SELECT ga.group_alloc_id
+FROM group_allocation ga
+INNER JOIN lab_group lg ON ga.lab_group_id = lg.lab_group_id
+INNER JOIN unit_off_lab l ON l.unit_off_lab_id = lg.unit_off_lab_id
+INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id
+WHERE
+	u.unit_code="FIT2099"
+	AND u.unit_off_year=2023
+	AND u.unit_off_period='S1';*/
 }
 
 // FIXME SQL query not working
