@@ -11,7 +11,8 @@ const { // import controller functions for route handlers
     getStudent,
     addAllStudents,
     addStudent,
-    deleteStudent,
+    deleteStudentEnrolment,
+    deleteStudentGroupAlloc,
     updateStudent
 } = require('../controllers/studentController');
 
@@ -28,9 +29,10 @@ router.post('/:unitCode/:year/:period', addAllStudents);
 router.post('/:unitCode/:year/:period/new', addStudent);
 
 // delete a specific student from a unit
-router.delete('/:unitCode/:year/:period/:studId', deleteStudent);
+router.delete('/:unitCode/:year/:period/:studId', deleteStudentEnrolment);
 
-// todo @nethara add a delete route that takes in the new delete function here
+// delete a specific student from a group
+router.delete('/:unitCode/:year/:period/:studId', deleteStudentGroupAlloc);
 
 // update a student for a unit
 router.patch('/:unitCode/:year/:period/:studId', updateStudent);
