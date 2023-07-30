@@ -31,8 +31,7 @@ app.use('/api/units/', unitRoutes);
 app.use('/api/groups/', groupRoutes);
 app.use('/api/students/', studentRoutes);
 
-// TODO connect to mysql -> listen to port after connection
 // listen to port
 app.listen(process.env.PORT || 8080, () => {
-    console.log(`listening to port ${process.env.PORT}`);
+    console.log(`listening to port ${process.env.PORT || 8080}`);
 });

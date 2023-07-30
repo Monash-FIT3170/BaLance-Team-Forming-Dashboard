@@ -19,5 +19,5 @@ COPY . .
 EXPOSE 8080
 
 # run on container starting
-CMD ["nodemon", "server.js"]
+CMD ["nodemon", "-L", "server.js"]
 
