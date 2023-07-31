@@ -13,9 +13,6 @@ const {
     shuffle
 } = require("../helpers/groupControllerHelpers")
 
-const {insertUnitOffLabs} = require("../helpers/studentControllerHelpers");
-
-
 // get all groups from a unit
 const getAllGroups = async (req, res) => {
     const {
@@ -105,6 +102,7 @@ const createUnitGroups = async (req, res) => {
 
     /* GET ALL OF THE STUDENTS ASSOCIATED WITH THIS UNIT SORTED BY LAB */
     const unitOffId = await selectUnitOffKey(unitCode, year, period);
+    // fixme the method of selecting students depends on the formation strategy
     const students = await promiseBasedQuery(
         'SELECT stud.stud_unique_id, alloc.unit_off_lab_id ' +
         'FROM student stud ' +
@@ -119,24 +117,37 @@ const createUnitGroups = async (req, res) => {
         [unitCode, year, period]
     );
 
+    console.log('students is created by getting relevant student + personality data from DB')
+    console.log(students);
     // students = [{stud_unique_id: INT},{stud_unique_id: INT}]
-    // console.log("-----------------\n", unitCode, year, period);
     console.log(`group size: ${groupSize}, variance: ${variance}, strat: ${strategy}`);
 
     /* SPLIT BY LAB | labStudents = [ lab_id: [student_unique_ids], lab_id: [student_unique_ids] ] */
+    // fixme splitting by lab should consider that different attributes exist per student given the strategy
     const labStudents = { };
     students.forEach((student) => {
         if(!labStudents[student.unit_off_lab_id]) { labStudents[student.unit_off_lab_id] = []; }
         labStudents[student.unit_off_lab_id].push(student.stud_unique_id);
     });
 
-    /* RANDOMISE THE, STUDENTS WITHIN EACH LAB NUMBER todo randomise first or get random index when assigning? */
+    console.log('labStudents is created by splitting by lab')
+    console.log(labStudents)
+
+    /* RANDOMISE THE, STUDENTS WITHIN EACH LAB NUMBER */
     /* THEN SPLIT THE RANDOMISED LIST INTO GROUPS OF n AS SPECIFIED IN REQ */
+    // fixme shuffle is unique to random strategy
     for(let lab in labStudents) { labStudents[lab] = shuffle(labStudents[lab]); }
+    console.log('lab students is randomised only in random')
+    console.log(labStudents)
+    // fixme this just splits students, not randomises, what is called depends on the strategy
     for(let lab in labStudents) {
         labStudents[lab] = createGroupsRandom(unitOffId, lab, labStudents[lab], groupSize, variance);
     }
+    console.log('lab students is split into groups of X')
+    console.log(labStudents)
 
+
+    // TODO i think here onwards does not care about strategy ///////////////////////////////////////////
     /* INSERT THE NEW GROUPS INTO THE DATABASE */
     // determine the number of groups to be inserted to database -> inserted as [unit_off_lab_id, group_number]
     const groupInsertData = [];
@@ -169,6 +180,7 @@ const createUnitGroups = async (req, res) => {
     );
 
     // for each group, pop a group from the lab key in object and form the allocation
+    // todo verify that here onwards is strategy agnostic
     for(let i=0; i<numGroups; i++) {
         const group = groupData.pop();
         const groupStudents = labStudents[group.unit_off_lab_id].pop()
@@ -184,7 +196,7 @@ const createUnitGroups = async (req, res) => {
     res.status(200).send();
 }
 
-// re-create (shuffle) unit groups
+// re-create (i.e. shuffle) unit groups
 const shuffleUnitGroups = async (req, res) => {
     const {
         unitCode,
@@ -312,6 +324,7 @@ const moveStudent = async (req, res) => {
 
 /* SUPPLEMENTARY FUNCTIONS. TO BE REFACTORED */
 const createGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) => {
+    // fixme this doesn't 'create' groups, it just splits a list of students in prep for insert
     // console.log(`| unit id: ${unitOffId} | lab id: ${labId} | students: ${studentsList} |`);
     let groups = [];
     for (let i = 0; i < studentsList.length; i += groupSize) {
