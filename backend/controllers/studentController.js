@@ -80,22 +80,6 @@ const addAllStudents = async (req, res) => {
     res.status(200).send();
 }
 
-// add a single student to a unit
-const addStudent = async (req, res) => {
-    /* todo ADD STUDENT IF NOT EXISTS */
-    /* todo ADD STUDENT TO UNIT */
-    /* todo ADD STUDENT TO LAB */
-    /* todo UPDATE UNIT ENROLMENT COUNT */
-    res.status(200).send({wip: "test"});
-}
-
-//  separate functions for DELETE functions:
-//  one function deletes a student from the unit including all labs and groups e.d. deleteStudentEnrolment()
-//  one function deletes a student from the group only e.g. deleteStudentGroupAlloc()
-//  this will allow for separation of concerns and cleaner code,
-//  have a try creating the function signatures [keep this one and rename it and make a second one
-//  to either delete from the whole unit or only the group
-
 // delete a single student from the unit
 const deleteStudentEnrolment = async (req, res) => {
     const { // get the URL params
@@ -122,6 +106,7 @@ const deleteStudentEnrolment = async (req, res) => {
         res.status(500).send({ message: "An error occurred while deleting"});
     }
 }
+
 // delete a single student from group
 const deleteStudentGroupAlloc = async (req, res) => {
     const { // get the URL params
@@ -177,7 +162,6 @@ module.exports = {
     getAllStudents,
     getStudent,
     addAllStudents,
-    addStudent,
     deleteStudentEnrolment,
     deleteStudentGroupAlloc,
     updateStudent
