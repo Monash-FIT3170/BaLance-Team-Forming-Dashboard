@@ -51,7 +51,7 @@ ALTER TABLE student AUTO_INCREMENT=100000000;
 
 CREATE TABLE IF NOT EXISTS unit_off_lab (
     unit_off_lab_id INT AUTO_INCREMENT COMMENT 'global unique identifier for a lab that is part of some unit offering',
-    unit_off_id INT,
+    unit_off_id INT COMMENT 'unique identifier for a unit offering',
     lab_number INT COMMENT 'a generic identifier for a lab internally by a specific unit offering',
     CONSTRAINT pk_lab PRIMARY KEY (unit_off_lab_id),
     CONSTRAINT ck_lab UNIQUE (unit_off_id, lab_number)
@@ -70,8 +70,11 @@ ALTER TABLE lab_group AUTO_INCREMENT=100000000;
 CREATE TABLE IF NOT EXISTS unit_enrolment ( -- connection between student and unit offering
     enrolment_id INT AUTO_INCREMENT COMMENT 'unique identifier to refer to a students enrolment to a unit offering',
     stud_unique_id INT,
-    unit_off_id INT,
+    unit_off_id INT COMMENT 'unique identifier for a unit offering',
     enrolment_status ENUM('active', 'inactive'), -- todo ask Rio if we still store and maintain this
+    unit_code VARCHAR(50) COMMENT 'code used by an institute to refer to an offering',
+    unit_off_year INTEGER COMMENT 'the year in which the offering is made',
+    unit_off_period VARCHAR(20) COMMENT 'the term which the offering is held e.g. S2',
     CONSTRAINT pk_unit_enrolment PRIMARY KEY (enrolment_id),
     CONSTRAINT ck_unit_enrolment UNIQUE (stud_unique_id, unit_off_id)
 );
@@ -105,8 +108,10 @@ ALTER TABLE student_lab_allocation ADD FOREIGN KEY (stud_unique_id) REFERENCES s
 -- staff to unit_offering
 ALTER TABLE unit_offering ADD FOREIGN KEY (staff_unique_id) REFERENCES staff(staff_unique_id);
 
--- units to student enrolment, staff employment, unit labs
+-- units to student enrolment, unit labs
 ALTER TABLE unit_enrolment ADD FOREIGN KEY (unit_off_id) REFERENCES unit_offering(unit_off_id);
+ALTER TABLE unit_enrolment ADD FOREIGN KEY (unit_off_period, unit_off_year, unit_code)
+    REFERENCES unit_offering(unit_off_period, unit_off_year, unit_code);
 ALTER TABLE unit_off_lab ADD FOREIGN KEY (unit_off_id) REFERENCES unit_offering(unit_off_id);
 
 -- labs to student allocations, group allocations
