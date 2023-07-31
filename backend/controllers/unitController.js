@@ -5,6 +5,10 @@
  * */
 
 const db_connection = require('../db_connection');
+const {
+    promiseBasedQuery,
+    selectUnitOffKey
+} = require("../helpers/commonHelpers");
 
 // gets all units for a user
 const getAllUnits = async (req, res) => {
@@ -28,20 +32,15 @@ const getUnit = async (req, res) => {
         period
     } = req.params
 
-    db_connection.query(
+    const [unitData] = promiseBasedQuery(
         'SELECT * ' +
         'FROM unit_offering ' +
         'WHERE unit_code=? AND unit_off_year=? AND unit_off_period=?;',
-        [unitCode, Number(year), period],
-        (err, results, fields) => {
-            if(err) { console.error(err.stack); }
-            else {
-                [unitData] = results; // extract unit object from array
-                console.log(unitData);
-                res.status(200).json(unitData);
-            }
-        }
-    )
+        [unitCode, Number(year), period]
+    );
+
+    console.log(unitData);
+    res.status(200).json(unitData);
 }
 
 const addUnit = async (req, res) => {
@@ -53,22 +52,34 @@ const addUnit = async (req, res) => {
         period,
     } = req.body
 
-    console.log(newUnit)
+    try {
+        // note: unique id has auto_increment enabled thus not provided
+        const insertQueryResult = await promiseBasedQuery(
+            'INSERT INTO unit_offering ' +
+            '(unit_code, unit_name, unit_off_year, unit_off_period, enrolment_count) ' +
+            'VALUES (?, ?, ?, ?, ?);',
+            [unitCode, unitName, Number(year), period, 0]
+        )
 
-    // note: unique id has auto_increment enabled thus not provided
-    db_connection.query(
-        'INSERT INTO unit_offering ' +
-        '(unit_code, unit_name, unit_off_year, unit_off_period, enrolment_count) ' +
-        'VALUES (?, ?, ?, ?);',
-        [unitCode, unitName, Number(year), period, 0],
-        (err, results, fields) => {
-            if(err) { console.log(err.stack); }
-            else {
-                console.log(results);
-                res.status(200).json(results);
-            }
+        console.log(`Successfully added new unit ${JSON.stringify(newUnit)}`);
+        res.status(200).json(newUnit);
+
+    } catch(error) {
+        console.log(error.code);
+
+        let errorMsg;
+        switch (error.code) {
+            case 'ER_DUP_ENTRY':
+                errorMsg = `Error: the unit offering ${unitCode}, ${year}, ${period} already exists`;
+                break;
+            case 'ER_BAD_FIELD_ERROR':
+                errorMsg = `Error: year ${year} is not a number`;
+                break;
+            default:
+                errorMsg = "Error: something went wrong :(";
         }
-    )
+        res.status(400).send(errorMsg);
+    }
 }
 
 // TODO delete associated enrolments, labs etc
