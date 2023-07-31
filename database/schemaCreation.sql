@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS unit_offering (
     unit_name VARCHAR(50),
     unit_off_year INTEGER COMMENT 'the year in which the offering is made',
     unit_off_period VARCHAR(20) COMMENT 'the term which the offering is held e.g. S2',
+    staff_unique_id INT COMMENT 'unique identifier used by database for staff',
     enrolment_count INT,
     CONSTRAINT pk_unit_off PRIMARY KEY (unit_off_id),
     CONSTRAINT ck_unit_off UNIQUE (unit_code, unit_off_year, unit_off_period)
@@ -94,15 +95,6 @@ CREATE TABLE IF NOT EXISTS group_allocation ( -- connection between student and 
 );
 ALTER TABLE group_allocation AUTO_INCREMENT=100000000;
 
-CREATE TABLE IF NOT EXISTS unit_off_employment ( -- connection between staff and unit offering
-    employment_id INT AUTO_INCREMENT COMMENT 'unique identifier for a staff employment to a unit oferring',
-    staff_unique_id INT,
-    unit_off_id INT,
-    employment_status ENUM('active', 'inactive'),
-    CONSTRAINT pk_staff_employment PRIMARY KEY (employment_id),
-    CONSTRAINT ck_staff_employment UNIQUE (staff_unique_id, unit_off_id)
-);
-ALTER TABLE unit_off_employment AUTO_INCREMENT=100000000;
 
 -- FOREIGN KEY CREATION
 -- student to enrolment, group allocation, lab allocation
@@ -110,12 +102,11 @@ ALTER TABLE unit_enrolment ADD FOREIGN KEY (stud_unique_id) REFERENCES student(s
 ALTER TABLE group_allocation ADD FOREIGN KEY (stud_unique_id) REFERENCES student(stud_unique_id);
 ALTER TABLE student_lab_allocation ADD FOREIGN KEY (stud_unique_id) REFERENCES student(stud_unique_id);
 
--- staff to employment and lab allocation
-ALTER TABLE unit_off_employment ADD FOREIGN KEY (staff_unique_id) REFERENCES staff(staff_unique_id);
+-- staff to unit_offering
+ALTER TABLE unit_offering ADD FOREIGN KEY (staff_unique_id) REFERENCES staff(staff_unique_id);
 
 -- units to student enrolment, staff employment, unit labs
 ALTER TABLE unit_enrolment ADD FOREIGN KEY (unit_off_id) REFERENCES unit_offering(unit_off_id);
-ALTER TABLE unit_off_employment ADD FOREIGN KEY (unit_off_id) REFERENCES unit_offering(unit_off_id);
 ALTER TABLE unit_off_lab ADD FOREIGN KEY (unit_off_id) REFERENCES unit_offering(unit_off_id);
 
 -- labs to student allocations, group allocations
@@ -124,5 +115,3 @@ ALTER TABLE lab_group ADD FOREIGN KEY (unit_off_lab_id) REFERENCES unit_off_lab(
 
 -- groups to group allocations
 ALTER TABLE group_allocation ADD FOREIGN KEY (lab_group_id) REFERENCES lab_group(lab_group_id);
-
--- todo PERSONALITY QUIZ IMPLEMENTATION
