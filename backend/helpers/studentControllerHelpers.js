@@ -39,14 +39,18 @@ const selectStudentsKeys = async (studentEmails) => {
     }
 }
 
-const insertStudentEnrolment = async (studentKeys, unitOffId) => {
+const insertStudentEnrolment = async (studentKeys, unitOffId, unitCode, year, period) => {
     /**
      * adds enrolment data given an array of student keys and a unit offering id,
      */
     try {
-        const enrolmentInsertData = studentKeys.map((student) => {return [student.stud_unique_id, unitOffId]})
+        const enrolmentInsertData = studentKeys.map((student) => {
+            return [student.stud_unique_id, unitOffId, year, period]
+        })
+
         return promiseBasedQuery(
-            'INSERT IGNORE INTO unit_enrolment (stud_unique_id, unit_off_id) VALUES ?;',
+            'INSERT IGNORE INTO unit_enrolment ' +
+            '(stud_unique_id, unit_off_id, unit_code, unit_off_year, unit_off_period) VALUES ?;',
             [enrolmentInsertData]
         )
     } catch(error) {
@@ -54,7 +58,7 @@ const insertStudentEnrolment = async (studentKeys, unitOffId) => {
     }
 }
 
-const insertUnitOffLabs = async (requestBody, unitOffId) => {
+const insertUnitOffLabs = async (requestBody, unitOffId, unitCode, year, period) => {
     /**
      * Given a list of students from a request body, determines the number of labs
      * in an offering and creates them in the database
@@ -73,7 +77,7 @@ const insertUnitOffLabs = async (requestBody, unitOffId) => {
         // formulate data into the desired format: [unit_off_id, lab_number]
         let labInsertData = []
         for (let i=1; i<=numLabs; i++) {
-            let lab = [unitOffId, i];
+            let lab = [unitOffId, i, unitCode, year, period];
             labInsertData.push(lab);
         }
 

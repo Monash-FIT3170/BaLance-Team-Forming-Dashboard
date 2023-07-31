@@ -6,7 +6,7 @@
 -- START FROM CLEAN SLATE
 DROP SCHEMA IF EXISTS student_group_db;
 
--- DATABASE CREATION AND SPECIFICATION todo consider encryption options
+-- DATABASE CREATION AND SPECIFICATION
 CREATE DATABASE IF NOT EXISTS student_group_db;
 USE student_group_db;
 
@@ -53,12 +53,15 @@ CREATE TABLE IF NOT EXISTS unit_off_lab (
     unit_off_lab_id INT AUTO_INCREMENT COMMENT 'global unique identifier for a lab that is part of some unit offering',
     unit_off_id INT COMMENT 'unique identifier for a unit offering',
     lab_number INT COMMENT 'a generic identifier for a lab internally by a specific unit offering',
+    unit_code VARCHAR(50) COMMENT 'code used by an institute to refer to an offering',
+    unit_off_year INTEGER COMMENT 'the year in which the offering is made',
+    unit_off_period VARCHAR(20) COMMENT 'the term which the offering is held e.g. S2',
     CONSTRAINT pk_lab PRIMARY KEY (unit_off_lab_id),
     CONSTRAINT ck_lab UNIQUE (unit_off_id, lab_number)
 );
 ALTER TABLE unit_off_lab AUTO_INCREMENT=100000000;
 
-CREATE TABLE IF NOT EXISTS lab_group ( -- todo a group_id used internally by a unit offering?
+CREATE TABLE IF NOT EXISTS lab_group (
     lab_group_id INT AUTO_INCREMENT COMMENT 'global unique identifier for a group part of some unit offering''s lab',
     unit_off_lab_id INT,
     group_number INT COMMENT 'a generic identifier for a group internally by a specific unit offering',
@@ -110,9 +113,11 @@ ALTER TABLE unit_offering ADD FOREIGN KEY (staff_unique_id) REFERENCES staff(sta
 
 -- units to student enrolment, unit labs
 ALTER TABLE unit_enrolment ADD FOREIGN KEY (unit_off_id) REFERENCES unit_offering(unit_off_id);
-ALTER TABLE unit_enrolment ADD FOREIGN KEY (unit_off_period, unit_off_year, unit_code)
-    REFERENCES unit_offering(unit_off_period, unit_off_year, unit_code);
+ALTER TABLE unit_enrolment ADD FOREIGN KEY (unit_code, unit_off_year, unit_off_period)
+    REFERENCES unit_offering(unit_code, unit_off_year, unit_off_period);
 ALTER TABLE unit_off_lab ADD FOREIGN KEY (unit_off_id) REFERENCES unit_offering(unit_off_id);
+ALTER TABLE unit_off_lab ADD FOREIGN KEY (unit_code, unit_off_year, unit_off_period)
+    REFERENCES unit_offering(unit_code, unit_off_year, unit_off_period);
 
 -- labs to student allocations, group allocations
 ALTER TABLE student_lab_allocation ADD FOREIGN KEY (unit_off_lab_id) REFERENCES unit_off_lab(unit_off_lab_id);
