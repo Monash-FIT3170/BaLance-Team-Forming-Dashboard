@@ -7,7 +7,8 @@ USE student_group_db;
 
 /* POPULATE THE DATABASE WITH SAMPLE DATA */
 -- Insert 1 unit
-INSERT INTO unit_offering VALUES 
+INSERT INTO unit_offering (unit_off_id, unit_code, unit_name, unit_off_year, unit_off_period, enrolment_count)
+VALUES 
 	(1600782300, "FIT2099", "OO Design & Implementation", 2023, "S1", 0),
 	(1600782359, "FIT2004", "Algorithms & Datastructures", 2019, "S1", 0),
     (1600782371, "FIT3170", "Software Engineering Practice", 2023, "FY", 0),

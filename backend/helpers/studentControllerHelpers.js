@@ -45,7 +45,7 @@ const insertStudentEnrolment = async (studentKeys, unitOffId, unitCode, year, pe
      */
     try {
         const enrolmentInsertData = studentKeys.map((student) => {
-            return [student.stud_unique_id, unitOffId, year, period]
+            return [student.stud_unique_id, unitOffId, unitCode, year, period]
         })
 
         return promiseBasedQuery(
@@ -81,13 +81,17 @@ const insertUnitOffLabs = async (requestBody, unitOffId, unitCode, year, period)
             labInsertData.push(lab);
         }
 
-        return promiseBasedQuery('INSERT IGNORE INTO unit_off_lab (unit_off_id, lab_number) VALUES ?;', [labInsertData])
+        return promiseBasedQuery(
+            'INSERT IGNORE INTO unit_off_lab (unit_off_id, lab_number, unit_code, unit_off_year, unit_off_period) ' +
+            'VALUES ?;',
+            [labInsertData]
+        )
     } catch(error) {
         throw error
     }
 }
 
-const insertStudentLabAllocations = async (requestBody, unitOffId) => {
+const insertStudentLabAllocations = async (requestBody, unitOffId, unitCode, year, period) => {
     try {
         /* SELECT labs and create a dictionary of form
         * {
@@ -137,10 +141,14 @@ const insertStudentLabAllocations = async (requestBody, unitOffId) => {
             // console.log(labNumber, labPrimaryKey, labStudentKeys);
 
             // combine data into a form compatible with the database schema
-            const insertData = labStudentKeys.map((studentKey) => { return [labPrimaryKey, studentKey.stud_unique_id] });
+            const insertData = labStudentKeys.map((studentKey) => {
+                return [labPrimaryKey, studentKey.stud_unique_id, unitCode, year, period]
+            });
             // insert the data into the database
             await promiseBasedQuery(
-                "INSERT IGNORE INTO student_lab_allocation (unit_off_lab_id, stud_unique_id) VALUES ?;", [insertData]
+                "INSERT IGNORE INTO student_lab_allocation " +
+                "(unit_off_lab_id, stud_unique_id, unit_code, unit_off_year, unit_off_period) VALUES ?;",
+                [insertData]
             );
         }
     } catch(error) {

@@ -87,6 +87,9 @@ CREATE TABLE IF NOT EXISTS student_lab_allocation ( -- connection between studen
     stud_lab_alloc_id INT AUTO_INCREMENT COMMENT 'unique identifier referring to students allocation to a lab',
     unit_off_lab_id INT,
     stud_unique_id INT,
+    unit_code VARCHAR(50) COMMENT 'code used by an institute to refer to an offering',
+    unit_off_year INTEGER COMMENT 'the year in which the offering is made',
+    unit_off_period VARCHAR(20) COMMENT 'the term which the offering is held e.g. S2',
     CONSTRAINT pk_stud_lab_alloc PRIMARY KEY (stud_lab_alloc_id),
     CONSTRAINT ck_stud_lab_alloc UNIQUE (unit_off_lab_id, stud_unique_id)
 );
@@ -115,8 +118,12 @@ ALTER TABLE unit_offering ADD FOREIGN KEY (staff_unique_id) REFERENCES staff(sta
 ALTER TABLE unit_enrolment ADD FOREIGN KEY (unit_off_id) REFERENCES unit_offering(unit_off_id);
 ALTER TABLE unit_enrolment ADD FOREIGN KEY (unit_code, unit_off_year, unit_off_period)
     REFERENCES unit_offering(unit_code, unit_off_year, unit_off_period);
+
 ALTER TABLE unit_off_lab ADD FOREIGN KEY (unit_off_id) REFERENCES unit_offering(unit_off_id);
 ALTER TABLE unit_off_lab ADD FOREIGN KEY (unit_code, unit_off_year, unit_off_period)
+    REFERENCES unit_offering(unit_code, unit_off_year, unit_off_period);
+
+ALTER TABLE student_lab_allocation ADD FOREIGN KEY (unit_code, unit_off_year, unit_off_period)
     REFERENCES unit_offering(unit_code, unit_off_year, unit_off_period);
 
 -- labs to student allocations, group allocations

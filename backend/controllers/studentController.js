@@ -75,7 +75,7 @@ const addAllStudents = async (req, res) => {
 
     /* CREATE THE LABS ASSOCIATED WITH THE UNIT ENROLMENT AND ALLOCATE THE STUDENTS */
     await insertUnitOffLabs(requestBody, unitOffId, unitCode, year, period); // ensure lab no.s don't repeat in units
-    await insertStudentLabAllocations(requestBody, unitOffId); // fixme
+    await insertStudentLabAllocations(requestBody, unitOffId, unitCode, year, period);
 
     res.status(200).send();
 }
