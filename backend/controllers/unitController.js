@@ -106,26 +106,25 @@ deleteUnit = async function (req, res) {
     
     await promiseBasedQuery(
         "DELETE FROM group_allocation " + 
-        "WHERE group_alloc_id  = ?; "
+        "WHERE group_alloc_id  = ?; ",
         [group_alloc_id]
     );
 
     const lab_group_id = await promiseBasedQuery(
-        "SELECT lg.lab_group_id " + 
+        "SELECT lg.lab_group_id " +
         "FROM lab_group lg " + 
-         
         "INNER JOIN unit_off_lab l ON l.unit_off_lab_id = lg.unit_off_lab_id "+
-        "INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " + 
+        "INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " +
         "WHERE " + 
-            "u.unit_code= ? " + 
-            "AND u.unit_off_year=? " +
-            "AND u.unit_off_period='?; "
-            [unitCode, year, period] 
+        "u.unit_code=? " + 
+        "AND u.unit_off_year=? " + 
+        "AND u.unit_off_period=?;",
+        [unitCode, year, period] 
     )
 
     await promiseBasedQuery(
         "DELETE FROM lab_group " + 
-        "WHERE lab_group_id = ?; "
+        "WHERE lab_group_id = ?; ",
         [lab_group_id]
     )
 
@@ -136,13 +135,13 @@ deleteUnit = async function (req, res) {
         "WHERE " + 
             "u.unit_code= ? " + 
             "AND u.unit_off_year=? " +
-            "AND u.unit_off_period='?; "
+            "AND u.unit_off_period='?; ",
             [unitCode, year, period] 
     )
 
     await promiseBasedQuery(
         "DELETE FROM unit_off_lab " + 
-        "WHERE lab_group_id = ?; "
+        "WHERE lab_group_id = ?; ",
         [unit_off_lab_id]
     )
 
@@ -152,13 +151,13 @@ deleteUnit = async function (req, res) {
         "WHERE " + 
             "u.unit_code= ? " + 
             "AND u.unit_off_year=? " +
-            "AND u.unit_off_period='?; "
+            "AND u.unit_off_period='?; ",
             [unitCode, year, period]
     )
 
     await promiseBasedQuery(
         "DELETE FROM unit_offering " + 
-        "WHERE unit_off_id = ?; "
+        "WHERE unit_off_id = ?; ",
         [unit_off_id]
     )
     
