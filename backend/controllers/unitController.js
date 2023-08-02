@@ -103,10 +103,11 @@ deleteUnit = async function (req, res) {
         [unitCode, year, period] 
     )
     
+    console.log(group_alloc_id)
     
     await promiseBasedQuery(
         "DELETE FROM group_allocation " + 
-        "WHERE group_alloc_id  = ?; ",
+        "WHERE group_alloc_id=?; ",
         [group_alloc_id]
     );
 
@@ -124,7 +125,7 @@ deleteUnit = async function (req, res) {
 
     await promiseBasedQuery(
         "DELETE FROM lab_group " + 
-        "WHERE lab_group_id = ?; ",
+        "WHERE lab_group_id = ?;",
         [lab_group_id]
     )
 
