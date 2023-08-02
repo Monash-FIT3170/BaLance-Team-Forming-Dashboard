@@ -92,26 +92,25 @@ deleteUnit = async function (req, res) {
 
 
     const group_alloc_id = await promiseBasedQuery(
-        "SELECT ga.group_alloc_id " + 
-        "FROM group_allocation ga " + 
-        "INNER JOIN lab_group lg ON ga.lab_group_id = lg.lab_group_id " + 
+        "SELECT ga.group_alloc_id FROM group_allocation ga "+
+        "INNER JOIN lab_group lg ON ga.lab_group_id = lg.lab_group_id "+
         "INNER JOIN unit_off_lab l ON l.unit_off_lab_id = lg.unit_off_lab_id "+
-        "INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " + 
-        "WHERE " + 
-            "u.unit_code= ? " + 
-            "AND u.unit_off_year=? " +
-            "AND u.unit_off_period='?; "
-            [unitCode, year, period] 
+        "INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " +
+        "WHERE " +
+            "u.unit_code=? " + 
+            "AND u.unit_off_year=? " + 
+            "AND u.unit_off_period=?;",
+        [unitCode, year, period] 
     )
     
     
-    await promisedBasedQuery(
-        "DELETE FROM group_allocation ga " + 
-        "WHERE ga.group_alloc_id  = ?; "
+    await promiseBasedQuery(
+        "DELETE FROM group_allocation " + 
+        "WHERE group_alloc_id  = ?; "
         [group_alloc_id]
     );
 
-    const lab_group_id = await promisedBasedQuery(
+    const lab_group_id = await promiseBasedQuery(
         "SELECT lg.lab_group_id " + 
         "FROM lab_group lg " + 
          
@@ -124,9 +123,9 @@ deleteUnit = async function (req, res) {
             [unitCode, year, period] 
     )
 
-    await promisedBasedQuery(
-        "DELETE FROM lab_group lg " + 
-        "WHERE lg.lab_group_id = ?; "
+    await promiseBasedQuery(
+        "DELETE FROM lab_group " + 
+        "WHERE lab_group_id = ?; "
         [lab_group_id]
     )
 
@@ -141,9 +140,9 @@ deleteUnit = async function (req, res) {
             [unitCode, year, period] 
     )
 
-    await promisedBasedQuery(
-        "DELETE FROM unit_off_lab u " + 
-        "WHERE u.lab_group_id = ?; "
+    await promiseBasedQuery(
+        "DELETE FROM unit_off_lab " + 
+        "WHERE lab_group_id = ?; "
         [unit_off_lab_id]
     )
 
@@ -157,9 +156,9 @@ deleteUnit = async function (req, res) {
             [unitCode, year, period]
     )
 
-    await promisedBasedQuery(
-        "DELETE FROM unit_offering u " + 
-        "WHERE u.unit_off_id = ?; "
+    await promiseBasedQuery(
+        "DELETE FROM unit_offering " + 
+        "WHERE unit_off_id = ?; "
         [unit_off_id]
     )
     
