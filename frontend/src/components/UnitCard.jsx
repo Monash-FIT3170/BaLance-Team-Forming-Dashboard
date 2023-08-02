@@ -49,6 +49,31 @@ const UnitCard = (unit) => {
   //navigate to the groups for the current unit if it is clicked
   const navigateToUnitOffering = () => navigate(`/groups/${unit_code}/${unit_off_year}/${unit_off_period}`);
 
+  // // handle delete unit and posting it to the backend
+  // const handleDeleteUnit = (event) => {
+  //   event.preventDefault();
+  //   console.log("deleting unit")
+  //   const unitObject = {
+  //     unitCode: unitCode,
+  //     year: unitYearOffering,
+  //     period: unitSemesterOffering
+  //   };
+
+  //   fetch('http://localhost:8080/api/units/', {
+  //     method: 'DELETE',
+  //     headers: {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(unitObject),
+  //   });
+
+  //   let answer = window.confirm('Unit deleted successfully');
+  //   if (answer) {
+  //     onCloseAdd();
+  //   }
+  // };
+
   return (
     <Flex
       borderRadius="20px"
@@ -134,7 +159,7 @@ const UnitCard = (unit) => {
                 fontSize="xl"
                 me="auto"
               >
-                <Button colorScheme = 'red' onClick={onDeleteUnit}>
+                <Button colorScheme = 'red' >
                   DELETE
                 </Button>
               </Text>
