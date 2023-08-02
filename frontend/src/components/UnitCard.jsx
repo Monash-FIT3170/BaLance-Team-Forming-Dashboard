@@ -109,7 +109,7 @@ const UnitCard = (unit) => {
         >
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>FIT3170</ModalHeader>
+            <ModalHeader>{unit_code}</ModalHeader>
             <ModalCloseButton />
             <ModalBody pb={6}>{`${enrollment_count} students enrolled`}</ModalBody>
             <ModalFooter>
@@ -124,6 +124,18 @@ const UnitCard = (unit) => {
                 <Button>
                   {' '}
                   <Icon as={EditIcon}></Icon>{' '}
+                </Button>
+              </Text>
+              <Text
+                my="auto"
+                fontWeight="800"
+                color={mainText}
+                textAlign="left"
+                fontSize="xl"
+                me="auto"
+              >
+                <Button colorScheme = 'red' onClick={onDeleteUnit}>
+                  DELETE
                 </Button>
               </Text>
               <Button onClick={onCloseDetails} mr={3}>

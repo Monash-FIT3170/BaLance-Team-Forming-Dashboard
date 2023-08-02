@@ -90,15 +90,81 @@ deleteUnit = async function (req, res) {
         period
     } = req.params;
 
-    /*SELECT ga.group_alloc_id
-FROM group_allocation ga
-INNER JOIN lab_group lg ON ga.lab_group_id = lg.lab_group_id
-INNER JOIN unit_off_lab l ON l.unit_off_lab_id = lg.unit_off_lab_id
-INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id
-WHERE
-	u.unit_code="FIT2099"
-	AND u.unit_off_year=2023
-	AND u.unit_off_period='S1';*/
+
+    const group_alloc_id = await promiseBasedQuery(
+        "SELECT ga.group_alloc_id " + 
+        "FROM group_allocation ga " + 
+        "INNER JOIN lab_group lg ON ga.lab_group_id = lg.lab_group_id " + 
+        "INNER JOIN unit_off_lab l ON l.unit_off_lab_id = lg.unit_off_lab_id "+
+        "INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " + 
+        "WHERE " + 
+            "u.unit_code= ? " + 
+            "AND u.unit_off_year=? " +
+            "AND u.unit_off_period='?; "
+            [unitCode, year, period] 
+    )
+    
+    
+    await promisedBasedQuery(
+        "DELETE FROM group_allocation ga " + 
+        "WHERE ga.group_alloc_id  = ?; "
+        [group_alloc_id]
+    );
+
+    const lab_group_id = await promisedBasedQuery(
+        "SELECT lg.lab_group_id " + 
+        "FROM lab_group lg " + 
+         
+        "INNER JOIN unit_off_lab l ON l.unit_off_lab_id = lg.unit_off_lab_id "+
+        "INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " + 
+        "WHERE " + 
+            "u.unit_code= ? " + 
+            "AND u.unit_off_year=? " +
+            "AND u.unit_off_period='?; "
+            [unitCode, year, period] 
+    )
+
+    await promisedBasedQuery(
+        "DELETE FROM lab_group lg " + 
+        "WHERE lg.lab_group_id = ?; "
+        [lab_group_id]
+    )
+
+    const unit_off_lab_id = await promiseBasedQuery(
+        "SELECT unit_off_lab_id " + 
+        "FROM unit_off_lab l " + 
+        "INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " + 
+        "WHERE " + 
+            "u.unit_code= ? " + 
+            "AND u.unit_off_year=? " +
+            "AND u.unit_off_period='?; "
+            [unitCode, year, period] 
+    )
+
+    await promisedBasedQuery(
+        "DELETE FROM unit_off_lab u " + 
+        "WHERE u.lab_group_id = ?; "
+        [unit_off_lab_id]
+    )
+
+    const unit_off_id = await promiseBasedQuery(
+        "SELECT unit_off_lab_id " + 
+        "FROM unit_off_lab l " + 
+        "WHERE " + 
+            "u.unit_code= ? " + 
+            "AND u.unit_off_year=? " +
+            "AND u.unit_off_period='?; "
+            [unitCode, year, period]
+    )
+
+    await promisedBasedQuery(
+        "DELETE FROM unit_offering u " + 
+        "WHERE u.unit_off_id = ?; "
+        [unit_off_id]
+    )
+    
+    
+
 }
 
 // FIXME SQL query not working
