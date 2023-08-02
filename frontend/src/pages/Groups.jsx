@@ -20,7 +20,8 @@ function Groups() {
   const navigate = useNavigate();
   const [groups, setGroups] = useState([]);
 
-  const { // Confirmation popup for shuffling groups
+  // Confirmation popup for shuffling groups
+  const {
     isOpen,
     onOpen,
     onClose
