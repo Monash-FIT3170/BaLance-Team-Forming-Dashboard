@@ -92,12 +92,40 @@ const deleteStudentEnrolment = async (req, res) => {
     // error handling for unexpected issues
     try {
         // Delete the student from entire unit
-        await promiseBasedQuery(
-            "DELETE FROM unit_enrolment " +
+        const [studentEnrolment] = await promiseBasedQuery(
+            "SELECT stud_unique_id FROM unit_enrolment " +
             "WHERE student_id=? AND unit_off_id=(SELECT unit_off_id FROM unit_offering WHERE unit_code=? " +
             "AND unit_off_year=? AND unit_off_period=?);",
             [studentId, unitCode, year, period]
         );
+
+        if (!studentEnrolment) {
+            return res.status(404).send({ message: "Student enrolment not found" });
+        }
+
+        const { stud_unique_id } = studentEnrolment;
+
+        // todo delete lab allocation for this student
+        await promiseBasedQuery(
+            "DELETE FROM student_lab_allocation " +
+            "WHERE student_id=? AND unit_off_id=(SELECT unit_off_id FROM unit_offering WHERE unit_code=? " +
+            "AND unit_off_year=? AND unit_off_period=?);",
+            [studentId, unitCode, year, period]
+        )
+        // todo delete group allocation for this student
+        await promiseBasedQuery(
+            "DELETE FROM group_allocation WHERE stud_unique_id=?;",
+            [stud_unique_id]
+        );
+
+        // Delete the student from the unit enrolment (entire unit)
+        await promiseBasedQuery(
+        "DELETE FROM unit_enrolment " +
+        "WHERE student_id=? AND unit_off_id=(SELECT unit_off_id FROM unit_offering WHERE unit_code=? " +
+        "AND unit_off_year=? AND unit_off_period=?);",
+        [studentId, unitCode, year, period]
+        );
+
         // Respond with success message
         res.status(200).send({ message: "Student successfully deleted from specified unit"});
     } catch (err) {
