@@ -26,7 +26,8 @@ function Groups() {
     onClose
   } = useDisclosure();
 
-  const { // Retrieve route parameters
+  // Retrieve route parameters
+  const {
     groupStrategy,
     groupSize,
     variance,
