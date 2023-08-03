@@ -21,6 +21,10 @@ const GroupCard = ({groupData, numberOfGroups}) => {
     students
   } = groupData;
 
+  const handleDeleteStudent = (studentId) => {
+    console.log(`Deleting student with ID: ${studentId}`);
+  };
+
   console.log(groupData)
   return (
     <Card border="1px" margin="20px">
@@ -53,6 +57,7 @@ const GroupCard = ({groupData, numberOfGroups}) => {
                       studentData={student}
                       numberOfGroups={numberOfGroups}
                       key={student.student_id}
+                      onDelete={handleDeleteStudent}
                   />
                 );
               })}
