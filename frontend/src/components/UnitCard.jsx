@@ -35,13 +35,15 @@ const UnitCard = (unit) => {
     onClose: onCloseDetails,
   } = useDisclosure();
 
+
+
   //getting the unit details from the unit object
   const {
     unit_code,
     unit_name,
     unit_off_year,
     unit_off_period,
-    enrollment_count
+    enrolment_count
   } = unit
 
   const navigate = useNavigate();
@@ -111,7 +113,7 @@ const UnitCard = (unit) => {
           <ModalContent>
             <ModalHeader>FIT3170</ModalHeader>
             <ModalCloseButton />
-            <ModalBody pb={6}>{`${enrollment_count} students enrolled`}</ModalBody>
+            <ModalBody pb={6}>{`${enrolment_count} students enrolled`}</ModalBody>
             <ModalFooter>
               <Text
                 my="auto"
