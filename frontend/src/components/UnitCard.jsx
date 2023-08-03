@@ -16,8 +16,11 @@ import {
   ModalCloseButton,
   useColorModeValue,
   useDisclosure,
+  VStack,
+  HStack,
 } from '@chakra-ui/react';
-import { AddIcon, EditIcon } from '@chakra-ui/icons';
+import { BsTrash } from 'react-icons/bs';
+
 import { IoEllipsisHorizontalSharp, IoTrashOutline } from 'react-icons/io5';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 
@@ -111,29 +114,25 @@ const UnitCard = (unit) => {
         >
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>FIT3170</ModalHeader>
+            <ModalHeader>{`${unit_code} - ${unit_name}`}</ModalHeader>
             <ModalCloseButton />
-            <ModalBody pb={6}>{`${enrolment_count} students enrolled`}</ModalBody>
+
+            <ModalBody>
+              <VStack>
+                <p>{`${unit_off_year}, Semester ${unit_off_period} - **Campus**`}</p>
+                <p>{`${enrolment_count} students enrolled`}</p>
+              </VStack>
+            </ModalBody>
+
             <ModalFooter>
-              <Text
-                my="auto"
-                fontWeight="800"
-                color={mainText}
-                textAlign="left"
-                fontSize="xl"
-                me="auto"
-              >
-                <Button>
-                  {' '}
-                  <Icon as={EditIcon}></Icon>{' '}
+              
+                <Button colorScheme={"red"}>
+                  <HStack>
+                    <Text>Remove Offering</Text>
+                    <Icon as={BsTrash}></Icon>
+                  </HStack>
+                  
                 </Button>
-              </Text>
-              <Button onClick={onCloseDetails} mr={3}>
-                Cancel
-              </Button>
-              <Button colorScheme="blue" onClick={onCloseDetails}>
-                OK
-              </Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
