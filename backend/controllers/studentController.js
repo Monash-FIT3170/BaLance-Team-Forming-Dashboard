@@ -91,43 +91,82 @@ const deleteStudentEnrolment = async (req, res) => {
 
     // error handling for unexpected issues
     try {
-        // Delete the student from entire unit
-        const [studentEnrolment] = await promiseBasedQuery(
-            "SELECT stud_unique_id FROM unit_enrolment " +
-            "WHERE student_id=? AND unit_off_id=(SELECT unit_off_id FROM unit_offering WHERE unit_code=? " +
-            "AND unit_off_year=? AND unit_off_period=?);",
-            [studentId, unitCode, year, period]
+        // Delete the student unit enrolment
+        const enrolment_id = await promiseBasedQuery(
+            "SELECT enrolment_id FROM unit_offering u " +
+             "INNER JOIN unit_enrolment ue ON ue.unit_off_id=u.unit_off_id " +
+             "INNER JOIN student s ON s.stud_unique_id=ue.stud_unique_id " +
+             "WHERE " +
+                "u.unit_code=? " +
+                "AND u.unit_off_year=? " +
+                "AND u.unit_off_period=? " +
+                "AND s.student_id=?;",
+                [unitCode, year, period, studentId]
         );
 
-        if (!studentEnrolment) {
+        await promiseBasedQuery(
+            "DELETE FROM unit_enrolment " +
+             "WHERE enrolment_id=?; ",
+             [enrolment_id]
+        );
+
+        if (!enrolment_id) {
             return res.status(404).send({ message: "Student enrolment not found" });
         }
 
-        const { stud_unique_id } = studentEnrolment;
-
         // todo delete lab allocation for this student
+        const stud_lab_alloc_id = await promiseBasedQuery(
+            "SELECT stud_lab_alloc_id FROM student s " +
+            "INNER JOIN student_lab_allocation sa ON s.stud_unique_id=sa.stud_unique_id " +
+            "INNER JOIN unit_off_lab ul ON ul.unit_off_lab_id=sa.unit_off_lab_id " +
+            "INNER JOIN unit_offering u ON u.unit_off_id=ul.unit_off_id" +
+            "WHERE" +
+                "u.unit_code=? " +
+                "AND u.unit_off_year=? " +
+                "AND u.unit_off_period=? " +
+                "AND s.student_id=?; ",
+                [unitCode, year, period, studentId]
+        );
+
         await promiseBasedQuery(
             "DELETE FROM student_lab_allocation " +
-            "WHERE student_id=? AND unit_off_id=(SELECT unit_off_id FROM unit_offering WHERE unit_code=? " +
-            "AND unit_off_year=? AND unit_off_period=?);",
-            [studentId, unitCode, year, period]
-        )
-        // todo delete group allocation for this student
-        await promiseBasedQuery(
-            "DELETE FROM group_allocation WHERE stud_unique_id=?;",
-            [stud_unique_id]
+            "WHERE stud_lab_alloc_id=?; ",
+            [stud_lab_alloc_id]
         );
 
-        // Delete the student from the unit enrolment (entire unit)
-        await promiseBasedQuery(
-        "DELETE FROM unit_enrolment " +
-        "WHERE student_id=? AND unit_off_id=(SELECT unit_off_id FROM unit_offering WHERE unit_code=? " +
-        "AND unit_off_year=? AND unit_off_period=?);",
-        [studentId, unitCode, year, period]
+        if (!stud_lab_alloc_id) {
+            return res.status(404).send({ message: "Student lab allocation not found" });
+        }
+
+        // todo delete group allocation for this student
+        const group_alloc_id = await promiseBasedQuery(
+            "SELECT group_alloc_id " +
+            "FROM student s " +
+            "INNER JOIN group_allocation ga ON ga.stud_unique_id=s.stud_unique_id " +
+            "INNER JOIN lab_group lg ON lg.lab_group_id=ga.lab_group_id " +
+            "INNER JOIN unit_off_lab ul ON ul.unit_off_lab_id=lg.unit_off_lab_id " +
+            "INNER JOIN unit_offering u ON u.unit_off_id=ul.unit_off_id " +
+            "WHERE " +
+            "u.unit_code=? " +
+            "AND u.unit_off_year=? " +
+            "AND u.unit_off_period=? " +
+            "AND s.student_id=?;",
+            [unitCode, year, period, studentId]
         );
+
+        await promiseBasedQuery(
+            "DELETE FROM group_allocation " +
+            "WHERE group_alloc_id=?;",
+            [group_alloc_id]
+        )
+
+        if (!enrolment_id) {
+            return res.status(404).send({ message: "Student group allocation not found" });
+        }
 
         // Respond with success message
         res.status(200).send({ message: "Student successfully deleted from specified unit"});
+
     } catch (err) {
         // Respond with error message
         console.error("An error occurred while deleting", err);
@@ -146,12 +185,26 @@ const deleteStudentGroupAlloc = async (req, res) => {
     // error handling for unexpected issues
     try {
          // Delete student from group
-         await promiseBasedQuery(
-             "DELETE FROM student_lab_allocation " +
-             "WHERE student_id=? AND unit_off_id=(SELECT unit_off_id FROM unit_offering WHERE unit_code=? " +
-             "AND unit_off_year=? AND unit_off_period=?);",
-             [studentId, unitCode, year, period]
-         );
+        const group_alloc_id = await promiseBasedQuery(
+            "SELECT group_alloc_id " +
+            "FROM student s " +
+            "INNER JOIN group_allocation ga ON ga.stud_unique_id=s.stud_unique_id " +
+            "INNER JOIN lab_group lg ON lg.lab_group_id=ga.lab_group_id " +
+            "INNER JOIN unit_off_lab ul ON ul.unit_off_lab_id=lg.unit_off_lab_id " +
+            "INNER JOIN unit_offering u ON u.unit_off_id=ul.unit_off_id " +
+            "WHERE " +
+            "u.unit_code=? " +
+            "AND u.unit_off_year=? " +
+            "AND u.unit_off_period=? " +
+            "AND s.student_id=?;",
+            [unitCode, year, period, studentId]
+        );
+
+        await promiseBasedQuery(
+            "DELETE FROM group_allocation " +
+            "WHERE group_alloc_id=?;",
+            [group_alloc_id]
+        )
          // Respond with success message todo later, look into best practices for res messages in DEL requests
          res.status(200).send({ message: "Student successfully deleted from lab allocations"});
     } catch (err) {
