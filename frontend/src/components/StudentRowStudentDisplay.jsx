@@ -1,7 +1,8 @@
 import { Tr, Td, HStack } from '@chakra-ui/react';
+import { DeleteIcon } from '@chakra-ui/icons';
 import ChangeStudentGroupModal from './ChangeStudentGroupModal';
 
-const StudentRowStudentDisplay = ({studentData, numberOfGroups}) => {
+const StudentRowStudentDisplay = ({studentData, numberOfGroups, onDelete}) => {
     /* HTML component for each student in each group in the 'List Students' View */
     const {
         student_id,
@@ -10,6 +11,10 @@ const StudentRowStudentDisplay = ({studentData, numberOfGroups}) => {
         email_address,
         group_number
     } = studentData;
+
+    const handleDelete = () => {
+        onDelete(student_id);
+    }
 
     return (
         <Tr>
@@ -26,6 +31,11 @@ const StudentRowStudentDisplay = ({studentData, numberOfGroups}) => {
                 />
             </HStack>
             </Td>
+            <Td>
+                <DeleteIcon
+                style={{ cursor: 'pointer', color: 'red' }}
+                />
+             </Td>
         </Tr>
     );
 };
