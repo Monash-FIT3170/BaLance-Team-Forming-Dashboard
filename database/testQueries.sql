@@ -83,13 +83,53 @@ WHERE lab_group_id IN (
   ) AS subquery
 );
 
--- delete enrolments
+SELECT * FROM unit_offering u 
+WHERE
+u.unit_code='FIT2099'
+AND u.unit_off_year=2023
+AND u.unit_off_period='S1';
 
+-- delete from unit
+SELECT enrolment_id 
+FROM unit_offering u 
+INNER JOIN unit_enrolment ue ON ue.unit_off_id=u.unit_off_id
+INNER JOIN student s ON s.stud_unique_id=ue.stud_unique_id
+WHERE
+u.unit_code='FIT2099'
+AND u.unit_off_year=2023
+AND u.unit_off_period='S1'
+AND s.student_id="94328702";
 
--- delete group allocations
+DELETE FROM unit_enrolment
+WHERE enrolment_id=100000081;
 
+-- delete from lab
+SELECT stud_lab_alloc_id 
+FROM student s
+INNER JOIN student_lab_allocation sa ON s.stud_unique_id=sa.stud_unique_id
+INNER JOIN unit_off_lab ul ON ul.unit_off_lab_id=sa.unit_off_lab_id
+INNER JOIN unit_offering u ON u.unit_off_id=ul.unit_off_id
+WHERE
+u.unit_code='FIT2099'
+AND u.unit_off_year=2023
+AND u.unit_off_period='S1'
+AND s.student_id="94328702";
 
--- delete unif_off_labs
+DELETE FROM student_lab_allocation
+WHERE stud_lab_alloc_id=100000073;
 
+-- delete from group
+SELECT group_alloc_id
+FROM student s
+INNER JOIN group_allocation ga ON ga.stud_unique_id=s.stud_unique_id
+INNER JOIN lab_group lg ON lg.lab_group_id=ga.lab_group_id
+INNER JOIN unit_off_lab ul ON ul.unit_off_lab_id=lg.unit_off_lab_id
+INNER JOIN unit_offering u ON u.unit_off_id=ul.unit_off_id
+WHERE
+u.unit_code='FIT2099'
+AND u.unit_off_year=2023
+AND u.unit_off_period='S1'
+AND s.student_id="94328702";
 
--- delete student lab allocations
+DELETE FROM group_allocation
+WHERE group_alloc_id=100000139;
