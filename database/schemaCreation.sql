@@ -53,9 +53,6 @@ CREATE TABLE IF NOT EXISTS unit_off_lab (
     unit_off_lab_id INT AUTO_INCREMENT COMMENT 'global unique identifier for a lab that is part of some unit offering',
     unit_off_id INT COMMENT 'unique identifier for a unit offering',
     lab_number INT COMMENT 'a generic identifier for a lab internally by a specific unit offering',
-    unit_code VARCHAR(50) COMMENT 'code used by an institute to refer to an offering',
-    unit_off_year INTEGER COMMENT 'the year in which the offering is made',
-    unit_off_period VARCHAR(20) COMMENT 'the term which the offering is held e.g. S2',
     CONSTRAINT pk_lab PRIMARY KEY (unit_off_lab_id),
     CONSTRAINT ck_lab UNIQUE (unit_off_id, lab_number)
 );
@@ -75,9 +72,6 @@ CREATE TABLE IF NOT EXISTS unit_enrolment ( -- connection between student and un
     stud_unique_id INT,
     unit_off_id INT COMMENT 'unique identifier for a unit offering',
     enrolment_status ENUM('active', 'inactive'), -- todo ask Rio if we still store and maintain this
-    unit_code VARCHAR(50) COMMENT 'code used by an institute to refer to an offering',
-    unit_off_year INTEGER COMMENT 'the year in which the offering is made',
-    unit_off_period VARCHAR(20) COMMENT 'the term which the offering is held e.g. S2',
     CONSTRAINT pk_unit_enrolment PRIMARY KEY (enrolment_id),
     CONSTRAINT ck_unit_enrolment UNIQUE (stud_unique_id, unit_off_id)
 );
@@ -87,9 +81,6 @@ CREATE TABLE IF NOT EXISTS student_lab_allocation ( -- connection between studen
     stud_lab_alloc_id INT AUTO_INCREMENT COMMENT 'unique identifier referring to students allocation to a lab',
     unit_off_lab_id INT,
     stud_unique_id INT,
-    unit_code VARCHAR(50) COMMENT 'code used by an institute to refer to an offering',
-    unit_off_year INTEGER COMMENT 'the year in which the offering is made',
-    unit_off_period VARCHAR(20) COMMENT 'the term which the offering is held e.g. S2',
     CONSTRAINT pk_stud_lab_alloc PRIMARY KEY (stud_lab_alloc_id),
     CONSTRAINT ck_stud_lab_alloc UNIQUE (unit_off_lab_id, stud_unique_id)
 );
@@ -116,15 +107,7 @@ ALTER TABLE unit_offering ADD FOREIGN KEY (staff_unique_id) REFERENCES staff(sta
 
 -- units to student enrolment, unit labs
 ALTER TABLE unit_enrolment ADD FOREIGN KEY (unit_off_id) REFERENCES unit_offering(unit_off_id);
-ALTER TABLE unit_enrolment ADD FOREIGN KEY (unit_code, unit_off_year, unit_off_period)
-    REFERENCES unit_offering(unit_code, unit_off_year, unit_off_period);
-
 ALTER TABLE unit_off_lab ADD FOREIGN KEY (unit_off_id) REFERENCES unit_offering(unit_off_id);
-ALTER TABLE unit_off_lab ADD FOREIGN KEY (unit_code, unit_off_year, unit_off_period)
-    REFERENCES unit_offering(unit_code, unit_off_year, unit_off_period);
-
-ALTER TABLE student_lab_allocation ADD FOREIGN KEY (unit_code, unit_off_year, unit_off_period)
-    REFERENCES unit_offering(unit_code, unit_off_year, unit_off_period);
 
 -- labs to student allocations, group allocations
 ALTER TABLE student_lab_allocation ADD FOREIGN KEY (unit_off_lab_id) REFERENCES unit_off_lab(unit_off_lab_id);

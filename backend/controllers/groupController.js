@@ -100,6 +100,8 @@ const createUnitGroups = async (req, res) => {
         strategy='random';
     }
 
+    // update from lists of just student IDs to lists of {studid: ..., personality stuff:...}
+
     /* GET ALL OF THE STUDENTS ASSOCIATED WITH THIS UNIT SORTED BY LAB */
     const unitOffId = await selectUnitOffKey(unitCode, year, period);
     // fixme the method of selecting students depends on the formation strategy
@@ -118,8 +120,7 @@ const createUnitGroups = async (req, res) => {
     );
 
     console.log('students is created by getting relevant student + personality data from DB')
-    console.log(students);
-    // students = [{stud_unique_id: INT},{stud_unique_id: INT}]
+    console.log(students); // students is an array of {stud_unique_id: ..., unit_off_lab_id: ...}
     console.log(`group size: ${groupSize}, variance: ${variance}, strat: ${strategy}`);
 
     /* SPLIT BY LAB | labStudents = [ lab_id: [student_unique_ids], lab_id: [student_unique_ids] ] */
@@ -131,7 +132,7 @@ const createUnitGroups = async (req, res) => {
     });
 
     console.log('labStudents is created by splitting by lab')
-    console.log(labStudents)
+    console.log(labStudents) // object of {lab_id: [array of student id's]}
 
     /* RANDOMISE THE, STUDENTS WITHIN EACH LAB NUMBER */
     /* THEN SPLIT THE RANDOMISED LIST INTO GROUPS OF n AS SPECIFIED IN REQ */
@@ -144,10 +145,8 @@ const createUnitGroups = async (req, res) => {
         labStudents[lab] = createGroupsRandom(unitOffId, lab, labStudents[lab], groupSize, variance);
     }
     console.log('lab students is split into groups of X')
-    console.log(labStudents)
+    console.log(labStudents) // object of {lab_id: [array of groups containing student id's]}
 
-
-    // TODO i think here onwards does not care about strategy ///////////////////////////////////////////
     /* INSERT THE NEW GROUPS INTO THE DATABASE */
     // determine the number of groups to be inserted to database -> inserted as [unit_off_lab_id, group_number]
     const groupInsertData = [];

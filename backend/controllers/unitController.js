@@ -112,6 +112,8 @@ deleteUnit = async function (req, res) {
 
     }
 
+    console.log("deleted group allocation")
+
     // delete lab group
     const lab_group_id = await promiseBasedQuery(
         "SELECT lg.group_number " +
@@ -128,11 +130,13 @@ deleteUnit = async function (req, res) {
     for (let i = 0;i < lab_group_id.length; i++){
         await promiseBasedQuery(
             "DELETE FROM lab_group " + 
-            "WHERE group_number = ?;",
+            "WHERE lab_group_id = ?;",
             [lab_group_id[i].lab_group_id]
         )
-        console.log(lab_group_id[i].lab_group_id)
+        // console.log(lab_group_id[i].lab_group_id)
     }
+
+    console.log("deleted groups")
 
     //delete student lab allocation
     const stud_lab_alloc_id = await promiseBasedQuery(
@@ -153,9 +157,10 @@ deleteUnit = async function (req, res) {
             "WHERE stud_lab_alloc_id = ?;",
             [stud_lab_alloc_id[i].stud_lab_alloc_id]
         )
-        console.log(stud_lab_alloc_id[i].stud_lab_alloc_id)
+        // console.log(stud_lab_alloc_id[i].stud_lab_alloc_id)
     }
 
+    console.log("deleted lab allocations")
 
     //delete unit offering lab
     const unit_off_lab_id = await promiseBasedQuery(
@@ -177,6 +182,8 @@ deleteUnit = async function (req, res) {
         )
     }
 
+    console.log("deleted labs");
+
     //DELETE UNIT_OFFERING
     const unit_off_id = await promiseBasedQuery(
         "SELECT unit_off_id " + 
@@ -195,9 +202,10 @@ deleteUnit = async function (req, res) {
             [unit_off_id[i].unit_off_id]
         )
     }
-        
-    
 
+    console.log("deleted unit")
+        
+    res.status(200).send();
 }
 
 // FIXME SQL query not working

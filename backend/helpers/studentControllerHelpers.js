@@ -39,13 +39,13 @@ const selectStudentsKeys = async (studentEmails) => {
     }
 }
 
-const insertStudentEnrolment = async (studentKeys, unitOffId, unitCode, year, period) => {
+const insertStudentEnrolment = async (studentKeys, unitOffId) => {
     /**
      * adds enrolment data given an array of student keys and a unit offering id,
      */
     try {
         const enrolmentInsertData = studentKeys.map((student) => {
-            return [student.stud_unique_id, unitOffId, unitCode, year, period]
+            return [student.stud_unique_id, unitOffId]
         })
 
         return promiseBasedQuery(
@@ -58,7 +58,7 @@ const insertStudentEnrolment = async (studentKeys, unitOffId, unitCode, year, pe
     }
 }
 
-const insertUnitOffLabs = async (requestBody, unitOffId, unitCode, year, period) => {
+const insertUnitOffLabs = async (requestBody, unitOffId) => {
     /**
      * Given a list of students from a request body, determines the number of labs
      * in an offering and creates them in the database
@@ -77,7 +77,7 @@ const insertUnitOffLabs = async (requestBody, unitOffId, unitCode, year, period)
         // formulate data into the desired format: [unit_off_id, lab_number]
         let labInsertData = []
         for (let i=1; i<=numLabs; i++) {
-            let lab = [unitOffId, i, unitCode, year, period];
+            let lab = [unitOffId, i];
             labInsertData.push(lab);
         }
 
@@ -91,7 +91,7 @@ const insertUnitOffLabs = async (requestBody, unitOffId, unitCode, year, period)
     }
 }
 
-const insertStudentLabAllocations = async (requestBody, unitOffId, unitCode, year, period) => {
+const insertStudentLabAllocations = async (requestBody, unitOffId) => {
     try {
         /* SELECT labs and create a dictionary of form
         * {
@@ -142,7 +142,7 @@ const insertStudentLabAllocations = async (requestBody, unitOffId, unitCode, yea
 
             // combine data into a form compatible with the database schema
             const insertData = labStudentKeys.map((studentKey) => {
-                return [labPrimaryKey, studentKey.stud_unique_id, unitCode, year, period]
+                return [labPrimaryKey, studentKey.stud_unique_id]
             });
             // insert the data into the database
             await promiseBasedQuery(

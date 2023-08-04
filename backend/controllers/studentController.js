@@ -71,11 +71,11 @@ const addAllStudents = async (req, res) => {
     const studentEmails = requestBody.map((student) => student.studentEmailAddress);
     const studentKeys = await selectStudentsKeys(studentEmails);
     const unitOffId = await selectUnitOffKey(unitCode, year, period);
-    await insertStudentEnrolment(studentKeys, unitOffId, unitCode, year, period);
+    await insertStudentEnrolment(studentKeys, unitOffId);
 
     /* CREATE THE LABS ASSOCIATED WITH THE UNIT ENROLMENT AND ALLOCATE THE STUDENTS */
-    await insertUnitOffLabs(requestBody, unitOffId, unitCode, year, period); // ensure lab no.s don't repeat in units
-    await insertStudentLabAllocations(requestBody, unitOffId, unitCode, year, period);
+    await insertUnitOffLabs(requestBody, unitOffId); // ensure lab no.s don't repeat in units
+    await insertStudentLabAllocations(requestBody, unitOffId);
 
     res.status(200).send();
 }
