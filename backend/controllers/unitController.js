@@ -102,6 +102,8 @@ deleteUnit = async function (req, res) {
             "AND u.unit_off_period=?;",
         [unitCode, year, period] 
     )
+
+
     // create an array
     for (let i = 0;i < group_alloc.length; i++){
         await promiseBasedQuery(
@@ -116,7 +118,7 @@ deleteUnit = async function (req, res) {
 
     // delete lab group
     const lab_group_id = await promiseBasedQuery(
-        "SELECT lg.group_number " +
+        "SELECT lg.lab_group_id " +
         "FROM lab_group lg " + 
         "INNER JOIN unit_off_lab l ON l.unit_off_lab_id = lg.unit_off_lab_id "+
         "INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " +
@@ -141,19 +143,19 @@ deleteUnit = async function (req, res) {
     //delete student lab allocation
     const stud_lab_alloc_id = await promiseBasedQuery(
         "SELECT sla.stud_lab_alloc_id " +
-        "FROM student_lab_allocation sla " + 
+        "FROM student_lab_allocation sla " +
         "INNER JOIN unit_off_lab l ON l.unit_off_lab_id = sla.unit_off_lab_id "+
         "INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " +
-        "WHERE " + 
-        "u.unit_code=? " + 
-        "AND u.unit_off_year=? " + 
+        "WHERE " +
+        "u.unit_code=? " +
+        "AND u.unit_off_year=? " +
         "AND u.unit_off_period=?;",
-        [unitCode, year, period] 
+        [unitCode, year, period]
     )
     
     for (let i = 0;i < stud_lab_alloc_id.length; i++){
         await promiseBasedQuery(
-            "DELETE FROM student_lab_allocation " + 
+            "DELETE FROM student_lab_allocation " +
             "WHERE stud_lab_alloc_id = ?;",
             [stud_lab_alloc_id[i].stud_lab_alloc_id]
         )
@@ -164,19 +166,19 @@ deleteUnit = async function (req, res) {
 
     //delete unit offering lab
     const unit_off_lab_id = await promiseBasedQuery(
-        "SELECT unit_off_lab_id " + 
-        "FROM unit_off_lab l " + 
-        "INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " + 
-        "WHERE " + 
-            "u.unit_code= ? " + 
+        "SELECT unit_off_lab_id " +
+        "FROM unit_off_lab l " +
+        "INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " +
+        "WHERE " +
+            "u.unit_code= ? " +
             "AND u.unit_off_year=? " +
             "AND u.unit_off_period=?; ",
-            [unitCode, year, period] 
+            [unitCode, year, period]
     )
 
     for (let i = 0;i < unit_off_lab_id.length; i++){
         await promiseBasedQuery(
-            "DELETE FROM unit_off_lab " + 
+            "DELETE FROM unit_off_lab " +
             "WHERE unit_off_lab_id = ?; ",
             [unit_off_lab_id[i].unit_off_lab_id]
         )
@@ -186,10 +188,10 @@ deleteUnit = async function (req, res) {
 
     //DELETE UNIT_OFFERING
     const unit_off_id = await promiseBasedQuery(
-        "SELECT unit_off_id " + 
-        "FROM unit_offering u " + 
-        "WHERE " + 
-            "u.unit_code= ? " + 
+        "SELECT u.unit_off_id " +
+        "FROM unit_offering u " +
+        "WHERE " +
+            "u.unit_code= ? " +
             "AND u.unit_off_year=? " +
             "AND u.unit_off_period=?; ",
             [unitCode, year, period]
@@ -197,14 +199,14 @@ deleteUnit = async function (req, res) {
 
     for (let i = 0;i < unit_off_id.length; i++){
         await promiseBasedQuery(
-            "DELETE FROM unit_offering " + 
+            "DELETE FROM unit_offering " +
             "WHERE unit_off_id = ?; ",
             [unit_off_id[i].unit_off_id]
         )
     }
 
     console.log("deleted unit")
-        
+
     res.status(200).send();
 }
 
