@@ -186,6 +186,24 @@ deleteUnit = async function (req, res) {
 
     console.log("deleted labs");
 
+    // delete enrolments with students in this unit
+    await promiseBasedQuery(
+        "DELETE FROM unit_enrolment " +
+        "WHERE enrolment_id IN ( " +
+        "  SELECT subquery.enrolment_id " +
+        "  FROM ( " +
+        "    SELECT ue.enrolment_id " +
+        "    FROM unit_enrolment ue " +
+        "    INNER JOIN unit_offering u ON ue.unit_off_id = u.unit_off_id " +
+        "    WHERE " +
+        "      u.unit_code=? " +
+        "      AND u.unit_off_year=? " +
+        "      AND u.unit_off_period=? " +
+        "  ) AS subquery " +
+        ");",
+        [unitCode, year, period]
+    )
+
     //DELETE UNIT_OFFERING
     const unit_off_id = await promiseBasedQuery(
         "SELECT u.unit_off_id " +
