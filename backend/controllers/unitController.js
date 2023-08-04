@@ -43,6 +43,7 @@ const getUnit = async (req, res) => {
     res.status(200).json(unitData);
 }
 
+// add a new unit to a TAs dashboard
 const addUnit = async (req, res) => {
     // get the req body
     const newUnit = {
@@ -82,8 +83,8 @@ const addUnit = async (req, res) => {
     }
 }
 
-// TODO delete associated enrolments, labs etc
-deleteUnit = async function (req, res) {
+// delete a unit and associated relations
+const deleteUnit = async function (req, res) {
     const { // get the URL params
         unitCode,
         year,

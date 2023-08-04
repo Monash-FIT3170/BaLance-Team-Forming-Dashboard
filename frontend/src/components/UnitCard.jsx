@@ -67,6 +67,7 @@ const UnitCard = (unit) => {
     if (answer) {
       onCloseDetails();
     }
+    window.location.reload();
   };
 
   return (
