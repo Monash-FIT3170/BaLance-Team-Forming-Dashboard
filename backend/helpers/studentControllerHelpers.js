@@ -50,7 +50,7 @@ const insertStudentEnrolment = async (studentKeys, unitOffId) => {
 
         return promiseBasedQuery(
             'INSERT IGNORE INTO unit_enrolment ' +
-            '(stud_unique_id, unit_off_id, unit_code, unit_off_year, unit_off_period) VALUES ?;',
+            '(stud_unique_id, unit_off_id) VALUES ?;',
             [enrolmentInsertData]
         )
     } catch(error) {
@@ -82,7 +82,7 @@ const insertUnitOffLabs = async (requestBody, unitOffId) => {
         }
 
         return promiseBasedQuery(
-            'INSERT IGNORE INTO unit_off_lab (unit_off_id, lab_number, unit_code, unit_off_year, unit_off_period) ' +
+            'INSERT IGNORE INTO unit_off_lab (unit_off_id, lab_number) ' +
             'VALUES ?;',
             [labInsertData]
         )
@@ -147,7 +147,7 @@ const insertStudentLabAllocations = async (requestBody, unitOffId) => {
             // insert the data into the database
             await promiseBasedQuery(
                 "INSERT IGNORE INTO student_lab_allocation " +
-                "(unit_off_lab_id, stud_unique_id, unit_code, unit_off_year, unit_off_period) VALUES ?;",
+                "(unit_off_lab_id, stud_unique_id) VALUES ?;",
                 [insertData]
             );
         }
