@@ -100,97 +100,7 @@ const createUnitGroups = async (req, res) => {
         strategy='random';
     }
 
-    // update from lists of just student IDs to lists of {studid: ..., personality stuff:...}
-
-    /* GET ALL OF THE STUDENTS ASSOCIATED WITH THIS UNIT SORTED BY LAB */
-    const unitOffId = await selectUnitOffKey(unitCode, year, period);
-    // fixme the method of selecting students depends on the formation strategy
-    const students = await promiseBasedQuery(
-        'SELECT stud.stud_unique_id, alloc.unit_off_lab_id ' +
-        'FROM student stud ' +
-        'INNER JOIN student_lab_allocation alloc ON stud.stud_unique_id=alloc.stud_unique_id ' +
-        'INNER JOIN unit_off_lab lab ON lab.unit_off_lab_id=alloc.unit_off_lab_id ' +
-        'INNER JOIN unit_offering unit ON unit.unit_off_id=lab.unit_off_id ' +
-        'WHERE ' +
-        '   unit.unit_code=? ' +
-        '   AND unit.unit_off_year=? ' +
-        '   AND unit.unit_off_period=? ' +
-        'ORDER BY unit_off_lab_id;',
-        [unitCode, year, period]
-    );
-
-    console.log('students is created by getting relevant student + personality data from DB')
-    console.log(students); // students is an array of {stud_unique_id: ..., unit_off_lab_id: ...}
-    console.log(`group size: ${groupSize}, variance: ${variance}, strat: ${strategy}`);
-
-    /* SPLIT BY LAB | labStudents = [ lab_id: [student_unique_ids], lab_id: [student_unique_ids] ] */
-    // fixme splitting by lab should consider that different attributes exist per student given the strategy
-    const labStudents = { };
-    students.forEach((student) => {
-        if(!labStudents[student.unit_off_lab_id]) { labStudents[student.unit_off_lab_id] = []; }
-        labStudents[student.unit_off_lab_id].push(student.stud_unique_id);
-    });
-
-    console.log('labStudents is created by splitting by lab')
-    console.log(labStudents) // object of {lab_id: [array of student id's]}
-
-    /* RANDOMISE THE, STUDENTS WITHIN EACH LAB NUMBER */
-    /* THEN SPLIT THE RANDOMISED LIST INTO GROUPS OF n AS SPECIFIED IN REQ */
-    // fixme shuffle is unique to random strategy
-    for(let lab in labStudents) { labStudents[lab] = shuffle(labStudents[lab]); }
-    console.log('lab students is randomised only in random')
-    console.log(labStudents)
-    // fixme this just splits students, not randomises, what is called depends on the strategy
-    for(let lab in labStudents) {
-        labStudents[lab] = createGroupsRandom(unitOffId, lab, labStudents[lab], groupSize, variance);
-    }
-    console.log('lab students is split into groups of X')
-    console.log(labStudents) // object of {lab_id: [array of groups containing student id's]}
-
-    /* INSERT THE NEW GROUPS INTO THE DATABASE */
-    // determine the number of groups to be inserted to database -> inserted as [unit_off_lab_id, group_number]
-    const groupInsertData = [];
-    let numGroups = 0;
-    for(let lab in labStudents) {
-        labStudents[lab].forEach((student) => {
-            numGroups++;
-            groupInsertData.push([lab, numGroups]);
-        })
-    }
-
-    await promiseBasedQuery(
-        'INSERT IGNORE INTO lab_group (unit_off_lab_id, group_number) VALUES ?;',
-        [groupInsertData]
-    );
-
-    /* INSERT THE ALLOCATIONS TO GROUPS INTO THE DATABASE */
-    // get all groups in this unit as [ >> group_id <<, lab_id]
-    const groupAllocInsertData = [];
-    const groupData = await promiseBasedQuery(
-        'SELECT g.lab_group_id, g.unit_off_lab_id ' +
-        'FROM lab_group g ' +
-        'INNER JOIN unit_off_lab l ON g.unit_off_lab_id=l.unit_off_lab_id ' +
-        'INNER JOIN unit_offering u ON u.unit_off_id=l.unit_off_id ' +
-        'WHERE ' +
-        '   u.unit_code=? ' +
-        '   AND u.unit_off_year=? ' +
-        '   AND u.unit_off_period=?;',
-        [unitCode, year, period]
-    );
-
-    // for each group, pop a group from the lab key in object and form the allocation
-    // todo verify that here onwards is strategy agnostic
-    for(let i=0; i<numGroups; i++) {
-        const group = groupData.pop();
-        const groupStudents = labStudents[group.unit_off_lab_id].pop()
-        groupStudents.forEach((studentId) => { groupAllocInsertData.push([studentId, group.lab_group_id]) })
-    }
-
-    // student allocations are created as [~~group_alloc_id~~, stud_unique_id, lab_group_id]
-    await promiseBasedQuery(
-        'INSERT IGNORE INTO group_allocation (stud_unique_id, lab_group_id) VALUES ?;',
-        [groupAllocInsertData]
-    );
+    await createGroupsRandom(unitCode, year, period, groupSize, variance);
 
     res.status(200).send();
 }
@@ -322,8 +232,90 @@ const moveStudent = async (req, res) => {
 }
 
 /* SUPPLEMENTARY FUNCTIONS. TO BE REFACTORED */
-const createGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) => {
-    // fixme this doesn't 'create' groups, it just splits a list of students in prep for insert
+const createGroupsRandom = async (unitCode, year, period, groupSize, variance) => {
+    /**
+     * Obtains students required from a given unit in a format we can use to then split them
+     * into groups using the random group formation strategy
+     *
+     */
+
+    /* GET ALL OF THE STUDENTS ASSOCIATED WITH THIS UNIT SORTED BY LAB */
+    const unitOffId = await selectUnitOffKey(unitCode, year, period);
+
+    const students = await promiseBasedQuery(
+        'SELECT stud.stud_unique_id, alloc.unit_off_lab_id ' +
+        'FROM student stud ' +
+        'INNER JOIN student_lab_allocation alloc ON stud.stud_unique_id=alloc.stud_unique_id ' +
+        'INNER JOIN unit_off_lab lab ON lab.unit_off_lab_id=alloc.unit_off_lab_id ' +
+        'INNER JOIN unit_offering unit ON unit.unit_off_id=lab.unit_off_id ' +
+        'WHERE ' +
+        '   unit.unit_code=? ' +
+        '   AND unit.unit_off_year=? ' +
+        '   AND unit.unit_off_period=? ' +
+        'ORDER BY unit_off_lab_id;',
+        [unitCode, year, period]
+    );
+
+    /* SPLIT BY LAB | labStudents = [ lab_id: [student_unique_ids], lab_id: [student_unique_ids] ] */
+    const labStudents = { };
+    students.forEach((student) => {
+        if(!labStudents[student.unit_off_lab_id]) { labStudents[student.unit_off_lab_id] = []; }
+        labStudents[student.unit_off_lab_id].push(student.stud_unique_id);
+    });
+
+    /* RANDOMISE THE, STUDENTS WITHIN EACH LAB NUMBER */
+    /* THEN SPLIT THE RANDOMISED LIST INTO GROUPS OF n AS SPECIFIED IN REQ */
+    for(let lab in labStudents) { labStudents[lab] = shuffle(labStudents[lab]); }
+    for(let lab in labStudents) {
+        labStudents[lab] = splitGroupsRandom(unitOffId, lab, labStudents[lab], groupSize, variance);
+    }
+
+    /* INSERT THE NEW GROUPS INTO THE DATABASE */
+    // determine the number of groups to be inserted to database -> inserted as [unit_off_lab_id, group_number]
+    const groupInsertData = [];
+    let numGroups = 0;
+    for(let lab in labStudents) {
+        labStudents[lab].forEach((student) => {
+            numGroups++;
+            groupInsertData.push([lab, numGroups]);
+        })
+    }
+
+    await promiseBasedQuery(
+        'INSERT IGNORE INTO lab_group (unit_off_lab_id, group_number) VALUES ?;',
+        [groupInsertData]
+    );
+
+    /* INSERT THE ALLOCATIONS TO GROUPS INTO THE DATABASE */
+    // get all groups in this unit as [ >> group_id <<, lab_id]
+    const groupAllocInsertData = [];
+    const groupData = await promiseBasedQuery(
+        'SELECT g.lab_group_id, g.unit_off_lab_id ' +
+        'FROM lab_group g ' +
+        'INNER JOIN unit_off_lab l ON g.unit_off_lab_id=l.unit_off_lab_id ' +
+        'INNER JOIN unit_offering u ON u.unit_off_id=l.unit_off_id ' +
+        'WHERE ' +
+        '   u.unit_code=? ' +
+        '   AND u.unit_off_year=? ' +
+        '   AND u.unit_off_period=?;',
+        [unitCode, year, period]
+    );
+
+    // for each group, pop a group from the lab key in object and form the allocation
+    for(let i=0; i<numGroups; i++) {
+        const group = groupData.pop();
+        const groupStudents = labStudents[group.unit_off_lab_id].pop()
+        groupStudents.forEach((studentId) => { groupAllocInsertData.push([studentId, group.lab_group_id]) })
+    }
+
+    // student allocations are created as [~~group_alloc_id~~, stud_unique_id, lab_group_id]
+    await promiseBasedQuery(
+        'INSERT IGNORE INTO group_allocation (stud_unique_id, lab_group_id) VALUES ?;',
+        [groupAllocInsertData]
+    );
+}
+
+const splitGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) => {
     // console.log(`| unit id: ${unitOffId} | lab id: ${labId} | students: ${studentsList} |`);
     let groups = [];
     for (let i = 0; i < studentsList.length; i += groupSize) {
@@ -366,7 +358,7 @@ const createGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance)
         }
         // split the groups as evenly as possible
         else {
-            return createGroupsRandom(unitOffId, labId, studentsList, groupSize - 1, variance)
+            return splitGroupsRandom(unitOffId, labId, studentsList, groupSize - 1, variance)
         }
     }
 

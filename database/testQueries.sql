@@ -23,6 +23,7 @@ WHERE group_alloc_id IN (
       AND u.unit_off_period = "S1"
   ) AS subquery
 );
+
     
 DELETE FROM lab_group
 WHERE lab_group_id IN (
@@ -38,3 +39,35 @@ WHERE lab_group_id IN (
       AND u.unit_off_period = "S1"
   ) AS subquery
 );
+
+DELETE FROM lab_group
+WHERE lab_group_id IN (
+  SELECT subquery.lab_group_id
+  FROM (
+    SELECT ue.enrolment_id
+    FROM unit_enrolment ue
+    INNER JOIN unit_offering u ON ue.unit_off_id = u.unit_off_id
+    WHERE
+      u.unit_code = "FIT2099"
+      AND u.unit_off_year = 2023
+      AND u.unit_off_period = "S1"
+  ) AS subquery
+);
+
+DELETE FROM table_
+WHERE primary_key IN (
+  SELECT subquery.primary_key
+  FROM (
+  
+    SELECT table_ t1
+    FROM primary_key
+    INNER JOIN other_table t2 ON t1.primary_key = t2.primary_key
+    WHERE
+      u.unit_code = "?"
+      AND u.unit_off_year = "?"
+      AND u.unit_off_period = "?"
+      
+  ) AS subquery
+);
+
+
