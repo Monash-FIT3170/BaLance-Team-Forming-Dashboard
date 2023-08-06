@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Box, ChakraProvider, extendTheme } from '@chakra-ui/react';
 import ImportStudents from './pages/ImportStudents';
+import UploadGroupScript from './pages/UploadGroupScript';
 
 import UnitHomePage from './pages/UnitHomePage';
 import NavBar from './components/NavBar';
@@ -29,6 +30,7 @@ function App() {
             <Route path="/groups/:unitCode/:year/:period" element={<Groups />} />
             <Route path="/students/:unitCode/:year/:period" element={<Students />} />
             <Route path="/uploadStudents/:unitCode/:year/:period" element={<ImportStudents />} />
+            <Route path="/uploadGroupScript/:unitCode/:year/:period" element={<UploadGroupScript />} />
             <Route path="/assigningPage" element={<Teachers />} />
           </Routes>
         </div>
