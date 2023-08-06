@@ -33,7 +33,7 @@ const StudentRowStudentDisplay = ({studentData, numberOfGroups, onDelete}) => {
             </Td>
             <Td>
                 <DeleteIcon
-                style={{ cursor: 'pointer', color: 'red' }}
+                style={{ cursor: 'pointer'}}
                 />
              </Td>
         </Tr>

@@ -16,14 +16,13 @@ import StudentRowGroupDisplay from './StudentRowGroupDisplay';
 
 const GroupCard = ({groupData, numberOfGroups}) => {
   const {
+    unit_code,
+    unit_off_year,
+    unit_off_period,
     lab_number,
     group_number,
     students
   } = groupData;
-
-  const handleDeleteStudent = (studentId) => {
-    console.log(`Deleting student with ID: ${studentId}`);
-  };
 
   console.log(groupData)
   return (
@@ -57,7 +56,6 @@ const GroupCard = ({groupData, numberOfGroups}) => {
                       studentData={student}
                       numberOfGroups={numberOfGroups}
                       key={student.student_id}
-                      onDelete={handleDeleteStudent}
                   />
                 );
               })}
