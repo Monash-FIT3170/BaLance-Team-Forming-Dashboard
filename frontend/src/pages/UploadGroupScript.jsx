@@ -48,6 +48,15 @@ function UploadGroupScript() {
             />
           )}
         </Box>
+        <Box textAlign="center" mt={4}>
+          <IconButton
+            aria-label="Upload Group Formation Script"
+            icon={<ArrowForwardIcon />}
+            colorScheme="green"
+            size="lg"
+            onClick={handleUpload} // Replace with your function to handle the script upload
+          />
+        </Box>
       </Flex>
     </>
   );
