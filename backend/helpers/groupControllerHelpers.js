@@ -112,7 +112,7 @@ const createGroupsRandom = async (unitCode, year, period, groupSize, variance) =
 
 }
 
-const createGroupsEffort = (unitCode, year, period, groupSize, variance) => {
+const createGroupsEffort = async (unitCode, year, period, groupSize, variance) => {
     /**
      * Given a unit offering, group size and acceptable group variance from a group size,
      * forms groups within the units labs using student average assignment marks and
@@ -122,7 +122,7 @@ const createGroupsEffort = (unitCode, year, period, groupSize, variance) => {
 
 }
 
-const createGroupsBelbin = (unitCode, year, period, groupSize, variance) => {
+const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) => {
     /**
      * Given a unit offering, group size and acceptable group variance from a group size,
      * forms groups within the units labs using student Belbin types
