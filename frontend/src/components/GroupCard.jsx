@@ -16,6 +16,9 @@ import StudentRowGroupDisplay from './StudentRowGroupDisplay';
 
 const GroupCard = ({groupData, numberOfGroups}) => {
   const {
+    unit_code,
+    unit_off_year,
+    unit_off_period,
     lab_number,
     group_number,
     students

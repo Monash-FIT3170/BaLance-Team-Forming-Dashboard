@@ -44,9 +44,13 @@ const insertStudentEnrolment = async (studentKeys, unitOffId) => {
      * adds enrolment data given an array of student keys and a unit offering id,
      */
     try {
-        const enrolmentInsertData = studentKeys.map((student) => {return [student.stud_unique_id, unitOffId]})
+        const enrolmentInsertData = studentKeys.map((student) => {
+            return [student.stud_unique_id, unitOffId]
+        })
+
         return promiseBasedQuery(
-            'INSERT IGNORE INTO unit_enrolment (stud_unique_id, unit_off_id) VALUES ?;',
+            'INSERT IGNORE INTO unit_enrolment ' +
+            '(stud_unique_id, unit_off_id) VALUES ?;',
             [enrolmentInsertData]
         )
     } catch(error) {
@@ -77,7 +81,11 @@ const insertUnitOffLabs = async (requestBody, unitOffId) => {
             labInsertData.push(lab);
         }
 
-        return promiseBasedQuery('INSERT IGNORE INTO unit_off_lab (unit_off_id, lab_number) VALUES ?;', [labInsertData])
+        return promiseBasedQuery(
+            'INSERT IGNORE INTO unit_off_lab (unit_off_id, lab_number) ' +
+            'VALUES ?;',
+            [labInsertData]
+        )
     } catch(error) {
         throw error
     }
@@ -133,10 +141,14 @@ const insertStudentLabAllocations = async (requestBody, unitOffId) => {
             // console.log(labNumber, labPrimaryKey, labStudentKeys);
 
             // combine data into a form compatible with the database schema
-            const insertData = labStudentKeys.map((studentKey) => { return [labPrimaryKey, studentKey.stud_unique_id] });
+            const insertData = labStudentKeys.map((studentKey) => {
+                return [labPrimaryKey, studentKey.stud_unique_id]
+            });
             // insert the data into the database
             await promiseBasedQuery(
-                "INSERT IGNORE INTO student_lab_allocation (unit_off_lab_id, stud_unique_id) VALUES ?;", [insertData]
+                "INSERT IGNORE INTO student_lab_allocation " +
+                "(unit_off_lab_id, stud_unique_id) VALUES ?;",
+                [insertData]
             );
         }
     } catch(error) {

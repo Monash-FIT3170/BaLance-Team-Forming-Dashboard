@@ -62,6 +62,7 @@ function UnitPage() {
 
     let answer = window.confirm('Unit created successfully');
     if (answer) {
+      window.location.reload();
       onCloseAdd();
     }
   };

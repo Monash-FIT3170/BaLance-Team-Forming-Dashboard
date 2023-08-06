@@ -54,6 +54,27 @@ const UnitCard = (unit) => {
   //navigate to the groups for the current unit if it is clicked
   const navigateToUnitOffering = () => navigate(`/groups/${unit_code}/${unit_off_year}/${unit_off_period}`);
 
+  // handle delete unit and posting it to the backend
+  const handleDeleteUnit = (event) => {
+    event.preventDefault();
+    console.log("deleting unit")
+    
+
+    fetch(`http://localhost:8080/api/units/${unit_code}/${unit_off_year}/${unit_off_period}`, {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    });
+
+    let answer = window.confirm('Unit deleted successfully');
+    if (answer) {
+      onCloseDetails();
+    }
+    window.location.reload();
+  };
+
   return (
     <Flex
       borderRadius="20px"
@@ -114,7 +135,7 @@ const UnitCard = (unit) => {
         >
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>{`${unit_code} - ${unit_name}`}</ModalHeader>
+            <ModalHeader>{unit_code}</ModalHeader>
             <ModalCloseButton />
 
             <ModalBody>
@@ -133,6 +154,25 @@ const UnitCard = (unit) => {
                   </HStack>
                   
                 </Button>
+              </Text>
+              <Text
+                my="auto"
+                fontWeight="800"
+                color={mainText}
+                textAlign="left"
+                fontSize="xl"
+                me="auto"
+              >
+                <Button colorScheme = 'red' onClick={handleDeleteUnit} >
+                  DELETE
+                </Button>
+              </Text>
+              <Button onClick={onCloseDetails} mr={3}>
+                Cancel
+              </Button>
+              <Button colorScheme="blue" onClick={onCloseDetails}>
+                OK
+              </Button>
             </ModalFooter>
           </ModalContent>
         </Modal>

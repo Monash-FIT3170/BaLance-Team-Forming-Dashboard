@@ -7,6 +7,7 @@ const promiseBasedQuery = (query, values) => {
     return new Promise((resolve, reject) => {
         db_connection.query(query, values, (error, results) => {
             if (error) {
+                console.log(error)
                 reject(error);
             } else {
                 console.log(`${results.affectedRows} affected rows`)
