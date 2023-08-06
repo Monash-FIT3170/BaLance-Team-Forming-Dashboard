@@ -5,6 +5,7 @@ import '../pages/UnitHomePage.css';
 
 // Chakra imports
 import {
+  HStack,
   Flex,
   Button,
   Icon,
@@ -22,9 +23,10 @@ import {
   Input,
   Select,
   Container,
+  Spacer,
 } from '@chakra-ui/react';
 
-import { PlusSquareIcon } from '@chakra-ui/icons';
+import { AddIcon } from '@chakra-ui/icons';
 import { Center, Heading } from '@chakra-ui/react';
 
 function UnitPage() {
@@ -86,21 +88,21 @@ function UnitPage() {
         {/* new unit button */}
 
         <Button
-          w="40px"
-          h="40px"
+          
           align="right"
           justify="right"
           borderRadius="12px"
           style={{ position: 'absolute', top: 135, right: 10 }}
           me="12px"
+          onClick={onOpenAdd}
         >
-          <Icon
-            w="50px"
-            h="30px"
-            as={PlusSquareIcon}
+          <HStack><p>Add Offering</p><Spacer/><Icon
+            margin-left="10%"
+            as={AddIcon}
             color={iconColor}
-            onClick={onOpenAdd}
-          />
+            
+          /></HStack>
+          
         </Button>
 
         {/* pop up when adding a new unit */}

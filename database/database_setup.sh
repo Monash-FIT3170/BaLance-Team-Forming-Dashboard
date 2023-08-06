@@ -1,1 +1,3 @@
-# TODO create DB and run scripts
+# start mysql
+ls
+

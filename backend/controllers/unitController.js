@@ -10,6 +10,7 @@ const {
     selectUnitOffKey
 } = require("../helpers/commonHelpers");
 
+
 // gets all units for a user
 const getAllUnits = async (req, res) => {
     db_connection.query(
@@ -61,7 +62,7 @@ const addUnit = async (req, res) => {
             'VALUES (?, ?, ?, ?, ?);',
             [unitCode, unitName, Number(year), period, 0]
         )
-
+        
         console.log(`Successfully added new unit ${JSON.stringify(newUnit)}`);
         res.status(200).json(newUnit);
 
