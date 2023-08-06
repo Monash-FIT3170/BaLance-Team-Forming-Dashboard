@@ -83,7 +83,7 @@ function Students() {
         <Center margin="10">{unitCode}</Center>
       </Heading>
 
-      <HStack margin="0px 20vw 5vh 20vw">
+      <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>
         <Button
           onClick={navigateToStudentUpload}
           colorScheme="gray"
@@ -95,11 +95,11 @@ function Students() {
 
         <HStack m="40px">
           <Spacer />
-          <ButtonGroup colorScheme="#282c34" variant="outline" size="lg">
+          <ButtonGroup colorScheme="#282c34" variant="outline" size="lg" isAttached>
             <Link to={`/groups/${unitCode}/${year}/${period}`}>
-              <Button margin="0px 2px">Groups</Button>
+              <Button >  Groups  </Button>
             </Link>
-            <Button margin="0px 2px" isDisabled={true}>
+            <Button isDisabled={true}>
               Students
             </Button>
           </ButtonGroup>

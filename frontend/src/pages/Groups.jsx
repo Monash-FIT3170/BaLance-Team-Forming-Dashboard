@@ -20,13 +20,15 @@ function Groups() {
   const navigate = useNavigate();
   const [groups, setGroups] = useState([]);
 
-  const { // Confirmation popup for shuffling groups
+  // Confirmation popup for shuffling groups
+  const {
     isOpen,
     onOpen,
     onClose
   } = useDisclosure();
 
-  const { // Retrieve route parameters
+  // Retrieve route parameters
+  const {
     groupStrategy,
     groupSize,
     variance,
@@ -92,12 +94,10 @@ function Groups() {
 
         <HStack m="40px">
           <Spacer />
-          <ButtonGroup colorScheme="#282c34" variant="outline" size="lg">
-            <Button margin="0px 2px" isDisabled={true}>
-              Groups
-            </Button>
+          <ButtonGroup colorScheme="#282c34" variant="outline" size="lg" isAttached>
+            <Button isDisabled={true}>  Groups  </Button>
             <Link to={`/students/${unitCode}/${year}/${period}`}>
-              <Button margin="0px 2px">Students</Button>
+              <Button>Students</Button>
             </Link>
           </ButtonGroup>
           <Spacer />
