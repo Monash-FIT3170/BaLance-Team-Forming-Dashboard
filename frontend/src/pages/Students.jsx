@@ -186,7 +186,7 @@ function Students() {
               </HStack>
             </Button>
             <Select
-              placeholder={`${students.length}`}
+              placeholder={"All"}
               value={`unitSemesterOffering`}
               onChange={(event) => `setUnitSemesterOffering(event.target.value)`}
             >

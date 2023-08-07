@@ -177,7 +177,7 @@ function Groups() {
               </HStack>
             </Button>
             <Select
-              placeholder={`${groups.length}`}
+              placeholder={"All"}
               value={`unitSemesterOffering`}
               onChange={(event) => `setUnitSemesterOffering(event.target.value)`}
             >
