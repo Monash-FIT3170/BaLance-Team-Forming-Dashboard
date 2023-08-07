@@ -165,17 +165,7 @@ function Groups() {
                 <Text>Create/Reconfigure Groups</Text>
               </HStack>
             </Button>
-            <Button
-              width="100%"
-              onClick={navigateToStudentUpload}
-              colorScheme="gray"
-              margin-left="20">
-              <HStack>
-                <AddIcon />
-                <Spacer />
-                <Text>Show Students from Class:</Text>
-              </HStack>
-            </Button>
+            <Center><Text fontWeight={"semibold"}>Show Students from Class:</Text></Center>
             <Select
               placeholder={"All"}
               value={`unitSemesterOffering`}

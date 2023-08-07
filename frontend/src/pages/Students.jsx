@@ -17,6 +17,7 @@ import {
   Text,
   VStack,
   Box,
+  Container,
 } from '@chakra-ui/react';
 import StudentRowStudentDisplay from '../components/StudentRowStudentDisplay';
 import { Link, useNavigate } from 'react-router-dom';
@@ -86,30 +87,30 @@ function Students() {
       <Center>
         No students have yet been added to the offering. Click "Add Students" to add students to the offering.
       </Center>
-    </Box> 
+    </Box>
     :
     <Table variant="striped" width="80vw">
-          <Thead>
-            <Tr>
-              <Th>ID</Th>
-              <Th>Preferred Name</Th>
-              <Th>Last Name</Th>
-              <Th>Email Address</Th>
-              <Th>Group</Th>
-            </Tr>
-          </Thead>
+      <Thead>
+        <Tr>
+          <Th>ID</Th>
+          <Th>Preferred Name</Th>
+          <Th>Last Name</Th>
+          <Th>Email Address</Th>
+          <Th>Group</Th>
+        </Tr>
+      </Thead>
 
-          <Tbody>
-            {students.map((student) => (
-              <StudentRowStudentDisplay
-                studentData={student}
-                numberOfGroups={numberOfGroups}
-                key={student.student_id}
-              />
-            ))}
-          </Tbody>
-        </Table>
-  ;
+      <Tbody>
+        {students.map((student) => (
+          <StudentRowStudentDisplay
+            studentData={student}
+            numberOfGroups={numberOfGroups}
+            key={student.student_id}
+          />
+        ))}
+      </Tbody>
+    </Table>
+    ;
 
   return (
     <div>
@@ -174,17 +175,7 @@ function Students() {
                 <Text>Create/Reconfigure Groups</Text>
               </HStack>
             </Button>
-            <Button
-              width="100%"
-              onClick={navigateToStudentUpload}
-              colorScheme="gray"
-              margin-left="20">
-              <HStack>
-                <AddIcon />
-                <Spacer />
-                <Text>Show Students from Class:</Text>
-              </HStack>
-            </Button>
+            <Center><Text fontWeight={"semibold"}>Show Students from Class:</Text></Center>
             <Select
               placeholder={"All"}
               value={`unitSemesterOffering`}
