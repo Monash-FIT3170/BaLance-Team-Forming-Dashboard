@@ -122,7 +122,7 @@ function BelbinImporter() {
 
   //create belbin type for students manually
   const handleAddBelbinClick = async () => {
-    // to implement api call to belbin db
+    // TODO: implement api call to belbin db
     setShowAlert(true);
   };
 
@@ -390,7 +390,7 @@ function BelbinImporter() {
         </Box>
         <Box mt={8} display="flex" justifyContent="space-between" alignItems="center">
           <Button onClick={handleAssignGroupsClick} w="100%" colorScheme="blue">
-            Next
+            Submit
           </Button>
         </Box>
       </Flex>
