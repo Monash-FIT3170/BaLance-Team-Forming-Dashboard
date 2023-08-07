@@ -120,7 +120,7 @@ function Students() {
       <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>
         <VStack>
           <Button
-            width="100%"
+            width="18vw"
             onClick={navigateToStudentUpload}
             colorScheme="gray"
             margin-left="20">
@@ -131,6 +131,7 @@ function Students() {
             </HStack>
           </Button>
           <Button
+            width="100%"
             onClick={navigateToStudentUpload}
             colorScheme="gray"
             margin-left="20">
@@ -163,7 +164,7 @@ function Students() {
         <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>
           <VStack>
             <Button
-              width="100%"
+              width="18vw"
               onClick={navigateToStudentUpload}
               colorScheme="gray"
               margin-left="20">

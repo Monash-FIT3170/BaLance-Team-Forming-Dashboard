@@ -171,7 +171,7 @@ function UnitPage() {
 
       {/* display the units from the data fetched from the backend */}
 
-      <Container className="units" maxW="80vw">
+      <Container className="units" maxW="92vw">
         {units &&
           units.map((unit) => (
             <UnitCard

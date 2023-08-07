@@ -111,7 +111,7 @@ function Groups() {
       <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>
         <VStack>
           <Button
-            width="100%"
+            width="18vw"
             onClick={navigateToStudentUpload}
             colorScheme="gray"
             margin-left="20">
@@ -122,6 +122,7 @@ function Groups() {
             </HStack>
           </Button>
           <Button
+            width="100%"
             onClick={navigateToBelbinUpload}
             colorScheme="gray"
             margin-left="20">
@@ -154,7 +155,7 @@ function Groups() {
         <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>
           <VStack>
             <Button
-              width="100%"
+              width="18vw"
               onClick={navigateToStudentUpload}
               colorScheme="gray"
               margin-left="20">
@@ -190,7 +191,7 @@ function Groups() {
       <Center>
         {groupsDisplay}
       </Center>
-      
+
     </div>
   );
 }
