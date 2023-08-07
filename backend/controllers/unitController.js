@@ -4,7 +4,7 @@
  *
  * */
 
-const db_connection = require('../db_connection');
+const db_connection = require("../config/databaseConfig");
 const {
     promiseBasedQuery,
     selectUnitOffKey
