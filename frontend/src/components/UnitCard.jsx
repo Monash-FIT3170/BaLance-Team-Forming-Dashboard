@@ -154,7 +154,6 @@ const UnitCard = (unit) => {
                   </HStack>
                   
                 </Button>
-              </Text>
               <Text
                 my="auto"
                 fontWeight="800"

@@ -579,8 +579,8 @@ function ImportPage() {
         <Box mt={8} display="flex" justifyContent="space-between" alignItems="center">
           <Select placeholder="Select strategy" w="40%" mr={4} id="groupStrategy">
             <option value="random">Random</option>
-            <option value="DISC">DISC</option>
-            <option value="OCEAN">OCEAN</option>
+            <option value="effort">Effort</option>
+            <option value="belbin">Belbin</option>
           </Select>
           <Select placeholder="No. per team" w="40%" mr={4} id="groupSize">
             <option value="2">2</option>
