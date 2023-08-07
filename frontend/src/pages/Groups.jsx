@@ -46,6 +46,10 @@ function Groups() {
     navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
   };
 
+  const navigateToBelbinUpload = () => {
+    navigate(`/belbinImport/${unitCode}/${year}/${period}`);
+  };
+
   useEffect(() => {
     fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`)
       .then((res) =>
@@ -118,7 +122,7 @@ function Groups() {
             </HStack>
           </Button>
           <Button
-            onClick={navigateToStudentUpload}
+            onClick={navigateToBelbinUpload}
             colorScheme="gray"
             margin-left="20">
             <HStack>

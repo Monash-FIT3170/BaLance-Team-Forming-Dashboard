@@ -32,7 +32,7 @@ function App() {
             <Route path="/students/:unitCode/:year/:period" element={<Students />} />
             <Route path="/uploadStudents/:unitCode/:year/:period" element={<ImportStudents />} />
             <Route path="/assigningPage" element={<Teachers />} />
-            <Route path="/belbinImport" element={<BelbinImporter />} />
+            <Route path="/belbinImport/:unitCode/:year/:period" element={<BelbinImporter />} />
             <Route path="/infoImport" element={<InfoImporter />} />
           </Routes>
         </div>
