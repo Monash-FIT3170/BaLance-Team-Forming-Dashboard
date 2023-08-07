@@ -297,7 +297,7 @@ function BelbinImporter() {
                 onClick={onAddBelbinOpen}
               ></IconButton>
 
-        <Modal isOpen={isBelbinOpen} onClose={onAddBelbinClose}>
+        <Modal isOpen={isAddBelbinOpen} onClose={onAddBelbinClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Add Student Belbin Type</ModalHeader>
