@@ -103,9 +103,9 @@ function BelbinImporter() {
   } = useDisclosure();
 
   const {
-    isOpen: isAddProfileOpen,
-    onOpen: onAddProfileOpen,
-    onClose: onAddProfileClose,
+    isOpen: isAddBelbinOpen,
+    onOpen: onAddBelbinOpen,
+    onClose: onAddBelbinClose,
   } = useDisclosure();
 
   const {
@@ -259,7 +259,7 @@ function BelbinImporter() {
         <Box width="80%" borderWidth="1px" borderRadius="lg" overflow="hidden" mt={8}>
           <Box borderWidth="2px" borderColor="black" as="header" p="4">
             <Text fontSize="2xl" fontWeight="bold">
-              View Belbin Types
+              Students' Belbin Types
             </Text>
           </Box>
           <TableContainer borderWidth="2px" borderColor="black">
@@ -289,14 +289,124 @@ function BelbinImporter() {
             </Table>
 
             <Box textAlign="center">
+            <IconButton
+                mt={4}
+                mb={4}
+                colorScheme="green"
+                icon={<AddIcon />}
+                onClick={onAddBelbinOpen}
+              ></IconButton>
 
+        <Modal isOpen={isBelbinOpen} onClose={onAddBelbinClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Add Student Belbin Type</ModalHeader>
+          <ModalBody>
+            <Divider my={4} />
+            <Box as="form" onSubmit={handleSubmit} onCancel={onAddBelbinClose}>
+              <FormField
+                label="Student ID"
+                placeholder="Enter Student ID"
+                value={currProfile.studentId}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, studentId: e.target.value })
+                }
+              />
+              <FormField
+                label="First Name"
+                placeholder="Enter first name"
+                value={currProfile.studentFirstName}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, studentFirstName: e.target.value })
+                }
+              />
+              <FormField
+                label="Last Name"
+                placeholder="Enter last name"
+                value={currProfile.studentLastName}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, studentLastName: e.target.value })
+                }
+              />
+              <FormField
+                label="Email"
+                placeholder="Enter email"
+                value={currProfile.studentEmailAddress}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, studentEmailAddress: e.target.value })
+                }
+              />
+              <FormField
+                label="WAM"
+                placeholder="Enter WAM"
+                value={currProfile.wamAverage}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, wamAverage: e.target.value })
+                }
+              />
+              <FormField
+                label="Gender"
+                placeholder="Select gender"
+                value={currProfile.gender}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, gender: e.target.value })
+                }
+                options={[
+                  { label: 'M', value: 'M' },
+                  { label: 'F', value: 'F' },
+                ]}
+              />
+              <FormField
+                label="Lab ID"
+                placeholder="Enter Lab ID"
+                value={currProfile.labId}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, labId: e.target.value })
+                }
+              />
+              <FormField
+                label="Enrolment Status"
+                placeholder="Select Enrolment Status"
+                value={currProfile.enrolmentStatus}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, enrolmentStatus: e.target.value })
+                }
+                options={[
+                  { label: 'Active', value: 'ACTIVE' },
+                  { label: 'Inactive', value: 'INACTIVE' },
+                ]}
+              />
+              <FormField
+                label="DISC Personality"
+                placeholder="Select Personality Type"
+                value={currProfile.discPersonality}
+                onChange={(e) =>
+                  setCurrProfile({ ...currProfile, discPersonality: e.target.value })
+                }
+                options={[
+                  { label: 'Dominant', value: 'DOMINANT' },
+                  { label: 'Influence', value: 'INFLUENCE' },
+                  { label: 'Steadiness', value: 'STEADINESS' },
+                  { label: 'Conscientiousness', value: 'CONSCIENTIOUSNESS' },
+                ]}
+              />
+            </Box>
+          </ModalBody>
+          <ModalFooter>
+            <Button type="submit" colorScheme="blue" mr={3} onClick={handleSubmit}>
+              Save
+            </Button>
+            <Button onClick={onAddBelbinClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
               <Button 
                 ml={4} 
                 mt={4}
                 mb={4} 
                 colorScheme="blue" onClick={() => handleAddProfilesClick()}>
-                Add Belbin Types to Unit
+                Add Student's Belbin Type to Unit
               </Button>
               {showAlert && (
                 <Alert
