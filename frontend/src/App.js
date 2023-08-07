@@ -7,6 +7,8 @@ import NavBar from './components/NavBar';
 import Groups from './pages/Groups';
 import Students from './pages/Students';
 import Teachers from './pages/Teachers';
+import BelbinImporter from './pages/ImportBelbin';
+import InfoImporter from './pages/ImportStudentInfo';
 
 const theme = extendTheme({
   colors: {
@@ -30,6 +32,8 @@ function App() {
             <Route path="/students/:unitCode/:year/:period" element={<Students />} />
             <Route path="/uploadStudents/:unitCode/:year/:period" element={<ImportStudents />} />
             <Route path="/assigningPage" element={<Teachers />} />
+            <Route path="/belbinImport" element={<BelbinImporter />} />
+            <Route path="/infoImport" element={<InfoImporter />} />
           </Routes>
         </div>
       </BrowserRouter>
