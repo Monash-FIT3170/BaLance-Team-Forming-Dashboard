@@ -93,21 +93,50 @@ CREATE TABLE IF NOT EXISTS group_allocation ( -- connection between student and 
     CONSTRAINT pk_group_alloc PRIMARY KEY (group_alloc_id),
     CONSTRAINT ck_group_alloc UNIQUE (stud_unique_id, lab_group_id)
 );
-ALTER TABLE group_allocation AUTO_INCREMENT=100000000;
+ALTER TABLE group_allocation AUTO_INCREMENT=100000000;	
+
+CREATE TABLE IF NOT EXISTS personality_test_result ( -- stores a student's personality data
+	test_attempt_id INT AUTO_INCREMENT COMMENT 'unique identifier for the personality test attempt',
+    test_type ENUM('effort', 'belbin'), 
+    stud_unique_id INT,
+    unit_off_id INT,
+	CONSTRAINT pk_personality_test_result PRIMARY KEY (test_attempt_id),
+    CONSTRAINT ck_personality_test_result UNIQUE (test_type, stud_unique_id, unit_off_id)
+);
+ALTER TABLE personality_test_result AUTO_INCREMENT=100000000;	
+
+CREATE TABLE IF NOT EXISTS effort_result ( -- information on student's effort factors
+	effort_result_id INT AUTO_INCREMENT COMMENT 'unique identifier for the effort test result',
+    personality_test_attempt INT,
+    assignment_avg INT,
+    time_commitment_hrs INT,
+    marks_per_hour INT,
+    CONSTRAINT pk_effort_result PRIMARY KEY (result_id)
+);
+ALTER TABLE effort_result AUTO_INCREMENT=100000000; 
+
+CREATE TABLE IF NOT EXISTS belbin_result ( -- information on student's belbin personality type
+	belbin_result_id INT AUTO_INCREMENT COMMENT 'unique identifier for the belbin test result',
+    personality_test_attempt INT,
+    belbin_type ENUM ('people', 'action', 'thinking')
+);
+ALTER TABLE belbin_result AUTO_INCREMENT=100000000; 
 
 
 -- FOREIGN KEY CREATION
--- student to enrolment, group allocation, lab allocation
+-- student to enrolment, group allocation, lab allocation, personality_test_attempt
 ALTER TABLE unit_enrolment ADD FOREIGN KEY (stud_unique_id) REFERENCES student(stud_unique_id);
 ALTER TABLE group_allocation ADD FOREIGN KEY (stud_unique_id) REFERENCES student(stud_unique_id);
 ALTER TABLE student_lab_allocation ADD FOREIGN KEY (stud_unique_id) REFERENCES student(stud_unique_id);
+ALTER TABLE personality_test_attempt ADD FOREIGN KEY (stud_unique_id) REFERENCES student(stud_unique_id);
 
 -- staff to unit_offering
 ALTER TABLE unit_offering ADD FOREIGN KEY (staff_unique_id) REFERENCES staff(staff_unique_id);
 
--- units to student enrolment, unit labs
+-- unit offerings to student enrolment, unit labs, personality test attempts
 ALTER TABLE unit_enrolment ADD FOREIGN KEY (unit_off_id) REFERENCES unit_offering(unit_off_id);
 ALTER TABLE unit_off_lab ADD FOREIGN KEY (unit_off_id) REFERENCES unit_offering(unit_off_id);
+ALTER TABLE personality_test_attempt ADD FOREIGN KEY (unit_off_id) REFERENCES unit_offering(unit_off_id);
 
 -- labs to student allocations, group allocations
 ALTER TABLE student_lab_allocation ADD FOREIGN KEY (unit_off_lab_id) REFERENCES unit_off_lab(unit_off_lab_id);
@@ -115,3 +144,8 @@ ALTER TABLE lab_group ADD FOREIGN KEY (unit_off_lab_id) REFERENCES unit_off_lab(
 
 -- groups to group allocations
 ALTER TABLE group_allocation ADD FOREIGN KEY (lab_group_id) REFERENCES lab_group(lab_group_id);
+
+-- personality test attempt to effort result, belbin result
+ALTER TABLE effort_result ADD FOREIGN KEY (personality_test_attempt) REFERENCES personality_test_attempt(test_attempt_id);
+ALTER TABLE belbin_result ADD FOREIGN KEY (personality_test_attempt) REFERENCES personality_test_attempt(test_attempt_id);
+
