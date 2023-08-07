@@ -120,8 +120,9 @@ function BelbinImporter() {
     
   };
 
-  //create unit for new students
-  const handleAddProfilesClick = async () => {
+  //create belbin type for students manually
+  const handleAddBelbinClick = async () => {
+    // to implement api call to belbin db
     setShowAlert(true);
   };
 
@@ -200,6 +201,12 @@ function BelbinImporter() {
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setProfiles([...profiles, currProfile]);
+    setCurrProfile(blankStudent);
+    onAddBelbinClose();
+  };
 
   const sortedProfiles = [...profiles].sort((a, b) => {
     if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -329,65 +336,16 @@ function BelbinImporter() {
                 }
               />
               <FormField
-                label="Email"
-                placeholder="Enter email"
-                value={currProfile.studentEmailAddress}
-                onChange={(e) =>
-                  setCurrProfile({ ...currProfile, studentEmailAddress: e.target.value })
-                }
-              />
-              <FormField
-                label="WAM"
-                placeholder="Enter WAM"
-                value={currProfile.wamAverage}
-                onChange={(e) =>
-                  setCurrProfile({ ...currProfile, wamAverage: e.target.value })
-                }
-              />
-              <FormField
-                label="Gender"
-                placeholder="Select gender"
-                value={currProfile.gender}
-                onChange={(e) =>
-                  setCurrProfile({ ...currProfile, gender: e.target.value })
-                }
-                options={[
-                  { label: 'M', value: 'M' },
-                  { label: 'F', value: 'F' },
-                ]}
-              />
-              <FormField
-                label="Lab ID"
-                placeholder="Enter Lab ID"
-                value={currProfile.labId}
-                onChange={(e) =>
-                  setCurrProfile({ ...currProfile, labId: e.target.value })
-                }
-              />
-              <FormField
-                label="Enrolment Status"
-                placeholder="Select Enrolment Status"
-                value={currProfile.enrolmentStatus}
-                onChange={(e) =>
-                  setCurrProfile({ ...currProfile, enrolmentStatus: e.target.value })
-                }
-                options={[
-                  { label: 'Active', value: 'ACTIVE' },
-                  { label: 'Inactive', value: 'INACTIVE' },
-                ]}
-              />
-              <FormField
-                label="DISC Personality"
-                placeholder="Select Personality Type"
+                label="Belbin Type"
+                placeholder="Select Belbin Type"
                 value={currProfile.discPersonality}
                 onChange={(e) =>
                   setCurrProfile({ ...currProfile, discPersonality: e.target.value })
                 }
                 options={[
-                  { label: 'Dominant', value: 'DOMINANT' },
-                  { label: 'Influence', value: 'INFLUENCE' },
-                  { label: 'Steadiness', value: 'STEADINESS' },
-                  { label: 'Conscientiousness', value: 'CONSCIENTIOUSNESS' },
+                  { label: 'Thought', value: 'DOMINANT' },
+                  { label: 'Action', value: 'INFLUENCE' },
+                  { label: 'People', value: 'STEADINESS' },
                 ]}
               />
             </Box>
@@ -405,7 +363,7 @@ function BelbinImporter() {
                 ml={4} 
                 mt={4}
                 mb={4} 
-                colorScheme="blue" onClick={() => handleAddProfilesClick()}>
+                colorScheme="blue" onClick={() => handleAddBelbinClick()}>
                 Add Student's Belbin Type to Unit
               </Button>
               {showAlert && (
