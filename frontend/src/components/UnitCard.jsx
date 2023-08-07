@@ -18,6 +18,7 @@ import {
   useDisclosure,
   VStack,
   HStack,
+  Spacer,
 } from '@chakra-ui/react';
 import { BsTrash } from 'react-icons/bs';
 
@@ -58,7 +59,7 @@ const UnitCard = (unit) => {
   const handleDeleteUnit = (event) => {
     event.preventDefault();
     console.log("deleting unit")
-    
+
 
     fetch(`http://localhost:8080/api/units/${unit_code}/${unit_off_year}/${unit_off_period}`, {
       method: 'DELETE',
@@ -146,32 +147,25 @@ const UnitCard = (unit) => {
             </ModalBody>
 
             <ModalFooter>
-              
-                <Button colorScheme={"red"}>
-                  <HStack>
-                    <Text>Remove Offering</Text>
-                    <Icon as={BsTrash}></Icon>
-                  </HStack>
-                  
-                </Button>
-              <Text
-                my="auto"
-                fontWeight="800"
-                color={mainText}
-                textAlign="left"
-                fontSize="xl"
-                me="auto"
-              >
-                <Button colorScheme = 'red' onClick={handleDeleteUnit} >
-                  DELETE
-                </Button>
-              </Text>
-              <Button onClick={onCloseDetails} mr={3}>
-                Cancel
-              </Button>
-              <Button colorScheme="blue" onClick={onCloseDetails}>
-                OK
-              </Button>
+              <HStack>
+                <Spacer />
+                <Text
+                  my="auto"
+                  fontWeight="800"
+                  color={mainText}
+                  textAlign="right"
+                  fontSize="xl"
+                  me="auto"
+                >
+                  <Button colorScheme='red' onClick={handleDeleteUnit} >
+                    <HStack>
+                      <Text>Remove Offering</Text>
+                      <Icon as={BsTrash}></Icon>
+                    </HStack>
+                  </Button>
+                </Text>
+              </HStack>
+
             </ModalFooter>
           </ModalContent>
         </Modal>
