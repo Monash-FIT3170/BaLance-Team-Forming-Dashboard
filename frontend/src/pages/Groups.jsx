@@ -10,10 +10,15 @@ import {
   Heading,
   Center,
   useDisclosure,
+  VStack,
+  Text,
+  Select,
+  Box,
 } from '@chakra-ui/react';
 
 import { Link, useNavigate } from 'react-router-dom';
 import { ShuffleGroups } from '../components/ShuffleGroups';
+import { AddIcon, EditIcon } from '@chakra-ui/icons';
 
 function Groups() {
   const cancelRef = React.useRef();
@@ -79,16 +84,51 @@ function Groups() {
       });
   };
 
+  let groupsDisplay = groups.length === 0 ?
+    <Box bg='#E6EBF0' w='60%' p={4} alignContent="center">
+      <Center>
+        No students have yet been added to the offering. Click "Add Students" to add students to the offering.
+      </Center>
+    </Box>
+    :
+    <Container className="groups" maxW="80vw">
+      {groups.map((group) => {
+        const cardKey = `${group.lab_number}_${group.group_number}`;
+        return (<GroupCard groupData={group} numberOfGroups={17} key={cardKey} />);
+      })}
+    </Container>
+
   return (
     <div>
       <Heading alignContent={'center'}>
         <Center margin="10">{unitCode}</Center>
       </Heading>
 
-      <HStack margin="0px 20vw 5vh 20vw">
-        <Button onClick={navigateToStudentUpload} colorScheme="gray" margin-left="20">
-          Upload Students
-        </Button>
+      <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>
+        <VStack>
+          <Button
+            width="100%"
+            onClick={navigateToStudentUpload}
+            colorScheme="gray"
+            margin-left="20">
+            <HStack>
+              <AddIcon />
+              <Spacer />
+              <Text>Add Students</Text>
+            </HStack>
+          </Button>
+          <Button
+            onClick={navigateToStudentUpload}
+            colorScheme="gray"
+            margin-left="20">
+            <HStack>
+              <AddIcon />
+              <Spacer />
+              <Text>Add Personality Data</Text>
+            </HStack>
+          </Button>
+        </VStack>
+
 
         <Spacer />
 
@@ -97,7 +137,9 @@ function Groups() {
           <ButtonGroup colorScheme="#282c34" variant="outline" size="lg" isAttached>
             <Button isDisabled={true}>  Groups  </Button>
             <Link to={`/students/${unitCode}/${year}/${period}`}>
-              <Button>Students</Button>
+              <Button>
+                Students
+              </Button>
             </Link>
           </ButtonGroup>
           <Spacer />
@@ -105,21 +147,46 @@ function Groups() {
 
         <Spacer />
 
-        <ShuffleGroups
-          onOpen={onOpen}
-          onClose={onClose}
-          isOpen={isOpen}
-          cancelRef={cancelRef}
-          handleShuffleGroups={handleShuffleGroups}
-        />
+        <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>
+          <VStack>
+            <Button
+              width="100%"
+              onClick={navigateToStudentUpload}
+              colorScheme="gray"
+              margin-left="20">
+              <HStack>
+                <EditIcon />
+                <Spacer />
+                <Text>Create/Reconfigure Groups</Text>
+              </HStack>
+            </Button>
+            <Button
+              width="100%"
+              onClick={navigateToStudentUpload}
+              colorScheme="gray"
+              margin-left="20">
+              <HStack>
+                <AddIcon />
+                <Spacer />
+                <Text>Show Students from Class:</Text>
+              </HStack>
+            </Button>
+            <Select
+              placeholder={`${groups.length}`}
+              value={`unitSemesterOffering`}
+              onChange={(event) => `setUnitSemesterOffering(event.target.value)`}
+            >
+              {`<option value="S1">S1</option>
+                      <option value="S2">S2</option>
+                      <option value="FY">FY</option>`}
+            </Select>
+          </VStack>
+        </HStack>
       </HStack>
-
-      <Container className="groups" maxW="80vw">
-        {groups.map((group) => {
-          const cardKey = `${group.lab_number}_${group.group_number}`;
-          return (<GroupCard groupData={group} numberOfGroups={17} key={cardKey} />);
-        })}
-      </Container>
+      <Center>
+        {groupsDisplay}
+      </Center>
+      
     </div>
   );
 }
