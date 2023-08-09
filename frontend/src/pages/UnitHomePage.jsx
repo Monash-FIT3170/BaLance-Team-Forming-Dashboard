@@ -24,6 +24,7 @@ import {
   Select,
   Container,
   Spacer,
+  Radio, RadioGroup, Stack, Text
 } from '@chakra-ui/react';
 
 import { AddIcon } from '@chakra-ui/icons';
@@ -37,8 +38,11 @@ function UnitPage() {
   const [units, setUnits] = useState([]);
   const [unitCode, setUnitCode] = useState('');
   const [unitName, setUnitName] = useState('');
+  const [addDataOption, setAddDataOption] = React.useState('Add Now');
   const [unitYearOffering, setUnitYearOffering] = useState('');
   const [unitSemesterOffering, setUnitSemesterOffering] = useState('');
+
+  const navigate = useNavigate();
 
   // handle submit unit and posting it to the backend
   const handleSubmitUnit = (event) => {
@@ -62,8 +66,14 @@ function UnitPage() {
 
     let answer = window.confirm('Unit created successfully');
     if (answer) {
-      window.location.reload();
       onCloseAdd();
+      // if the user wants to add the student data later, reload the page, otherwise take them directly to that offering's upload students page
+      if (addDataOption === "Add Later") {
+        window.location.reload();
+      }
+      else {
+        navigate(`/uploadStudents/${unitCode}/${unitYearOffering}/${unitSemesterOffering}`);
+      }
     }
   };
 
@@ -72,7 +82,6 @@ function UnitPage() {
     fetch('http://localhost:8080/api/units/')
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setUnits(data);
       })
       .catch((err) => {
@@ -88,7 +97,7 @@ function UnitPage() {
         {/* new unit button */}
 
         <Button
-          
+
           align="right"
           justify="right"
           borderRadius="12px"
@@ -96,13 +105,13 @@ function UnitPage() {
           me="12px"
           onClick={onOpenAdd}
         >
-          <HStack><p>Add Offering</p><Spacer/><Icon
+          <HStack><p>Add Offering</p><Spacer /><Icon
             margin-left="10%"
             as={AddIcon}
             color={iconColor}
-            
+
           /></HStack>
-          
+
         </Button>
 
         {/* pop up when adding a new unit */}
@@ -154,6 +163,16 @@ function UnitPage() {
                       <option value="FY">FY</option>
                     </Select>
                   </Flex>
+                  <Text>Add student data to your offering:</Text>
+                  <Center>
+                    <RadioGroup onChange={setAddDataOption} value={addDataOption}>
+                    <Stack direction='row'>
+                      <Radio value='Add Now'>Now</Radio>
+                      <Radio value='Add Later'>Later</Radio>
+                    </Stack>
+                  </RadioGroup>
+                  </Center>
+
                 </FormControl>
               </form>
             </ModalBody>
@@ -161,7 +180,7 @@ function UnitPage() {
               <Button onClick={onCloseAdd} colorScheme="red" mr={3}>
                 Cancel
               </Button>
-              <Button type="submit" colorScheme="green" form="create-unit">
+              <Button type="submit" colorScheme="blue" form="create-unit">
                 Create Unit
               </Button>
             </ModalFooter>
@@ -169,15 +188,17 @@ function UnitPage() {
         </Modal>
       </Center>
 
+
+
       {/* display the units from the data fetched from the backend */}
 
       <Container className="units" maxW="92vw">
         {units &&
           units.map((unit) => (
             <UnitCard
-                {...unit}
-                key={`${unit.unit_code}/${unit.unit_off_year}/${unit.unit_off_period}`}
-                className="unit"
+              {...unit}
+              key={`${unit.unit_code}/${unit.unit_off_year}/${unit.unit_off_period}`}
+              className="unit"
             />
           ))}
       </Container>
