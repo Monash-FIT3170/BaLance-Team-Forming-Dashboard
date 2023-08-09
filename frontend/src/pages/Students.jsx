@@ -17,6 +17,7 @@ import {
   Text,
   VStack,
   Box,
+  Container,
 } from '@chakra-ui/react';
 import StudentRowStudentDisplay from '../components/StudentRowStudentDisplay';
 import { Link, useNavigate } from 'react-router-dom';
@@ -86,30 +87,30 @@ function Students() {
       <Center>
         No students have yet been added to the offering. Click "Add Students" to add students to the offering.
       </Center>
-    </Box> 
+    </Box>
     :
     <Table variant="striped" width="80vw">
-          <Thead>
-            <Tr>
-              <Th>ID</Th>
-              <Th>Preferred Name</Th>
-              <Th>Last Name</Th>
-              <Th>Email Address</Th>
-              <Th>Group</Th>
-            </Tr>
-          </Thead>
+      <Thead>
+        <Tr>
+          <Th>ID</Th>
+          <Th>Preferred Name</Th>
+          <Th>Last Name</Th>
+          <Th>Email Address</Th>
+          <Th>Group</Th>
+        </Tr>
+      </Thead>
 
-          <Tbody>
-            {students.map((student) => (
-              <StudentRowStudentDisplay
-                studentData={student}
-                numberOfGroups={numberOfGroups}
-                key={student.student_id}
-              />
-            ))}
-          </Tbody>
-        </Table>
-  ;
+      <Tbody>
+        {students.map((student) => (
+          <StudentRowStudentDisplay
+            studentData={student}
+            numberOfGroups={numberOfGroups}
+            key={student.student_id}
+          />
+        ))}
+      </Tbody>
+    </Table>
+    ;
 
   return (
     <div>
@@ -120,7 +121,7 @@ function Students() {
       <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>
         <VStack>
           <Button
-            width="100%"
+            width="18vw"
             onClick={navigateToStudentUpload}
             colorScheme="gray"
             margin-left="20">
@@ -131,6 +132,7 @@ function Students() {
             </HStack>
           </Button>
           <Button
+            width="100%"
             onClick={navigateToStudentUpload}
             colorScheme="gray"
             margin-left="20">
@@ -138,6 +140,17 @@ function Students() {
               <AddIcon />
               <Spacer />
               <Text>Add Personality Data</Text>
+            </HStack>
+          </Button>
+          <Button
+            width="100%"
+            onClick={navigateToStudentUpload}
+            colorScheme="gray"
+            margin-left="20">
+            <HStack>
+              <AddIcon />
+              <Spacer />
+              <Text>Add Work Ethic Data</Text>
             </HStack>
           </Button>
         </VStack>
@@ -163,7 +176,7 @@ function Students() {
         <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>
           <VStack>
             <Button
-              width="100%"
+              width="18vw"
               onClick={navigateToStudentUpload}
               colorScheme="gray"
               margin-left="20">
@@ -173,19 +186,9 @@ function Students() {
                 <Text>Create/Reconfigure Groups</Text>
               </HStack>
             </Button>
-            <Button
-              width="100%"
-              onClick={navigateToStudentUpload}
-              colorScheme="gray"
-              margin-left="20">
-              <HStack>
-                <AddIcon />
-                <Spacer />
-                <Text>Show Students from Class:</Text>
-              </HStack>
-            </Button>
+            <Center><Text fontWeight={"semibold"}>Show Students from Class:</Text></Center>
             <Select
-              placeholder={`${students.length}`}
+              placeholder={"All"}
               value={`unitSemesterOffering`}
               onChange={(event) => `setUnitSemesterOffering(event.target.value)`}
             >

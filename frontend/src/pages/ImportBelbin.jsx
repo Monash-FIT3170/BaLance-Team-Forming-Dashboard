@@ -30,6 +30,8 @@ import {
   ModalBody,
   useDisclosure,
   IconButton,
+  Center,
+  Thead,
 } from '@chakra-ui/react';
 import { AddIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
 
@@ -124,6 +126,7 @@ function BelbinImporter() {
   const handleAddBelbinClick = async () => {
     // TODO: implement api call to belbin db
     setShowAlert(true);
+    console.log(profiles);
   };
 
   // Logic for table sorting by column
@@ -271,8 +274,8 @@ function BelbinImporter() {
           </Box>
           <TableContainer borderWidth="2px" borderColor="black">
             <Table variant="striped">
-              <thead>
-                <tr>
+              <Thead>
+                <Tr>
                   {headers.map((header) => (
                     <th key={header[0]} onClick={() => handleSort(header)}>
                       {header[1]}
@@ -281,16 +284,18 @@ function BelbinImporter() {
                       )}
                     </th>
                   ))}
-                </tr>
-              </thead>
+                </Tr>
+              </Thead>
               <Tbody>
                 {sortedProfiles.map((profile) => (
-                  <Tr key={profile.studentEmailAddress}>
-                    <Td>{profile.studentId}</Td>
-                    <Td>{profile.studentFirstName}</Td>
-                    <Td>{profile.studentLastName}</Td>
-                    <Td>{profile.belbinType}</Td>
+                  <Tr key ={profile.studentEmailAddress}>
+                    <Td textAlign="center">{profile.studentId}</Td>
+                    <Td textAlign="center">{profile.studentFirstName}</Td>
+                    <Td textAlign="center">{profile.studentLastName}</Td>
+                    <Td textAlign="center">{profile.belbinType}</Td>
                   </Tr>
+
+                  
                 ))}
               </Tbody>
             </Table>

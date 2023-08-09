@@ -111,7 +111,7 @@ function Groups() {
       <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>
         <VStack>
           <Button
-            width="100%"
+            width="18vw"
             onClick={navigateToStudentUpload}
             colorScheme="gray"
             margin-left="20">
@@ -122,6 +122,7 @@ function Groups() {
             </HStack>
           </Button>
           <Button
+            width="100%"
             onClick={navigateToBelbinUpload}
             colorScheme="gray"
             margin-left="20">
@@ -129,6 +130,17 @@ function Groups() {
               <AddIcon />
               <Spacer />
               <Text>Add Personality Data</Text>
+            </HStack>
+          </Button>
+          <Button
+            width="100%"
+            onClick={navigateToStudentUpload}
+            colorScheme="gray"
+            margin-left="20">
+            <HStack>
+              <AddIcon />
+              <Spacer />
+              <Text>Add Work Ethic Data</Text>
             </HStack>
           </Button>
         </VStack>
@@ -154,7 +166,7 @@ function Groups() {
         <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>
           <VStack>
             <Button
-              width="100%"
+              width="18vw"
               onClick={navigateToStudentUpload}
               colorScheme="gray"
               margin-left="20">
@@ -164,19 +176,9 @@ function Groups() {
                 <Text>Create/Reconfigure Groups</Text>
               </HStack>
             </Button>
-            <Button
-              width="100%"
-              onClick={navigateToStudentUpload}
-              colorScheme="gray"
-              margin-left="20">
-              <HStack>
-                <AddIcon />
-                <Spacer />
-                <Text>Show Students from Class:</Text>
-              </HStack>
-            </Button>
+            <Center><Text fontWeight={"semibold"}>Show Students from Class:</Text></Center>
             <Select
-              placeholder={`${groups.length}`}
+              placeholder={"All"}
               value={`unitSemesterOffering`}
               onChange={(event) => `setUnitSemesterOffering(event.target.value)`}
             >
@@ -190,7 +192,7 @@ function Groups() {
       <Center>
         {groupsDisplay}
       </Center>
-      
+
     </div>
   );
 }

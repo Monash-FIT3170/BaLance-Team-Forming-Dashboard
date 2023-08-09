@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router';
 import { DeleteProfile } from '../components/DeleteProfile';
 import { ConfirmClearSelection } from '../components/ConfirmClearSelection';
 import { UploadCSV } from '../components/UploadCSV';
 import { FormField } from '../components/FormField';
+import { CsvInfoButton } from '../components/CsvInfoButton';
 
 import {
   Box,
@@ -30,8 +31,21 @@ import {
   ModalBody,
   useDisclosure,
   IconButton,
+  Thead,
+  Th,
+  HStack,
+  Center,
+  Spacer,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
+  PopoverBody,
+  VStack,
 } from '@chakra-ui/react';
-import { AddIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
+import { AddIcon, QuestionOutlineIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
 
 function ImportPage() {
   class Student {
@@ -60,11 +74,6 @@ function ImportPage() {
 
   const blankStudent = new Student('', '', '', '', '', '', '', '', '');
 
-  // Defaults for assigning groups
-  const defaultGroupSize = 4;
-  const defaultVariance = 1;
-  const defaultStrategy = 'random';
-
   // Formatted headers for different possible variables
   const headers = [
     ['studentId', 'Student ID'],
@@ -75,7 +84,6 @@ function ImportPage() {
     ['gender', 'Gender'],
     ['labId', 'Lab ID'],
     ['enrolmentStatus', 'Enrolment Status'],
-    ['discPersonality', 'DISC Personality'],
   ];
 
   // Mapping for CSV headers to database headers
@@ -122,29 +130,6 @@ function ImportPage() {
   } = useDisclosure();
 
   const { unitCode, year, period } = useParams();
-
-  const handleAssignGroupsClick = async () => {
-    // Get current values
-    const groupStrategy =
-      document.getElementById('groupStrategy').value || defaultStrategy;
-    const groupSize = document.getElementById('groupSize').value || defaultGroupSize;
-    const variance = document.getElementById('variance').value || defaultVariance;
-
-    // Make API call
-    await fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        groupSize: Number(groupSize),
-        variance: Number(variance),
-        strategy: groupStrategy
-      })
-    });
-    // Go to groups page todo
-    navigate(`/groups/${unitCode}/${year}/${period}`);
-  };
 
   //create unit for new students
   const handleAddProfilesClick = async () => {
@@ -198,8 +183,6 @@ function ImportPage() {
       const csvDict = csvToDict(csvString);
       setCsvFile(file);
 
-      // Add default values to enrollmentStatus and discPersonality
-      // TODO: expect this info from CSV file
       const profilesWithDefaultValues = csvDict.map((profile) => {
         return {
           ...profile,
@@ -345,11 +328,13 @@ function ImportPage() {
     setIsConfirmationClearOpen(false);
   };
 
+  console.log(sortedProfiles)
+
   return (
     <>
       <Box as="header" p="4" textAlign="center">
         <Text fontSize="2xl" fontWeight="bold">
-          Upload Profiles
+          Add Student Profiles to: {`${unitCode} - ${period} ${year}, **CAMPUS**`}
         </Text>
       </Box>
 
@@ -362,78 +347,37 @@ function ImportPage() {
         />
       )}
 
-      <Flex
-        height="100%"
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="center"
-        textAlign="center"
-        margin="20px"
-      >
-        <UploadCSV
-          isFileChosen={isFileChosen}
-          csvFile={csvFile}
-          handleClearSelection={handleClearSelection}
-          handleUpload={handleUpload}
-          setIsFileChosen={setIsFileChosen}
-        />
-        <ConfirmClearSelection
-          isConfirmationClearOpen={isConfirmationClearOpen}
-          handleConfirmClearSelection={handleConfirmClearSelection}
-          handleCloseConfirmation={handleCloseConfirmation}
-        />
-        <Box width="80%" borderWidth="1px" borderRadius="lg" overflow="hidden" mt={8}>
-          <Box borderWidth="2px" borderColor="black" as="header" p="4">
-            <Text fontSize="2xl" fontWeight="bold">
-              View Profiles
-            </Text>
-          </Box>
-          <TableContainer borderWidth="2px" borderColor="black">
-            <Table variant="striped">
-              <thead>
-                <tr>
-                  {headers.map((header) => (
-                    <th key={header[0]} onClick={() => handleSort(header)}>
-                      {header[1]}
-                      {sortConfig.key === header[0] && (
-                        <span>{sortConfig.direction === 'ascending' ? '▲' : '▼'}</span>
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <Tbody>
-                {sortedProfiles.map((profile) => (
-                  <Tr key={profile.studentEmailAddress}>
-                    <Td>{profile.studentId}</Td>
-                    <Td>{profile.studentFirstName}</Td>
-                    <Td>{profile.studentLastName}</Td>
-                    <Td>{profile.studentEmailAddress}</Td>
-                    <Td>{profile.wamAverage}</Td>
-                    <Td>{profile.gender}</Td>
-                    <Td>{profile.labId}</Td>
-                    <Td>{profile.enrolmentStatus}</Td>
-                    <Td>{profile.discPersonality}</Td>
+      <VStack>
+        <HStack>
 
-                    <Td>
-                      <EditIcon
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => {
-                          setCurrProfile(profile);
-                          onEditProfileOpen();
-                        }}
-                      />
-                    </Td>
-                    <Td>
-                      <DeleteIcon
-                        style={{ cursor: 'pointer', color: 'red' }}
-                        onClick={() => handleDeleteProfile(profile.studentEmailAddress)} // Call a function to delete the profile when the icon is clicked
-                      />
-                    </Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
+          <Flex
+            height="100%"
+            flexDirection="column"
+            alignItems="center"
+            textAlign="center"
+            maxWidth="50vw"
+            minWidth="50vw"
+            marginX="3vw"
+          >
+            <CsvInfoButton
+              infoHeader=".csv file format"
+              infoText="Accepted .csv files will have the following attributes: DISPLAY_SUBJECT_CODE SUBJECT_CODE ACTIVITY_GROUP_CODE SHORT_CODE STUDENT_CODE LAST_NAME PREFERRED_NAME EMAIL_ADDRESS WAM_DISPLAY WAM_VAL GENDER"
+            />
+            <UploadCSV
+              isFileChosen={isFileChosen}
+              csvFile={csvFile}
+              handleClearSelection={handleClearSelection}
+              handleUpload={handleUpload}
+              setIsFileChosen={setIsFileChosen}
+            />
+
+            <ConfirmClearSelection
+              isConfirmationClearOpen={isConfirmationClearOpen}
+              handleConfirmClearSelection={handleConfirmClearSelection}
+              handleCloseConfirmation={handleCloseConfirmation}
+            />
+
+
             <Modal isOpen={isEditProfileOpen} onClose={onEditProfileClose}>
               <ModalOverlay />
               <ModalContent>
@@ -534,69 +478,106 @@ function ImportPage() {
                 </ModalFooter>
               </ModalContent>
             </Modal>
+            {/*<Box textAlign="center">
+            <IconButton
+              mt={4}
+              mb={4}
+              colorScheme="green"
+              icon={<AddIcon />}
+              onClick={onAddProfileOpen}
+            ></IconButton>
 
-            <Box textAlign="center">
-              <IconButton
-                mt={4}
-                mb={4}
-                colorScheme="green"
-                icon={<AddIcon />}
-                onClick={onAddProfileOpen}
-              ></IconButton>
-
-              <Button
-                marginLeft="2em"
-                colorScheme="red"
-                onClick={() => handleDeleteInactiveProfiles(profiles)}
+            <Button
+              marginLeft="2em"
+              colorScheme="red"
+              onClick={() => handleDeleteInactiveProfiles(profiles)}
+            >
+              Delete All Inactive Profiles
+            </Button>
+            <Button ml={4} colorScheme="blue" onClick={() => handleAddProfilesClick()}>
+              Add Profiles To Unit
+            </Button>
+            {showAlert && (
+              <Alert
+                status="success"
+                variant="subtle"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+                textAlign="center"
+                height="200px"
               >
-                Delete All Inactive Profiles
-              </Button>
-              <Button ml={4} colorScheme="blue" onClick={() => handleAddProfilesClick()}>
-                Add Profiles To Unit
-              </Button>
-              {showAlert && (
-                <Alert
-                  status="success"
-                  variant="subtle"
-                  flexDirection="column"
-                  alignItems="center"
-                  justifyContent="center"
-                  textAlign="center"
-                  height="200px"
-                >
-                  <AlertIcon boxSize="40px" mr={0} />
-                  <AlertTitle mt={4} mb={1} fontSize="lg">
-                    Profiles Added Successfully
-                  </AlertTitle>
-                  <AlertDescription maxWidth="sm">
-                    You can now assign groups using the menu below!
-                  </AlertDescription>
-                </Alert>
-              )}
-            </Box>
-          </TableContainer>
-        </Box>
-        <Box mt={8} display="flex" justifyContent="space-between" alignItems="center">
-          <Select placeholder="Select strategy" w="40%" mr={4} id="groupStrategy">
-            <option value="random">Random</option>
-            <option value="effort">Effort</option>
-            <option value="belbin">Belbin</option>
-          </Select>
-          <Select placeholder="No. per team" w="40%" mr={4} id="groupSize">
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-          </Select>
-          <Select placeholder="Team variance" w="40%" mr={4} id="variance">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-          </Select>
-          <Button onClick={handleAssignGroupsClick} w="25%" colorScheme="blue">
-            Assign groups
-          </Button>
-        </Box>
-      </Flex>
+                <AlertIcon boxSize="40px" mr={0} />
+                <AlertTitle mt={4} mb={1} fontSize="lg">
+                  Profiles Added Successfully
+                </AlertTitle>
+              </Alert>
+            )}
+          </Box>
+          */}
+
+          </Flex>
+
+          <Center height="20vh">
+            <Divider orientation="vertical" />
+          </Center>
+          <Text paddingX="3vw">When you are finished, click <Text _hover={{cursor: "pointer"}} color="blue"><a onClick={() => {navigate(`/groups/${unitCode}/${year}/${period}`)}}>here</a></Text> to view the unit offering</Text>
+          
+
+        </HStack>
+
+        {sortedProfiles.length === 0 ? (<Box bg='#E6EBF0' p={4} alignContent="center" width="80%">
+          <Center>
+            No students have yet been added to the offering.
+          </Center>
+        </Box>) : (<Table variant="striped" size="sm">
+          <Thead>
+            <Tr>
+              {headers.map((header) => (
+                <Th key={header[0]} onClick={() => handleSort(header)}>
+                  {header[1]}
+                  {sortConfig.key === header[0] && (
+                    <span>{sortConfig.direction === 'ascending' ? '▲' : '▼'}</span>
+                  )}
+                </Th>
+              ))}
+            </Tr>
+          </Thead>
+          <Tbody>
+            {sortedProfiles.map((profile) => (
+              <Tr key={profile.studentEmailAddress}>
+                <Td>{profile.studentId}</Td>
+                <Td>{profile.studentFirstName}</Td>
+                <Td>{profile.studentLastName}</Td>
+                <Td>{profile.studentEmailAddress}</Td>
+                <Td>{profile.wamAverage}</Td>
+                <Td>{profile.gender}</Td>
+                <Td>{profile.labId}</Td>
+                <Td>{profile.enrolmentStatus}</Td>
+
+                <Td>
+                  <EditIcon
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      setCurrProfile(profile);
+                      onEditProfileOpen();
+                    }}
+                  />
+                </Td>
+                <Td>
+                  <DeleteIcon
+                    style={{ cursor: 'pointer', color: 'red' }}
+                    onClick={() => handleDeleteProfile(profile.studentEmailAddress)} // Call a function to delete the profile when the icon is clicked
+                  />
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>)}
+      </VStack>
+
+
+
 
       <Modal isOpen={isAddProfileOpen} onClose={onAddProfileClose}>
         <ModalOverlay />
@@ -664,32 +645,6 @@ function ImportPage() {
                 onChange={(e) =>
                   setCurrProfile({ ...currProfile, labId: e.target.value })
                 }
-              />
-              <FormField
-                label="Enrolment Status"
-                placeholder="Select Enrolment Status"
-                value={currProfile.enrolmentStatus}
-                onChange={(e) =>
-                  setCurrProfile({ ...currProfile, enrolmentStatus: e.target.value })
-                }
-                options={[
-                  { label: 'Active', value: 'ACTIVE' },
-                  { label: 'Inactive', value: 'INACTIVE' },
-                ]}
-              />
-              <FormField
-                label="DISC Personality"
-                placeholder="Select Personality Type"
-                value={currProfile.discPersonality}
-                onChange={(e) =>
-                  setCurrProfile({ ...currProfile, discPersonality: e.target.value })
-                }
-                options={[
-                  { label: 'Dominant', value: 'DOMINANT' },
-                  { label: 'Influence', value: 'INFLUENCE' },
-                  { label: 'Steadiness', value: 'STEADINESS' },
-                  { label: 'Conscientiousness', value: 'CONSCIENTIOUSNESS' },
-                ]}
               />
             </Box>
           </ModalBody>
