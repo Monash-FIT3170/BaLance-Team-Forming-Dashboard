@@ -23,7 +23,7 @@ export class UploadCSV extends React.Component {
         <>
           <HStack>
             <FiUploadCloud />
-            <Text>Upload your .csv file below</Text>
+            <Text>Submit a .csv file below to add students to the offering</Text>
           </HStack>
           <Box
             bg={this.props.isFileChosen ? '#00ADB5' : 'white'}
