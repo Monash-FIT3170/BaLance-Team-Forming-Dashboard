@@ -30,6 +30,8 @@ import {
   ModalBody,
   useDisclosure,
   IconButton,
+  Thead,
+  Th,
 } from '@chakra-ui/react';
 import { AddIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
 
@@ -59,11 +61,6 @@ function ImportPage() {
   }
 
   const blankStudent = new Student('', '', '', '', '', '', '', '', '');
-
-  // Defaults for assigning groups
-  const defaultGroupSize = 4;
-  const defaultVariance = 1;
-  const defaultStrategy = 'random';
 
   // Formatted headers for different possible variables
   const headers = [
@@ -123,29 +120,6 @@ function ImportPage() {
 
   const { unitCode, year, period } = useParams();
 
-  const handleAssignGroupsClick = async () => {
-    // Get current values
-    const groupStrategy =
-      document.getElementById('groupStrategy').value || defaultStrategy;
-    const groupSize = document.getElementById('groupSize').value || defaultGroupSize;
-    const variance = document.getElementById('variance').value || defaultVariance;
-
-    // Make API call
-    await fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        groupSize: Number(groupSize),
-        variance: Number(variance),
-        strategy: groupStrategy
-      })
-    });
-    // Go to groups page todo
-    navigate(`/groups/${unitCode}/${year}/${period}`);
-  };
-
   //create unit for new students
   const handleAddProfilesClick = async () => {
     // Make API call
@@ -198,8 +172,6 @@ function ImportPage() {
       const csvDict = csvToDict(csvString);
       setCsvFile(file);
 
-      // Add default values to enrollmentStatus and discPersonality
-      // TODO: expect this info from CSV file
       const profilesWithDefaultValues = csvDict.map((profile) => {
         return {
           ...profile,
@@ -382,26 +354,19 @@ function ImportPage() {
           handleConfirmClearSelection={handleConfirmClearSelection}
           handleCloseConfirmation={handleCloseConfirmation}
         />
-        <Box width="80%" borderWidth="1px" borderRadius="lg" overflow="hidden" mt={8}>
-          <Box borderWidth="2px" borderColor="black" as="header" p="4">
-            <Text fontSize="2xl" fontWeight="bold">
-              View Profiles
-            </Text>
-          </Box>
-          <TableContainer borderWidth="2px" borderColor="black">
             <Table variant="striped">
-              <thead>
-                <tr>
+              <Thead>
+                <Tr>
                   {headers.map((header) => (
-                    <th key={header[0]} onClick={() => handleSort(header)}>
+                    <Th key={header[0]} onClick={() => handleSort(header)}>
                       {header[1]}
                       {sortConfig.key === header[0] && (
                         <span>{sortConfig.direction === 'ascending' ? '▲' : '▼'}</span>
                       )}
-                    </th>
+                    </Th>
                   ))}
-                </tr>
-              </thead>
+                </Tr>
+              </Thead>
               <Tbody>
                 {sortedProfiles.map((profile) => (
                   <Tr key={profile.studentEmailAddress}>
@@ -568,34 +533,9 @@ function ImportPage() {
                   <AlertTitle mt={4} mb={1} fontSize="lg">
                     Profiles Added Successfully
                   </AlertTitle>
-                  <AlertDescription maxWidth="sm">
-                    You can now assign groups using the menu below!
-                  </AlertDescription>
                 </Alert>
               )}
             </Box>
-          </TableContainer>
-        </Box>
-        <Box mt={8} display="flex" justifyContent="space-between" alignItems="center">
-          <Select placeholder="Select strategy" w="40%" mr={4} id="groupStrategy">
-            <option value="random">Random</option>
-            <option value="effort">Effort</option>
-            <option value="belbin">Belbin</option>
-          </Select>
-          <Select placeholder="No. per team" w="40%" mr={4} id="groupSize">
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-          </Select>
-          <Select placeholder="Team variance" w="40%" mr={4} id="variance">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-          </Select>
-          <Button onClick={handleAssignGroupsClick} w="25%" colorScheme="blue">
-            Assign groups
-          </Button>
-        </Box>
       </Flex>
 
       <Modal isOpen={isAddProfileOpen} onClose={onAddProfileClose}>
@@ -664,32 +604,6 @@ function ImportPage() {
                 onChange={(e) =>
                   setCurrProfile({ ...currProfile, labId: e.target.value })
                 }
-              />
-              <FormField
-                label="Enrolment Status"
-                placeholder="Select Enrolment Status"
-                value={currProfile.enrolmentStatus}
-                onChange={(e) =>
-                  setCurrProfile({ ...currProfile, enrolmentStatus: e.target.value })
-                }
-                options={[
-                  { label: 'Active', value: 'ACTIVE' },
-                  { label: 'Inactive', value: 'INACTIVE' },
-                ]}
-              />
-              <FormField
-                label="DISC Personality"
-                placeholder="Select Personality Type"
-                value={currProfile.discPersonality}
-                onChange={(e) =>
-                  setCurrProfile({ ...currProfile, discPersonality: e.target.value })
-                }
-                options={[
-                  { label: 'Dominant', value: 'DOMINANT' },
-                  { label: 'Influence', value: 'INFLUENCE' },
-                  { label: 'Steadiness', value: 'STEADINESS' },
-                  { label: 'Conscientiousness', value: 'CONSCIENTIOUSNESS' },
-                ]}
               />
             </Box>
           </ModalBody>
