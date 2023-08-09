@@ -142,6 +142,17 @@ function Students() {
               <Text>Add Personality Data</Text>
             </HStack>
           </Button>
+          <Button
+            width="100%"
+            onClick={navigateToStudentUpload}
+            colorScheme="gray"
+            margin-left="20">
+            <HStack>
+              <AddIcon />
+              <Spacer />
+              <Text>Add Work Ethic Data</Text>
+            </HStack>
+          </Button>
         </VStack>
 
 
