@@ -1,7 +1,9 @@
 // Upload CSV component
 // props: isFileChosen, csvFile, handleClearSelection, handleUpload, setIsFileChosen
 import * as React from 'react';
-import { Box, Text, Flex, Button, Input, Icon, HStack } from '@chakra-ui/react';
+import {
+  Box, Text, Button, Input, HStack, 
+} from '@chakra-ui/react';
 import { FiUploadCloud } from 'react-icons/fi';
 
 export class UploadCSV extends React.Component {
@@ -18,16 +20,16 @@ export class UploadCSV extends React.Component {
           </Button>
         </>
       ) : (
-          <>
+        <>
           <HStack>
-            <FiUploadCloud/>
+            <FiUploadCloud />
             <Text>Upload your .csv file below</Text>
           </HStack>
           <Box
             bg={this.props.isFileChosen ? '#00ADB5' : 'white'}
             borderRadius="md"
-            width="90%"
-            m="0"
+            width="100%"
+            margin="0 3vw 5vw 3vw"
             fontWeight="bold"
             display="flex"
             flexDirection="column"
@@ -36,7 +38,7 @@ export class UploadCSV extends React.Component {
             border="2px dashed #24265D"
             color="#F0EDE7"
             transition="color 0.3s ease"
-            _hover={{bg: '#E2E8F0', cursor: 'pointer' }}
+            _hover={{ bg: '#E2E8F0', cursor: 'pointer' }}
             cursor="pointer"
           >
             <Input
@@ -53,12 +55,7 @@ export class UploadCSV extends React.Component {
               focusBorderColor='black'
             />
           </Box></>
-          
-
-
-        )
-      
-
+      )
     );
   }
 }

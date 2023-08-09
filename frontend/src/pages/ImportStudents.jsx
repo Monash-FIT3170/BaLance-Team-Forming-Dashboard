@@ -5,6 +5,7 @@ import { DeleteProfile } from '../components/DeleteProfile';
 import { ConfirmClearSelection } from '../components/ConfirmClearSelection';
 import { UploadCSV } from '../components/UploadCSV';
 import { FormField } from '../components/FormField';
+import { CsvInfoButton } from '../components/CsvInfoButton';
 
 import {
   Box,
@@ -32,8 +33,18 @@ import {
   IconButton,
   Thead,
   Th,
+  HStack,
+  Center,
+  Spacer,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
+  PopoverBody,
 } from '@chakra-ui/react';
-import { AddIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
+import { AddIcon, QuestionOutlineIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
 
 function ImportPage() {
   class Student {
@@ -72,7 +83,6 @@ function ImportPage() {
     ['gender', 'Gender'],
     ['labId', 'Lab ID'],
     ['enrolmentStatus', 'Enrolment Status'],
-    ['discPersonality', 'DISC Personality'],
   ];
 
   // Mapping for CSV headers to database headers
@@ -317,11 +327,13 @@ function ImportPage() {
     setIsConfirmationClearOpen(false);
   };
 
+  console.log(sortedProfiles)
+
   return (
     <>
       <Box as="header" p="4" textAlign="center">
         <Text fontSize="2xl" fontWeight="bold">
-          Upload Profiles
+          Add Student Profiles to: {`${unitCode} - ${period} ${year}, **CAMPUS**`}
         </Text>
       </Box>
 
@@ -334,209 +346,230 @@ function ImportPage() {
         />
       )}
 
-      <Flex
-        height="100%"
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="center"
-        textAlign="center"
-        margin="20px"
-      >
-        <UploadCSV
-          isFileChosen={isFileChosen}
-          csvFile={csvFile}
-          handleClearSelection={handleClearSelection}
-          handleUpload={handleUpload}
-          setIsFileChosen={setIsFileChosen}
-        />
-        <ConfirmClearSelection
-          isConfirmationClearOpen={isConfirmationClearOpen}
-          handleConfirmClearSelection={handleConfirmClearSelection}
-          handleCloseConfirmation={handleCloseConfirmation}
-        />
-            <Table variant="striped">
-              <Thead>
-                <Tr>
-                  {headers.map((header) => (
-                    <Th key={header[0]} onClick={() => handleSort(header)}>
-                      {header[1]}
-                      {sortConfig.key === header[0] && (
-                        <span>{sortConfig.direction === 'ascending' ? '▲' : '▼'}</span>
-                      )}
-                    </Th>
-                  ))}
-                </Tr>
-              </Thead>
-              <Tbody>
-                {sortedProfiles.map((profile) => (
-                  <Tr key={profile.studentEmailAddress}>
-                    <Td>{profile.studentId}</Td>
-                    <Td>{profile.studentFirstName}</Td>
-                    <Td>{profile.studentLastName}</Td>
-                    <Td>{profile.studentEmailAddress}</Td>
-                    <Td>{profile.wamAverage}</Td>
-                    <Td>{profile.gender}</Td>
-                    <Td>{profile.labId}</Td>
-                    <Td>{profile.enrolmentStatus}</Td>
-                    <Td>{profile.discPersonality}</Td>
+      <HStack>
 
-                    <Td>
-                      <EditIcon
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => {
-                          setCurrProfile(profile);
-                          onEditProfileOpen();
-                        }}
-                      />
-                    </Td>
-                    <Td>
-                      <DeleteIcon
-                        style={{ cursor: 'pointer', color: 'red' }}
-                        onClick={() => handleDeleteProfile(profile.studentEmailAddress)} // Call a function to delete the profile when the icon is clicked
-                      />
-                    </Td>
-                  </Tr>
+        <Flex
+          height="100%"
+          flexDirection="column"
+          alignItems="center"
+          textAlign="center"
+          maxWidth="75vw"
+          minWidth="50vw"
+          marginX="3vw"
+        >
+          <CsvInfoButton
+            infoHeader=".csv file format"
+            infoText="Accepted .csv files will have the following attributes: DISPLAY_SUBJECT_CODE SUBJECT_CODE ACTIVITY_GROUP_CODE SHORT_CODE STUDENT_CODE LAST_NAME PREFERRED_NAME EMAIL_ADDRESS WAM_DISPLAY WAM_VAL GENDER"
+          />
+          <UploadCSV
+            isFileChosen={isFileChosen}
+            csvFile={csvFile}
+            handleClearSelection={handleClearSelection}
+            handleUpload={handleUpload}
+            setIsFileChosen={setIsFileChosen}
+          />
+          <Box bg='#E6EBF0' p={4} alignContent="center">
+            <Center>
+              No students have yet been added to the offering. Click "Add Students" to add students to the offering.
+            </Center>
+          </Box>
+
+          <ConfirmClearSelection
+            isConfirmationClearOpen={isConfirmationClearOpen}
+            handleConfirmClearSelection={handleConfirmClearSelection}
+            handleCloseConfirmation={handleCloseConfirmation}
+          />
+          {sortedProfiles.length === 0 ? "" : (<Table variant="striped" size="sm">
+            <Thead>
+              <Tr>
+                {headers.map((header) => (
+                  <Th key={header[0]} onClick={() => handleSort(header)}>
+                    {header[1]}
+                    {sortConfig.key === header[0] && (
+                      <span>{sortConfig.direction === 'ascending' ? '▲' : '▼'}</span>
+                    )}
+                  </Th>
                 ))}
-              </Tbody>
-            </Table>
-            <Modal isOpen={isEditProfileOpen} onClose={onEditProfileClose}>
-              <ModalOverlay />
-              <ModalContent>
-                <ModalHeader>Edit Profile</ModalHeader>
-                <ModalBody>
-                  <FormField
-                    label="Student ID"
-                    value={currProfile?.studentId}
-                    onChange={(e) => handleAttributeChange('studentId', e.target.value)}
-                  />
-                  <FormField
-                    label="First Name"
-                    value={currProfile?.studentFirstName}
-                    onChange={(e) =>
-                      handleAttributeChange('studentFirstName', e.target.value)
-                    }
-                  />
-                  <FormField
-                    label="Last Name"
-                    value={currProfile?.studentLastName}
-                    onChange={(e) =>
-                      handleAttributeChange('studentLastName', e.target.value)
-                    }
-                  />
-                  <FormField
-                    label="Email Address"
-                    placeholder="Email Address"
-                    value={currProfile?.studentEmailAddress}
-                    onChange={(e) =>
-                      handleAttributeChange('studentEmailAddress', e.target.value)
-                    }
-                  />
-                  <FormField
-                    label="WAM"
-                    placeholder="WAM"
-                    value={currProfile?.wamAverage}
-                    onChange={(e) => handleAttributeChange('wamAverage', e.target.value)}
-                  />
-                  <FormField
-                    label="Gender"
-                    placeholder="Select Gender"
-                    value={currProfile?.gender}
-                    onChange={(e) => handleAttributeChange('gender', e.target.value)}
-                    options={[
-                      { label: 'M', value: 'M' },
-                      { label: 'F', value: 'F' },
-                    ]}
-                  />
-                  <FormField
-                    label="Lab ID"
-                    placeholder="Lab ID"
-                    value={currProfile?.labId}
-                    onChange={(e) => handleAttributeChange('labId', e.target.value)}
-                  />
-                  <FormField
-                    label="Enrolment Status"
-                    placeholder="Select Enrolment Status"
-                    value={currProfile?.enrolmentStatus}
-                    onChange={(e) =>
-                      handleAttributeChange('enrolmentStatus', e.target.value)
-                    }
-                    options={[
-                      { label: 'Active', value: 'ACTIVE' },
-                      { label: 'Inactive', value: 'INACTIVE' },
-                    ]}
-                  />
-                  <FormField
-                    label="DISC Personality"
-                    placeholder="Select Personality Type"
-                    value={currProfile?.discPersonality}
-                    onChange={(e) =>
-                      handleAttributeChange('discPersonality', e.target.value)
-                    }
-                    options={[
-                      { label: 'Dominant', value: 'DOMINANT' },
-                      { label: 'Influence', value: 'INFLUENCE' },
-                      { label: 'Steadiness', value: 'STEADINESS' },
-                      { label: 'Conscientiousness', value: 'CONSCIENTIOUSNESS' },
-                    ]}
-                  />
-                </ModalBody>
-                <ModalFooter>
-                  <Button
-                    onClick={() => handleSaveProfile(currProfile)}
-                    type="submit"
-                    colorScheme="green"
-                    mr={3}
-                  >
-                    Save
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      onEditProfileClose();
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {sortedProfiles.map((profile) => (
+                <Tr key={profile.studentEmailAddress}>
+                  <Td>{profile.studentId}</Td>
+                  <Td>{profile.studentFirstName}</Td>
+                  <Td>{profile.studentLastName}</Td>
+                  <Td>{profile.studentEmailAddress}</Td>
+                  <Td>{profile.wamAverage}</Td>
+                  <Td>{profile.gender}</Td>
+                  <Td>{profile.labId}</Td>
+                  <Td>{profile.enrolmentStatus}</Td>
 
-            <Box textAlign="center">
-              <IconButton
-                mt={4}
-                mb={4}
-                colorScheme="green"
-                icon={<AddIcon />}
-                onClick={onAddProfileOpen}
-              ></IconButton>
+                  <Td>
+                    <EditIcon
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => {
+                        setCurrProfile(profile);
+                        onEditProfileOpen();
+                      }}
+                    />
+                  </Td>
+                  <Td>
+                    <DeleteIcon
+                      style={{ cursor: 'pointer', color: 'red' }}
+                      onClick={() => handleDeleteProfile(profile.studentEmailAddress)} // Call a function to delete the profile when the icon is clicked
+                    />
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>)}
 
-              <Button
-                marginLeft="2em"
-                colorScheme="red"
-                onClick={() => handleDeleteInactiveProfiles(profiles)}
-              >
-                Delete All Inactive Profiles
-              </Button>
-              <Button ml={4} colorScheme="blue" onClick={() => handleAddProfilesClick()}>
-                Add Profiles To Unit
-              </Button>
-              {showAlert && (
-                <Alert
-                  status="success"
-                  variant="subtle"
-                  flexDirection="column"
-                  alignItems="center"
-                  justifyContent="center"
-                  textAlign="center"
-                  height="200px"
+          <Modal isOpen={isEditProfileOpen} onClose={onEditProfileClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Edit Profile</ModalHeader>
+              <ModalBody>
+                <FormField
+                  label="Student ID"
+                  value={currProfile?.studentId}
+                  onChange={(e) => handleAttributeChange('studentId', e.target.value)}
+                />
+                <FormField
+                  label="First Name"
+                  value={currProfile?.studentFirstName}
+                  onChange={(e) =>
+                    handleAttributeChange('studentFirstName', e.target.value)
+                  }
+                />
+                <FormField
+                  label="Last Name"
+                  value={currProfile?.studentLastName}
+                  onChange={(e) =>
+                    handleAttributeChange('studentLastName', e.target.value)
+                  }
+                />
+                <FormField
+                  label="Email Address"
+                  placeholder="Email Address"
+                  value={currProfile?.studentEmailAddress}
+                  onChange={(e) =>
+                    handleAttributeChange('studentEmailAddress', e.target.value)
+                  }
+                />
+                <FormField
+                  label="WAM"
+                  placeholder="WAM"
+                  value={currProfile?.wamAverage}
+                  onChange={(e) => handleAttributeChange('wamAverage', e.target.value)}
+                />
+                <FormField
+                  label="Gender"
+                  placeholder="Select Gender"
+                  value={currProfile?.gender}
+                  onChange={(e) => handleAttributeChange('gender', e.target.value)}
+                  options={[
+                    { label: 'M', value: 'M' },
+                    { label: 'F', value: 'F' },
+                  ]}
+                />
+                <FormField
+                  label="Lab ID"
+                  placeholder="Lab ID"
+                  value={currProfile?.labId}
+                  onChange={(e) => handleAttributeChange('labId', e.target.value)}
+                />
+                <FormField
+                  label="Enrolment Status"
+                  placeholder="Select Enrolment Status"
+                  value={currProfile?.enrolmentStatus}
+                  onChange={(e) =>
+                    handleAttributeChange('enrolmentStatus', e.target.value)
+                  }
+                  options={[
+                    { label: 'Active', value: 'ACTIVE' },
+                    { label: 'Inactive', value: 'INACTIVE' },
+                  ]}
+                />
+                <FormField
+                  label="DISC Personality"
+                  placeholder="Select Personality Type"
+                  value={currProfile?.discPersonality}
+                  onChange={(e) =>
+                    handleAttributeChange('discPersonality', e.target.value)
+                  }
+                  options={[
+                    { label: 'Dominant', value: 'DOMINANT' },
+                    { label: 'Influence', value: 'INFLUENCE' },
+                    { label: 'Steadiness', value: 'STEADINESS' },
+                    { label: 'Conscientiousness', value: 'CONSCIENTIOUSNESS' },
+                  ]}
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  onClick={() => handleSaveProfile(currProfile)}
+                  type="submit"
+                  colorScheme="green"
+                  mr={3}
                 >
-                  <AlertIcon boxSize="40px" mr={0} />
-                  <AlertTitle mt={4} mb={1} fontSize="lg">
-                    Profiles Added Successfully
-                  </AlertTitle>
-                </Alert>
-              )}
-            </Box>
-      </Flex>
+                  Save
+                </Button>
+                <Button
+                  onClick={() => {
+                    onEditProfileClose();
+                  }}
+                >
+                  Cancel
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+          {/*<Box textAlign="center">
+            <IconButton
+              mt={4}
+              mb={4}
+              colorScheme="green"
+              icon={<AddIcon />}
+              onClick={onAddProfileOpen}
+            ></IconButton>
+
+            <Button
+              marginLeft="2em"
+              colorScheme="red"
+              onClick={() => handleDeleteInactiveProfiles(profiles)}
+            >
+              Delete All Inactive Profiles
+            </Button>
+            <Button ml={4} colorScheme="blue" onClick={() => handleAddProfilesClick()}>
+              Add Profiles To Unit
+            </Button>
+            {showAlert && (
+              <Alert
+                status="success"
+                variant="subtle"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+                textAlign="center"
+                height="200px"
+              >
+                <AlertIcon boxSize="40px" mr={0} />
+                <AlertTitle mt={4} mb={1} fontSize="lg">
+                  Profiles Added Successfully
+                </AlertTitle>
+              </Alert>
+            )}
+          </Box>
+          */}
+
+        </Flex>
+
+        <Center height="85vh">
+          <Divider orientation="vertical" />
+        </Center>
+
+      </HStack>
+
 
       <Modal isOpen={isAddProfileOpen} onClose={onAddProfileClose}>
         <ModalOverlay />
