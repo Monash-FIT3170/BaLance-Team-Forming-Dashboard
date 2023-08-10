@@ -52,7 +52,7 @@ const UnitCard = (unit) => {
   const navigate = useNavigate();
 
   //navigate to the groups for the current unit if it is clicked
-  const navigateToUnitOffering = () => navigate(`/groups/${unit_code}/${unit_off_year}/${unit_off_period}`);
+  const navigateToUnitOffering = () => navigate(`/students/${unit_code}/${unit_off_year}/${unit_off_period}`);
 
   // handle delete unit and posting it to the backend
   const handleDeleteUnit = (event) => {

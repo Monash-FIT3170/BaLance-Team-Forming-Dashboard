@@ -32,7 +32,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 
 function CreateGroups() {
-    const [strategy, setStrategy] = useState("Random Strategy");
+    const [strategy, setStrategy] = useState("random");
     const [groupSize, setGroupSize] = useState(2);
     const [variance, setVariance] = useState(1);
     const cancelRef = React.useRef();
@@ -51,8 +51,23 @@ function CreateGroups() {
 
     const handleSubmitGroupOptions = async (event) => {
         event.preventDefault();
-        //navigateToOfferingDashboard();
-        console.log(groupDetails);
+        navigateToOfferingDashboard();
+
+        /* Call to shuffle groups */
+        fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                groupSize: groupSize,
+                variance: variance,
+                strategy: strategy,
+            })
+        })
+            .catch((error) => { console.error('Error:', error); })
+            .finally(() => {window.location.reload();});
+
+        /* Creating new groups */
+        /*
         await fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`, {
             method: 'POST',
             headers: {
@@ -64,10 +79,11 @@ function CreateGroups() {
                 strategy: strategy
             })
         });
+        */
     }
 
     const navigateToOfferingDashboard = () => {
-        navigate(`/students/${unitCode}/${year}/${period}`);
+        navigate(`/groups/${unitCode}/${year}/${period}`);
     };
 
     return (
@@ -106,9 +122,9 @@ function CreateGroups() {
                             <VStack>
                                 <FormLabel>Strategy</FormLabel>
                                 <Select marginLeft="5vw" w="12vw" placeholder='' onChange={(event) => setStrategy(event.target.value)}>
-                                    <option value='Random Strategy'>Random Strategy</option>
-                                    <option value='WAM Based Strategy'>WAM Based Strategy</option>
-                                    <option value='Belbin Based Strategy'>Belbin Based Strategy</option>
+                                    <option value='random'>Random Strategy</option>
+                                    <option value='effort'>WAM Based Strategy</option>
+                                    <option value='belbin'>Belbin Based Strategy</option>
                                 </Select>
                             </VStack>
                         </HStack>
