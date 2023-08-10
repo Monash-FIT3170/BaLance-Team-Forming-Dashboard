@@ -371,6 +371,23 @@ function ImportPage() {
               setIsFileChosen={setIsFileChosen}
             />
 
+            {showAlert && (
+              <Alert
+                status="success"
+                variant="subtle"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+                textAlign="center"
+                height="200px"
+              >
+                <AlertIcon boxSize="40px" mr={0} />
+                <AlertTitle mt={4} mb={1} fontSize="lg">
+                  Profiles Added Successfully
+                </AlertTitle>
+              </Alert>
+            )}
+
             <ConfirmClearSelection
               isConfirmationClearOpen={isConfirmationClearOpen}
               handleConfirmClearSelection={handleConfirmClearSelection}
@@ -497,22 +514,7 @@ function ImportPage() {
             <Button ml={4} colorScheme="blue" onClick={() => handleAddProfilesClick()}>
               Add Profiles To Unit
             </Button>
-            {showAlert && (
-              <Alert
-                status="success"
-                variant="subtle"
-                flexDirection="column"
-                alignItems="center"
-                justifyContent="center"
-                textAlign="center"
-                height="200px"
-              >
-                <AlertIcon boxSize="40px" mr={0} />
-                <AlertTitle mt={4} mb={1} fontSize="lg">
-                  Profiles Added Successfully
-                </AlertTitle>
-              </Alert>
-            )}
+            
           </Box>
           */}
 
