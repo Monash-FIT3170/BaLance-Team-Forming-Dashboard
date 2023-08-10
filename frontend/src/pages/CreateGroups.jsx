@@ -82,7 +82,7 @@ function CreateGroups() {
                 <form id="create-groups" onSubmit={handleSubmitGroupOptions} w="100%">
                     <FormControl isRequired>
                         <HStack w="80%">
-                            <Box fontSize="19" maxW="40vw">
+                            <Box fontSize="19" w="40vw">
                                 <Text fontWeight="semibold">Step 1: Select a strategy</Text>
                                 <Text>Choose a strategy for how the groups will be determined and allocated.</Text>
                                 <Text>Note: for any strategy other than “random”, please ensure that each student in the offering has an entry for the relevant data points.</Text>
@@ -101,7 +101,7 @@ function CreateGroups() {
                         </HStack>
                         <Divider />
                         <HStack w="80%">
-                            <Box fontSize="19" maxW="40vw">
+                            <Box fontSize="19" w="40vw">
                                 <Text fontWeight="semibold">Step 2: Select an ideal group size</Text>
                                 <Text>Choose the ideal size for each group.</Text>
                                 <Text>Note: it is possible that not all of the groups are the ideal size, depending on the number of students in the offering.</Text>
@@ -120,7 +120,7 @@ function CreateGroups() {
                         </HStack>
                         <Divider />
                         <HStack w="80%">
-                            <Box fontSize="19" maxW="40vw">
+                            <Box fontSize="19" w="40vw">
                                 <Text fontWeight="semibold">Step 3: Select a variance value (recommended 1)</Text>
                                 <Text>Choose how big or small you would like the variance in group size to be.</Text>
                                 <Text>We recommend this value to be 1.</Text>
@@ -137,10 +137,10 @@ function CreateGroups() {
                             <FormHelperText>Minimum variance is 1</FormHelperText>
                         </HStack>
                     </FormControl>
-
+                    <Divider />
                 </form>
 
-                <Divider />
+
                 <Button type="submit" form="create-groups" colorScheme="blue" >Assign Groups</Button>
             </VStack>
 
