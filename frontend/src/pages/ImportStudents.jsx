@@ -525,7 +525,7 @@ function ImportPage() {
           <Center height="20vh">
             <Divider orientation="vertical" />
           </Center>
-          <Text paddingX="3vw">When you are finished, click <Text _hover={{ cursor: "pointer" }} color="blue"><a onClick={() => { navigate(`/groups/${unitCode}/${year}/${period}`) }}>here</a></Text> to view the unit offering</Text>
+          <Text paddingX="3vw">When you are finished, click <Text _hover={{ cursor: "pointer" }} color="blue"><a onClick={() => { navigate(`/students/${unitCode}/${year}/${period}`) }}>here</a></Text> to view the unit offering</Text>
 
 
         </HStack>
