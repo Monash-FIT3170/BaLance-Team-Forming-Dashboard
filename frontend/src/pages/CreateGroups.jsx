@@ -78,10 +78,11 @@ function CreateGroups() {
             </Center>
 
 
-            <VStack margin="5vh 5vw">
+            <VStack margin="3vh 5vw">
                 <form id="create-groups" onSubmit={handleSubmitGroupOptions} w="100%">
+
                     <FormControl isRequired>
-                        <HStack w="80%">
+                        <HStack w="100%">
                             <Box fontSize="19" w="40vw">
                                 <Text fontWeight="semibold">Step 1: Select a strategy</Text>
                                 <Text>Choose a strategy for how the groups will be determined and allocated.</Text>
@@ -90,54 +91,62 @@ function CreateGroups() {
                                 <Text>WAM based - WAM_VAL and DEDICATED_HOURS</Text>
                                 <Text>Belbin based - BELBIN_TYPE</Text>
                             </Box>
-                            <Spacer />
-                            <FormLabel>Strategy</FormLabel>
-                            <Select maxW="15vw" placeholder='' onChange={(event) => setStrategy(event.target.value)}>
-                                <option value='Random Strategy'>Random Strategy</option>
-                                <option value='WAM Based Strategy'>WAM Based Strategy</option>
-                                <option value='Belbin Based Strategy'>Belbin Based Strategy</option>
-                            </Select>
-
+                            <Spacer width="15vw"/>
+                            <VStack>
+                                <FormLabel>Strategy</FormLabel>
+                                <Select marginLeft="5vw" w="12vw" placeholder='' onChange={(event) => setStrategy(event.target.value)}>
+                                    <option value='Random Strategy'>Random Strategy</option>
+                                    <option value='WAM Based Strategy'>WAM Based Strategy</option>
+                                    <option value='Belbin Based Strategy'>Belbin Based Strategy</option>
+                                </Select>
+                            </VStack>
                         </HStack>
-                        <Divider />
-                        <HStack w="80%">
+
+                        <Divider marginY="1vh" />
+
+                        <HStack w="100%">
                             <Box fontSize="19" w="40vw">
                                 <Text fontWeight="semibold">Step 2: Select an ideal group size</Text>
                                 <Text>Choose the ideal size for each group.</Text>
                                 <Text>Note: it is possible that not all of the groups are the ideal size, depending on the number of students in the offering.</Text>
                             </Box>
                             <Spacer />
-                            <FormLabel>Group Size</FormLabel>
-                            <NumberInput min="2" defaultValue="2" onChange={(valueString) => setGroupSize(parseInt(valueString))}>
-                                <NumberInputField />
-                                <NumberInputStepper>
-                                    <NumberIncrementStepper />
-                                    <NumberDecrementStepper />
-                                </NumberInputStepper>
-                            </NumberInput>
-                            <FormHelperText>Minimum group size is 2</FormHelperText>
-
+                            <VStack>
+                                <FormLabel>Group Size</FormLabel>
+                                <NumberInput w="12vw" min="2" defaultValue="2" onChange={(valueString) => setGroupSize(parseInt(valueString))}>
+                                    <NumberInputField />
+                                    <NumberInputStepper>
+                                        <NumberIncrementStepper />
+                                        <NumberDecrementStepper />
+                                    </NumberInputStepper>
+                                </NumberInput>
+                                <FormHelperText>Minimum group size is 2</FormHelperText>
+                            </VStack>
                         </HStack>
-                        <Divider />
-                        <HStack w="80%">
+
+                        <Divider marginY="1vh" />
+
+                        <HStack w="100%">
                             <Box fontSize="19" w="40vw">
                                 <Text fontWeight="semibold">Step 3: Select a variance value (recommended 1)</Text>
                                 <Text>Choose how big or small you would like the variance in group size to be.</Text>
                                 <Text>We recommend this value to be 1.</Text>
                             </Box>
                             <Spacer />
-                            <FormLabel>Variance</FormLabel>
-                            <NumberInput min="1" defaultValue="1" onChange={(valueString) => setVariance(parseInt(valueString))}>
-                                <NumberInputField />
-                                <NumberInputStepper>
-                                    <NumberIncrementStepper />
-                                    <NumberDecrementStepper />
-                                </NumberInputStepper>
-                            </NumberInput>
-                            <FormHelperText>Minimum variance is 1</FormHelperText>
+                            <VStack>
+                                <FormLabel>Variance</FormLabel>
+                                <NumberInput w="12vw" min="1" defaultValue="1" onChange={(valueString) => setVariance(parseInt(valueString))}>
+                                    <NumberInputField />
+                                    <NumberInputStepper>
+                                        <NumberIncrementStepper />
+                                        <NumberDecrementStepper />
+                                    </NumberInputStepper>
+                                </NumberInput>
+                                <FormHelperText>Minimum variance is 1</FormHelperText>
+                            </VStack>
                         </HStack>
                     </FormControl>
-                    <Divider />
+                    <Divider marginY="1vh" />
                 </form>
 
 
