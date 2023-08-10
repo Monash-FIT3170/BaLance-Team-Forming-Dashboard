@@ -328,8 +328,6 @@ function ImportPage() {
     setIsConfirmationClearOpen(false);
   };
 
-  console.log(sortedProfiles)
-
   return (
     <>
       <Box as="header" p="4" textAlign="center">
@@ -359,17 +357,23 @@ function ImportPage() {
             minWidth="50vw"
             marginX="3vw"
           >
-            <CsvInfoButton
+            {sortedProfiles.length === 0 && (<CsvInfoButton
               infoHeader=".csv file format"
               infoText="Accepted .csv files will have the following attributes: DISPLAY_SUBJECT_CODE SUBJECT_CODE ACTIVITY_GROUP_CODE SHORT_CODE STUDENT_CODE LAST_NAME PREFERRED_NAME EMAIL_ADDRESS WAM_DISPLAY WAM_VAL GENDER"
-            />
+            />)}
+
             <UploadCSV
               isFileChosen={isFileChosen}
               csvFile={csvFile}
               handleClearSelection={handleClearSelection}
+              handleAddProfilesClick={handleAddProfilesClick}
               handleUpload={handleUpload}
               setIsFileChosen={setIsFileChosen}
             />
+
+            <Button ml={4} colorScheme="blue" onClick={() => handleAddProfilesClick()}>
+              Add Profiles To Unit
+            </Button>
 
             <ConfirmClearSelection
               isConfirmationClearOpen={isConfirmationClearOpen}
@@ -521,8 +525,8 @@ function ImportPage() {
           <Center height="20vh">
             <Divider orientation="vertical" />
           </Center>
-          <Text paddingX="3vw">When you are finished, click <Text _hover={{cursor: "pointer"}} color="blue"><a onClick={() => {navigate(`/groups/${unitCode}/${year}/${period}`)}}>here</a></Text> to view the unit offering</Text>
-          
+          <Text paddingX="3vw">When you are finished, click <Text _hover={{ cursor: "pointer" }} color="blue"><a onClick={() => { navigate(`/groups/${unitCode}/${year}/${period}`) }}>here</a></Text> to view the unit offering</Text>
+
 
         </HStack>
 
@@ -530,7 +534,7 @@ function ImportPage() {
           <Center>
             No students have yet been added to the offering.
           </Center>
-        </Box>) : (<Table variant="striped" size="sm">
+        </Box>) : (<Table variant="striped" size="sm" maxWidth="90vw">
           <Thead>
             <Tr>
               {headers.map((header) => (
