@@ -24,14 +24,17 @@ import {
     NumberIncrementStepper,
     NumberInputStepper,
     NumberDecrementStepper,
+    FormControl,
+    FormLabel,
+    FormHelperText,
 } from '@chakra-ui/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 
 function CreateGroups() {
-    const [strategy, setStrategy] = useState("");
-    const [groupSize, setGroupSize] = useState(-1);
-    const [variance, setVariance] = useState(-1);
+    const [strategy, setStrategy] = useState("Random Strategy");
+    const [groupSize, setGroupSize] = useState(2);
+    const [variance, setVariance] = useState(1);
     const cancelRef = React.useRef();
     const navigate = useNavigate();
     const {
@@ -40,7 +43,17 @@ function CreateGroups() {
         onClose
     } = useDisclosure();
     const { unitCode, year, period } = useParams();
+    const groupDetails = {
+        "strategy": strategy,
+        "groupSize": groupSize,
+        "variance": variance
+    }
 
+    const handleSubmitGroupOptions = (event) => {
+        event.preventDefault();
+        //navigateToOfferingDashboard();
+        console.log(groupDetails);
+    }
 
     const navigateToOfferingDashboard = () => {
         navigate(`/students/${unitCode}/${year}/${period}`);
@@ -64,57 +77,71 @@ function CreateGroups() {
                 </Button>
             </Center>
 
+
             <VStack margin="5vh 5vw">
-                <HStack w="80%">
-                    <Box fontSize="19" maxW="40vw">
-                        <Text fontWeight="semibold">Step 1: Select a strategy</Text>
-                        <Text>Choose a strategy for how the groups will be determined and allocated.</Text>
-                        <Text>Note: for any strategy other than “random”, please ensure that each student in the offering has an entry for the relevant data points.</Text>
-                        <Text>Random - None required</Text>
-                        <Text>WAM based - WAM_VAL and DEDICATED_HOURS</Text>
-                        <Text>Belbin based - BELBIN_TYPE</Text>
-                    </Box>
-                    <Spacer />
-                    <Select maxW="15vw" placeholder='Strategy'>
-                        <option value='option1'>Random Strategy</option>
-                        <option value='option2'>WAM Based Strategy</option>
-                        <option value='option3'>Belbin Based Strategy</option>
-                    </Select>
-                </HStack>
+                <form id="create-groups" onSubmit={handleSubmitGroupOptions} w="100%">
+                    <FormControl isRequired>
+                        <HStack w="80%">
+                            <Box fontSize="19" maxW="40vw">
+                                <Text fontWeight="semibold">Step 1: Select a strategy</Text>
+                                <Text>Choose a strategy for how the groups will be determined and allocated.</Text>
+                                <Text>Note: for any strategy other than “random”, please ensure that each student in the offering has an entry for the relevant data points.</Text>
+                                <Text>Random - None required</Text>
+                                <Text>WAM based - WAM_VAL and DEDICATED_HOURS</Text>
+                                <Text>Belbin based - BELBIN_TYPE</Text>
+                            </Box>
+                            <Spacer />
+                            <FormLabel>Strategy</FormLabel>
+                            <Select maxW="15vw" placeholder='' onChange={(event) => setStrategy(event.target.value)}>
+                                <option value='Random Strategy'>Random Strategy</option>
+                                <option value='WAM Based Strategy'>WAM Based Strategy</option>
+                                <option value='Belbin Based Strategy'>Belbin Based Strategy</option>
+                            </Select>
+
+                        </HStack>
+                        <Divider />
+                        <HStack w="80%">
+                            <Box fontSize="19" maxW="40vw">
+                                <Text fontWeight="semibold">Step 2: Select an ideal group size</Text>
+                                <Text>Choose the ideal size for each group.</Text>
+                                <Text>Note: it is possible that not all of the groups are the ideal size, depending on the number of students in the offering.</Text>
+                            </Box>
+                            <Spacer />
+                            <FormLabel>Group Size</FormLabel>
+                            <NumberInput min="2" defaultValue="2" onChange={(valueString) => setGroupSize(parseInt(valueString))}>
+                                <NumberInputField />
+                                <NumberInputStepper>
+                                    <NumberIncrementStepper />
+                                    <NumberDecrementStepper />
+                                </NumberInputStepper>
+                            </NumberInput>
+                            <FormHelperText>Minimum group size is 2</FormHelperText>
+
+                        </HStack>
+                        <Divider />
+                        <HStack w="80%">
+                            <Box fontSize="19" maxW="40vw">
+                                <Text fontWeight="semibold">Step 3: Select a variance value (recommended 1)</Text>
+                                <Text>Choose how big or small you would like the variance in group size to be.</Text>
+                                <Text>We recommend this value to be 1.</Text>
+                            </Box>
+                            <Spacer />
+                            <FormLabel>Variance</FormLabel>
+                            <NumberInput min="1" defaultValue="1" onChange={(valueString) => setVariance(parseInt(valueString))}>
+                                <NumberInputField />
+                                <NumberInputStepper>
+                                    <NumberIncrementStepper />
+                                    <NumberDecrementStepper />
+                                </NumberInputStepper>
+                            </NumberInput>
+                            <FormHelperText>Minimum variance is 1</FormHelperText>
+                        </HStack>
+                    </FormControl>
+
+                </form>
+
                 <Divider />
-                <HStack w="80%">
-                    <Box fontSize="19" maxW="40vw">
-                        <Text fontWeight="semibold">Step 2: Select an ideal group size</Text>
-                        <Text>Choose the ideal size for each group.</Text>
-                        <Text>Note: it is possible that not all of the groups are the ideal size, depending on the number of students in the offering.</Text>
-                    </Box>
-                    <Spacer />
-                    <NumberInput min="2" defaultValue="2">
-                        <NumberInputField />
-                        <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                        </NumberInputStepper>
-                    </NumberInput>
-                </HStack>
-                <Divider />
-                <HStack w="80%">
-                    <Box fontSize="19" maxW="40vw">
-                        <Text fontWeight="semibold">Step 3: Select a variance value (recommended 1)</Text>
-                        <Text>Choose how big or small you would like the variance in group size to be.</Text>
-                        <Text>We recommend this value to be 1.</Text>
-                    </Box>
-                    <Spacer />
-                    <NumberInput min="1" defaultValue="1">
-                        <NumberInputField />
-                        <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                        </NumberInputStepper>
-                    </NumberInput>
-                </HStack>
-                <Divider />
-                <Button colorScheme="blue" onClick={navigateToOfferingDashboard}>Assign Groups</Button>
+                <Button type="submit" form="create-groups" colorScheme="blue" >Assign Groups</Button>
             </VStack>
 
         </>
