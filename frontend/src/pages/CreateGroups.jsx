@@ -64,7 +64,6 @@ function CreateGroups() {
             })
         })
             .catch((error) => { console.error('Error:', error); })
-            .finally(() => {window.location.reload();});
 
         /* Creating new groups */
         /*

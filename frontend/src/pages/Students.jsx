@@ -61,16 +61,18 @@ function Students() {
     fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}`)
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
         setStudents(res);
       })
       .catch((err) => console.error(err));
 
-    // determine the number of groups in this unit offering
-    setNumberOfGroups(
-      // convert each student object to just student.group_number then find the max
-      Math.max(...students.map(student => student.group_number))
-    )
+    // fetch groups from the backend
+    fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`)
+      .then((res) => res.json())
+      .then((res) => {
+        setNumberOfGroups(res.length);
+      })
+      .catch((err) => console.error(err));
+
   }, []);
 
   const handleShuffleGroups = () => {
@@ -170,7 +172,7 @@ function Students() {
           <Spacer />
           <ButtonGroup colorScheme="#282c34" variant="outline" size="lg" isAttached>
             <Link to={`/groups/${unitCode}/${year}/${period}`}>
-              <Button >  Groups  </Button>
+              <Button isDisabled={numberOfGroups===0}>  Groups  </Button>
             </Link>
             <Button isDisabled={true}>
               Students

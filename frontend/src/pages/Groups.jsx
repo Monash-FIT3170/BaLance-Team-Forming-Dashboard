@@ -95,7 +95,7 @@ function Groups() {
   let groupsDisplay = groups.length === 0 ?
     <Box bg='#E6EBF0' w='60vw' p={4} alignContent="center">
       <Center>
-        No students have yet been added to the offering. Click "Add Students" to add students to the offering.
+        No groups have been created for this offering. Click "Create/Reconfigure Groups" to create groups for the offering.
       </Center>
     </Box>
     :
