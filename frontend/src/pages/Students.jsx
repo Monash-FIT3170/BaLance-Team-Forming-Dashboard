@@ -47,6 +47,10 @@ function Students() {
   const navigateToStudentUpload = () => {
     navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
   };
+
+  const navigateToBelbinUpload = () => {
+    navigate(`/belbinImport/${unitCode}/${year}/${period}`);
+  }
   
   const navigateToCreateGroups = () => {
     navigate(`/createGroups/${unitCode}/${year}/${period}`);
@@ -137,7 +141,7 @@ function Students() {
           </Button>
           <Button
             width="100%"
-            onClick={navigateToStudentUpload}
+            onClick={navigateToBelbinUpload}
             colorScheme="gray"
             margin-left="20">
             <HStack>
