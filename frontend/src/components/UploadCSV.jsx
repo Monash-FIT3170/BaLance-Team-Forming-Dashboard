@@ -2,7 +2,7 @@
 // props: isFileChosen, csvFile, handleClearSelection, handleUpload, setIsFileChosen
 import * as React from 'react';
 import {
-  Box, Text, Button, Input, HStack, 
+  Box, Text, Button, Input, HStack, ButtonGroup,
 } from '@chakra-ui/react';
 import { FiUploadCloud } from 'react-icons/fi';
 
@@ -15,9 +15,15 @@ export class UploadCSV extends React.Component {
           <Text color="white" mb={2}>
             File: {this.props.csvFile.name}{' '}
           </Text>
-          <Button mb={2} colorScheme="red" onClick={this.props.handleClearSelection}>
-            Clear Selection
-          </Button>
+          <ButtonGroup>
+            <Button mb={2} colorScheme="red" onClick={this.props.handleClearSelection}>
+                  Clear Profiles      
+            </Button>
+            <Button onClick={this.props.handleAddProfilesClick}>
+              Add Profiles To Unit
+            </Button>
+          </ButtonGroup>
+
         </>
       ) : (
         <>

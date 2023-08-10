@@ -47,6 +47,10 @@ function Students() {
   const navigateToStudentUpload = () => {
     navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
   };
+  
+  const navigateToCreateGroups = () => {
+    navigate(`/createGroups/${unitCode}/${year}/${period}`);
+  }
 
   useEffect(() => {
     // fetch students from the backend
@@ -177,7 +181,7 @@ function Students() {
           <VStack>
             <Button
               width="18vw"
-              onClick={navigateToStudentUpload}
+              onClick={navigateToCreateGroups}
               colorScheme="gray"
               margin-left="20">
               <HStack>
