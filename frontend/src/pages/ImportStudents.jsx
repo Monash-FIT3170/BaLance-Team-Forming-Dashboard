@@ -322,6 +322,7 @@ function ImportPage() {
     setProfiles([]); // Clear the table data
     setIsFileChosen(false); // Reset the file chosen state
     setIsConfirmationClearOpen(false); // Close the modal
+    setShowAlert(false);
   };
 
   const handleCloseConfirmation = () => {
