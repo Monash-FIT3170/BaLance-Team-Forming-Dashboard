@@ -88,20 +88,19 @@ function Students() {
   }
 
   let studentsDisplay = students.length === 0 ?
-    <Box bg='#E6EBF0' w='60%' p={4} alignContent="center">
+    <Box bg='#E6EBF0' w='60vw' p={4} alignContent="center">
       <Center>
         No students have yet been added to the offering. Click "Add Students" to add students to the offering.
       </Center>
     </Box>
     :
-    <Table variant="striped" width="80vw">
+    <Table variant="striped" width="60vw" size="sm" marginBottom="3vh">
       <Thead>
         <Tr>
           <Th>ID</Th>
           <Th>Preferred Name</Th>
           <Th>Last Name</Th>
           <Th>Email Address</Th>
-          <Th>Group</Th>
         </Tr>
       </Thead>
 

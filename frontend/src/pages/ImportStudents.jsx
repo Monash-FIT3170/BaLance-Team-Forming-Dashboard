@@ -496,28 +496,6 @@ function ImportPage() {
                 </ModalFooter>
               </ModalContent>
             </Modal>
-            {/*<Box textAlign="center">
-            <IconButton
-              mt={4}
-              mb={4}
-              colorScheme="green"
-              icon={<AddIcon />}
-              onClick={onAddProfileOpen}
-            ></IconButton>
-
-            <Button
-              marginLeft="2em"
-              colorScheme="red"
-              onClick={() => handleDeleteInactiveProfiles(profiles)}
-            >
-              Delete All Inactive Profiles
-            </Button>
-            <Button ml={4} colorScheme="blue" onClick={() => handleAddProfilesClick()}>
-              Add Profiles To Unit
-            </Button>
-            
-          </Box>
-          */}
 
           </Flex>
 
@@ -533,7 +511,7 @@ function ImportPage() {
           <Center>
             No students have yet been added to the offering.
           </Center>
-        </Box>) : (<Table variant="striped" size="sm" maxWidth="90vw">
+        </Box>) : (<Table variant="striped" size="sm" maxWidth="90vw" marginBottom="3vh">
           <Thead>
             <Tr>
               {headers.map((header) => (
