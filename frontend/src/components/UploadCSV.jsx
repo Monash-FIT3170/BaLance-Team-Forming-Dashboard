@@ -20,7 +20,7 @@ export class UploadCSV extends React.Component {
                   Clear Profiles      
             </Button>
             <Button onClick={this.props.handleAddProfilesClick}>
-              Add Profiles To UInit
+              Add Profiles To Unit
             </Button>
           </ButtonGroup>
 

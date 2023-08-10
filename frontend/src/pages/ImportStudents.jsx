@@ -371,10 +371,6 @@ function ImportPage() {
               setIsFileChosen={setIsFileChosen}
             />
 
-            <Button ml={4} colorScheme="blue" onClick={() => handleAddProfilesClick()}>
-              Add Profiles To Unit
-            </Button>
-
             <ConfirmClearSelection
               isConfirmationClearOpen={isConfirmationClearOpen}
               handleConfirmClearSelection={handleConfirmClearSelection}
