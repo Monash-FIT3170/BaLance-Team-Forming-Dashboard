@@ -61,6 +61,7 @@ function Students() {
     fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}`)
       .then((res) => res.json())
       .then((res) => {
+        console.log(res);
         setStudents(res);
       })
       .catch((err) => console.error(err));

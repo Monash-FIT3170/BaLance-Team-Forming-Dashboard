@@ -25,23 +25,12 @@ const getAllStudents = async (req, res) => {
         year,
         period
     } = req.params
-
+    console.log("IM HERE");
     const studentsData = await promiseBasedQuery(
-        "SELECT stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val, " +
-        "   l_group.group_number, lab.lab_number " +
-        "FROM student stud " +
-        "INNER JOIN group_allocation g_alloc ON stud.stud_unique_id=g_alloc.stud_unique_id " +
-        "INNER JOIN lab_group l_group ON g_alloc.lab_group_id=l_group.lab_group_id " +
-        "INNER JOIN unit_off_lab lab ON lab.unit_off_lab_id=l_group.unit_off_lab_id " +
-        "INNER JOIN unit_offering unit ON unit.unit_off_id=lab.unit_off_id " +
-        "WHERE " +
-        "   unit.unit_code=? " +
-        "   AND unit.unit_off_year=? " +
-        "   AND unit.unit_off_period=? " +
-        "ORDER BY l_group.group_number;",
+        "SELECT stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val FROM student stud inner join unit_enrolment ue on ue.stud_unique_id=stud.stud_unique_id inner join unit_offering unit on ue.unit_off_id=unit.unit_off_id WHERE unit.unit_code=? AND unit.unit_off_year=? AND unit.unit_off_period=?",
         [unitCode, year, period]
     )
-
+    console.log(studentsData)
     res.status(200).json(studentsData);
 }
 
