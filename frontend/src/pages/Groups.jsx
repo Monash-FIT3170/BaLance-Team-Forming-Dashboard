@@ -93,7 +93,7 @@ function Groups() {
   };
 
   let groupsDisplay = groups.length === 0 ?
-    <Box bg='#E6EBF0' w='60%' p={4} alignContent="center">
+    <Box bg='#E6EBF0' w='60vw' p={4} alignContent="center">
       <Center>
         No students have yet been added to the offering. Click "Add Students" to add students to the offering.
       </Center>
@@ -194,7 +194,11 @@ function Groups() {
         </HStack>
       </HStack>
       <Center>
-        {groupsDisplay}
+        <VStack>
+          {groups.length > 0 && (<Button>Export group data to .csv</Button>)}
+          {groupsDisplay}
+        </VStack>
+
       </Center>
 
     </div>
