@@ -19,6 +19,7 @@ import {
   VStack,
   HStack,
   Spacer,
+  Center,
 } from '@chakra-ui/react';
 import { BsTrash } from 'react-icons/bs';
 
@@ -74,25 +75,8 @@ const UnitCard = (unit) => {
   };
 
   return (
-    <Flex
-      borderRadius="20px"
-      bg={boxBg}
-      p="20px"
-      h="345px"
-      w={{ base: '315px', md: '345px' }}
-      alignItems="center"
-      direction="column"
-    >
-      <Flex w="100%" mb="18px">
-        <Flex
-          w="20px"
-          h="40px"
-          align="left"
-          justify="left"
-          borderRadius="20%"
-          borderColor="black"
-          me="12px"
-        ></Flex>
+    <VStack marginX="2vw" width="26vw">
+      <HStack width="100%" marginX="0">
         <Text
           my="auto"
           fontWeight="800"
@@ -100,101 +84,104 @@ const UnitCard = (unit) => {
           textAlign="center"
           fontSize="xl"
           me="auto"
+          width="90%"
         >
           {/* the unit name button */}
           <Button
             onClick={navigateToUnitOffering}
-            style={{ fontWeight: 'bold', fontSize: '20px' }}
+            style={{ fontWeight: 'bold', fontSize: '20px', width:"100%" }}
           >
             {`${unit_code} - ${unit_off_period}, ${unit_off_year}`}
           </Button>
         </Text>
-
         {/* the 3 dots button */}
         <Button
-          w="38px"
-          h="38px"
+          maxW="10%"
           align="right"
           justify="right"
-          borderRadius="12px"
-          me="12px"
           bg={iconBox}
           onClick={onOpenDetails}
         >
-          <Icon w="24px" h="24px" as={IoEllipsisHorizontalSharp} color={iconColor} />
+          <Icon w="1.5em" h="1.5em" as={IoEllipsisHorizontalSharp} color={iconColor} />
         </Button>
+      </HStack>
 
-        {/* the popup when the 3 dots button is clicked, shows the unit details */}
-        <Modal
-          closeOnOverlayClick={false}
-          isOpen={isOpenDetails}
-          onClose={onCloseDetails}
-          onClick={<Link to={this} onClick={isOpenDetails}></Link>}
-        >
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>{unit_code}</ModalHeader>
-            <ModalCloseButton />
+      {/* the popup when the 3 dots button is clicked, shows the unit details */}
+      <Modal
+        closeOnOverlayClick={false}
+        isOpen={isOpenDetails}
+        onClose={onCloseDetails}
+        onClick={<Link to={this} onClick={isOpenDetails}></Link>}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{unit_code}</ModalHeader>
+          <ModalCloseButton />
 
-            <ModalBody>
-              <VStack>
-                <p>{`${unit_off_year}, Semester ${unit_off_period} - **Campus**`}</p>
-                <p>{`${enrolment_count} students enrolled`}</p>
-              </VStack>
-            </ModalBody>
+          <ModalBody>
+            <VStack>
+              <p>{`${unit_off_year}, Semester ${unit_off_period} - **Campus**`}</p>
+              <p>{`${enrolment_count} students enrolled`}</p>
+            </VStack>
+          </ModalBody>
 
-            <ModalFooter>
-              <HStack>
-                <Spacer />
-                <Text
-                  my="auto"
-                  fontWeight="800"
-                  color={mainText}
-                  textAlign="right"
-                  fontSize="xl"
-                  me="auto"
-                >
-                  <Button colorScheme='red' onClick={handleDeleteUnit} >
-                    <HStack>
-                      <Text>Remove Offering</Text>
-                      <Icon as={BsTrash}></Icon>
-                    </HStack>
-                  </Button>
-                </Text>
-              </HStack>
+          <ModalFooter>
+            <HStack>
+              <Spacer />
+              <Text
+                my="auto"
+                fontWeight="800"
+                color={mainText}
+                textAlign="right"
+                fontSize="xl"
+                me="auto"
+              >
+                <Button colorScheme='red' onClick={handleDeleteUnit} >
+                  <HStack>
+                    <Text>Remove Offering</Text>
+                    <Icon as={BsTrash}></Icon>
+                  </HStack>
+                </Button>
+              </Text>
+            </HStack>
 
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      </Flex>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
       {/* the button with the image and the faculty, when clicked will also bring to the groups for this unit */}
       <Button
         onClick={navigateToUnitOffering}
-        style={{ display: 'inline-block', width: 'auto', height: 'auto' }}
+        style={{ display: 'inline-block', width: '100%', height: 'auto', marginBottom: "5vh" }}
       >
-        <Image
-          src="https://img.freepik.com/free-vector/gradient-purple-color-gradient-background-abstract-modern_343694-2243.jpg?w=740&t=st=1682246391~exp=1682246991~hmac=24a5e0adc73d36b09e5b9fc4b2b05aabd12bab82078f67b6556cb3800ca6d1e4"
-          style={{
-            height: '60%',
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-          borderRadius="20px"
-          mb="10px"
-        />
-        <Text
-          fontWeight="600"
-          color={secondaryText}
-          textAlign="center"
-          fontSize="l"
-          w="80%"
-        >
-          {unit_name}
-        </Text>
+        <Center>
+          <VStack marginY="2vh">
+            <Text
+              fontWeight="600"
+              color={secondaryText}
+              textAlign="center"
+              fontSize="l"
+              w="80%"
+            >
+              {unit_name}
+            </Text>
+            <Image
+              src="https://img.freepik.com/free-vector/gradient-purple-color-gradient-background-abstract-modern_343694-2243.jpg?w=740&t=st=1682246391~exp=1682246991~hmac=24a5e0adc73d36b09e5b9fc4b2b05aabd12bab82078f67b6556cb3800ca6d1e4"
+              style={{
+                height: 'auto',
+                width: '80%',
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+              borderRadius="20px"
+            />
+          </VStack>
+
+        </Center>
+
+
       </Button>
-    </Flex>
+    </VStack>
   );
 };
 export default UnitCard;
