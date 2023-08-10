@@ -158,9 +158,12 @@ function UnitPage() {
                       value={unitSemesterOffering}
                       onChange={(event) => setUnitSemesterOffering(event.target.value)}
                     >
-                      <option value="S1">S1</option>
-                      <option value="S2">S2</option>
-                      <option value="FY">FY</option>
+                      <option value="S1">Semester 1</option>
+                      <option value="S2">Semester 2</option>
+                      <option value="FY">Full Year</option>
+                      <option value="Summer">Summer</option>
+                      <option value="Winter">Winter</option>
+
                     </Select>
                   </Flex>
                   <Text>Add student data to your offering:</Text>

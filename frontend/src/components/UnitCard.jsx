@@ -39,8 +39,6 @@ const UnitCard = (unit) => {
     onClose: onCloseDetails,
   } = useDisclosure();
 
-
-
   //getting the unit details from the unit object
   const {
     unit_code,
@@ -59,7 +57,6 @@ const UnitCard = (unit) => {
   const handleDeleteUnit = (event) => {
     event.preventDefault();
     console.log("deleting unit")
-
 
     fetch(`http://localhost:8080/api/units/${unit_code}/${unit_off_year}/${unit_off_period}`, {
       method: 'DELETE',
@@ -109,7 +106,7 @@ const UnitCard = (unit) => {
             onClick={navigateToUnitOffering}
             style={{ fontWeight: 'bold', fontSize: '20px' }}
           >
-            {unit_code}
+            {`${unit_code} - ${unit_off_period}, ${unit_off_year}`}
           </Button>
         </Text>
 
