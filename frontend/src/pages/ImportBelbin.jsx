@@ -454,7 +454,7 @@ function ImportPage() {
                       handleAttributeChange('discPersonality', e.target.value) //TODO: update when belbin db is created
                     }
                     options={[
-                      { label: 'Thought', value: 'DOMINANT' },
+                      { label: 'Thinking', value: 'DOMINANT' },
                       { label: 'People', value: 'INFLUENCE' },
                       { label: 'Action', value: 'STEADINESS' },
                     ]}
