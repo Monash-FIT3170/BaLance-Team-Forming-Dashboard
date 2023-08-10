@@ -145,7 +145,8 @@ function Students() {
             width="100%"
             onClick={navigateToBelbinUpload}
             colorScheme="gray"
-            margin-left="20">
+            margin-left="20"
+            isDisabled={students.length===0}>
             <HStack>
               <AddIcon />
               <Spacer />
@@ -156,7 +157,8 @@ function Students() {
             width="100%"
             onClick={navigateToStudentUpload}
             colorScheme="gray"
-            margin-left="20">
+            margin-left="20"
+            isDisabled={students.length===0}>
             <HStack>
               <AddIcon />
               <Spacer />
@@ -189,7 +191,8 @@ function Students() {
               width="18vw"
               onClick={navigateToCreateGroups}
               colorScheme="gray"
-              margin-left="20">
+              margin-left="20"
+              isDisabled={students.length===0}>
               <HStack>
                 <EditIcon />
                 <Spacer />
