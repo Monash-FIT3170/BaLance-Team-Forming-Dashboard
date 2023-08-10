@@ -429,22 +429,6 @@ function ImportPage() {
                     }
                   />
                   <FormField
-                    label="WAM"
-                    placeholder="WAM"
-                    value={currProfile?.wamAverage}
-                    onChange={(e) => handleAttributeChange('wamAverage', e.target.value)}
-                  />
-                  <FormField
-                    label="Gender"
-                    placeholder="Select Gender"
-                    value={currProfile?.gender}
-                    onChange={(e) => handleAttributeChange('gender', e.target.value)}
-                    options={[
-                      { label: 'M', value: 'M' },
-                      { label: 'F', value: 'F' },
-                    ]}
-                  />
-                  <FormField
                     label="Lab ID"
                     placeholder="Lab ID"
                     value={currProfile?.labId}
@@ -463,17 +447,16 @@ function ImportPage() {
                     ]}
                   />
                   <FormField
-                    label="DISC Personality"
-                    placeholder="Select Personality Type"
+                    label="Belbin Type"
+                    placeholder="Select Belbin Type"
                     value={currProfile?.discPersonality}
                     onChange={(e) =>
-                      handleAttributeChange('discPersonality', e.target.value)
+                      handleAttributeChange('discPersonality', e.target.value) //TODO: update when belbin db is created
                     }
                     options={[
-                      { label: 'Dominant', value: 'DOMINANT' },
-                      { label: 'Influence', value: 'INFLUENCE' },
-                      { label: 'Steadiness', value: 'STEADINESS' },
-                      { label: 'Conscientiousness', value: 'CONSCIENTIOUSNESS' },
+                      { label: 'Thought', value: 'DOMINANT' },
+                      { label: 'People', value: 'INFLUENCE' },
+                      { label: 'Action', value: 'STEADINESS' },
                     ]}
                   />
                 </ModalBody>
@@ -620,26 +603,6 @@ function ImportPage() {
                 onChange={(e) =>
                   setCurrProfile({ ...currProfile, studentEmailAddress: e.target.value })
                 }
-              />
-              <FormField
-                label="WAM"
-                placeholder="Enter WAM"
-                value={currProfile.wamAverage}
-                onChange={(e) =>
-                  setCurrProfile({ ...currProfile, wamAverage: e.target.value })
-                }
-              />
-              <FormField
-                label="Gender"
-                placeholder="Select gender"
-                value={currProfile.gender}
-                onChange={(e) =>
-                  setCurrProfile({ ...currProfile, gender: e.target.value })
-                }
-                options={[
-                  { label: 'M', value: 'M' },
-                  { label: 'F', value: 'F' },
-                ]}
               />
               <FormField
                 label="Lab ID"
