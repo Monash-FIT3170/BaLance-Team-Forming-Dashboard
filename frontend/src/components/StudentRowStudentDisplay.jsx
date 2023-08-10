@@ -1,4 +1,4 @@
-import { Tr, Td, HStack } from '@chakra-ui/react';
+import { Tr, Td} from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import ChangeStudentGroupModal from './ChangeStudentGroupModal';
 

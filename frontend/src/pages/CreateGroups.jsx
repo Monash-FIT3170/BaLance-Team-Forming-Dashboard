@@ -49,10 +49,21 @@ function CreateGroups() {
         "variance": variance
     }
 
-    const handleSubmitGroupOptions = (event) => {
+    const handleSubmitGroupOptions = async (event) => {
         event.preventDefault();
         //navigateToOfferingDashboard();
         console.log(groupDetails);
+        await fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                groupSize: groupSize,
+                variance: variance,
+                strategy: strategy
+            })
+        });
     }
 
     const navigateToOfferingDashboard = () => {
@@ -91,7 +102,7 @@ function CreateGroups() {
                                 <Text>WAM based - WAM_VAL and DEDICATED_HOURS</Text>
                                 <Text>Belbin based - BELBIN_TYPE</Text>
                             </Box>
-                            <Spacer width="15vw"/>
+                            <Spacer width="15vw" />
                             <VStack>
                                 <FormLabel>Strategy</FormLabel>
                                 <Select marginLeft="5vw" w="12vw" placeholder='' onChange={(event) => setStrategy(event.target.value)}>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-    Box, Text, Flex, Button, Input, Icon, HStack, Popover,
+    Popover,
     PopoverTrigger,
     PopoverContent,
     PopoverArrow,
@@ -9,7 +9,6 @@ import {
     PopoverBody,
     IconButton,
 } from '@chakra-ui/react';
-import { FiUploadCloud } from 'react-icons/fi';
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
 
 
