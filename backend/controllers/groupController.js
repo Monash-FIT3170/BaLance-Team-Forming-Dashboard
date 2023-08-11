@@ -272,7 +272,13 @@ const moveStudent = async (req, res) => {
     res.status(200).send({wip: "test"});
 }
 
+const createGroupsCustomScript = (unitOffId, labId, studentsList, groupSize, variance) => {
+    let groups = [];
+    
+}
+
 /* SUPPLEMENTARY FUNCTIONS. TO BE REFACTORED */
+//MIGHT RUN OUT OF MEMORY STACK
 const createGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) => {
     // console.log(`| unit id: ${unitOffId} | lab id: ${labId} | students: ${studentsList} |`);
     let groups = [];

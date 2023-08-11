@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Box, Text, Flex, IconButton, Input } from '@chakra-ui/react';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
+import { useParams } from 'react-router';
+import { Link, useNavigate } from 'react-router-dom';
 
 function UploadGroupScript() {
   const [file, setFile] = useState(null);
+  const navigate = useNavigate();
 
   const handleUpload = (e) => {
     e.preventDefault();
@@ -11,15 +14,41 @@ function UploadGroupScript() {
     setFile(uploadedFile);
   };
 
-  const handleSubmit = () => {
+  const {
+    unitCode,
+    year,
+    period
+  } = useParams();
+
+  const handleSubmit = async () => {
     // Handle the file submission here, e.g., send it to the server
     if (file) {
       // Make an API call or perform other actions with the uploaded file
+      try {
+
+        const formData = new FormData();
+        formData.append('pythonFile', file);
+
+        fetch(`http://localhost:8080/api/groups/:${unitCode}/:${year}/:${period}/uploadScript`, {
+        method: 'POST',
+        body: formData,
+        }).then((res) => {
+            console.log(res);
+            //handle nav
+            navigate(`/assigningPage`);
+          })
+          .catch((err) => console.log(err));
+      }
+      catch (e) { 
+
+      }
       console.log('File uploaded:', file);
     } else {
       console.log('No file uploaded.');
     }
   };
+
+
 
   return (
     <>
@@ -38,7 +67,7 @@ function UploadGroupScript() {
         margin="20px"
       >
         <Box>
-          <Input type="file" accept=".js" onChange={handleUpload} />
+          <Input type="file" accept=".py" onChange={handleUpload} />
           {file && (
             <IconButton
               mt={4}
@@ -48,15 +77,7 @@ function UploadGroupScript() {
             />
           )}
         </Box>
-        <Box textAlign="center" mt={4}>
-          <IconButton
-            aria-label="Upload Group Formation Script"
-            icon={<ArrowForwardIcon />}
-            colorScheme="green"
-            size="lg"
-            onClick={handleUpload} // Replace with your function to handle the script upload
-          />
-        </Box>
+       
       </Flex>
     </>
   );
