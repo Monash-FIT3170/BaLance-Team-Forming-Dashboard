@@ -17,6 +17,12 @@ const { // import controller functions for route handlers
     moveStudent
 } = require('../controllers/groupController');
 
+const {
+    uploadCustomScript,
+} = require('../controllers/scriptController');
+
+router.post('/uploadScript', uploadCustomScript)
+
 // Api Structure /api/groups/{unitId}/{groupId}
 
 // get all groups for a specific unit
@@ -41,7 +47,5 @@ router.delete('/:unitCode/:year/:period/:groupNumber', deleteGroup);
 router.patch('/:unitCode/:year/:period/:groupNumber', updateGroup);
 
 // move a student between two groups
-router.patch('/:unitCode/:year/:period/move/:studentId/', moveStudent)
-
 // export this router for external use
 module.exports = router;
