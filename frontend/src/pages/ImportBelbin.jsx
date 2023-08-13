@@ -79,11 +79,9 @@ function ImportPage() {
     ['studentId', 'Student ID'],
     ['studentFirstName', 'First Name'],
     ['studentLastName', 'Last Name'],
-    ['studentEmailAddress', 'Email Address'],
-    ['wamAverage', 'WAM'],
-    ['gender', 'Gender'],
     ['labId', 'Lab ID'],
     ['enrolmentStatus', 'Enrolment Status'],
+    ['belbinType', 'Belbin Type']
   ];
 
   // Mapping for CSV headers to database headers
@@ -95,6 +93,7 @@ function ImportPage() {
     EMAIL_ADDRESS: 'studentEmailAddress',
     WAM_VAL: 'wamAverage',
     GENDER: 'gender',
+    BELBIN_TYPE: 'belbinType',
   };
 
   // State hooks for this page
@@ -535,11 +534,9 @@ function ImportPage() {
                 <Td>{profile.studentId}</Td>
                 <Td>{profile.studentFirstName}</Td>
                 <Td>{profile.studentLastName}</Td>
-                <Td>{profile.studentEmailAddress}</Td>
-                <Td>{profile.wamAverage}</Td>
-                <Td>{profile.gender}</Td>
                 <Td>{profile.labId}</Td>
                 <Td>{profile.enrolmentStatus}</Td>
+                <Td>{profile.belbinType}</Td>
 
                 <Td>
                   <EditIcon
