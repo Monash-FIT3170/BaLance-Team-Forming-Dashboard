@@ -11,8 +11,11 @@ const { // import controller functions for route handlers
     getUnit,
     addUnit,
     deleteUnit,
-    updateUnit
+    updateUnit,
+    uploadCustomScript
 } = require('../controllers/unitController');
+
+const { upload } = require('../helpers/uploadMiddleware');
 
 // get all units for a user
 router.get('/', getAllUnits);
@@ -20,6 +23,7 @@ router.get('/', getAllUnits);
 // get a specific unit for a user
 router.get('/:unitCode/:year/:period', getUnit);
 
+router.post('/:unitCode/:year/:period/uploadScript', upload.single('pythonFile'), uploadCustomScript);
 // add a new unit for the user
 router.post('/', addUnit);
 
