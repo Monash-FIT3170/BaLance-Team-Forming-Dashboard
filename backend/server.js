@@ -38,6 +38,24 @@ const verifyJwt = auth({
 
 app.use(verifyJwt);
 
+app.use(async (req, res, next) => {
+    try {
+        const accessToken = req.auth.token;
+        const userResponse = await axios.get('https://balance.au.auth0.com/userinfo',
+        {
+            headers: {
+                authorization: `Bearer ${accessToken}`
+            }
+        })
+
+        req.user = userResponse.data;
+    }
+    catch(err){
+        console.log(err);
+    }
+    next();
+})
+
 // route middleware
 app.use('/api/units/', unitRoutes);
 app.use('/api/groups/', groupRoutes);
