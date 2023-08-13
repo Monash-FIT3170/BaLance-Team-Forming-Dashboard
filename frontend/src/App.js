@@ -36,7 +36,7 @@ function App() {
             <Route path="/createGroups/:unitCode/:year/:period" element={<CreateGroups/>} />
             <Route path="/assigningPage" element={<Teachers />} />
             <Route path="/belbinImport/:unitCode/:year/:period" element={<BelbinImporter />} />
-            <Route path="/infoImport" element={<InfoImporter />} />
+            <Route path="/infoImport/:unitCode/:year/:period" element={<InfoImporter />} />
           </Routes>
         </div>
       </BrowserRouter>

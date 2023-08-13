@@ -48,6 +48,10 @@ function Students() {
     navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
   };
 
+  const navigateToWorkEthicUpload = () =>{
+    navigate(`/infoImport/${unitCode}/${year}/${period}`);
+  };
+
   const navigateToBelbinUpload = () => {
     navigate(`/belbinImport/${unitCode}/${year}/${period}`);
   }
@@ -155,7 +159,7 @@ function Students() {
           </Button>
           <Button
             width="100%"
-            onClick={navigateToStudentUpload}
+            onClick={navigateToWorkEthicUpload}
             colorScheme="gray"
             margin-left="20"
             isDisabled={students.length===0}>
