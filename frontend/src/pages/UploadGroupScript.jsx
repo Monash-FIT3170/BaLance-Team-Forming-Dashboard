@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Box, Text, Flex, IconButton, Input } from '@chakra-ui/react';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
+import { useParams } from 'react-router';
+import { useLocation, useNavigate } from 'react-router-dom';
+import StudentContext from '../store/student-context';
 
 function UploadGroupScript() {
   const [file, setFile] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleUpload = (e) => {
     e.preventDefault();
@@ -11,15 +16,51 @@ function UploadGroupScript() {
     setFile(uploadedFile);
   };
 
-  const handleSubmit = () => {
-    // Handle the file submission here, e.g., send it to the server
+  const {
+    unitCode,
+    year,
+    period
+  } = useParams();
+
+  const navigateToCreateGroup = () => {
+        navigate(`/createGroups/${unitCode}/${year}/${period}`);
+    };
+  const stuCtx = useContext(StudentContext);
+
+  const handleSubmit = async () => {
+    const { groupDetails } = location.state;
     if (file) {
-      // Make an API call or perform other actions with the uploaded file
+      try {
+        const formData = new FormData();
+        formData.append('pythonFile', file);
+        formData.append('variance', groupDetails.variance);
+        formData.append('groupSize', groupDetails.groupSize);
+        const response = await fetch(`http://localhost:8080/api/units/:${unitCode}/:${year}/:${period}/uploadScript`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (response.ok) {
+          const students = await response.json(); // Wait for JSON parsing
+          console.log(students);
+          stuCtx.updateStudents(students);
+          // const jsonDataString = JSON.stringify(students);
+          // localStorage.setItem("jsonData", jsonDataString);
+          navigate(`/assigningPage`);
+        } else {
+          throw new Error('Request failed with status ' + response.status);
+        }
+      } catch (error) {
+        console.error(error);
+      }
       console.log('File uploaded:', file);
     } else {
       console.log('No file uploaded.');
     }
   };
+
+
+
 
   return (
     <>
@@ -38,7 +79,7 @@ function UploadGroupScript() {
         margin="20px"
       >
         <Box>
-          <Input type="file" accept=".js" onChange={handleUpload} />
+          <Input type="file" accept=".py" onChange={handleUpload} />
           {file && (
             <IconButton
               mt={4}
@@ -48,15 +89,7 @@ function UploadGroupScript() {
             />
           )}
         </Box>
-        <Box textAlign="center" mt={4}>
-          <IconButton
-            aria-label="Upload Group Formation Script"
-            icon={<ArrowForwardIcon />}
-            colorScheme="green"
-            size="lg"
-            onClick={handleUpload} // Replace with your function to handle the script upload
-          />
-        </Box>
+       
       </Flex>
     </>
   );

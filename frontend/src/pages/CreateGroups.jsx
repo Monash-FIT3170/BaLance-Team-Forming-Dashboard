@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
+
 import {
     Table,
     Thead,
@@ -44,26 +45,32 @@ function CreateGroups() {
     } = useDisclosure();
     const { unitCode, year, period } = useParams();
     const groupDetails = {
-        "strategy": strategy,
         "groupSize": groupSize,
         "variance": variance
     }
 
     const handleSubmitGroupOptions = async (event) => {
         event.preventDefault();
-        navigateToOfferingDashboard();
 
-        /* Call to shuffle groups */
-        fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                groupSize: groupSize,
-                variance: variance,
-                strategy: strategy,
-            })
-        })
-            .catch((error) => { console.error('Error:', error); })
+        if (strategy === "custom") {
+            navigateUploadScript();
+            navigate(
+                `/uploadGroupScript/${unitCode}/${year}/${period}`,
+                {state: { groupDetails }});
+        } else { 
+            navigateToOfferingDashboard();
+
+            /* Call to shuffle groups */
+            fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    groupSize: groupSize,
+                    variance: variance,
+                    strategy: strategy,
+                })
+            }).catch((error) => { console.error('Error:', error); })
+        }
 
         /* Creating new groups */
         /*
@@ -83,6 +90,10 @@ function CreateGroups() {
 
     const navigateToOfferingDashboard = () => {
         navigate(`/groups/${unitCode}/${year}/${period}`);
+    };
+
+    const navigateUploadScript = () => {
+        navigate(`/uploadGroupScript/${unitCode}/${year}/${period}`);
     };
 
     return (
@@ -124,6 +135,7 @@ function CreateGroups() {
                                     <option value='random'>Random Strategy</option>
                                     <option value='effort'>WAM Based Strategy</option>
                                     <option value='belbin'>Belbin Based Strategy</option>
+                                    <option value='custom'>Custom Script</option>
                                 </Select>
                             </VStack>
                         </HStack>
@@ -176,7 +188,7 @@ function CreateGroups() {
                 </form>
 
 
-                <Button type="submit" form="create-groups" colorScheme="blue" >Assign Groups</Button>
+                <Button type="submit" form="create-groups" colorScheme="blue" >{strategy == "custom" ? "Upload Custom Script": "Assign group"}</Button>
             </VStack>
 
         </>
