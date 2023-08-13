@@ -21,32 +21,32 @@ function UploadGroupScript() {
   } = useParams();
 
   const handleSubmit = async () => {
-    // Handle the file submission here, e.g., send it to the server
     if (file) {
-      // Make an API call or perform other actions with the uploaded file
       try {
-
         const formData = new FormData();
         formData.append('pythonFile', file);
 
-        fetch(`http://localhost:8080/api/groups/:${unitCode}/:${year}/:${period}/uploadScript`, {
-        method: 'POST',
-        body: formData,
-        }).then((res) => {
-            console.log(res);
-            //handle nav
-            navigate(`/assigningPage`);
-          })
-          .catch((err) => console.log(err));
-      }
-      catch (e) { 
+        const response = await fetch(`http://localhost:8080/api/groups/:${unitCode}/:${year}/:${period}/uploadScript`, {
+          method: 'POST',
+          body: formData,
+        });
 
+        if (response.ok) {
+          const data = await response.json(); // Wait for JSON parsing
+          console.log(data);
+          navigate(`/assigningPage`, {state: {data}});
+        } else {
+          throw new Error('Request failed with status ' + response.status);
+        }
+      } catch (error) {
+        console.error(error);
       }
       console.log('File uploaded:', file);
     } else {
       console.log('No file uploaded.');
     }
   };
+
 
 
 

@@ -1,4 +1,5 @@
 import { React, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 // Chakra imports
 import {
@@ -41,7 +42,9 @@ function Teachers() {
   const [checkedValues2, setCheckedValues2] = useState([]);
   const [checkedValues3, setCheckedValues3] = useState([]);
   const [checkedValues4, setCheckedValues4] = useState([]);
-
+  const location = useLocation();
+  const { jsonData } = location.state;
+  
   return (
     <div>
       <Center margin="30px">
