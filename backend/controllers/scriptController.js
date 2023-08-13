@@ -4,69 +4,51 @@ const fs = require('fs')
 const { promisify } = require('util')
 
 const unlinkAsync = promisify(fs.unlink)
-
 const uploadCustomScript = async (req, res) => {
-  const {
-        unitCode,
-        year,
-        period,
-        save
-    } = req.params;
-
-    // Access the uploaded file using req.file
-    const uploadedFile = req.file;
-
-    if (!uploadedFile) {
-        return res.status(400).send('No file uploaded.');
-    }
-  req.file.student_id = req.body.student_id;
-  console.log(req.file);
-    // Read the uploaded file as a string
-  const filePath = uploadedFile.path;
-  const fileContent = fs.readFileSync(filePath, 'utf-8');
-  const pythonFileString = fileContent.toString();
-  
-    // .buffer
-    // .toString('utf-8');
-  console.log(pythonFileString);
-  const students = [{ id: 30722055, wam: 1 }, {id: 233122, wam: 2}];
-  
-  
-  const pythonArgs = [unitCode, year, period, JSON.stringify(students)]; 
-  const pythonProcess = spawn('python3', ['-c', pythonFileString, ...pythonArgs]);
-    console.log(__dirname + '/uploads'); // Outputs the absolute path of the current module's directory
-
-  let output = '';
-
-  pythonProcess.stdout.on('data', (data) => {
-    output += data.toString();
-  });
-
-  pythonProcess.stderr.on('data', (data) => {
-    console.error(data.toString());
-  });
-
-  pythonProcess.on('close', (code) => {
-    console.log(`Python script exited with code ${code}`);
+    // ... (other code)
 
     try {
-      const parsedOutput = JSON.parse(output);
-        console.log(parsedOutput);
-      res.json(parsedOutput);
+        // ... (other code)
+        
+        // Execute the Python process
+        await new Promise((resolve, reject) => {
+            pythonProcess.on('close', (code) => {
+                console.log(`Python script exited with code ${code}`);
+                if (code === 0) {
+                    resolve();
+                } else {
+                    reject(new Error(`Python script exited with non-zero code: ${code}`));
+                }
+            });
+
+            pythonProcess.stdout.on('data', (data) => {
+                output += data.toString();
+            });
+
+            pythonProcess.stderr.on('data', (data) => {
+                console.error(data.toString());
+            });
+        });
+
+        // ... (other code)
     } catch (error) {
-      res.status(500).json({ error: 'Failed to parse Python output.' });
+        console.error('An error occurred:', error);
+        res.status(500).json({ error: 'An error occurred while processing the request.' });
+    } finally {
+        // unlink the file after finish processing / error occur
+      try {
+        //
+        // if (save) {
+          //associate req.user.id (sesson auth) / req.jwt (token auth) -> uploadedFile.filename
+        // } else { 
+          //await unlinkAsync(req.file.path);
+        // }
+            await unlinkAsync(req.file.path);
+        } catch (error) {
+            console.error('An error occurred while deleting the file:', error);
+        }
     }
-    
-  });
-
-  if (save) {
-
-  }
-  else { 
-    await unlinkAsync(req.file.path)
-  }
-}
-
+};
 
 
 
