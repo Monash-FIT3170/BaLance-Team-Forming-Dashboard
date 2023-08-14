@@ -79,11 +79,9 @@ function ImportPage() {
     ['studentId', 'Student ID'],
     ['studentFirstName', 'First Name'],
     ['studentLastName', 'Last Name'],
-    ['studentEmailAddress', 'Email Address'],
-    ['wamAverage', 'WAM'],
-    ['gender', 'Gender'],
     ['labId', 'Lab ID'],
     ['enrolmentStatus', 'Enrolment Status'],
+    ['belbinType', 'Belbin Type']
   ];
 
   // Mapping for CSV headers to database headers
@@ -95,6 +93,7 @@ function ImportPage() {
     EMAIL_ADDRESS: 'studentEmailAddress',
     WAM_VAL: 'wamAverage',
     GENDER: 'gender',
+    BELBIN_TYPE: 'belbinType',
   };
 
   // State hooks for this page
@@ -333,7 +332,7 @@ function ImportPage() {
     <>
       <Box as="header" p="4" textAlign="center">
         <Text fontSize="2xl" fontWeight="bold">
-          Add Student Profiles to: {`${unitCode} - ${period} ${year}, **CAMPUS**`}
+          Add Student Belbin Types to: {`${unitCode} - ${period} ${year}, **CAMPUS**`}
         </Text>
       </Box>
 
@@ -429,22 +428,6 @@ function ImportPage() {
                     }
                   />
                   <FormField
-                    label="WAM"
-                    placeholder="WAM"
-                    value={currProfile?.wamAverage}
-                    onChange={(e) => handleAttributeChange('wamAverage', e.target.value)}
-                  />
-                  <FormField
-                    label="Gender"
-                    placeholder="Select Gender"
-                    value={currProfile?.gender}
-                    onChange={(e) => handleAttributeChange('gender', e.target.value)}
-                    options={[
-                      { label: 'M', value: 'M' },
-                      { label: 'F', value: 'F' },
-                    ]}
-                  />
-                  <FormField
                     label="Lab ID"
                     placeholder="Lab ID"
                     value={currProfile?.labId}
@@ -463,17 +446,16 @@ function ImportPage() {
                     ]}
                   />
                   <FormField
-                    label="DISC Personality"
-                    placeholder="Select Personality Type"
+                    label="Belbin Type"
+                    placeholder="Select Belbin Type"
                     value={currProfile?.discPersonality}
                     onChange={(e) =>
-                      handleAttributeChange('discPersonality', e.target.value)
+                      handleAttributeChange('discPersonality', e.target.value) //TODO: update when belbin db is created
                     }
                     options={[
-                      { label: 'Dominant', value: 'DOMINANT' },
-                      { label: 'Influence', value: 'INFLUENCE' },
-                      { label: 'Steadiness', value: 'STEADINESS' },
-                      { label: 'Conscientiousness', value: 'CONSCIENTIOUSNESS' },
+                      { label: 'Thinking', value: 'DOMINANT' },
+                      { label: 'People', value: 'INFLUENCE' },
+                      { label: 'Action', value: 'STEADINESS' },
                     ]}
                   />
                 </ModalBody>
@@ -496,6 +478,28 @@ function ImportPage() {
                 </ModalFooter>
               </ModalContent>
             </Modal>
+            {/*<Box textAlign="center">
+            <IconButton
+              mt={4}
+              mb={4}
+              colorScheme="green"
+              icon={<AddIcon />}
+              onClick={onAddProfileOpen}
+            ></IconButton>
+
+            <Button
+              marginLeft="2em"
+              colorScheme="red"
+              onClick={() => handleDeleteInactiveProfiles(profiles)}
+            >
+              Delete All Inactive Profiles
+            </Button>
+            <Button ml={4} colorScheme="blue" onClick={() => handleAddProfilesClick()}>
+              Add Profiles To Unit
+            </Button>
+            
+          </Box>
+          */}
 
           </Flex>
 
@@ -511,7 +515,7 @@ function ImportPage() {
           <Center>
             No students have yet been added to the offering.
           </Center>
-        </Box>) : (<Table variant="striped" size="sm" maxWidth="90vw" marginBottom="3vh">
+        </Box>) : (<Table variant="striped" size="sm" maxWidth="90vw">
           <Thead>
             <Tr>
               {headers.map((header) => (
@@ -530,11 +534,9 @@ function ImportPage() {
                 <Td>{profile.studentId}</Td>
                 <Td>{profile.studentFirstName}</Td>
                 <Td>{profile.studentLastName}</Td>
-                <Td>{profile.studentEmailAddress}</Td>
-                <Td>{profile.wamAverage}</Td>
-                <Td>{profile.gender}</Td>
                 <Td>{profile.labId}</Td>
                 <Td>{profile.enrolmentStatus}</Td>
+                <Td>{profile.belbinType}</Td>
 
                 <Td>
                   <EditIcon
@@ -598,26 +600,6 @@ function ImportPage() {
                 onChange={(e) =>
                   setCurrProfile({ ...currProfile, studentEmailAddress: e.target.value })
                 }
-              />
-              <FormField
-                label="WAM"
-                placeholder="Enter WAM"
-                value={currProfile.wamAverage}
-                onChange={(e) =>
-                  setCurrProfile({ ...currProfile, wamAverage: e.target.value })
-                }
-              />
-              <FormField
-                label="Gender"
-                placeholder="Select gender"
-                value={currProfile.gender}
-                onChange={(e) =>
-                  setCurrProfile({ ...currProfile, gender: e.target.value })
-                }
-                options={[
-                  { label: 'M', value: 'M' },
-                  { label: 'F', value: 'F' },
-                ]}
               />
               <FormField
                 label="Lab ID"
