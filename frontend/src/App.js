@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Box, ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { useAuth0 } from '@auth0/auth0-react';
+
 import ImportStudents from './pages/ImportStudents';
 import UploadGroupScript from './pages/UploadGroupScript';
 import CreateGroups from './pages/CreateGroups';
@@ -21,8 +23,15 @@ const theme = extendTheme({
 });
 
 function App() {
+
+  const { loginWithRedirect, logout, user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+
   return (
     <ChakraProvider theme={theme}>
+      {!isAuthenticated && (
+        <button onClick={loginWithRedirect}>Login</button>
+      )}
+      {isAuthenticated && (
       <BrowserRouter>
         <NavBar />
         <Box pt="12vh" />
@@ -39,7 +48,9 @@ function App() {
             <Route path="/infoImport/:unitCode/:year/:period" element={<InfoImporter />} />
           </Routes>
         </div>
+        <button onClick={logout}>Logout</button>
       </BrowserRouter>
+      )}
     </ChakraProvider>
   );
 }
