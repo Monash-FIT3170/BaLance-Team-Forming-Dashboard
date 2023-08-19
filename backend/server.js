@@ -7,6 +7,7 @@ const cors = require('cors');
 const { auth } = require('express-oauth2-jwt-bearer');
 const jwks = require('jwks-rsa');
 const axios = require('axios');
+const db_connection = require('./db_connection');
 
 // attach .env contents to the global process object
 require('dotenv').config();
@@ -52,6 +53,24 @@ app.use(async (req, res, next) => {
     }
     catch(err){
         console.log(err);
+    }
+    next();
+})
+
+app.use(async (req, res, next) => {
+
+    results = await db_connection.promise().query(
+        `SELECT * FROM staff WHERE email_address='${req.user.email}';`
+    );
+
+    if (results[0].length == 0){
+
+        await db_connection.promise().query(
+            `INSERT INTO staff (staff_code, preferred_name, last_name, email_address)
+            VALUES ('${req.user.nickname}', '${req.user.nickname}', '${req.user.nickname}', '${req.user.email}');
+            `
+        )
+
     }
     next();
 })

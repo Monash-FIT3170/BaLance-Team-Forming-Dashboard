@@ -13,7 +13,6 @@ const getAllUnits = async (req, res) => {
         (err, results, fields) => {
             if(err) { console.error(err.stack); }
             else {
-                console.log(req.user.email);
                 res.status(200).json(results);
             }
         }
