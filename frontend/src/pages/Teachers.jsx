@@ -1,4 +1,5 @@
-import { useEffect, React, useState, useContext } from 'react';
+import { React, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 // Chakra imports
 import {
@@ -42,18 +43,9 @@ function Teachers() {
   const [checkedValues2, setCheckedValues2] = useState([]);
   const [checkedValues3, setCheckedValues3] = useState([]);
   const [checkedValues4, setCheckedValues4] = useState([]);
-  // Retrieve data from localStorage
-  const [storedData, setStoredData] = useState([]);
-
-  useEffect(() => {
-    // Retrieve data from localStorage
-    const storedData = localStorage.getItem('myData');
-    const parsedData = JSON.parse(storedData) || "failed";
-    setStoredData(parsedData);
-  }, []); // The empty dependency array makes this effect run only once on component mount
-
-  const stuCtx = useContext(StudentContext);
-
+  const location = useLocation();
+  const { jsonData } = location.state;
+  
   return (
        <div>
       <Center margin="30px">

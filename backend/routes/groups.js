@@ -16,6 +16,23 @@ const { // import controller functions for route handlers
     moveStudent
 } = require('../controllers/groupController');
 
+const {
+    uploadCustomScript,
+} = require('../controllers/scriptController');
+
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination(req, file, cb) {
+      cb(null, './tmp/my-uploads')
+    },
+    filename(req, file, cb) {
+      cb(null, `${file.fieldname}-${Date.now()}`)
+    }
+})
+
+const upload = multer({ storage });
+
 // Api Structure /api/groups/{unitId}/{groupId}
 
 // get all groups for a specific unit
@@ -32,6 +49,8 @@ router.post('/shuffle/:unitCode/:year/:period', shuffleUnitGroups);
 
 // add a new group to a unit
 router.post('/:unitCode/:year/:period/new', addGroup);
+
+router.post('/:unitCode/:year/:period/uploadScript', upload.single('pythonFile'), uploadCustomScript, )
 
 // delete a specific group from a unit
 router.delete('/:unitCode/:year/:period/:groupNumber', deleteGroup);
