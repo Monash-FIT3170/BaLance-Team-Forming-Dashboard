@@ -54,6 +54,10 @@ function Groups() {
     navigate(`/createGroups/${unitCode}/${year}/${period}`);
   }
 
+  const navigateToStudentUploadInfo = () =>{
+    navigate(`/infoImport/${unitCode}/${year}/${period}`);
+  }
+
   useEffect(() => {
     fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`)
       .then((res) =>
@@ -138,7 +142,7 @@ function Groups() {
           </Button>
           <Button
             width="100%"
-            onClick={navigateToStudentUpload}
+            onClick={navigateToStudentUploadInfo}
             colorScheme="gray"
             margin-left="20">
             <HStack>
