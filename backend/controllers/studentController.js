@@ -229,6 +229,9 @@ const updateStudent = async (req, res) => {
 }
 
 const addStudentBelbin = async (req, res) => {
+    console.log(req.params)
+    const {unitCode, year, period} = req.params
+
     console.log(req.body);
 
 }
