@@ -1,9 +1,21 @@
-import React, { useState, useContext } from 'react';
-import { Box, Text, Flex, IconButton, Input } from '@chakra-ui/react';
+import React, { useState } from 'react';
+import {
+  Box,
+  Text,
+  Flex,
+  IconButton,
+  Input,
+  Button,
+  Center,
+  Alert,
+  AlertIcon,
+} from '@chakra-ui/react';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
+import { useParams } from 'react-router-dom'; // Import the useParams hook
 
 function UploadGroupScript() {
   const [file, setFile] = useState(null);
+  const { unitCode, year, period } = useParams();
 
   const handleUpload = (e) => {
     e.preventDefault();
@@ -22,35 +34,33 @@ function UploadGroupScript() {
   };
 
   return (
-    <>
-      <Box as="header" p="4" textAlign="center">
-        <Text fontSize="2xl" fontWeight="bold">
-          Upload Group Formation Script
+    <Box minHeight="100vh" padding="4">
+      <Box width="80%" margin="0 auto">
+        <Text fontSize="2xl" fontWeight="bold" textAlign="center" mb={4}>
+          Upload Group Script to: {`${unitCode} - ${period} ${year}, **CAMPUS**`}
         </Text>
-      </Box>
-
-      <Flex
-        height="100%"
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="center"
-        textAlign="center"
-        margin="20px"
-      >
-        <Box>
+        <Alert status="info" borderRadius="md">
+          <AlertIcon />
+          <Text>
+            Please upload a Python script (.py) that will be used for custom group formation.
+            Make sure the script adheres to the requirements.
+          </Text>
+        </Alert>
+        <Flex direction="column" alignItems="center" mt={4}>
           <Input type="file" accept=".py" onChange={handleUpload} />
           {file && (
-            <IconButton
+            <Button
               mt={4}
               colorScheme="green"
-              icon={<ArrowForwardIcon />}
+              leftIcon={<ArrowForwardIcon />}
               onClick={handleSubmit}
-            />
+            >
+              Upload Script
+            </Button>
           )}
-        </Box>
-       
-      </Flex>
-    </>
+        </Flex>
+      </Box>
+    </Box>
   );
 }
 
