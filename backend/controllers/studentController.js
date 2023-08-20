@@ -228,11 +228,17 @@ const updateStudent = async (req, res) => {
     }
 }
 
+const addStudentBelbin = async (req, res) => {
+    console.log(req.body);
+
+}
+
 module.exports = {
     getAllStudents,
     getStudent,
     addAllStudents,
     deleteStudentEnrolment,
     deleteStudentGroupAlloc,
-    updateStudent
+    updateStudent,
+    addStudentBelbin
 };
