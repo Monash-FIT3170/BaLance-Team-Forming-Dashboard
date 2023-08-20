@@ -9,13 +9,16 @@ import {
   Center,
   Alert,
   AlertIcon,
+  HStack,
+  Spacer,
 } from '@chakra-ui/react';
-import { ArrowForwardIcon } from '@chakra-ui/icons';
-import { useParams } from 'react-router-dom'; // Import the useParams hook
+import { ArrowForwardIcon, ArrowBackIcon } from '@chakra-ui/icons';
+import { Link, useParams, useNavigate } from 'react-router-dom'; // Import the useParams hook
 
 function UploadGroupScript() {
   const [file, setFile] = useState(null);
   const { unitCode, year, period } = useParams();
+  const navigate = useNavigate(); // Hook to handle navigation
 
   const handleUpload = (e) => {
     e.preventDefault();
@@ -33,9 +36,23 @@ function UploadGroupScript() {
     }
   };
 
+  const navigateToGroupCreationDashboard = () => {
+    // Define the navigation logic to the offering dashboard here
+    navigate(`/createGroups/${unitCode}/${year}/${period}`);
+  };
+
   return (
     <Box minHeight="100vh" padding="4">
       <Box width="80%" margin="0 auto">
+        <Center>
+          <Button onClick={navigateToGroupCreationDashboard}>
+            <HStack>
+              <ArrowBackIcon />
+              <Spacer />
+              <Text>Return to Group Creation Page</Text>
+            </HStack>
+          </Button>
+        </Center>
         <Text fontSize="2xl" fontWeight="bold" textAlign="center" mb={4}>
           Upload Group Script to: {`${unitCode} - ${period} ${year}, **CAMPUS**`}
         </Text>
@@ -65,3 +82,5 @@ function UploadGroupScript() {
 }
 
 export default UploadGroupScript;
+
+
