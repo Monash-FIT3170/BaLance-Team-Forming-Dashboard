@@ -293,25 +293,7 @@ const deleteStudentGroupAlloc = async (req, res) => {
         )
     }
 
-    // delete from enrolment
-    for (let i = 0;i < stud_unique_id.length; i++){
-        await promiseBasedQuery(
-            "DELETE FROM unit_enrolment " +
-            "WHERE stud_unique_id = ?; ",
-            [stud_unique_id[i].stud_unique_id]
-        )
-    }
-
-    // DELETE STUDENT
-    for (let i = 0;i < stud_unique_id.length; i++){
-        await promiseBasedQuery(
-            "DELETE FROM student " +
-            "WHERE stud_unique_id = ?; ",
-            [stud_unique_id[i].stud_unique_id]
-        )
-    }
-
-    console.log("deleted student")
+    console.log("deleted student labs and groups")
 }
 
 // update a student's details
