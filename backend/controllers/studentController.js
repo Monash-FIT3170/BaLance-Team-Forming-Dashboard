@@ -246,13 +246,18 @@ const addStudentBelbin = async (req, res) => {
         
                 await promiseBasedQuery(updateQuery, [student.studentId, unitCode, year, period]);
                 // Respond with success message
-                res.status(200).send({ message: "Student details updated"});
+                //res.status(200).send({ message: "Student details updated"});
         
             } catch (err) {
                 // Respond with error message
                 console.log("Error while updating student ", err);
-                res.status(500).send({ error: "Error occurred while updating student details" })
+                //res.status(500).send({ error: "Error occurred while updating student details" })
             }
+        }
+
+        for(let i = 0; i < students.length; i++){
+
+            let student = students[i];
 
             try {
 
@@ -263,16 +268,20 @@ const addStudentBelbin = async (req, res) => {
         
                 await promiseBasedQuery(updateQuery, [student.studentId, unitCode, year, period, student.belbinType]);
                 // Respond with success message
-                res.status(200).send({ message: "Student details updated"});
         
             } catch (err) {
                 // Respond with error message
                 console.log("Error while updating student ", err);
-                res.status(500).send({ error: "Error occurred while updating student details" })
             }
 
         }
 
+
+}
+
+const addStudentEffort = async (req, res) => {
+    const {unitCode, year, period} = req.params
+    const students = req.body;
 
 }
 
@@ -283,5 +292,6 @@ module.exports = {
     deleteStudentEnrolment,
     deleteStudentGroupAlloc,
     updateStudent,
-    addStudentBelbin
+    addStudentBelbin,
+    addStudentEffort 
 };
