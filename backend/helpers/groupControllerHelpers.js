@@ -129,31 +129,33 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
      *
      */
 
-    /* GET ALL OF THE STUDENTS ASSOCIATED WITH THIS UNIT SORTED BY LAB */
-    const unitOffId = await selectUnitOffKey(unitCode, year, period);
-
     const students = await promiseBasedQuery(
-        'SELECT stud.stud_unique_id, alloc.unit_off_lab_id, test.test_attempt_id ,bel.belbin_type ' +
-        'FROM student stud' +
+        'SELECT stud.stud_unique_id, alloc.unit_off_lab_id, belbin.belbin_type ' +
+        'FROM student stud ' +
         'INNER JOIN student_lab_allocation alloc ON stud.stud_unique_id=alloc.stud_unique_id ' +
         'INNER JOIN unit_off_lab lab ON lab.unit_off_lab_id=alloc.unit_off_lab_id ' +
         'INNER JOIN unit_offering unit ON unit.unit_off_id=lab.unit_off_id ' +
-        'INNER JOIN personality_test_attempt test ON stud.stud_unique_id = test.stud_unique_id'+
-        'INNER JOIN belbin_result bel ON test.test_attempt_id= bel.personality_test_attempt' +
+        'INNER JOIN personality_test_attempt test ON test.stud_unique_id=stud.stud_unique_id ' +
+        'INNER JOIN belbin_result belbin ON belbin.personality_test_attempt=test.test_attempt_id ' +
         'WHERE ' +
         '   unit.unit_code=? ' +
         '   AND unit.unit_off_year=? ' +
         '   AND unit.unit_off_period=? ' +
+        '   AND test.test_type=? '+
         'ORDER BY unit_off_lab_id;',
-        [unitCode, year, period]
+        [unitCode, year, period, 'belbin']
     );
+
 
     /* SPLIT BY LAB | labStudents = [ lab_id: [student_unique_ids], lab_id: [student_unique_ids] ] */
     const labStudents = { };
     students.forEach((student) => {
         if(!labStudents[student.unit_off_lab_id]) { labStudents[student.unit_off_lab_id] = []; }
-        labStudents[student.unit_off_lab_id].push(student.stud_unique_id);
+        labStudents[student.unit_off_lab_id].push([student.stud_unique_id, student.belbin_type]);
     });
+
+    console.log(labStudents)
+
 
 }
 
