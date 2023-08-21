@@ -81,7 +81,9 @@ function InfoImporter() {
     ['studentLastName', 'Last Name'],
     ['labId', 'Lab ID'],
     ['enrolmentStatus', 'Enrolment Status'],
-    ['hours', 'Hours']
+    ['hours', 'Hours'],
+    ['averageMark', 'Average Mark'],
+    ['marksPerHour', 'Marks per Hour']
   ];
 
   // Mapping for CSV headers to database headers
@@ -91,6 +93,7 @@ function InfoImporter() {
     LAST_NAME: 'studentLastName',
     PREFERRED_NAME: 'studentFirstName',
     HOURS: 'hours',
+    AVERAGE_MARK: 'averageMark'
   };
 
   // State hooks for this page
@@ -184,6 +187,7 @@ function InfoImporter() {
           ...profile,
           enrolmentStatus: 'ACTIVE',
           discPersonality: 'DOMINANT',
+          marksPerHour: profile.averageMark / profile.hours
         };
       });
 
@@ -534,6 +538,8 @@ function InfoImporter() {
                 <Td>{profile.labId}</Td>
                 <Td>{profile.enrolmentStatus}</Td>
                 <Td>{profile.hours}</Td>
+                <Td>{profile.averageMark}</Td>
+                <Td>{profile.marksPerHour}</Td>
 
                 <Td>
                   <EditIcon
