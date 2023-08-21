@@ -195,8 +195,6 @@ const splitGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) 
         }
     }
 
-    // console.log("Groups after adjustments")
-    // console.log(groups)
     return groups;
 }
 

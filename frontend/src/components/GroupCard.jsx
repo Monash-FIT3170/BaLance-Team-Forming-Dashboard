@@ -24,7 +24,6 @@ const GroupCard = ({groupData, numberOfGroups}) => {
     students
   } = groupData;
 
-  console.log(groupData)
   return (
     <Card border="1px" margin="20px">
       <CardHeader>

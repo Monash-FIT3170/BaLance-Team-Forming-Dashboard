@@ -1,14 +1,9 @@
-import { Tr, Td, useDisclosure} from '@chakra-ui/react';
+import { Tr, Td} from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
-import { useParams } from 'react-router';
 import ChangeStudentGroupModal from './ChangeStudentGroupModal';
 
 const StudentRowStudentDisplay = ({ studentData, numberOfGroups, onDelete }) => {
     /* HTML component for each student in each group in the 'List Students' View */
-    const {
-        onClose: onCloseDetails,
-    } = useDisclosure();
-
     const {
         student_id,
         preferred_name,
@@ -16,29 +11,9 @@ const StudentRowStudentDisplay = ({ studentData, numberOfGroups, onDelete }) => 
         email_address,
     } = studentData;
 
-    const {
-        unitCode,
-        year,
-        period
-    } = useParams();
-
-  const handleDeleteStudentEnrolment = (event) => {
-    event.preventDefault();
-    console.log("delete student");
-    fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}/${student_id}`, {
-      method: 'DELETE',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    });
-
-    let answer = window.confirm('Student deleted successfully from enrolment');
-    if (answer) {
-        onCloseDetails();
+    const handleDelete = () => {
+        onDelete(student_id);
     }
-    window.location.reload();
-  }
 
     return (
         <Tr>
@@ -49,7 +24,6 @@ const StudentRowStudentDisplay = ({ studentData, numberOfGroups, onDelete }) => 
             <Td>
                 <DeleteIcon
                     style={{ cursor: 'pointer' }}
-                    onClick={handleDeleteStudentEnrolment}
                 />
             </Td>
         </Tr>
