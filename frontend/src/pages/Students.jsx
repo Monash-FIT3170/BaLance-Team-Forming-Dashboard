@@ -60,6 +60,10 @@ function Students() {
     navigate(`/createGroups/${unitCode}/${year}/${period}`);
   }
 
+  const navigateToUnitAnalytics = () => {
+    navigate(`/unitAnalytics/${unitCode}/${year}/${period}`);
+  }
+
   useEffect(() => {
     // fetch students from the backend
     fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}`)
@@ -131,6 +135,16 @@ function Students() {
       <Heading alignContent={'center'}>
         <Center margin="10">{unitCode}</Center>
       </Heading>
+      <Button
+        me="12px"
+        align="right"
+        justify="right"
+        borderRadius="12px"
+        style={{ position: 'absolute', top: 125, right: 10}}
+        onClick={navigateToUnitAnalytics}
+        colorScheme="green">
+        <HStack><p>View Unit Analytics</p></HStack>
+      </Button>
 
       <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>
         <VStack>
