@@ -129,6 +129,8 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
      *
      */
 
+    const unitOffId = await selectUnitOffKey(unitCode, year, period);
+
     const students = await promiseBasedQuery(
         'SELECT stud.stud_unique_id, alloc.unit_off_lab_id, belbin.belbin_type ' +
         'FROM student stud ' +
@@ -142,10 +144,10 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
         '   AND unit.unit_off_year=? ' +
         '   AND unit.unit_off_period=? ' +
         '   AND test.test_type=? '+
+        '   AND test.unit_off_id=? '+
         'ORDER BY unit_off_lab_id;',
-        [unitCode, year, period, 'belbin']
+        [unitCode, year, period, 'belbin', unitOffId]
     );
-
 
     /* SPLIT BY LAB | labStudents = [ lab_id: [student_unique_ids], lab_id: [student_unique_ids] ] */
     const labStudents = { };
