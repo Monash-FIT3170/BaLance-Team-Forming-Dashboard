@@ -156,6 +156,8 @@ const createGroupsEffort = async (unitCode, year, period, groupSize, variance) =
 }
 
 const belbinSplit = (labStudents, groupSize, totalCount) => {
+
+    console.log(labStudents);
     
     //set space to store groups
     let allocation = [];
@@ -163,48 +165,61 @@ const belbinSplit = (labStudents, groupSize, totalCount) => {
     //determine number of groups
     let numberOfGroups = Math.floor(totalCount / groupSize);
 
+    if(numberOfGroups == 0){
+        numberOfGroups = 1;
+    }
+
     //create the correct number of empty groups
     for(let j = 0; j < numberOfGroups; j++){
         allocation.push([]);
     }
 
-    //divde action members
     let currentGroup = 0;
 
-    for(let r = 0; r< labStudents['action'].length; r++){
+    //divde action members
+    if(labStudents['action'].length != 0){
+        for(let r = 0; r< labStudents['action'].length; r++){
 
-        allocation[currentGroup].push(labStudents['action'][r]);
-
-        currentGroup +=1;
-
-        if(currentGroup == numberOfGroups){
-            currentGroup = 0;
+            allocation[currentGroup].push(labStudents['action'][r]);
+    
+            currentGroup +=1;
+    
+            if(currentGroup == numberOfGroups){
+                currentGroup = 0;
+            }
+    
         }
-
     }
 
     //divde thinking members
-    for(let t = 0; t< labStudents['thinking'].length; t++){
+    if(labStudents['thinking'].length != 0){
+        for(let t = 0; t< labStudents['thinking'].length; t++){
 
-        allocation[currentGroup].push(labStudents['thinking'][t]);
-
-        currentGroup +=1;
-
-        if(currentGroup == numberOfGroups){
-            currentGroup = 0;
+            allocation[currentGroup].push(labStudents['thinking'][t]);
+    
+            currentGroup +=1;
+    
+            if(currentGroup == numberOfGroups){
+                currentGroup = 0;
+            }
+    
         }
 
     }
 
+
     //divde people members
-    for(let z = 0; z< labStudents['people'].length; z++){
+    if(labStudents['people'].length != 0){
+        for(let z = 0; z< labStudents['people'].length; z++){
 
-        allocation[currentGroup].push(labStudents['people'][z]);
-
-        currentGroup +=1;
-
-        if(currentGroup == numberOfGroups){
-            currentGroup = 0;
+            allocation[currentGroup].push(labStudents['people'][z]);
+    
+            currentGroup +=1;
+    
+            if(currentGroup == numberOfGroups){
+                currentGroup = 0;
+            }
+    
         }
 
     }
