@@ -156,6 +156,37 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
         labStudents[student.unit_off_lab_id].push([student.stud_unique_id, student.belbin_type]);
     });
 
+    //Split labs into three groups based off belbin type
+    for(var key in labStudents){
+
+        var currentLabstudents = labStudents[key];
+
+        let people = [];
+        let thinking = [];
+        let action = [];
+
+        for(let i = 0; i < currentLabstudents.length; i++){
+            
+            if(currentLabstudents[i][1] == 'action'){
+                action.push(currentLabstudents[i][0]);
+            }
+            else if(currentLabstudents[i][1] == 'thinking'){
+                thinking.push(currentLabstudents[i][0]);
+            }
+            else if(currentLabstudents[i][1] == 'people'){
+                people.push(currentLabstudents[i][0]);
+            }
+        }
+
+
+
+        labStudents[key] = {
+            'thinking': thinking,
+            'people': people,
+            'action': action
+                }
+    }
+
     console.log(labStudents)
 
 
