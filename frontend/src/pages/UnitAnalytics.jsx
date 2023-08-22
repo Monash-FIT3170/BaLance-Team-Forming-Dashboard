@@ -10,11 +10,29 @@ Center,
 } from '@chakra-ui/react'
 
 const UnitAnalytics = () => {
+    //for pie charts
+    const [categoricalData, setCategoricalData] = useState({});
+
+    //for bar graphs
+    const [numericalData, setNumericalData] = useState({});
+
     const {
         unitCode,
         year,
         period
     } = useParams();
+
+    useEffect(() => {
+        // fetch personality data
+        fetch('../analytics.json')
+        .then((res) => res.json())
+        .then((data) => {
+            const { categorical, numerical } = data;
+            setCategoricalData(categorical);
+            setNumericalData(numerical);
+        })
+        .catch((err) => console.error(err));
+    }, []);
 
   return (
     <div>

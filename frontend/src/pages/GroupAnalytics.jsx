@@ -11,6 +11,12 @@ Center,
 } from '@chakra-ui/react'
 
 const GroupAnalytics = () =>{
+    //for pie charts
+    const [categoricalData, setCategoricalData] = useState({});
+
+    //for bar graphs
+    const [numericalData, setNumericalData] = useState({});
+
     const {
         unitCode,
         year,
@@ -18,6 +24,18 @@ const GroupAnalytics = () =>{
         lab_number,
         group_number
     } = useParams();
+
+    useEffect(() => {
+        // fetch personality data
+        fetch('../analytics.json')
+        .then((res) => res.json())
+        .then((data) => {
+            const { categorical, numerical } = data;
+            setCategoricalData(categorical);
+            setNumericalData(numerical);
+        })
+        .catch((err) => console.error(err));
+    }, []);
 
   return (
     <div>
