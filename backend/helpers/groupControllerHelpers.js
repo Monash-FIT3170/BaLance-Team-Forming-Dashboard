@@ -141,8 +141,16 @@ const createGroupsEffort = async (unitCode, year, period, groupSize, variance) =
         [unitCode, year, period, 'effort', unitOffId]
     );
     
-    console.log("---------------------------");
-    console.log(students);
+    const labStudents = { };
+    students.forEach((student) => {
+        if(!labStudents[student.unit_off_lab_id]) { labStudents[student.unit_off_lab_id] = []; }
+        labStudents[student.unit_off_lab_id].push({'id' : student.stud_unique_id, 
+        'assignment_avg' : student.assignment_avg, 
+        'time_commitment_hrs' : student.time_commitment_hrs, 
+        'marks_per_hour' : student.marks_per_hour});
+    });
+
+    console.log(labStudents);
 
 
 }
