@@ -121,6 +121,30 @@ const createGroupsEffort = async (unitCode, year, period, groupSize, variance) =
      *
      */
 
+    const unitOffId = await selectUnitOffKey(unitCode, year, period);
+
+    const students = await promiseBasedQuery(
+        'SELECT stud.stud_unique_id, alloc.unit_off_lab_id, eff.assignment_avg, eff.time_commitment_hrs, eff.marks_per_hour ' +
+        'FROM student stud ' +
+        'INNER JOIN student_lab_allocation alloc ON stud.stud_unique_id=alloc.stud_unique_id ' +
+        'INNER JOIN unit_off_lab lab ON lab.unit_off_lab_id=alloc.unit_off_lab_id ' +
+        'INNER JOIN unit_offering unit ON unit.unit_off_id=lab.unit_off_id ' +
+        'INNER JOIN personality_test_attempt test ON test.stud_unique_id=stud.stud_unique_id ' +
+        'INNER JOIN effort_result eff ON eff.personality_test_attempt=test.test_attempt_id ' +
+        'WHERE ' +
+        '   unit.unit_code=? ' +
+        '   AND unit.unit_off_year=? ' +
+        '   AND unit.unit_off_period=? ' +
+        '   AND test.test_type=? '+
+        '   AND test.unit_off_id=? '+
+        'ORDER BY unit_off_lab_id;',
+        [unitCode, year, period, 'effort', unitOffId]
+    );
+    
+    console.log("---------------------------");
+    console.log(students);
+
+
 }
 
 const belbinSplit = (labStudents, groupSize, totalCount) => {
