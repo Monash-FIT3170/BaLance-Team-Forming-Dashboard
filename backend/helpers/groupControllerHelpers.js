@@ -66,6 +66,7 @@ const createGroupsRandom = async (unitCode, year, period, groupSize, variance) =
         labStudents[lab] = splitGroupsRandom(unitOffId, lab, labStudents[lab], groupSize, variance);
     }
 
+
     /* INSERT THE NEW GROUPS INTO THE DATABASE */
     // determine the number of groups to be inserted to database -> inserted as [unit_off_lab_id, group_number]
     const groupInsertData = [];
@@ -122,6 +123,64 @@ const createGroupsEffort = async (unitCode, year, period, groupSize, variance) =
 
 }
 
+const belbinSplit = (labStudents, groupSize, totalCount) => {
+    
+    //set space to store groups
+    let allocation = [];
+
+    //determine number of groups
+    let numberOfGroups = Math.floor(totalCount / groupSize);
+
+    //create the correct number of empty groups
+    for(let j = 0; j < numberOfGroups; j++){
+        allocation.push([]);
+    }
+
+    //divde action members
+    let currentGroup = 0;
+
+    for(let r = 0; r< labStudents['action'].length; r++){
+
+        allocation[currentGroup].push(labStudents['action'][r]);
+
+        currentGroup +=1;
+
+        if(currentGroup == numberOfGroups){
+            currentGroup = 0;
+        }
+
+    }
+
+    //divde thinking members
+    for(let t = 0; t< labStudents['thinking'].length; t++){
+
+        allocation[currentGroup].push(labStudents['thinking'][t]);
+
+        currentGroup +=1;
+
+        if(currentGroup == numberOfGroups){
+            currentGroup = 0;
+        }
+
+    }
+
+    //divde people members
+    for(let z = 0; z< labStudents['people'].length; z++){
+
+        allocation[currentGroup].push(labStudents['people'][z]);
+
+        currentGroup +=1;
+
+        if(currentGroup == numberOfGroups){
+            currentGroup = 0;
+        }
+
+    }
+
+    //return allocation
+    return allocation;
+}
+
 const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) => {
     /**
      * Given a unit offering, group size and acceptable group variance from a group size,
@@ -156,10 +215,15 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
         labStudents[student.unit_off_lab_id].push([student.stud_unique_id, student.belbin_type]);
     });
 
+
+    //storage for group allocation within labs
+    let laballocation = {};
+
     //Split labs into three groups based off belbin type
     for(var key in labStudents){
 
         var currentLabstudents = labStudents[key];
+        var studentCount = 0;
 
         let people = [];
         let thinking = [];
@@ -169,25 +233,72 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
             
             if(currentLabstudents[i][1] == 'action'){
                 action.push(currentLabstudents[i][0]);
+                studentCount += 1;
             }
             else if(currentLabstudents[i][1] == 'thinking'){
                 thinking.push(currentLabstudents[i][0]);
+                studentCount += 1;
             }
             else if(currentLabstudents[i][1] == 'people'){
                 people.push(currentLabstudents[i][0]);
+                studentCount += 1;
             }
         }
-
-
 
         labStudents[key] = {
             'thinking': thinking,
             'people': people,
             'action': action
                 }
+        
+        
+        laballocation[key] = belbinSplit(labStudents[key], groupSize, studentCount);
     }
 
-    console.log(labStudents)
+    /* INSERT THE NEW GROUPS INTO THE DATABASE */
+    // determine the number of groups to be inserted to database -> inserted as [unit_off_lab_id, group_number]
+    const groupInsertData = [];
+    let numGroups = 0;
+    for(let lab in laballocation) {
+        laballocation[lab].forEach((student) => {
+            numGroups++;
+            groupInsertData.push([lab, numGroups]);
+        })
+    }
+
+    await promiseBasedQuery(
+        'INSERT IGNORE INTO lab_group (unit_off_lab_id, group_number) VALUES ?;',
+        [groupInsertData]
+    );
+
+    /* INSERT THE ALLOCATIONS TO GROUPS INTO THE DATABASE */
+    // get all groups in this unit as [ >> group_id <<, lab_id]
+    const groupAllocInsertData = [];
+    const groupData = await promiseBasedQuery(
+        'SELECT g.lab_group_id, g.unit_off_lab_id ' +
+        'FROM lab_group g ' +
+        'INNER JOIN unit_off_lab l ON g.unit_off_lab_id=l.unit_off_lab_id ' +
+        'INNER JOIN unit_offering u ON u.unit_off_id=l.unit_off_id ' +
+        'WHERE ' +
+        '   u.unit_code=? ' +
+        '   AND u.unit_off_year=? ' +
+        '   AND u.unit_off_period=?;',
+        [unitCode, year, period]
+    );
+
+    // for each group, pop a group from the lab key in object and form the allocation
+    for(let i=0; i<numGroups; i++) {
+        const group = groupData.pop();
+        const groupStudents = laballocation[group.unit_off_lab_id].pop()
+        groupStudents.forEach((studentId) => { groupAllocInsertData.push([studentId, group.lab_group_id]) })
+    }
+
+    // student allocations are created as [~~group_alloc_id~~, stud_unique_id, lab_group_id]
+    await promiseBasedQuery(
+        'INSERT IGNORE INTO group_allocation (stud_unique_id, lab_group_id) VALUES ?;',
+        [groupAllocInsertData]
+    );
+
 
 
 }
