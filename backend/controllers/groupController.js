@@ -280,10 +280,26 @@ const moveStudent = async (req, res) => {
 }
 
 const getAllGroupsAnalytics = async (req,res) => {
-    
+    const {
+        unitCode,
+        year,
+        period
+    } = req.params;
+    const { unit } = req.body;
+
+    res.status(200).send("test");
+
 }
 const getGroupAnalytics = async (req,res) => {
+    const {
+        unitCode,
+        year,
+        period,
+        groupNumber
+    } = req.params;
+    const { group } = req.body;
 
+    res.status(200).send("test");
 }
 
 module.exports = {
