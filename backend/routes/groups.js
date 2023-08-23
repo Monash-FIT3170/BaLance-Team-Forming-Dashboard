@@ -13,7 +13,9 @@ const { // import controller functions for route handlers
     deleteGroup,
     createUnitGroups,
     shuffleUnitGroups,
-    moveStudent
+    moveStudent,
+    getAllGroupsAnalytics,
+    getGroupAnalytics
 } = require('../controllers/groupController');
 
 // Api Structure /api/groups/{unitId}/{groupId}
