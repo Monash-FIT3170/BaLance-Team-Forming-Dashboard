@@ -66,6 +66,7 @@ function UnitPage() {
 
     let answer = window.confirm('Unit created successfully');
     if (answer) {
+      window.location.reload();
       onCloseAdd();
       // if the user wants to add the student data later, reload the page, otherwise take them directly to that offering's upload students page
       if (addDataOption === "Add Later") {
