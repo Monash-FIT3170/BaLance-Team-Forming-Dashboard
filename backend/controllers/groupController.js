@@ -279,6 +279,13 @@ const moveStudent = async (req, res) => {
     res.status(200).send({wip: "test"});
 }
 
+const getAllGroupsAnalytics = async (req,res) => {
+    
+}
+const getGroupAnalytics = async (req,res) => {
+
+}
+
 module.exports = {
     getAllGroups,
     getGroup,
@@ -286,5 +293,8 @@ module.exports = {
     deleteGroup,
     createUnitGroups,
     shuffleUnitGroups,
-    moveStudent
+    moveStudent, 
+    getAllGroupsAnalytics,
+    getGroupAnalytics
+    
 }
