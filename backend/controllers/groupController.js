@@ -239,61 +239,6 @@ const createGroupsCustomScript = (unitOffId, labId, studentsList, groupSize, var
 
 }
 
-/* SUPPLEMENTARY FUNCTIONS. TO BE REFACTORED */
-//MIGHT RUN OUT OF MEMORY STACK
-const createGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) => {
-    // console.log(`| unit id: ${unitOffId} | lab id: ${labId} | students: ${studentsList} |`);
-    let groups = [];
-    for (let i = 0; i < studentsList.length; i += groupSize) {
-        const group = studentsList.slice(i, i + groupSize);
-        groups.push(group);
-    }
-
-    const numFullGroups = studentsList.length / groupSize;
-    const numRemStud = studentsList.length % groupSize; // students who didn't end up in full groups i.e. remainder
-    const lastGroup = groups[groups.length - 1]
-
-    console.log(`size: ${groupSize}, ${typeof groupSize} variance: ${variance}, ${typeof variance}`)
-    console.log("Full groups before adjustment")
-    console.log(groups);
-
-    // if we cannot form even groups from all students or the last group is not within variance limits
-    if (numRemStud !== 0 && numRemStud < groupSize - variance) {
-        // can the students not in a full group be shared between full groups?
-        if (numRemStud / numFullGroups <= variance) {
-            // todo consider variance > 1, enclose in a for(i=0 i<variance) or do i%variance
-            // students not in a full group are distributed amongst the full groups until no more remain
-            let lastGroupLen = lastGroup.length; // defined here to avoid re-evaluation of value in loop condition
-            for (let i = 0; i < lastGroupLen; i++) {
-                console.log("group that is to be distributed")
-                console.log(groups[i])
-                groups[i].push(lastGroup.pop());
-            }
-            groups.pop();
-        }
-        // can the remainder borrow from full groups without validating size constraints?
-        else if (numRemStud + variance * numFullGroups >= groupSize - variance) { // todo don't overestimate borrow
-            // borrow from full groups until last group is within size constraints
-            for (let i = 0; i <= (groups.length - 1) * variance; i++) {
-                // borrow from full group only if it doesnt break size constraints
-                if (groups[i % variance].length - variance >= groupSize - variance) {
-                    lastGroup.push(groups[i].pop());
-                }
-            }
-            groups.pop();
-        }
-        // split the groups as evenly as possible
-        else {
-            return createGroupsRandom(unitOffId, labId, studentsList, groupSize - 1, variance)
-        }
-    }
-
-    console.log("Groups after adjustments")
-    console.log(groups)
-
-    return groups;
-}
-
 const getAllGroupsAnalytics = async (req,res) => {
     const {
         unitCode,
@@ -303,7 +248,7 @@ const getAllGroupsAnalytics = async (req,res) => {
 
     const unitAnalyticData = [];
 
-    // loop through the unitAnalyticStrategies and append their results to the unitAnalyticData array
+    // loop through the unitAnalyticStrategies and append their results to the unitAnalyticData array todo
 
     res.status(200).json(unitAnalyticData);
 }
@@ -317,7 +262,7 @@ const getGroupAnalytics = async (req,res) => {
 
     const groupAnalyticData = [];
 
-    // loop through the groupAnalyticStrategies and append their results to the groupAnalyticData array
+    // loop through the groupAnalyticStrategies and append their results to the groupAnalyticData array todo
 
     res.status(200).json(groupAnalyticData);
 }
