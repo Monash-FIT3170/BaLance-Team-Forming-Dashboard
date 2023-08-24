@@ -34,24 +34,18 @@ const getUnitAnalyticsBelbin = async (unitCode, year, period) => {
     }
 
     const belbinResults = promiseBasedQuery(
-        "SELECT b.belbin_type " +
+        "SELECT b.belbin_type, count(b.belbin_type) " +
         "FROM unit_offering u " +
         "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
         "INNER JOIN belbin_result b ON b.personality_test_attempt = pa.test_attempt_id " +
-        " WHERE u.unit_code=?" +
-        " AND u.unit_off_year=? " +
-        " AND u.unit_off_period=?;",
+        "   WHERE u.unit_code=? " +
+        "   AND u.unit_off_year=? " +
+        "   AND u.unit_off_period=? " +
+        "GROUP BY b.belbin_type;",
         [unitCode, year, period]
     )
 
-    // get the proportion of the 3 belbin types and insert x & y data to doughnutChartData accordingly
-    const belbinTypeHistogram = {
-        "Action": 0,
-        "People": 0,
-        "Thinking": 0
-    }
-
-    // todo counting
+    // todo enter belbin count data into donut chart object
 
     belbinAnalyticData["data"].push(belbinDoughnutChartData)
     return belbinAnalyticData;
@@ -101,7 +95,7 @@ const getUnitAnalyticsEffort = async (unitCode, year, period) => {
         "y": []
     }
 
-    const effortResults = promiseBasedQuery(
+    const effortResults = promiseBasedQuery( // todo use mysql group/count features
         "",
         []
     )
@@ -155,13 +149,18 @@ const getGroupAnalyticsBelbin = async (unitCode, year, period, groupNumber) => {
     }
 
     const belbinResults = promiseBasedQuery( // todo update query to be for specific group
-        "SELECT b.belbin_type " +
+        "SELECT b.belbin_type, count(b.belbin_type) " +
         "FROM unit_offering u " +
         "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
         "INNER JOIN belbin_result b ON b.personality_test_attempt = pa.test_attempt_id " +
-        " WHERE u.unit_code=?" +
-        " AND u.unit_off_year=? " +
-        " AND u.unit_off_period=?;",
+        "INNER JOIN student s ON s.stud_unique_id = pa.stud_unique_id " +
+        "INNER JOIN group_allocation ga ON ga.stud_unique_id = s.stud_unique_id " +
+        "INNER JOIN lab_group g ON g.lab_group_id = ga.lab_group_id " +
+        "   WHERE u.unit_code=? " +
+        "   AND u.unit_off_year=? " +
+        "   AND u.unit_off_period=? " +
+        "   AND g.group_number=? " +
+        "GROUP BY b.belbin_type;",
         [unitCode, year, period]
     )
 
