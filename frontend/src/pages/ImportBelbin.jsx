@@ -133,7 +133,7 @@ function ImportPage() {
   //create unit for new students
   const handleAddProfilesClick = async () => {
     // Make API call
-    fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}`, {
+    fetch(`http://localhost:8080/api/students/belbin/${unitCode}/${year}/${period}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

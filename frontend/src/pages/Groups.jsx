@@ -42,16 +42,16 @@ function Groups() {
     period
   } = useParams();
 
-  const navigateToStudentUpload = () => {
-    navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
-  };
-
   const navigateToBelbinUpload = () => {
     navigate(`/belbinImport/${unitCode}/${year}/${period}`);
   };
 
   const navigateToCreateGroups = () => {
     navigate(`/createGroups/${unitCode}/${year}/${period}`);
+  }
+
+  const navigateToStudentUploadInfo = () =>{
+    navigate(`/infoImport/${unitCode}/${year}/${period}`);
   }
 
   useEffect(() => {
@@ -116,7 +116,7 @@ function Groups() {
         <VStack>
           <Button
             width="18vw"
-            onClick={navigateToStudentUpload}
+            onClick={navigateToStudentUploadInfo}
             colorScheme="gray"
             margin-left="20">
             <HStack>
@@ -138,7 +138,7 @@ function Groups() {
           </Button>
           <Button
             width="100%"
-            onClick={navigateToStudentUpload}
+            onClick={navigateToStudentUploadInfo}
             colorScheme="gray"
             margin-left="20">
             <HStack>

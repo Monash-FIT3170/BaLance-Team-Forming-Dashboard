@@ -321,11 +321,114 @@ const updateStudent = async (req, res) => {
     }
 }
 
+const addStudentBelbin = async (req, res) => {
+    const {unitCode, year, period} = req.params
+    const students = req.body;
+
+        // error handling for unexpected issues
+
+        for(let i = 0; i < students.length; i++){
+
+            let student = students[i];
+            
+            try {
+                const updateQuery =
+                    "insert into personality_test_attempt (test_type, stud_unique_id, unit_off_id) " +
+                    "values ('belbin', (select stud_unique_id from student where student_id like ?), (select unit_off_id from unit_offering where unit_code like ? and unit_off_year like ? and lower(unit_off_period) like ?) ) " ;
+                // updated values for the student
+        
+                await promiseBasedQuery(updateQuery, [student.studentId, unitCode, year, period]);
+                // Respond with success message
+                //res.status(200).send({ message: "Student details updated"});
+        
+            } catch (err) {
+                // Respond with error message
+                console.log("Error while updating student ", err);
+                //res.status(500).send({ error: "Error occurred while updating student details" })
+            }
+        }
+
+        for(let i = 0; i < students.length; i++){
+
+            let student = students[i];
+
+            try {
+
+                const updateQuery =
+                    "insert into belbin_result (personality_test_attempt, belbin_type) " +
+                    "values ((select test_attempt_id from personality_test_attempt where stud_unique_id like (select stud_unique_id from student where student_id like ? and test_type = 'belbin') and unit_off_id like (select unit_off_id from unit_offering where unit_code like ? and unit_off_year like ? and lower(unit_off_period) like ?)), ?)" ;
+                // updated values for the student
+        
+                await promiseBasedQuery(updateQuery, [student.studentId, unitCode, year, period, student.belbinType]);
+                // Respond with success message
+        
+            } catch (err) {
+                // Respond with error message
+                console.log("Error while updating student ", err);
+            }
+
+        }
+
+
+}
+
+const addStudentEffort = async (req, res) => {
+    const {unitCode, year, period} = req.params
+    const students = req.body;
+
+    for(let i = 0; i < students.length; i++){
+
+        let student = students[i];
+        
+        try {
+            const updateQuery =
+                "insert into personality_test_attempt (test_type, stud_unique_id, unit_off_id) " +
+                "values ('effort', (select stud_unique_id from student where student_id like ?), (select unit_off_id from unit_offering where unit_code like ? and unit_off_year like ? and lower(unit_off_period) like ?) ) " ;
+            // updated values for the student
+    
+            await promiseBasedQuery(updateQuery, [student.studentId, unitCode, year, period]);
+            // Respond with success message
+            //res.status(200).send({ message: "Student details updated"});
+    
+        } catch (err) {
+            // Respond with error message
+            console.log("Error while updating student ", err);
+            //res.status(500).send({ error: "Error occurred while updating student details" })
+        }
+    }
+
+    for(let i = 0; i < students.length; i++){
+
+        let student = students[i];
+
+        try {
+
+            const updateQuery =
+                "insert into effort_result (personality_test_attempt, time_commitment_hrs, assignment_avg, marks_per_hour) " +
+                "values ((select test_attempt_id from personality_test_attempt where stud_unique_id like (select stud_unique_id from student where student_id like ? ) and unit_off_id like (select unit_off_id from unit_offering where unit_code like ? and unit_off_year like ? and lower(unit_off_period) like ?)), ?, ?, ?)" ;
+            // updated values for the student
+    
+            await promiseBasedQuery(updateQuery, [student.studentId, unitCode, year, period, student.hours, student.averageMark, student.marksPerHour]);
+            // Respond with success message
+    
+        } catch (err) {
+            // Respond with error message
+            console.log("Error while updating student ", err);
+        }
+
+    }
+
+    
+
+}
+
 module.exports = {
     getAllStudents,
     getStudent,
     addAllStudents,
     deleteStudentEnrolment,
     deleteStudentGroupAlloc,
-    updateStudent
+    updateStudent,
+    addStudentBelbin,
+    addStudentEffort 
 };
