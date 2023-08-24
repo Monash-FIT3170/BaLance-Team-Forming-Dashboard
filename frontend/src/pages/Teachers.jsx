@@ -1,3 +1,4 @@
+import { useLocation } from 'react-router-dom';
 import { useEffect, React, useState, useContext } from 'react';
 
 // Chakra imports
@@ -42,6 +43,9 @@ function Teachers() {
   const [checkedValues2, setCheckedValues2] = useState([]);
   const [checkedValues3, setCheckedValues3] = useState([]);
   const [checkedValues4, setCheckedValues4] = useState([]);
+  const location = useLocation();
+  const { jsonData } = location.state;
+  
   // Retrieve data from localStorage
   const [storedData, setStoredData] = useState([]);
 
