@@ -12,6 +12,11 @@ const {
     groupFormationStrategies,
 } = require("../helpers/groupControllerHelpers")
 
+const {
+    getUnitAnalyticsStrategies,
+    getGroupAnalyticsStrategies
+} = require("../helpers/groupAnalyticsHelpers")
+
 // get all groups from a unit
 const getAllGroups = async (req, res) => {
     const {
@@ -236,8 +241,11 @@ const getAllGroupsAnalytics = async (req,res) => {
         period
     } = req.params;
 
-    res.status(200).send("test");
+    const unitAnalyticData = [];
 
+    // loop through the unitAnalyticStrategies and append their results to the unitAnalyticData array
+
+    res.status(200).json(unitAnalyticData);
 }
 const getGroupAnalytics = async (req,res) => {
     const {
@@ -247,7 +255,11 @@ const getGroupAnalytics = async (req,res) => {
         groupNumber
     } = req.params;
 
-    res.status(200).send("test");
+    const groupAnalyticData = [];
+
+    // loop through the groupAnalyticStrategies and append their results to the groupAnalyticData array
+
+    res.status(200).json(groupAnalyticData);
 }
 
 module.exports = {

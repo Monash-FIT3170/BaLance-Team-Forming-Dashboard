@@ -7,19 +7,19 @@
 
 const {promiseBasedQuery, selectUnitOffKey} = require("./commonHelpers");
 
-const getUnitAnalyticsBelbin = async () => {
+const getUnitAnalyticsBelbin = async (unitCode, year, offering) => {
     /**
      * Given a unit offering, obtains all information related to the distribution
-     * of Belbin personality types across the offering
+     * of Belbin personality types across the offering and returns it
      *
      */
 
 }
 
-const getUnitAnalyticsEffort = async () => {
+const getUnitAnalyticsEffort = async (unitCode, year, offering) => {
     /**
      * Given a unit offering, obtains all information related to the distribution
-     * of student effort estimations across the offering
+     * of student effort estimations across the offering and returns it
      *
      */
 
@@ -35,19 +35,19 @@ const getUnitAnalyticsStrategies = {
     "belbin": getUnitAnalyticsBelbin,
 }
 
-const getGroupAnalyticsBelbin = async () => {
+const getGroupAnalyticsBelbin = async (unitCode, year, offering, groupNumber) => {
     /**
      * Given a group within a unit offering, obtains all information related to the distribution
-     * of Belbin personality types across the group
+     * of Belbin personality types across the group  and returns it
      *
      */
 
 }
 
-const getGroupAnalyticsEffort = async () => {
+const getGroupAnalyticsEffort = async (unitCode, year, offering, groupNumber) => {
     /**
      * Given a group within a unit offering, obtains all information related to the distribution
-     * of student effort estimations across the group
+     * of student effort estimations across the group and returns it
      *
      */
 
