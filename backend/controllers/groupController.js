@@ -279,6 +279,29 @@ const moveStudent = async (req, res) => {
     res.status(200).send({wip: "test"});
 }
 
+const getAllGroupsAnalytics = async (req,res) => {
+    const {
+        unitCode,
+        year,
+        period
+    } = req.params;
+    const { unit } = req.body;
+
+    res.status(200).send("test");
+
+}
+const getGroupAnalytics = async (req,res) => {
+    const {
+        unitCode,
+        year,
+        period,
+        groupNumber
+    } = req.params;
+    const { group } = req.body;
+
+    res.status(200).send("test");
+}
+
 module.exports = {
     getAllGroups,
     getGroup,
@@ -286,5 +309,8 @@ module.exports = {
     deleteGroup,
     createUnitGroups,
     shuffleUnitGroups,
-    moveStudent
+    moveStudent, 
+    getAllGroupsAnalytics,
+    getGroupAnalytics
+    
 }
