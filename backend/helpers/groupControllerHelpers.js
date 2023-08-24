@@ -141,18 +141,52 @@ const createGroupsEffort = async (unitCode, year, period, groupSize, variance) =
         [unitCode, year, period, 'effort', unitOffId]
     );
     
+    let labStudentsKey = "";
+
     const labStudents = { };
     students.forEach((student) => {
         if(!labStudents[student.unit_off_lab_id]) { labStudents[student.unit_off_lab_id] = []; }
-        labStudents[student.unit_off_lab_id].push({'id' : student.stud_unique_id, 
-        'assignment_avg' : student.assignment_avg, 
-        'time_commitment_hrs' : student.time_commitment_hrs, 
-        'marks_per_hour' : student.marks_per_hour});
+        labStudents[student.unit_off_lab_id].push({
+            'id' : student.stud_unique_id, 
+            'assignment_avg' : student.assignment_avg, 
+            'time_commitment_hrs' : student.time_commitment_hrs
+        });
+        labStudentsKey = student.unit_off_lab_id;
     });
 
-    console.log(labStudents);
+    labStudents[labStudentsKey].sort((studentA, studentB) => {
+        studentACompVal = 4*(studentA.assignment_avg)/70 - studentA.time_commitment_hrs/12;
+        studentBCompVal = 4*(studentB.assignment_avg)/70 - studentB.time_commitment_hrs/12;
+        return studentBCompVal - studentACompVal; 
+    })
 
+    const numberOfGroups = Math.floor(labStudents[labStudentsKey].length / groupSize);
 
+    let groups = []
+    for (let i=0; i<numberOfGroups; i++) {
+        groups.push([]);
+    }
+    let groupCounter = 0;
+    let isIncrementing = true;
+    for (let i=0; i<labStudents[labStudentsKey].length; i++) {
+        groups[groupCounter].push(labStudents[labStudentsKey][i])
+        if (isIncrementing) {
+            groupCounter++;
+        }
+        else {
+            groupCounter--;
+        }
+
+        if (isIncrementing && groupCounter === numberOfGroups) {
+            groupCounter--;
+            isIncrementing = false;
+        }
+        else if (!isIncrementing && groupCounter == -1) {
+            groupCounter++;
+            isIncrementing = true;
+        }
+    }
+    console.log(groups);
 }
 
 const belbinSplit = (labStudents, groupSize, totalCount) => {
