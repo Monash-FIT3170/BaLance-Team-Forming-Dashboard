@@ -17,7 +17,7 @@ import { CategoryScale } from 'chart.js';
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale);
 const data = [
   {
-    "personality title": "Belbin team roles",
+    "personality title": "Belbin Team Roles",
     "description": "Personalities using Belbin team roles",
     "categorical data": [
       {
@@ -26,17 +26,8 @@ const data = [
         "y label": "Number of students",
         "x": ["thinking", "action", "people"],
         "y": [50, 50, 25]
-      }
+      },
     ],
-    "categorical data": [
-      {
-        "title": "Belbin team roles distribution",
-        "x label": "Personality type",
-        "y label": "Number of students",
-        "x": ["thinking", "action", "people"],
-        "y": [50, 50, 25]
-      }
-    ]
   },
   {
     "personality title": "Student Effort",
@@ -73,7 +64,7 @@ const UnitAnalytics = () => {
   return (
     <div>
        <Center>
-       <Heading mt="20px" fontSize="30px">
+       <Heading mt="20px">
           {unitCode} -  {period}, {year}
        </Heading>
        </Center>
@@ -84,10 +75,10 @@ const UnitAnalytics = () => {
        </Center>
       {data.map((item, index) => (
         <Center key={index}>
-          <Box width="100%" maxWidth="400px" margin="20px">
-            <Card padding="20px" border="2px">
+          <Box width="100%" maxWidth="800px" margin="20px">
+            <Card padding="20px" border="1px">
               <CardHeader>
-                <Heading as="h2" fontSize="xl">
+                <Heading style={{ marginTop: '-20px' }}>
                   {item['personality title']}
                 </Heading>
               </CardHeader>
@@ -95,7 +86,7 @@ const UnitAnalytics = () => {
                 {Array.isArray(item['categorical data']) ? (
                   item['categorical data'].map((categorical, catIndex) => (
                     <div key={catIndex}>
-                      <h3>{categorical.title}</h3>
+                      <h3 style={{ marginTop: '-30px', marginBottom: '15px' }}>{categorical.title}</h3>
                       <Doughnut
                         data={{
                           labels: categorical?.x || [],
@@ -103,16 +94,21 @@ const UnitAnalytics = () => {
                             {
                               data: categorical?.y || [],
                               backgroundColor: [
-                                'pink',
+                                'orange',
                                 'purple',
                                 'blue',
-                                'yellow',
+                                'green',
                                 'red',
                               ],
                             },
                           ],
                         }}
+                        options={{
+                            responsive: true,
+                            aspectRatio: 2.5
+                        }}
                       />
+                      <br /><br />
                     </div>
                   ))
                 ) : (
