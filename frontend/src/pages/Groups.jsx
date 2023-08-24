@@ -42,10 +42,6 @@ function Groups() {
     period
   } = useParams();
 
-  const navigateToStudentUpload = () => {
-    navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
-  };
-
   const navigateToBelbinUpload = () => {
     navigate(`/belbinImport/${unitCode}/${year}/${period}`);
   };
@@ -120,7 +116,7 @@ function Groups() {
         <VStack>
           <Button
             width="18vw"
-            onClick={navigateToStudentUpload}
+            onClick={navigateToStudentUploadInfo}
             colorScheme="gray"
             margin-left="20">
             <HStack>

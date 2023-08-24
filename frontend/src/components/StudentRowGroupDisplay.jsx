@@ -1,4 +1,4 @@
-import { Tr, Td, HStack, Spacer, Button } from '@chakra-ui/react';
+import { Tr, Td, HStack, Spacer, Button, useDisclosure } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { useParams } from 'react-router';
 import ChangeStudentGroupModal from './ChangeStudentGroupModal';
@@ -6,6 +6,10 @@ import ChangeStudentGroupModal from './ChangeStudentGroupModal';
 
 function StudentRowGroupDisplay({studentData, numberOfGroups}) {
   /* HTML component for each student in each group in the 'View Groups' View */
+    const {
+        onClose: onCloseDetails,
+    } = useDisclosure();
+
     const {
         student_id,
         preferred_name,
@@ -17,20 +21,26 @@ function StudentRowGroupDisplay({studentData, numberOfGroups}) {
     const {
         unitCode,
         year,
-        period
+        period,
     } = useParams();
 
   console.log(studentData);
 
-  const handleDeleteStudent = (event) => {
-    console.log("delete student")
-    fetch(`http://localhost:8080/api/units/${unitCode}/${year}/${period}/${student_id}`, {
+  const handleDeleteStudentGroupAlloc = (event) => {
+    console.log("delete student");
+    fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}/${student_id}/${last_name}`, {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
     });
+
+    let answer = window.confirm('Student deleted from labs and groups');
+    if (answer) {
+        onCloseDetails();
+    }
+    window.location.reload();
   }
 
     return (
@@ -51,7 +61,7 @@ function StudentRowGroupDisplay({studentData, numberOfGroups}) {
             <Td>
                 <DeleteIcon
                  style={{ cursor: 'pointer'}}
-                 onClick={handleDeleteStudent}
+                 onClick={handleDeleteStudentGroupAlloc}
                  />
             </Td>
         </Tr>

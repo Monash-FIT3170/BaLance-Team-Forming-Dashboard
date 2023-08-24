@@ -33,10 +33,10 @@ router.post('/belbin/:unitCode/:year/:period', addStudentBelbin);
 router.post('/effort/:unitCode/:year/:period', addStudentEffort);
 
 // delete a specific student from a unit
-router.delete('/:unitCode/:year/:period/:studId', deleteStudentEnrolment);
+router.delete('/:unitCode/:year/:period/:studentId', deleteStudentEnrolment);
 
 // delete a specific student from a group
-router.delete('/:unitCode/:year/:period/:studId', deleteStudentGroupAlloc);
+router.delete('/:unitCode/:year/:period/:studentId/:lastName', deleteStudentGroupAlloc);
 
 // update a student for a unit
 router.patch('/:unitCode/:year/:period/:studId', updateStudent);
