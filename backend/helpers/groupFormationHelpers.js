@@ -1,5 +1,4 @@
 /**
- * TODO refactor name to groupFormationHelpers.js
  * A module containing helper functions specifically used to implement
  * groupController.js controller functions related to group formation
  *
@@ -118,13 +117,7 @@ const createGroupsRandom = async (unitCode, year, period, groupSize, variance) =
   );
 };
 
-const createGroupsEffort = async (
-  unitCode,
-  year,
-  period,
-  groupSize,
-  variance
-) => {
+const createGroupsEffort = async (unitCode, year, period, groupSize, variance) => {
   /**
    * Given a unit offering, group size and acceptable group variance from a group size,
    * forms groups within the units labs using student average assignment marks and
@@ -275,7 +268,7 @@ const belbinSplit = (labStudents, groupSize, totalCount) => {
 
   let currentGroup = 0;
 
-  //divde action members
+  // divide action members
   if (labStudents["action"].length != 0) {
     for (let r = 0; r < labStudents["action"].length; r++) {
       allocation[currentGroup].push(labStudents["action"][r]);
@@ -288,7 +281,7 @@ const belbinSplit = (labStudents, groupSize, totalCount) => {
     }
   }
 
-  //divde thinking members
+  // divide thinking members
   if (labStudents["thinking"].length != 0) {
     for (let t = 0; t < labStudents["thinking"].length; t++) {
       allocation[currentGroup].push(labStudents["thinking"][t]);
@@ -301,7 +294,7 @@ const belbinSplit = (labStudents, groupSize, totalCount) => {
     }
   }
 
-  //divde people members
+  // divide people members
   if (labStudents["people"].length != 0) {
     for (let z = 0; z < labStudents["people"].length; z++) {
       allocation[currentGroup].push(labStudents["people"][z]);
@@ -318,13 +311,7 @@ const belbinSplit = (labStudents, groupSize, totalCount) => {
   return allocation;
 };
 
-const createGroupsBelbin = async (
-  unitCode,
-  year,
-  period,
-  groupSize,
-  variance
-) => {
+const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) => {
   /**
    * Given a unit offering, group size and acceptable group variance from a group size,
    * forms groups within the units labs using student Belbin types
@@ -455,13 +442,7 @@ const groupFormationStrategies = {
   belbin: createGroupsBelbin,
 };
 
-const splitGroupsRandom = (
-  unitOffId,
-  labId,
-  studentsList,
-  groupSize,
-  variance
-) => {
+const splitGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) => {
   /**
    * Splits students into groups of groupSize +/- variance
    *

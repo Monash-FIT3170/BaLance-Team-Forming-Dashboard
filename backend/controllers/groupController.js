@@ -10,7 +10,7 @@ const {
 
 const {
     groupFormationStrategies,
-} = require("../helpers/groupControllerHelpers")
+} = require("../helpers/groupFormationHelpers")
 
 const {
     getUnitAnalyticsStrategies,

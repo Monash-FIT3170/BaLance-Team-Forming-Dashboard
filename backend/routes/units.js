@@ -15,7 +15,7 @@ const { // import controller functions for route handlers
     uploadCustomScript
 } = require('../controllers/unitController');
 
-const { upload } = require('../helpers/uploadMiddleware');
+const { upload } = require('../middleware/uploadMiddleware');
 
 // get all units for a user
 router.get('/', getAllUnits);
