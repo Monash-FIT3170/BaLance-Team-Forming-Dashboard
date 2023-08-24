@@ -1,6 +1,7 @@
 /**
+ * TODO refactor name to groupFormationHelpers.js
  * A module containing helper functions specifically used to implement
- * groupController.js controller functions
+ * groupController.js controller functions related to group formation
  *
  * */
 
@@ -130,8 +131,6 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
      */
 
 }
-
-
 
 const groupFormationStrategies = {
     /**
