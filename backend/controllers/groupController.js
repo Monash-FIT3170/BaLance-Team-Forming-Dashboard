@@ -75,56 +75,6 @@ const getAllGroups = async (req, res) => {
 const getGroup = async (req, res) => {
     res.status(200).send({wip: "test"});
 }
-// DRAFT OF getGroup, testing in progress
-// const getGroup = async (req, res) => {
-//     const {
-//         unitCode,
-//         year,
-//         period,
-//         groupNumber // assuming group number is part of the request parameters
-//     } = req.params;
-
-//     /* GET A SPECIFIC GROUP */
-//     const groupData = await promiseBasedQuery(
-//         'SELECT stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val, l_group.group_number, lab.lab_number ' +
-//         'FROM student stud ' +
-//         'INNER JOIN group_allocation g_alloc ON stud.stud_unique_id=g_alloc.stud_unique_id ' +
-//         'INNER JOIN lab_group l_group ON g_alloc.lab_group_id=l_group.lab_group_id ' +
-//         'INNER JOIN unit_off_lab lab ON lab.unit_off_lab_id=l_group.unit_off_lab_id ' +
-//         'INNER JOIN unit_offering unit ON unit.unit_off_id=lab.unit_off_id ' +
-//         'WHERE' +
-//         '   unit.unit_code=? ' +
-//         '   AND unit.unit_off_year=? ' +
-//         '   AND unit.unit_off_period=? ' +
-//         '   AND l_group.group_number=? ' +
-//         'ORDER BY l_group.group_number;',
-//         [unitCode, year, period, groupNumber]
-//     );
-
-//     const group = {group_number: groupNumber, lab_number: groupData[0].lab_number, students: []};
-//     for(let i=0; i<groupData.length; i++) {
-//         // add student to the groups list of students
-//         const {
-//             student_id,
-//             preferred_name,
-//             last_name,
-//             email_address,
-//             wam_val
-//         } = groupData[i];
-
-//         group.students.push({
-//             student_id: student_id,
-//             preferred_name: preferred_name,
-//             last_name: last_name,
-//             email_address: email_address,
-//             wam_val: wam_val
-//         });
-//     }
-
-//     res.status(200).send(group);
-// }
-
-
 
 // create all the groups (based on csv)
 const createUnitGroups = async (req, res) => {
@@ -285,7 +235,6 @@ const getAllGroupsAnalytics = async (req,res) => {
         year,
         period
     } = req.params;
-    const { unit } = req.body;
 
     res.status(200).send("test");
 
@@ -297,7 +246,6 @@ const getGroupAnalytics = async (req,res) => {
         period,
         groupNumber
     } = req.params;
-    const { group } = req.body;
 
     res.status(200).send("test");
 }
