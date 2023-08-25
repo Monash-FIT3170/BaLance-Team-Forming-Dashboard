@@ -26,7 +26,7 @@ const {
 }= useParams()
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/groups/analytics/${unitCode}/${year}/${period}`, {
+        fetch(`http://localhost:8080/api/analytics/${unitCode}/${year}/${period}`, {
             method: 'GET'
         })
             .then((res) => res.json())
