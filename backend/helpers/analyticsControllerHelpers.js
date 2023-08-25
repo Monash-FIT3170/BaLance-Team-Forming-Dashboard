@@ -98,10 +98,67 @@ const getUnitAnalyticsEffort = async (unitCode, year, period) => {
         "y": []
     }
 
-    const effortResults = promiseBasedQuery( // todo use mysql group/count features
-        "",
-        []
+    const gradeResults = promiseBasedQuery(
+        "SELECT CASE " +
+        "       WHEN e.assignment_avg <50 THEN 'N' " +
+        "       WHEN e.assignment_avg <60 THEN 'P' " +
+        "       WHEN e.assignment_avg <70 THEN 'C' " +
+        "       WHEN e.assignment_avg <80 THEN 'D' " +
+        "       WHEN e.assignment_avg <=100 THEN 'HD' " +
+        "   END AS letter_grade, count(e.assignment_avg) AS 'count' " +
+        "FROM unit_offering u " +
+        "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
+        "INNER JOIN effort_result e ON e.personality_test_attempt = pa.test_attempt_id " +
+        "   WHERE u.unit_code=? " +
+        "   AND u.unit_off_year=? " +
+        "   AND u.unit_off_period=? " +
+        "GROUP BY letter_grade;",
+        [unitCode, year, period]
     )
+
+    const hourResults = promiseBasedQuery(
+        "SELECT CASE " +
+        "       WHEN e.time_commitment_hrs <4 THEN '0-4' " +
+        "       WHEN e.time_commitment_hrs <8 THEN '4-8' " +
+        "       WHEN e.time_commitment_hrs <12 THEN '8-12' " +
+        "       WHEN e.time_commitment_hrs >=12 THEN '12+' " +
+        "   END AS hours, count(e.time_commitment_hrs) AS 'count' " +
+        "FROM unit_offering u " +
+        "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
+        "INNER JOIN effort_result e ON e.personality_test_attempt = pa.test_attempt_id " +
+        "   WHERE u.unit_code=? " +
+        "   AND u.unit_off_year=? " +
+        "   AND u.unit_off_period=? " +
+        "GROUP BY hours;",
+        [unitCode, year, period]
+    )
+
+    const effortResults = promiseBasedQuery(
+        "SELECT e.marks_per_hour AS effort, count(e.time_commitment_hrs) AS 'count' " +
+        "FROM unit_offering u " +
+        "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
+        "INNER JOIN effort_result e ON e.personality_test_attempt = pa.test_attempt_id " +
+        "   WHERE u.unit_code=? " +
+        "   AND u.unit_off_year=? " +
+        "   AND u.unit_off_period=? " +
+        "GROUP BY effort;",
+        [unitCode, year, period]
+    )
+
+    gradeResults.forEach((result) => {
+        marksDoughnutChartData["x"].push(result["letter_grade"])
+        marksDoughnutChartData["y"].push(result["count"])
+    })
+
+    hourResults.forEach((result) => {
+        hoursDoughnutChartData["x"].push(result["hours"])
+        hoursDoughnutChartData["y"].push(result["count"])
+    })
+
+    effortResults.forEach((result) => {
+        effortBarChartData["x"].push(result["effort"])
+        effortBarChartData["y"].push(result["count"])
+    })
 
     effortAnalyticsData["data"].push(marksDoughnutChartData)
     effortAnalyticsData["data"].push(hoursDoughnutChartData)
