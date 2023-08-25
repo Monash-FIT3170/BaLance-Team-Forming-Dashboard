@@ -62,6 +62,9 @@ const data = [
 ]
 
 const GroupAnalytics = () =>{
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     const {
         unitCode,
