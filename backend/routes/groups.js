@@ -22,7 +22,7 @@ const {
 
 const multer = require('multer');
 
-const storage = multer.diskStorage({
+const storage = multer.diskStorage({ // fixme is this not in middleware/uploadMiddleware.js?
     destination(req, file, cb) {
       cb(null, './tmp/my-uploads')
     },

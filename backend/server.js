@@ -14,14 +14,11 @@ const corsOptions = {
     optionsSuccessStatus:200,
 }
 
-// set up the express app
 const app = express();
 
 // required to attach reqs with a body to the req object for req handling
 app.use(express.json());
-
 app.use(cors(corsOptions));
-
 app.use((req, res, next) => {
     console.log(req.path, req.method);
     next();
