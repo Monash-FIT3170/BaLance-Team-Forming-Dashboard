@@ -34,11 +34,11 @@ const data = [
     "description": "How much effort is put to a unit and marks obtained",
     "categorical data": [
       {
-        "title": "Average hour commitment to the unit",
-        "x label": "Average hour commitment",
+        "title": "Weekly hour commitment to the unit",
+        "x label": "Weekly hour commitment",
         "y label": "Number of students",
         "x": ["0-4", "4-8", "8-12", "12+"],
-        "y": [5, 10, 20, 30, 15]
+        "y": [5, 10, 45, 30]
       },
       {
         "title": "Average assignment mark distribution",
