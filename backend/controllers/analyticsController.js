@@ -1,3 +1,9 @@
+/**
+ * A module containing controller functions for routes related to
+ * group data within a unit.
+ *
+ */
+
 const {
     promiseBasedQuery,
     selectUnitOffKey
