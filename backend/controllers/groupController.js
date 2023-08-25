@@ -4,8 +4,7 @@
  *
  */
 const {
-    promiseBasedQuery,
-    selectUnitOffKey
+    promiseBasedQuery
 } = require("../helpers/commonHelpers");
 
 const {

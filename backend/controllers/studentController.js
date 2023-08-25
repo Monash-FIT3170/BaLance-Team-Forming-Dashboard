@@ -402,9 +402,6 @@ const addStudentEffort = async (req, res) => {
         }
 
     }
-
-    
-
 }
 
 module.exports = {
