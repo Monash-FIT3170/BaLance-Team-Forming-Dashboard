@@ -14,6 +14,13 @@ import {
     Text,
     Select,
     Box,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalCloseButton,
+    ModalBody,
+    ModalFooter,
 } from '@chakra-ui/react';
 
 import { Link, useNavigate } from 'react-router-dom';
@@ -22,6 +29,7 @@ function Groups() {
     const cancelRef = React.useRef();
     const navigate = useNavigate();
     const [groups, setGroups] = useState([]);
+    const [filteredClass, setFilteredClass] = useState(["All"]);
 
     // Confirmation popup for shuffling groups
     const {
@@ -39,6 +47,54 @@ function Groups() {
         year,
         period
     } = useParams();
+
+    const navigateToBelbinUpload = () => {
+        navigate(`/belbinImport/${unitCode}/${year}/${period}`);
+    };
+
+    const navigateToCreateGroups = () => {
+        navigate(`/createGroups/${unitCode}/${year}/${period}`);
+    }
+
+    const navigateToStudentUploadInfo = () => {
+        navigate(`/infoImport/${unitCode}/${year}/${period}`);
+    }
+
+    useEffect(() => {
+        fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`)
+            .then((res) =>
+                res.json().then(function (res) {
+                    setGroups(res);
+                })
+            )
+            .catch((err) => console.error(err));
+    }, []);
+
+    let groupsDisplay = groups.length === 0 ?
+        <Box bg='#E6EBF0' w='60vw' p={4} alignContent="center">
+            <Center>
+                No groups have been created for this offering. Click "Create/Reconfigure Groups" to create groups for the offering.
+            </Center>
+        </Box>
+        :
+        <Container className="groups" maxW="80vw">
+            {groups.map((group) => {
+                const cardKey = `${group.lab_number}_${group.group_number}`;
+                console.log(typeof(filteredClass), typeof(group.lab_number))
+                if (filteredClass == "All" | filteredClass == group.lab_number) {
+                    return (<GroupCard groupData={group} numberOfGroups={groups.length} key={cardKey} />);
+                }
+            })}
+        </Container>
+
+    const classFilterOptions = [{value: "All", label: "All labs"}]
+    const foundClasses = []
+    for (const group of groups) {
+        if (foundClasses.indexOf(group.lab_number) === -1) {
+            foundClasses.push(group.lab_number)
+            classFilterOptions.push({ value: group.lab_number, label: `Lab ${group.lab_number}` })
+        }
+    }
 
     const handleExportToCSV = () => {
 
@@ -77,14 +133,6 @@ function Groups() {
         navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
     };
 
-    const navigateToBelbinUpload = () => {
-        navigate(`/belbinImport/${unitCode}/${year}/${period}`);
-    };
-
-    const navigateToCreateGroups = () => {
-        navigate(`/createGroups/${unitCode}/${year}/${period}`);
-    }
-
     useEffect(() => {
         fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`)
             .then((res) =>
@@ -96,20 +144,6 @@ function Groups() {
             .catch((err) => console.error(err));
     }, []);
 
-    let groupsDisplay = groups.length === 0 ?
-        <Box bg='#E6EBF0' w='60vw' p={4} alignContent="center">
-            <Center>
-                No groups have been created for this offering. Click "Create/Reconfigure Groups" to create groups for the offering.
-            </Center>
-        </Box>
-        :
-        <Container className="groups" maxW="80vw">
-            {groups.map((group) => {
-                const cardKey = `${group.lab_number}_${group.group_number}`;
-                return (<GroupCard groupData={group} numberOfGroups={17} key={cardKey} />);
-            })}
-        </Container>
-
     return (
         <div>
             <Heading alignContent={'center'}>
@@ -120,7 +154,7 @@ function Groups() {
                 <VStack>
                     <Button
                         width="18vw"
-                        onClick={navigateToStudentUpload}
+                        onClick={navigateToStudentUploadInfo}
                         colorScheme="gray"
                         margin-left="20">
                         <HStack>
@@ -142,7 +176,7 @@ function Groups() {
                     </Button>
                     <Button
                         width="100%"
-                        onClick={navigateToStudentUpload}
+                        onClick={navigateToStudentUploadInfo}
                         colorScheme="gray"
                         margin-left="20">
                         <HStack>
@@ -185,21 +219,23 @@ function Groups() {
                             </HStack>
                         </Button>
                         <Center><Text fontWeight={"semibold"}>Show Students from Class:</Text></Center>
+
                         <Select
-                            placeholder={"All"}
-                            value={`unitSemesterOffering`}
-                            onChange={(event) => `setUnitSemesterOffering(event.target.value)`}
+                            value={filteredClass}
+                            onChange={(event) => setFilteredClass(event.target.value)}
                         >
-                            {`<option value="S1">S1</option>
-                      <option value="S2">S2</option>
-                      <option value="FY">FY</option>`}
+                            {classFilterOptions?.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
                         </Select>
                     </VStack>
                 </HStack>
             </HStack>
             <Center>
                 <VStack>
-                    {groups.length > 0 && (<Button onClick={handleExportToCSV}>Export group data to .csv</Button>)}
+                    {groups.length > 0 && (<Button>Export group data to .csv</Button>)}
                     {groupsDisplay}
                 </VStack>
 
