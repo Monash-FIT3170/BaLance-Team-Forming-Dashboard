@@ -14,24 +14,28 @@ const getUnitAnalyticsBelbin = async (unitCode, year, period) => {
      *
      */
 
-    const belbinAnalyticData = {
-        "personality title": "Belbin personality types",
-        "description:": "Based on the work of Meredith Belbin, the Belbin roles broadly " +
-                        "categorise people into one of 3 types: action-oriented, people-" +
-                        "oriented and thinking-oriented. People-oriented are generally l" +
-                        "eadership type personalities while action and thinking serve as" +
-                        " more supportive roles.",
-        "data": []
-    }
-    console.log("belbinanalyticsdata "+JSON.stringify(belbinAnalyticData))
+    // const belbinAnalyticData = {
+    //     "personality title": "Belbin personality types",
+    //     "description:": "Based on the work of Meredith Belbin, the Belbin roles broadly " +
+    //                     "categorise people into one of 3 types: action-oriented, people-" +
+    //                     "oriented and thinking-oriented. People-oriented are generally l" +
+    //                     "eadership type personalities while action and thinking serve as" +
+    //                     " more supportive roles.",
+    //     "data": []
+    // }
     const belbinDoughnutChartData = {
-        "type": "doughnut",
-        "title": "Belbin role distribution",
-        "x label": "Belbin personality type",
-        "y label": "Number of students",
-        "x": [],
-        "y": []
-    }
+        "personality title": "Belbin Team Roles",
+        "description": "Personalities using Belbin team roles",
+        "categorical data": [
+          {
+            "title": "Belbin team roles distribution",
+            "x label": "Personality type",
+            "y label": "Number of students",
+            "x": [],
+            "y": []
+          },
+        ],
+        }
 
     const belbinResults = promiseBasedQuery(
         "SELECT b.belbin_type, count(b.belbin_type) " +
@@ -44,11 +48,22 @@ const getUnitAnalyticsBelbin = async (unitCode, year, period) => {
         "GROUP BY b.belbin_type;",
         [unitCode, year, period]
     )
+        
 
-    // todo enter belbin count data into donut chart object
-    console.log(belbinResults)
-    belbinAnalyticData["data"].push(belbinDoughnutChartData)
-    return belbinAnalyticData;
+    try {
+        let response = await belbinResults;
+        console.log("belbin results:", response);
+
+        for (let i =0;i<response.length;i++){
+            belbinDoughnutChartData["categorical data"][0]["x"].push(response[i].belbin_type)
+            belbinDoughnutChartData["categorical data"][0]["y"].push(response[i]['count(b.belbin_type)'])
+
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    console.log("belbinanalyticsdata "+JSON.stringify(belbinDoughnutChartData))
+    return belbinDoughnutChartData;
 }
 
 const getUnitAnalyticsEffort = async (unitCode, year, period) => {

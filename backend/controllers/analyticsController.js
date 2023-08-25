@@ -24,17 +24,44 @@ const getAllGroupsAnalytics = async (req,res) => {
 
     let unitAnalyticStrategiesBelbin = await getUnitAnalyticsStrategies["belbin"](unitCode, year, period)
 
-    const unitAnalyticData = [];
+    let unitAnalyticData = [];
 
     // loop through the unitAnalyticStrategies and append their results to the unitAnalyticData array todo
-
-    for (let i =0; i < unitAnalyticStrategiesBelbin.length;i++){
-        console.log("unitAnalyticStrategies: "+unitAnalyticStrategiesBelbin[i])
-        unitAnalyticData.push(unitAnalyticStrategiesBelbin[i]);
-    }
-
+    unitAnalyticData.push(unitAnalyticStrategiesBelbin)
+    // let obj =
+    // {
+    //         "personality title": "Student Effort",
+    //         "description": "How much effort is put to a unit and marks obtained",
+    //         "categorical data": [
+    //           {
+    //             "title": "Weekly hour commitment to the unit",
+    //             "x label": "Weekly hour commitment",
+    //             "y label": "Number of students",
+    //             "x": ["0-4", "4-8", "8-12", "12+"],
+    //             "y": [5, 10, 45, 30]
+    //           },
+    //           {
+    //             "title": "Average assignment mark distribution",
+    //             "x label": ["Average assignment marks"],
+    //             "y label": ["Number of students"],
+    //             "x": ["N", "P", "C", "D", "HD"],
+    //             "y": [10, 10, 20, 30, 15]
+    //           }
+    //         ],
+    //         "numerical data": [
+    //           {
+    //             "title": "Distribution of marks per hour",
+    //             "x label": "Marks per hour",
+    //             "y label": "Number of students",
+    //             "x": [0.2, 0.5, 0.6, 0.8, 1.2],
+    //             "y": [10, 15, 17, 22, 7]
+    //           }
+    //         ]
+    //       }
+    // unitAnalyticData.push(obj)
+    
     res.status(200);
-    res.send(JSON.stringify(unitAnalyticData));
+    res.send(unitAnalyticData);
 }
 const getGroupAnalytics = async (req,res) => {
     const {

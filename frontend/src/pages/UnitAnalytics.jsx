@@ -80,7 +80,7 @@ useEffect(() => {
     .then((res) => res.json())
     .then((data) => {
       console.log("Fetched analytics data:", data);
-      setAnalytics([data]);
+      setAnalytics(data);
     })
     .catch((err) => {
       console.error('Error fetching units:', err);
