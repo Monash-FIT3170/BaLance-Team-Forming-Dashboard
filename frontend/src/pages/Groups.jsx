@@ -24,14 +24,12 @@ import {
 } from '@chakra-ui/react';
 
 import { Link, useNavigate } from 'react-router-dom';
-import { ShuffleGroups } from '../components/ShuffleGroups';
 import { AddIcon, EditIcon } from '@chakra-ui/icons';
-
 function Groups() {
     const cancelRef = React.useRef();
     const navigate = useNavigate();
     const [groups, setGroups] = useState([]);
-    const [filteredClass, setFilteredClass] = useState([""]);
+    const [filteredClass, setFilteredClass] = useState(["All"]);
 
     // Confirmation popup for shuffling groups
     const {
@@ -97,6 +95,54 @@ function Groups() {
             classFilterOptions.push({ value: group.lab_number, label: `Lab ${group.lab_number}` })
         }
     }
+
+    const handleExportToCSV = () => {
+
+        /* creating the csv */
+        const csvRows = [["Lab Number", "Group Number", "Student ID(s)"]];
+        let newRow = [];
+        for (const group of groups) {
+            newRow.push(group.lab_number);
+            newRow.push(group.group_number);
+            for (const student of group.students) {
+                newRow.push(student.student_id);
+            }
+            csvRows.push(newRow);
+            newRow = [];
+        }
+        let csvContent = "data:text/csv;charset=utf-8,"
+            + csvRows.map(e => e.join(",")).join("\n");
+
+        /* downloading the csv file */
+        try {
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            const file_name = `${unitCode}_${year}_${period}_groups.csv`;
+            link.setAttribute("download", file_name);
+            document.body.appendChild(link); // Required for FF
+            link.click();
+        } catch (error) {
+            console.log(error);
+        }
+
+        console.log("should have downloaded")
+    };
+
+    const navigateToStudentUpload = () => {
+        navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
+    };
+
+    useEffect(() => {
+        fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`)
+            .then((res) =>
+                res.json().then(function (res) {
+                    console.log(res)
+                    setGroups(res);
+                })
+            )
+            .catch((err) => console.error(err));
+    }, []);
 
     return (
         <div>
