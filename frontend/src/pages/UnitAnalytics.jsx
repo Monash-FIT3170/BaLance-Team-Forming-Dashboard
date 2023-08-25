@@ -15,52 +15,81 @@ import Chart from 'chart.js/auto';
 import { CategoryScale } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale);
-const data = [
-  {
-    "personality title": "Belbin Team Roles",
-    "description": "Personalities using Belbin team roles",
-    "categorical data": [
-      {
-        "title": "Belbin team roles distribution",
-        "x label": "Personality type",
-        "y label": "Number of students",
-        "x": ["thinking", "action", "people"],
-        "y": [50, 50, 25]
-      },
-    ],
-  },
-  {
-    "personality title": "Student Effort",
-    "description": "How much effort is put to a unit and marks obtained",
-    "categorical data": [
-      {
-        "title": "Weekly hour commitment to the unit",
-        "x label": "Weekly hour commitment",
-        "y label": "Number of students",
-        "x": ["0-4", "4-8", "8-12", "12+"],
-        "y": [5, 10, 45, 30]
-      },
-      {
-        "title": "Average assignment mark distribution",
-        "x label": ["Average assignment marks"],
-        "y label": ["Number of students"],
-        "x": ["N", "P", "C", "D", "HD"],
-        "y": [10, 10, 20, 30, 15]
-      }
-    ],
-    "numerical data": [
-      {
-        "title": "Distribution of marks per hour",
-        "x label": "Marks per hour",
-        "y label": "Number of students",
-        "x": [0.2, 0.5, 0.6, 0.8, 1.2],
-        "y": [10, 15, 17, 22, 7]
-      }
-    ]
-  }
-]
+// useState hooks for this page
+
+
+
+
+// const data = [
+//   {
+//     "personality title": "Belbin Team Roles",
+//     "description": "Personalities using Belbin team roles",
+//     "categorical data": [
+//       {
+//         "title": "Belbin team roles distribution",
+//         "x label": "Personality type",
+//         "y label": "Number of students",
+//         "x": ["thinking", "action", "people"],
+//         "y": [50, 50, 25]
+//       },
+//     ],
+//   },
+//   {
+//     "personality title": "Student Effort",
+//     "description": "How much effort is put to a unit and marks obtained",
+//     "categorical data": [
+//       {
+//         "title": "Weekly hour commitment to the unit",
+//         "x label": "Weekly hour commitment",
+//         "y label": "Number of students",
+//         "x": ["0-4", "4-8", "8-12", "12+"],
+//         "y": [5, 10, 45, 30]
+//       },
+//       {
+//         "title": "Average assignment mark distribution",
+//         "x label": ["Average assignment marks"],
+//         "y label": ["Number of students"],
+//         "x": ["N", "P", "C", "D", "HD"],
+//         "y": [10, 10, 20, 30, 15]
+//       }
+//     ],
+//     "numerical data": [
+//       {
+//         "title": "Distribution of marks per hour",
+//         "x label": "Marks per hour",
+//         "y label": "Number of students",
+//         "x": [0.2, 0.5, 0.6, 0.8, 1.2],
+//         "y": [10, 15, 17, 22, 7]
+//       }
+//     ]
+//   }
+// ]
 const UnitAnalytics = () => {
-  const { unitCode, year, period } = useParams();
+const [analytics, setAnalytics] = useState([]);
+
+const {
+  unitCode,
+  year,
+  period
+}= useParams()
+
+useEffect(() => {
+  console.log("testing")
+  fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}/analytics`,{
+    method:'POST'
+    }
+  )
+    .then((res) => res.json())
+    .then((data) => {
+      setAnalytics(data);
+    })
+    
+    .catch((err) => {
+      console.error('Error fetching units:', err)
+    })
+}, []);
+
+
   return (
     <div>
        <Center>
@@ -73,7 +102,7 @@ const UnitAnalytics = () => {
           Personality Distribution
        </Heading>
        </Center>
-      {data.map((item, index) => (
+      {/* {analytics.map((item, index) => (
         <Center key={index}>
           <Box width="100%" maxWidth="800px" margin="20px">
             <Card padding="20px" border="1px">
@@ -144,7 +173,7 @@ const UnitAnalytics = () => {
             </Card>
           </Box>
         </Center>
-      ))}
+      ))} */}
     </div>
   );
 };
