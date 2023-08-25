@@ -17,9 +17,7 @@ import {
 } from '@chakra-ui/react';
 
 import { Link, useNavigate } from 'react-router-dom';
-import { ShuffleGroups } from '../components/ShuffleGroups';
 import { AddIcon, EditIcon } from '@chakra-ui/icons';
-
 function Groups() {
   const cancelRef = React.useRef();
   const navigate = useNavigate();
@@ -42,16 +40,28 @@ function Groups() {
     period
   } = useParams();
 
+  const handleExportToCSV = () => {
+    console.log(`Unitcode: ${unitCode}\nYear: ${year}\nPeriod: ${period}`);
+    console.log(groups);
+    /* finding the maximum group size (to know how many student columns to include in the csv) */
+    let groupSizes = []
+    for (const group of groups) {
+        groupSizes.push(group.students.length);
+    }
+    const maxGroupSize = Math.max.apply(Math, groupSizes);
+
+  };
+
+  const navigateToStudentUpload = () => {
+    navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
+  };
+
   const navigateToBelbinUpload = () => {
     navigate(`/belbinImport/${unitCode}/${year}/${period}`);
   };
 
   const navigateToCreateGroups = () => {
     navigate(`/createGroups/${unitCode}/${year}/${period}`);
-  }
-
-  const navigateToStudentUploadInfo = () =>{
-    navigate(`/infoImport/${unitCode}/${year}/${period}`);
   }
 
   useEffect(() => {
@@ -64,33 +74,6 @@ function Groups() {
       )
       .catch((err) => console.error(err));
   }, []);
-
-  const handleShuffleGroups = () => {
-    // Close confirmation dialog
-    onClose();
-
-    // API call to create groups from scratch - will automatically delete existing groups first
-    // then call createUnitGroups under the hood
-    fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        groupSize: groupSize,
-        variance: variance,
-        strategy: groupStrategy,
-      })
-    })
-      .then((res) => res.json())
-      .catch((error) => {
-        console.error('Error:', error);
-      })
-      .finally(() => {
-        // Reload the page
-        window.location.reload();
-      });
-  };
 
   let groupsDisplay = groups.length === 0 ?
     <Box bg='#E6EBF0' w='60vw' p={4} alignContent="center">
@@ -116,7 +99,7 @@ function Groups() {
         <VStack>
           <Button
             width="18vw"
-            onClick={navigateToStudentUploadInfo}
+            onClick={navigateToStudentUpload}
             colorScheme="gray"
             margin-left="20">
             <HStack>
@@ -138,7 +121,7 @@ function Groups() {
           </Button>
           <Button
             width="100%"
-            onClick={navigateToStudentUploadInfo}
+            onClick={navigateToStudentUpload}
             colorScheme="gray"
             margin-left="20">
             <HStack>
@@ -195,7 +178,7 @@ function Groups() {
       </HStack>
       <Center>
         <VStack>
-          {groups.length > 0 && (<Button>Export group data to .csv</Button>)}
+          {groups.length > 0 && (<Button onClick={handleExportToCSV}>Export group data to .csv</Button>)}
           {groupsDisplay}
         </VStack>
 
