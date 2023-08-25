@@ -98,7 +98,7 @@ const getUnitAnalyticsEffort = async (unitCode, year, period) => {
         "y": []
     }
 
-    const gradeResults = promiseBasedQuery(
+    const gradeResults = await promiseBasedQuery(
         "SELECT CASE " +
         "       WHEN e.assignment_avg <50 THEN 'N' " +
         "       WHEN e.assignment_avg <60 THEN 'P' " +
@@ -116,7 +116,7 @@ const getUnitAnalyticsEffort = async (unitCode, year, period) => {
         [unitCode, year, period]
     )
 
-    const hourResults = promiseBasedQuery(
+    const hourResults = await promiseBasedQuery(
         "SELECT CASE " +
         "       WHEN e.time_commitment_hrs <4 THEN '0-4' " +
         "       WHEN e.time_commitment_hrs <8 THEN '4-8' " +
@@ -133,7 +133,7 @@ const getUnitAnalyticsEffort = async (unitCode, year, period) => {
         [unitCode, year, period]
     )
 
-    const effortResults = promiseBasedQuery(
+    const effortResults = await promiseBasedQuery(
         "SELECT e.marks_per_hour AS effort, count(e.time_commitment_hrs) AS 'count' " +
         "FROM unit_offering u " +
         "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
