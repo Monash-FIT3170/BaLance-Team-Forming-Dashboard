@@ -25,7 +25,7 @@ const getAllStudents = async (req, res) => {
         year,
         period
     } = req.params
-    console.log("IM HERE");
+
     const studentsData = await promiseBasedQuery(
         "SELECT stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val " +
         "FROM student stud " +
@@ -36,7 +36,7 @@ const getAllStudents = async (req, res) => {
         "AND unit.unit_off_period=?",
         [unitCode, year, period]
     )
-    console.log(studentsData)
+
     res.status(200).json(studentsData);
 }
 
@@ -108,8 +108,6 @@ const deleteStudentEnrolment = async (req, res) => {
         )
      }
 
-    console.log("deleted group allocation");
-
     // delete lab allocation
     const stud_lab_alloc_id = await promiseBasedQuery(
     "SELECT stud_lab_alloc_id FROM student_lab_allocation sa " +
@@ -132,8 +130,6 @@ const deleteStudentEnrolment = async (req, res) => {
         )
     }
 
-     console.log("deleted lab allocation");
-
     // Delete the student unit enrolment
     const enrolment_id = await promiseBasedQuery(
         "SELECT ue.enrolment_id FROM unit_enrolment ue "+
@@ -146,8 +142,6 @@ const deleteStudentEnrolment = async (req, res) => {
             "AND s.student_id=?;",
         [unitCode, year, period, studentId]
     )
-    console.log(unitCode, year, period, studentId)
-    console.log(enrolment_id)
 
     for (let i = 0;i < enrolment_id.length; i++){
         await promiseBasedQuery(
@@ -156,7 +150,6 @@ const deleteStudentEnrolment = async (req, res) => {
             [enrolment_id[i].enrolment_id]
         );
     }
-    console.log("deleted enrolment");
 
     const stud_unique_id = await promiseBasedQuery(
         "SELECT s.stud_unique_id " +
@@ -202,8 +195,6 @@ const deleteStudentEnrolment = async (req, res) => {
         )
     }
 
-    console.log("deleted student")
-
     // Respond with success message
     res.status(200).send({ message: "Student successfully deleted from specified unit"});
 }
@@ -242,8 +233,6 @@ const deleteStudentGroupAlloc = async (req, res) => {
         )
      }
 
-    console.log("deleted group allocation");
-
     // delete lab allocation
     const stud_lab_alloc_id = await promiseBasedQuery(
     "SELECT stud_lab_alloc_id FROM student_lab_allocation sa " +
@@ -265,8 +254,6 @@ const deleteStudentGroupAlloc = async (req, res) => {
             [stud_lab_alloc_id[i].stud_lab_alloc_id]
         )
     }
-
-    console.log("deleted lab allocation");
 
     const stud_unique_id = await promiseBasedQuery(
         "SELECT s.stud_unique_id " +
@@ -292,8 +279,6 @@ const deleteStudentGroupAlloc = async (req, res) => {
             [stud_unique_id[i].stud_unique_id]
         )
     }
-
-    console.log("deleted student groups and labs")
 }
 
 // update a student's details

@@ -103,7 +103,6 @@ const createGroupsRandom = async (unitCode, year, period, groupSize, variance) =
   // for each group, pop a group from the lab key in object and form the allocation
   for (let i = 0; i < numGroups; i++) {
     const group = groupData.pop();
-    console.log(labStudents[group.unit_off_lab_id])
     const groupStudents = labStudents[group.unit_off_lab_id].pop();
     groupStudents.forEach((studentId) => {
       groupAllocInsertData.push([studentId, group.lab_group_id]);
@@ -230,13 +229,11 @@ const createGroupsEffort = async (unitCode, year, period, groupSize, variance) =
     [unitCode, year, period]
   );
   // for each group, pop a group from the lab key in object and form the allocation
-  console.log(numGroups)
   for (let i = 0; i < numGroups; i++) {
     const group = groupData.pop();
     let groupStudents = groups[group.unit_off_lab_id].pop();
     for (let i=0; i<groupStudents.length; i++) {
         let student = groupStudents[i];
-        console.log(student)
         groupAllocInsertData.push([student.id, group.lab_group_id]);
     }
   }
@@ -249,9 +246,7 @@ const createGroupsEffort = async (unitCode, year, period, groupSize, variance) =
 };
 
 const belbinSplit = (labStudents, groupSize, totalCount) => {
-  console.log(labStudents);
-
-  //set space to store groups
+  // set space to store groups
   let allocation = [];
 
   //determine number of groups
@@ -458,10 +453,6 @@ const splitGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) 
   const numRemStud = studentsList.length % groupSize; // students who didn't end up in full groups i.e. remainder
   const lastGroup = groups[groups.length - 1];
 
-  // console.log(`size: ${groupSize}, ${typeof groupSize} variance: ${variance}, ${typeof variance}`)
-  // console.log("Full groups before adjustment")
-  // console.log(groups);
-
   // if we cannot form even groups from all students or the last group is not within variance limits
   if (numRemStud !== 0 && numRemStud < groupSize - variance) {
     // can the students not in a full group be shared between full groups?
@@ -470,8 +461,6 @@ const splitGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) 
       // students not in a full group are distributed amongst the full groups until no more remain
       let lastGroupLen = lastGroup.length; // defined here to avoid re-evaluation of value in loop condition
       for (let i = 0; i < lastGroupLen; i++) {
-        // console.log("group that is to be distributed")
-        // console.log(groups[i])
         groups[i].push(lastGroup.pop());
       }
       groups.pop();

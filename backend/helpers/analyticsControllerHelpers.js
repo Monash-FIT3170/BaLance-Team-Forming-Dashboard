@@ -23,7 +23,7 @@ const getUnitAnalyticsBelbin = async (unitCode, year, period) => {
                         " more supportive roles.",
         "data": []
     }
-    console.log("belbinanalyticsdata "+belbinAnalyticData)
+
     const belbinDoughnutChartData = {
         "type": "doughnut",
         "title": "Belbin role distribution",
@@ -45,8 +45,6 @@ const getUnitAnalyticsBelbin = async (unitCode, year, period) => {
         [unitCode, year, period]
     )
 
-    // todo enter belbin count data into donut chart object
-    console.log(belbinResults)
     belbinAnalyticData["data"].push(belbinDoughnutChartData)
     return belbinAnalyticData;
 }

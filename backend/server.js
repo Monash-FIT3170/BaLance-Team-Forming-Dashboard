@@ -30,6 +30,7 @@ app.use((req, res, next) => {
 app.use('/api/units/', unitRoutes);
 app.use('/api/groups/', groupRoutes);
 app.use('/api/students/', studentRoutes);
+app.use('/api/analytics/')
 
 // listen to port
 app.listen(process.env.PORT || 8080, () => {

@@ -12,11 +12,6 @@ const {
     groupFormationStrategies,
 } = require("../helpers/groupFormationHelpers")
 
-const {
-    getUnitAnalyticsStrategies,
-    getGroupAnalyticsStrategies
-} = require("../helpers/groupAnalyticsHelpers")
-
 // get all groups from a unit
 const getAllGroups = async (req, res) => {
     const {
@@ -67,7 +62,6 @@ const getAllGroups = async (req, res) => {
         })
 
         // if the next student is in a new group or this is the last student, push this group
-        //console.log(i, studentData[i+1]['groupNumber'], studentData[i]['groupNumber'])
         if(i+1 === studentData.length || studentData[i+1].group_number !== studentData[i].group_number) {
             responseData.push(group);
         }
@@ -236,52 +230,6 @@ const moveStudent = async (req, res) => {
 
 const createGroupsCustomScript = (unitOffId, labId, studentsList, groupSize, variance) => {
     let groups = [];
-
-}
-
-const getAllGroupsAnalytics = async (req,res) => {
-    const {
-        unitCode,
-        year,
-        period
-    } = req.params;
-
-    console.log("getALL groups controller")
-
-    unitAnalyticStrategiesBelbin = await getUnitAnalyticsStrategies["belbin"](unitCode, year, period)
-
-    const unitAnalyticData = [];
-
-    // loop through the unitAnalyticStrategies and append their results to the unitAnalyticData array todo
-
-    for (let i =0; i < unitAnalyticStrategiesEffort.length;i++){
-        console.log("unitAnalyticStrategies: "+unitAnalyticStrategies[i])
-
-        unitAnalyticData.push(unitAnalyticStrategies[i])
-
-    }
-
-    res.status(200).json(unitAnalyticData);
-}
-const getGroupAnalytics = async (req,res) => {
-    const {
-        unitCode,
-        year,
-        period,
-        groupNumber
-    } = req.params;
-
-    const groupAnalyticData = [];
-
-    await getGroupAnalyticsStrategies[groupAnalyticData](unitCode, year, period,groupNumber)
-
-
-    // loop through the groupAnalyticStrategies and append their results to the groupAnalyticData array todo
-    for (let i = 0;i<groupAnalyticData.length;i++){
-        groupAnalyticData.push(groupAnalyticData)
-    }
-
-    res.status(200).json(groupAnalyticData);
 }
 
 module.exports = {
@@ -291,8 +239,5 @@ module.exports = {
     deleteGroup,
     createUnitGroups,
     shuffleUnitGroups,
-    moveStudent,
-    getAllGroupsAnalytics,
-    getGroupAnalytics
-
+    moveStudent
 }
