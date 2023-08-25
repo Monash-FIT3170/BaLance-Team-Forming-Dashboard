@@ -10,10 +10,9 @@ import {
     Center,
 } from '@chakra-ui/react';
 import { Doughnut, Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { CategoryScale } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarController, BarElement } from 'chart.js';
 
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale);
+ChartJS.register(ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarController, BarElement);
 
 const UnitAnalytics = () => {
     const [analytics, setAnalytics] = useState([]);
@@ -57,7 +56,6 @@ const UnitAnalytics = () => {
                                     <Heading style={{ marginTop: '-20px' }}>
                                         {item['personality title']}
                                     </Heading>
-                                    {console.log(Object.values(item))}
                                     <Text>{Object.values(item)[1]}</Text>
                                 </CardHeader>
                                 <CardBody>
