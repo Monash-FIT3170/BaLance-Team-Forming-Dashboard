@@ -24,7 +24,7 @@ const getUnitAnalytics = async (req,res) => {
         unitAnalyticData.push(analytics);
     }
 
-    console.log(unitAnalyticData)
+    console.log(JSON.stringify(unitAnalyticData))
     res.status(200).json(unitAnalyticData);
 }
 
@@ -45,7 +45,7 @@ const getGroupAnalytics = async (req,res) => {
         groupAnalyticData.push(analytics);
     }
 
-    console.log(groupAnalyticData)
+    console.log(JSON.stringify(groupAnalyticData))
     res.status(200).json(groupAnalyticData);
 }
 

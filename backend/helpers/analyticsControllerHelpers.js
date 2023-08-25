@@ -33,8 +33,8 @@ const getUnitAnalyticsBelbin = async (unitCode, year, period) => {
         "y": []
     }
 
-    const belbinResults = promiseBasedQuery(
-        "SELECT b.belbin_type, count(b.belbin_type) " +
+    const belbinResults = await promiseBasedQuery(
+        "SELECT b.belbin_type, count(b.belbin_type) AS 'count' " +
         "FROM unit_offering u " +
         "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
         "INNER JOIN belbin_result b ON b.personality_test_attempt = pa.test_attempt_id " +
@@ -44,6 +44,11 @@ const getUnitAnalyticsBelbin = async (unitCode, year, period) => {
         "GROUP BY b.belbin_type;",
         [unitCode, year, period]
     )
+
+    belbinResults.forEach((result) => {
+        belbinDoughnutChartData["x"].push(result["belbin_type"])
+        belbinDoughnutChartData["y"].push(result["count"])
+    })
 
     belbinAnalyticData["data"].push(belbinDoughnutChartData)
     return belbinAnalyticData;
@@ -97,12 +102,6 @@ const getUnitAnalyticsEffort = async (unitCode, year, period) => {
         "",
         []
     )
-
-    // convert hours and average marks into categorical ranges todo
-
-    // count hours, average marks and effort data todo
-
-    // append data to appropriate variables todo
 
     effortAnalyticsData["data"].push(marksDoughnutChartData)
     effortAnalyticsData["data"].push(hoursDoughnutChartData)
