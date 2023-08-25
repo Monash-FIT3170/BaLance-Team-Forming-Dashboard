@@ -105,10 +105,10 @@ const UnitAnalytics = () => {
                         }}
                         options={{
                             responsive: true,
-                            aspectRatio: 2.5
+                            aspectRatio: 3.0
                         }}
                       />
-                      <br /><br />
+                      <br />
                     </div>
                   ))
                 ) : (
