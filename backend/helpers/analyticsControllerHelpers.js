@@ -183,6 +183,7 @@ const getGroupAnalyticsBelbin = async (unitCode, year, period, groupNumber) => {
      *
      */
 
+
     const belbinAnalyticData = {
         "personality title": "Belbin personality types",
         "description:": "Based on the work of Meredith Belbin, the Belbin roles broadly " +
@@ -202,13 +203,11 @@ const getGroupAnalyticsBelbin = async (unitCode, year, period, groupNumber) => {
         "y": []
     }
 
-    const belbinResults = promiseBasedQuery( // todo update query to be for specific group
-        "SELECT b.belbin_type, count(b.belbin_type) " +
+    const belbinResults = await promiseBasedQuery(
+        "SELECT b.belbin_type, count(b.belbin_type) AS 'count' " +
         "FROM unit_offering u " +
         "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
         "INNER JOIN belbin_result b ON b.personality_test_attempt = pa.test_attempt_id " +
-        "INNER JOIN student s ON s.stud_unique_id = pa.stud_unique_id " +
-        "INNER JOIN group_allocation ga ON ga.stud_unique_id = s.stud_unique_id " +
         "INNER JOIN lab_group g ON g.lab_group_id = ga.lab_group_id " +
         "   WHERE u.unit_code=? " +
         "   AND u.unit_off_year=? " +
@@ -218,17 +217,14 @@ const getGroupAnalyticsBelbin = async (unitCode, year, period, groupNumber) => {
         [unitCode, year, period]
     )
 
-    // get the proportion of the 3 belbin types and insert x & y data to doughnutChartData accordingly
-    const belbinTypeHistogram = {
-        "Action": 0,
-        "People": 0,
-        "Thinking": 0
-    }
-
-    // todo counting
+    belbinResults.forEach((result) => {
+        belbinDoughnutChartData["x"].push(result["belbin_type"])
+        belbinDoughnutChartData["y"].push(result["count"])
+    })
 
     belbinAnalyticData["data"].push(belbinDoughnutChartData)
     return belbinAnalyticData;
+
 }
 
 const getGroupAnalyticsEffort = async (unitCode, year, period, groupNumber) => {
@@ -275,16 +271,73 @@ const getGroupAnalyticsEffort = async (unitCode, year, period, groupNumber) => {
         "y": []
     }
 
-    const effortResults = promiseBasedQuery( // todo query for a specific group
-        "",
-        []
+    const gradeResults = await promiseBasedQuery(
+        "SELECT CASE " +
+        "       WHEN e.assignment_avg <50 THEN 'N' " +
+        "       WHEN e.assignment_avg <60 THEN 'P' " +
+        "       WHEN e.assignment_avg <70 THEN 'C' " +
+        "       WHEN e.assignment_avg <80 THEN 'D' " +
+        "       WHEN e.assignment_avg <=100 THEN 'HD' " +
+        "   END AS letter_grade, count(e.assignment_avg) AS 'count' " +
+        "FROM unit_offering u " +
+        "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
+        "INNER JOIN effort_result e ON e.personality_test_attempt = pa.test_attempt_id " +
+        "INNER JOIN lab_group g ON g.lab_group_id = ga.lab_group_id " +
+        "   WHERE u.unit_code=? " +
+        "   AND u.unit_off_year=? " +
+        "   AND u.unit_off_period=? " +
+        "   AND g.group_number=? " +
+        "GROUP BY letter_grade;",
+        [unitCode, year, period, groupNumber]
     )
 
-    // convert hours and average marks into categorical ranges todo
+    const hourResults = await promiseBasedQuery(
+        "SELECT CASE " +
+        "       WHEN e.time_commitment_hrs <4 THEN '0-4' " +
+        "       WHEN e.time_commitment_hrs <8 THEN '4-8' " +
+        "       WHEN e.time_commitment_hrs <12 THEN '8-12' " +
+        "       WHEN e.time_commitment_hrs >=12 THEN '12+' " +
+        "   END AS hours, count(e.time_commitment_hrs) AS 'count' " +
+        "FROM unit_offering u " +
+        "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
+        "INNER JOIN effort_result e ON e.personality_test_attempt = pa.test_attempt_id " +
+        "INNER JOIN lab_group g ON g.lab_group_id = ga.lab_group_id " +
+        "   WHERE u.unit_code=? " +
+        "   AND u.unit_off_year=? " +
+        "   AND u.unit_off_period=? " +
+        "   AND g.group_number=? " +
+        "GROUP BY hours;",
+        [unitCode, year, period, groupNumber]
+    )
 
-    // count hours, average marks and effort data todo
+    const effortResults = await promiseBasedQuery(
+        "SELECT e.marks_per_hour AS effort, count(e.time_commitment_hrs) AS 'count' " +
+        "FROM unit_offering u " +
+        "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
+        "INNER JOIN effort_result e ON e.personality_test_attempt = pa.test_attempt_id " +
+        "INNER JOIN lab_group g ON g.lab_group_id = ga.lab_group_id " +
+        "   WHERE u.unit_code=? " +
+        "   AND u.unit_off_year=? " +
+        "   AND u.unit_off_period=? " +
+        "   AND g.group_number=? " +
+        "GROUP BY effort;",
+        [unitCode, year, period, groupNumber]
+    )
 
-    // append data to appropriate variables todo
+    gradeResults.forEach((result) => {
+        marksDoughnutChartData["x"].push(result["letter_grade"])
+        marksDoughnutChartData["y"].push(result["count"])
+    })
+
+    hourResults.forEach((result) => {
+        hoursDoughnutChartData["x"].push(result["hours"])
+        hoursDoughnutChartData["y"].push(result["count"])
+    })
+
+    effortResults.forEach((result) => {
+        effortBarChartData["x"].push(result["effort"])
+        effortBarChartData["y"].push(result["count"])
+    })
 
     effortAnalyticsData["data"].push(marksDoughnutChartData)
     effortAnalyticsData["data"].push(hoursDoughnutChartData)
@@ -300,10 +353,7 @@ const getGroupAnalyticsStrategies = {
 
     "effort": getGroupAnalyticsEffort,
     "belbin": getGroupAnalyticsBelbin,
-
-    
 }
-
 
 module.exports = {
     getUnitAnalyticsStrategies,
