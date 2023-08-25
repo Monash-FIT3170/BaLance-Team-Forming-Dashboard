@@ -204,16 +204,18 @@ const getGroupAnalyticsBelbin = async (unitCode, year, period, groupNumber) => {
     }
 
     const belbinResults = await promiseBasedQuery(
-        "SELECT b.belbin_type, count(b.belbin_type) AS 'count' " +
-        "FROM unit_offering u " +
-        "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
-        "INNER JOIN belbin_result b ON b.personality_test_attempt = pa.test_attempt_id " +
-        "INNER JOIN lab_group g ON g.lab_group_id = ga.lab_group_id " +
-        "   WHERE u.unit_code=? " +
-        "   AND u.unit_off_year=? " +
-        "   AND u.unit_off_period=? " +
-        "   AND g.group_number=? " +
-        "GROUP BY b.belbin_type;",
+        "SELECT b.belbin_type, count(b.belbin_type) AS 'count'\n" +
+        "        FROM unit_offering u\n" +
+        "        INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id\n" +
+        "        INNER JOIN belbin_result b ON b.personality_test_attempt = pa.test_attempt_id\n" +
+        "        INNER JOIN student s ON s.stud_unique_id = pa.stud_unique_id\n" +
+        "        INNER JOIN group_allocation ga ON ga.stud_unique_id = s.stud_unique_id\n" +
+        "        INNER JOIN lab_group g ON g.lab_group_id = ga.lab_group_id\n" +
+        "           WHERE u.unit_code='f'\n" +
+        "           AND u.unit_off_year=2\n" +
+        "           AND u.unit_off_period='S2'\n" +
+        "           AND g.group_number=1\n" +
+        "        GROUP BY b.belbin_type;",
         [unitCode, year, period]
     )
 
@@ -272,21 +274,23 @@ const getGroupAnalyticsEffort = async (unitCode, year, period, groupNumber) => {
     }
 
     const gradeResults = await promiseBasedQuery(
-        "SELECT CASE " +
-        "       WHEN e.assignment_avg <50 THEN 'N' " +
-        "       WHEN e.assignment_avg <60 THEN 'P' " +
-        "       WHEN e.assignment_avg <70 THEN 'C' " +
-        "       WHEN e.assignment_avg <80 THEN 'D' " +
-        "       WHEN e.assignment_avg <=100 THEN 'HD' " +
-        "   END AS letter_grade, count(e.assignment_avg) AS 'count' " +
-        "FROM unit_offering u " +
-        "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
-        "INNER JOIN effort_result e ON e.personality_test_attempt = pa.test_attempt_id " +
-        "INNER JOIN lab_group g ON g.lab_group_id = ga.lab_group_id " +
-        "   WHERE u.unit_code=? " +
-        "   AND u.unit_off_year=? " +
-        "   AND u.unit_off_period=? " +
-        "   AND g.group_number=? " +
+        "SELECT CASE\n" +
+        "       WHEN e.assignment_avg <50 THEN 'N'\n" +
+        "       WHEN e.assignment_avg <60 THEN 'P'\n" +
+        "       WHEN e.assignment_avg <70 THEN 'C'\n" +
+        "       WHEN e.assignment_avg <80 THEN 'D'\n" +
+        "       WHEN e.assignment_avg <=100 THEN 'HD'\n" +
+        "   END AS letter_grade, count(e.assignment_avg) AS 'count'\n" +
+        "FROM unit_offering u\n" +
+        "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id\n" +
+        "INNER JOIN effort_result e ON e.personality_test_attempt = pa.test_attempt_id\n" +
+        "INNER JOIN student s ON s.stud_unique_id = pa.stud_unique_id\n" +
+        "INNER JOIN group_allocation ga ON ga.stud_unique_id = s.stud_unique_id\n" +
+        "INNER JOIN lab_group g ON g.lab_group_id = ga.lab_group_id\n" +
+        "   WHERE u.unit_code='f'\n" +
+        "   AND u.unit_off_year=2\n" +
+        "   AND u.unit_off_period='S2'\n" +
+        "   AND g.group_number=1\n" +
         "GROUP BY letter_grade;",
         [unitCode, year, period, groupNumber]
     )
@@ -301,6 +305,8 @@ const getGroupAnalyticsEffort = async (unitCode, year, period, groupNumber) => {
         "FROM unit_offering u " +
         "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
         "INNER JOIN effort_result e ON e.personality_test_attempt = pa.test_attempt_id " +
+        "INNER JOIN student s ON s.stud_unique_id = pa.stud_unique_id " +
+        "INNER JOIN group_allocation ga ON ga.stud_unique_id = s.stud_unique_id " +
         "INNER JOIN lab_group g ON g.lab_group_id = ga.lab_group_id " +
         "   WHERE u.unit_code=? " +
         "   AND u.unit_off_year=? " +
@@ -315,6 +321,8 @@ const getGroupAnalyticsEffort = async (unitCode, year, period, groupNumber) => {
         "FROM unit_offering u " +
         "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
         "INNER JOIN effort_result e ON e.personality_test_attempt = pa.test_attempt_id " +
+        "INNER JOIN student s ON s.stud_unique_id = pa.stud_unique_id " +
+        "INNER JOIN group_allocation ga ON ga.stud_unique_id = s.stud_unique_id " +
         "INNER JOIN lab_group g ON g.lab_group_id = ga.lab_group_id " +
         "   WHERE u.unit_code=? " +
         "   AND u.unit_off_year=? " +

@@ -40,7 +40,7 @@ function App() {
             <Route path="/belbinImport/:unitCode/:year/:period" element={<BelbinImporter />} />
             <Route path="/infoImport/:unitCode/:year/:period" element={<InfoImporter />} />
             <Route path="/unitAnalytics/:unitCode/:year/:period" element={<UnitAnalytics />} />
-            <Route path="/groupAnalytics/:unitCode/:year/:period/:lab_number/:group_number" element={<GroupAnalytics />} />
+            <Route path="/groupAnalytics/:unitCode/:year/:period/:labNumber/:groupnumber" element={<GroupAnalytics />} />
           </Routes>
         </div>
       </BrowserRouter>
