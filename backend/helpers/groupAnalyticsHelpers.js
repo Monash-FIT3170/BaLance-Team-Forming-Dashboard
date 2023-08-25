@@ -23,7 +23,7 @@ const getUnitAnalyticsBelbin = async (unitCode, year, period) => {
                         " more supportive roles.",
         "data": []
     }
-    console.log("belbinanalyticsdata "+belbinAnalyticData)
+    console.log("belbinanalyticsdata "+JSON.stringify(belbinAnalyticData))
     const belbinDoughnutChartData = {
         "type": "doughnut",
         "title": "Belbin role distribution",

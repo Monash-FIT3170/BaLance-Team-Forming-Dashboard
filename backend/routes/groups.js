@@ -43,12 +43,6 @@ router.get('/:unitCode/:year/:period', getAllGroups);
 // get a specific group for a specific unit
 router.get('/:unitCode/:year/:period/:groupNumber', getGroup);
 
-//get all group analytics
-router.get('/:unitCode/:year/:period/analytics', getAllGroupsAnalytics)
-
-//get a specific group analytics
-router.get('/:unitCode/:year/:period/analytics/:groupNumber', getGroupAnalytics)
-
 // create unit groups
 router.post('/:unitCode/:year/:period', createUnitGroups);
 

@@ -74,19 +74,17 @@ const {
 }= useParams()
 
 useEffect(() => {
-  console.log("testing")
-  fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}/analytics`,{
-    method:'POST'
-    }
-  )
+  console.log("Fetching analytics data...");
+
+  fetch(`http://localhost:8080/api/analytics/${unitCode}/${year}/${period}`)
     .then((res) => res.json())
     .then((data) => {
-      setAnalytics(data);
+      console.log("Fetched analytics data:", data);
+      setAnalytics([data]);
     })
-    
     .catch((err) => {
-      console.error('Error fetching units:', err)
-    })
+      console.error('Error fetching units:', err);
+    });
 }, []);
 
 
@@ -102,7 +100,7 @@ useEffect(() => {
           Personality Distribution
        </Heading>
        </Center>
-      {/* {analytics.map((item, index) => (
+      {analytics.map((item, index) => (
         <Center key={index}>
           <Box width="100%" maxWidth="800px" margin="20px">
             <Card padding="20px" border="1px">
@@ -173,7 +171,7 @@ useEffect(() => {
             </Card>
           </Box>
         </Center>
-      ))} */}
+      ))}
     </div>
   );
 };
