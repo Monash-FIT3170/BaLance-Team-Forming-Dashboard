@@ -6,6 +6,7 @@ import {
     CardBody,
     CardHeader,
     Heading,
+    Text,
     Center,
 } from '@chakra-ui/react';
 import { Doughnut, Bar } from 'react-chartjs-2';
@@ -28,6 +29,19 @@ const UnitAnalytics = () => {
             });
     }, []);
 
+    const generatePastelColors = (count) => {
+        const colors = [];
+        const baseHue = 200; // Start with a bluish hue
+        const hueIncrement = 360 / count;
+
+        for (let i = 0; i < count; i++) {
+            const hue = (baseHue + i * hueIncrement) % 360;
+            colors.push(`hsla(${hue}, 100%, 70%, 0.9)`);
+        }
+
+        return colors;
+    };
+
     return (
         <div>
             {analytics.length === 0 ? (
@@ -43,6 +57,8 @@ const UnitAnalytics = () => {
                                     <Heading style={{ marginTop: '-20px' }}>
                                         {item['personality title']}
                                     </Heading>
+                                    {console.log(Object.values(item))}
+                                    <Text>{Object.values(item)[1]}</Text>
                                 </CardHeader>
                                 <CardBody>
                                     {item.data.map((chartData, dataIndex) => (
@@ -62,13 +78,9 @@ const UnitAnalytics = () => {
                                                         datasets: [
                                                             {
                                                                 data: chartData.y || [],
-                                                                backgroundColor: [
-                                                                    'orange',
-                                                                    'purple',
-                                                                    'blue',
-                                                                    'green',
-                                                                    'red',
-                                                                ],
+                                                                backgroundColor: generatePastelColors(
+                                                                    chartData.x.length
+                                                                ),
                                                             },
                                                         ],
                                                     }}
@@ -86,7 +98,9 @@ const UnitAnalytics = () => {
                                                             {
                                                                 label: chartData['y label'],
                                                                 data: chartData.y,
-                                                                backgroundColor: 'blue',
+                                                                backgroundColor: generatePastelColors(
+                                                                    chartData.x.length
+                                                                )[0], // Use the first color for bars
                                                             },
                                                         ],
                                                     }}
