@@ -207,7 +207,6 @@ const deleteStudentGroupAlloc = async (req, res) => {
         period,
         studentId
     } = req.params;
-    // error handling for unexpected issues
 
      // delete group allocations
      const group_alloc_id = await promiseBasedQuery(
@@ -353,8 +352,6 @@ const addStudentBelbin = async (req, res) => {
             }
 
         }
-
-
 }
 
 const addStudentEffort = async (req, res) => {

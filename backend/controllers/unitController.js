@@ -244,7 +244,7 @@ const deleteUnit = async function (req, res) {
     res.status(200).send();
 }
 
-// FIXME SQL query not working
+// FIXME
 updateUnit = async function (req, res){
     const urlParamValues = { // URL params
         unitCode,
@@ -370,8 +370,6 @@ const uploadCustomScript = async (req, res) => {
 
     }
 };
-
-
 
 module.exports = {
     getAllUnits,

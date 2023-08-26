@@ -25,7 +25,7 @@ const StudentRowStudentDisplay = ({ studentData, numberOfGroups, onDelete }) => 
   const handleDeleteStudentEnrolment = (event) => {
     event.preventDefault();
     console.log("delete student");
-    fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}/${student_id}`, {
+    fetch(`http://localhost:8080/api/students/enrolment/${unitCode}/${year}/${period}/${student_id}`, {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',

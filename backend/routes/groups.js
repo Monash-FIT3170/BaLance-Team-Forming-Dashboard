@@ -33,8 +33,6 @@ const storage = multer.diskStorage({ // fixme is this not in middleware/uploadMi
 
 const upload = multer({ storage });
 
-// Api Structure /api/groups/{unitId}/{groupId}
-
 // get all groups for a specific unit
 router.get('/:unitCode/:year/:period', getAllGroups);
 
