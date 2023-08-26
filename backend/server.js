@@ -39,9 +39,8 @@ const verifyJwt = auth({
 
 app.use(verifyJwt);
 
-app.use(async (req, res, next) => {
-    try {
-        const accessToken = req.auth.token;
+async function getUserDetails(req) {
+    const accessToken = req.auth.token;
         const userResponse = await axios.get('https://balance.au.auth0.com/userinfo',
         {
             headers: {
@@ -49,12 +48,33 @@ app.use(async (req, res, next) => {
             }
         })
 
-        req.user = userResponse.data;
+        return userResponse.data;
+}
+
+async function delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+  }
+
+app.use(async (req, res, next) => {
+    try {
+        req.user = await getUserDetails(req);
+        next();
     }
     catch(err){
-        console.log(err);
+        try {
+            console.log("Waiting")
+            await delay(10000);
+            console.log("Complete")
+            req.user = await getUserDetails(req)
+            next();
+        }
+
+        catch(err){
+            return res.sendStatus(500);
+        }
+
     }
-    next();
+    
 })
 
 app.use(async (req, res, next) => {
