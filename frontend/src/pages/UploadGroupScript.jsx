@@ -32,6 +32,18 @@ function UploadGroupScript() {
 	const [ pyFile, setPyFile ] = useState(null);
 	const { unitCode, year, period } = useParams();
 	const navigate = useNavigate();
+  const location = useLocation();
+
+// Extract groupDetails or set it to default values
+const groupDetails = location.state?.groupDetails || { groupSize: 2, variance: 1 };
+
+// Destructure groupSize and variance from groupDetails
+const { groupSize: initialGroupSize, variance: initialVariance } = groupDetails;
+
+// Use the initial values in useState
+const [groupSize, setGroupSize] = useState(initialGroupSize);
+const [variance, setVariance] = useState(initialVariance);
+
 
 	const handleUpload = (e) => {
 		e.preventDefault();
