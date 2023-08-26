@@ -84,119 +84,37 @@ const deleteStudentEnrolment = async (req, res) => {
         studentId
     } = req.params;
 
-     // delete group allocations
-     const group_alloc_id = await promiseBasedQuery(
-     "SELECT group_alloc_id " +
-     "FROM group_allocation ga " +
-     "INNER JOIN lab_group lg ON lg.lab_group_id=ga.lab_group_id " +
-     "INNER JOIN unit_off_lab ul ON ul.unit_off_lab_id=lg.unit_off_lab_id " +
-     "INNER JOIN unit_offering u ON u.unit_off_id=ul.unit_off_id " +
-     "INNER JOIN student s ON ga.stud_unique_id=s.stud_unique_id " +
-     "WHERE " +
-        "u.unit_code=? " +
-        "AND u.unit_off_year=? " +
-        "AND u.unit_off_period=? " +
-        "AND s.student_id=?;",
-        [unitCode, year, period, studentId]
-     );
-
-     for (let i = 0;i < group_alloc_id.length; i++){
-        await promiseBasedQuery(
-            "DELETE FROM group_allocation " +
-            "WHERE group_alloc_id=?;",
-            [group_alloc_id[i].group_alloc_id]
-        )
-     }
-
-    // delete lab allocation
-    const stud_lab_alloc_id = await promiseBasedQuery(
-    "SELECT stud_lab_alloc_id FROM student_lab_allocation sa " +
-    "INNER JOIN unit_off_lab ul ON ul.unit_off_lab_id=sa.unit_off_lab_id " +
-    "INNER JOIN unit_offering u ON u.unit_off_id=ul.unit_off_id " +
-    "INNER JOIN student s ON s.stud_unique_id=sa.stud_unique_id " +
-    "WHERE " +
-        "u.unit_code=? " +
-        "AND u.unit_off_year=? " +
-        "AND u.unit_off_period=? " +
-        "AND s.student_id=?; ",
-        [unitCode, year, period, studentId]
-    );
-
-    for (let i = 0;i < stud_lab_alloc_id.length; i++){
-        await promiseBasedQuery(
-        "DELETE FROM student_lab_allocation " +
-        "WHERE stud_lab_alloc_id=?; ",
-            [stud_lab_alloc_id[i].stud_lab_alloc_id]
-        )
-    }
-
-    // Delete the student unit enrolment
-    const enrolment_id = await promiseBasedQuery(
-        "SELECT ue.enrolment_id FROM unit_enrolment ue "+
-        "INNER JOIN unit_offering u ON ue.unit_off_id = u.unit_off_id "+
-        "INNER JOIN student s ON s.stud_unique_id = ue.stud_unique_id " +
-        "WHERE " +
-            "u.unit_code=? " +
-            "AND u.unit_off_year=? " +
-            "AND u.unit_off_period=? " +
-            "AND s.student_id=?;",
+    await promiseBasedQuery( // delete effort personality test results for student
+        "",
         [unitCode, year, period, studentId]
     )
 
-    for (let i = 0;i < enrolment_id.length; i++){
-        await promiseBasedQuery(
-            "DELETE FROM unit_enrolment " +
-            "WHERE enrolment_id=?; ",
-            [enrolment_id[i].enrolment_id]
-        );
-    }
-
-    const stud_unique_id = await promiseBasedQuery(
-        "SELECT s.stud_unique_id " +
-        "FROM student s " +
-        "WHERE " +
-            "s.student_id =?; ",
-            [studentId]
+    await promiseBasedQuery( // delete belbin personality test results for student
+        "",
+        [unitCode, year, period, studentId]
     )
 
-    // delete from lab allocation
-    for (let i = 0;i < stud_unique_id.length; i++){
-        await promiseBasedQuery(
-            "DELETE FROM student_lab_allocation " +
-            "WHERE stud_unique_id = ?; ",
-            [stud_unique_id[i].stud_unique_id]
-        )
-    }
+    await promiseBasedQuery( // delete personality test attmepts for student
+        "",
+        [unitCode, year, period, studentId]
+    )
 
-    // delete from group allocation
-    for (let i = 0;i < stud_unique_id.length; i++){
-        await promiseBasedQuery(
-            "DELETE FROM group_allocation " +
-            "WHERE stud_unique_id = ?; ",
-            [stud_unique_id[i].stud_unique_id]
-        )
-    }
+    await promiseBasedQuery( // delete group allocation for student
+        "",
+        [unitCode, year, period, studentId]
+    )
 
-    // delete from enrolment
-    for (let i = 0;i < stud_unique_id.length; i++){
-        await promiseBasedQuery(
-            "DELETE FROM unit_enrolment " +
-            "WHERE stud_unique_id = ?; ",
-            [stud_unique_id[i].stud_unique_id]
-        )
-    }
+    await promiseBasedQuery( // delete lab allocation for student
+        "",
+        [unitCode, year, period, studentId]
+    )
 
-    // DELETE STUDENT
-    for (let i = 0;i < stud_unique_id.length; i++){
-        await promiseBasedQuery(
-            "DELETE FROM student " +
-            "WHERE stud_unique_id = ?; ",
-            [stud_unique_id[i].stud_unique_id]
-        )
-    }
+    await promiseBasedQuery( // delete unit enrolment for student
+        "",
+        [unitCode, year, period, studentId]
+    )
 
-    // Respond with success message
-    res.status(200).send({ message: "Student successfully deleted from specified unit"});
+    res.status(200).send();
 }
 
 // delete a single student from group
@@ -208,76 +126,27 @@ const deleteStudentGroupAlloc = async (req, res) => {
         studentId
     } = req.params;
 
-     // delete group allocations
-     const group_alloc_id = await promiseBasedQuery(
-     "SELECT group_alloc_id " +
-     "FROM group_allocation ga " +
-     "INNER JOIN lab_group lg ON lg.lab_group_id=ga.lab_group_id " +
-     "INNER JOIN unit_off_lab ul ON ul.unit_off_lab_id=lg.unit_off_lab_id " +
-     "INNER JOIN unit_offering u ON u.unit_off_id=ul.unit_off_id " +
-     "INNER JOIN student s ON ga.stud_unique_id=s.stud_unique_id " +
-     "WHERE " +
-        "u.unit_code=? " +
-        "AND u.unit_off_year=? " +
-        "AND u.unit_off_period=? " +
-        "AND s.student_id=?;",
+    await promiseBasedQuery(
+        "DELETE FROM group_allocation " +
+        "WHERE group_alloc_id IN ( " +
+        "   SELECT subquery.group_alloc_id " +
+        "   FROM ( " +
+        "       SELECT ga.group_alloc_id " +
+        "       FROM unit_offering u " +
+        "           INNER JOIN unit_off_lab l ON u.unit_off_id = l.unit_off_id " +
+        "           INNER JOIN lab_group g ON g.unit_off_lab_id = l.unit_off_lab_id " +
+        "           INNER JOIN group_allocation ga ON ga.lab_group_id = g.lab_group_id " +
+        "           INNER JOIN student s ON s.stud_unique_id = ga.stud_unique_id " +
+        "       WHERE u.unit_code=? " +
+        "           AND u.unit_off_year=? " +
+        "           AND u.unit_off_period=? " +
+        "           AND s.student_id=? " +
+        "   ) AS subquery " +
+        ");",
         [unitCode, year, period, studentId]
-     );
-
-     for (let i = 0;i < group_alloc_id.length; i++){
-        await promiseBasedQuery(
-            "DELETE FROM group_allocation " +
-            "WHERE group_alloc_id=?;",
-            [group_alloc_id[i].group_alloc_id]
-        )
-     }
-
-    // delete lab allocation
-    const stud_lab_alloc_id = await promiseBasedQuery(
-    "SELECT stud_lab_alloc_id FROM student_lab_allocation sa " +
-    "INNER JOIN unit_off_lab ul ON ul.unit_off_lab_id=sa.unit_off_lab_id " +
-    "INNER JOIN unit_offering u ON u.unit_off_id=ul.unit_off_id " +
-    "INNER JOIN student s ON s.stud_unique_id=sa.stud_unique_id " +
-    "WHERE " +
-        "u.unit_code=? " +
-        "AND u.unit_off_year=? " +
-        "AND u.unit_off_period=? " +
-        "AND s.student_id=?; ",
-        [unitCode, year, period, studentId]
-    );
-
-    for (let i = 0;i < stud_lab_alloc_id.length; i++){
-        await promiseBasedQuery(
-        "DELETE FROM student_lab_allocation " +
-        "WHERE stud_lab_alloc_id=?; ",
-            [stud_lab_alloc_id[i].stud_lab_alloc_id]
-        )
-    }
-
-    const stud_unique_id = await promiseBasedQuery(
-        "SELECT s.stud_unique_id " +
-        "FROM student s " +
-        "WHERE " +
-            "s.student_id =?; ",
-            [studentId]
     )
-    // delete from lab allocation
-    for (let i = 0;i < stud_unique_id.length; i++){
-        await promiseBasedQuery(
-            "DELETE FROM student_lab_allocation " +
-            "WHERE stud_unique_id = ?; ",
-            [stud_unique_id[i].stud_unique_id]
-        )
-    }
 
-    // delete from group allocation
-    for (let i = 0;i < stud_unique_id.length; i++){
-        await promiseBasedQuery(
-            "DELETE FROM group_allocation " +
-            "WHERE stud_unique_id = ?; ",
-            [stud_unique_id[i].stud_unique_id]
-        )
-    }
+    res.status(200).send();
 }
 
 // update a student's details

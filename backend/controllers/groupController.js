@@ -163,7 +163,6 @@ const deleteGroup = async (req, res) => {
 
 // move a student from one group to another
 const moveStudent = async (req, res) => {
-    /* REQUIRES OFFERING, STUDENT, OLD GROUP, NEW GROUP */
     const {
         unitCode,
         year,
@@ -171,8 +170,6 @@ const moveStudent = async (req, res) => {
         studentId
     } = req.params;
     const { newGroup } = req.body;
-
-    console.log(unitCode, year, period, studentId, newGroup);
 
     /* OBTAIN ALLOCATION AND ASSIGNMENT DATA REQUIRED FOR UPDATES */
     // get the id of the new group we are changing to as well as the id of the lab it is in
