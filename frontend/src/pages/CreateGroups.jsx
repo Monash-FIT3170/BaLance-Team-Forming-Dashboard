@@ -71,21 +71,6 @@ function CreateGroups() {
                 })
             }).catch((error) => { console.error('Error:', error); })
         }
-
-        /* Creating new groups */
-        /*
-        await fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                groupSize: groupSize,
-                variance: variance,
-                strategy: strategy
-            })
-        });
-        */
     }
 
     const navigateToOfferingDashboard = () => {

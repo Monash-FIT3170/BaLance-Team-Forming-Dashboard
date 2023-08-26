@@ -124,7 +124,7 @@ const deleteStudentEnrolment = async (req, res) => {
 
     await promiseBasedQuery( // delete personality test attempt for student
         "DELETE FROM personality_test_attempt " +
-        "WHERE test_attmept_id IN ( " +
+        "WHERE test_attempt_id IN ( " +
         "   SELECT subquery.test_attempt_id " +
         "   FROM ( " +
         "       SELECT pt.test_attempt_id " +

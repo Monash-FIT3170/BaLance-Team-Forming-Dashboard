@@ -209,6 +209,8 @@ const createGroupsEffort = async (unitCode, year, period, groupSize, variance) =
     });
   }
 
+  console.log(groupInsertData);
+
   await promiseBasedQuery(
     "INSERT IGNORE INTO lab_group (unit_off_lab_id, group_number) VALUES ?;",
     [groupInsertData]
@@ -389,6 +391,8 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
       groupInsertData.push([lab, numGroups]);
     });
   }
+
+  console.log(groupInsertData)
 
   await promiseBasedQuery(
     "INSERT IGNORE INTO lab_group (unit_off_lab_id, group_number) VALUES ?;",
