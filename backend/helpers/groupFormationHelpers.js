@@ -1,18 +1,17 @@
 /**
  * A module containing helper functions specifically used to implement
- * groupController.js controller functions
+ * groupController.js controller functions related to group formation
  *
  * */
 
 const { promiseBasedQuery, selectUnitOffKey } = require("./commonHelpers");
 
 const shuffle = (array) => {
-  /**
-   *     Fisher-Yates shuffle algorithm from
-   *     https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-   */
-  let currentIndex = array.length,
-    randomIndex;
+    /**
+     *     Fisher-Yates shuffle algorithm from
+     *     https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+     */
+    let currentIndex = array.length, randomIndex;
 
   // While there remain elements to shuffle.
   while (currentIndex != 0) {
@@ -27,24 +26,18 @@ const shuffle = (array) => {
     ];
   }
 
-  return array;
-};
+    return array;
+}
 
-const createGroupsRandom = async (
-  unitCode,
-  year,
-  period,
-  groupSize,
-  variance
-) => {
-  /**
-   * Given a unit offering, group size and acceptable group variance from a group size,
-   * forms groups within the units labs randomly
-   *
-   */
+const createGroupsRandom = async (unitCode, year, period, groupSize, variance) => {
+    /**
+     * Given a unit offering, group size and acceptable group variance from a group size,
+     * forms groups within the units labs randomly
+     *
+     */
 
-  /* GET ALL OF THE STUDENTS ASSOCIATED WITH THIS UNIT SORTED BY LAB */
-  const unitOffId = await selectUnitOffKey(unitCode, year, period);
+    /* GET ALL OF THE STUDENTS ASSOCIATED WITH THIS UNIT SORTED BY LAB */
+    const unitOffId = await selectUnitOffKey(unitCode, year, period);
 
   const students = await promiseBasedQuery(
     "SELECT stud.stud_unique_id, alloc.unit_off_lab_id " +
@@ -69,20 +62,12 @@ const createGroupsRandom = async (
     labStudents[student.unit_off_lab_id].push(student.stud_unique_id);
   });
 
-  /* RANDOMISE THE, STUDENTS WITHIN EACH LAB NUMBER */
-  /* THEN SPLIT THE RANDOMISED LIST INTO GROUPS OF n AS SPECIFIED IN REQ */
-  for (let lab in labStudents) {
-    labStudents[lab] = shuffle(labStudents[lab]);
-  }
-  for (let lab in labStudents) {
-    labStudents[lab] = splitGroupsRandom(
-      unitOffId,
-      lab,
-      labStudents[lab],
-      groupSize,
-      variance
-    );
-  }
+    /* RANDOMISE THE, STUDENTS WITHIN EACH LAB NUMBER */
+    /* THEN SPLIT THE RANDOMISED LIST INTO GROUPS OF n AS SPECIFIED IN REQ */
+    for(let lab in labStudents) { labStudents[lab] = shuffle(labStudents[lab]); }
+    for(let lab in labStudents) {
+        labStudents[lab] = splitGroupsRandom(unitOffId, lab, labStudents[lab], groupSize, variance);
+    }
 
   /* INSERT THE NEW GROUPS INTO THE DATABASE */
   // determine the number of groups to be inserted to database -> inserted as [unit_off_lab_id, group_number]
@@ -118,7 +103,6 @@ const createGroupsRandom = async (
   // for each group, pop a group from the lab key in object and form the allocation
   for (let i = 0; i < numGroups; i++) {
     const group = groupData.pop();
-    console.log(labStudents[group.unit_off_lab_id])
     const groupStudents = labStudents[group.unit_off_lab_id].pop();
     groupStudents.forEach((studentId) => {
       groupAllocInsertData.push([studentId, group.lab_group_id]);
@@ -132,13 +116,7 @@ const createGroupsRandom = async (
   );
 };
 
-const createGroupsEffort = async (
-  unitCode,
-  year,
-  period,
-  groupSize,
-  variance
-) => {
+const createGroupsEffort = async (unitCode, year, period, groupSize, variance) => {
   /**
    * Given a unit offering, group size and acceptable group variance from a group size,
    * forms groups within the units labs using student average assignment marks and
@@ -147,8 +125,6 @@ const createGroupsEffort = async (
    */
 
   /* GET ALL OF THE STUDENTS ASSOCIATED WITH THIS UNIT SORTED BY LAB */
-  const unitOffId = await selectUnitOffKey(unitCode, year, period);
-
   const students = await promiseBasedQuery(
     "SELECT stud.stud_unique_id, alloc.unit_off_lab_id, eff.assignment_avg, eff.time_commitment_hrs, eff.marks_per_hour " +
       "FROM student stud " +
@@ -162,11 +138,10 @@ const createGroupsEffort = async (
       "   AND unit.unit_off_year=? " +
       "   AND unit.unit_off_period=? " +
       "   AND test.test_type=? " +
-      "   AND test.unit_off_id=? " +
       "ORDER BY unit_off_lab_id;",
-    [unitCode, year, period, "effort", unitOffId]
+    [unitCode, year, period, "effort"]
   );
-
+  console.log(students)
   /* SPLIT BY LAB | labStudents = [ lab_id: [student_unique_ids], lab_id: [student_unique_ids] ] */
   const labStudents = {};
   students.forEach((student) => {
@@ -180,7 +155,7 @@ const createGroupsEffort = async (
     });
   });
 
-  /* Sort the students into groups within their labs */ 
+  /* Sort the students into groups within their labs */
   let groups = {};
   for (let lab in labStudents) {
     // each student is given a ranking value by (4*assignmentAvg/70 - hours/12) and sorted within their labs this way
@@ -195,11 +170,11 @@ const createGroupsEffort = async (
     const numberOfGroups = Math.floor(
       labStudents[lab].length / groupSize
     );
-    
+
     for (let i = 0; i < numberOfGroups; i++) {
       groups[lab].push([]);
     }
-    // students within each lab are distributing throughout the groups 
+    // students within each lab are distributing throughout the groups
     let groupCounter = 0;
     let isIncrementing = true;
     for (let i = 0; i < labStudents[lab].length; i++) {
@@ -231,6 +206,9 @@ const createGroupsEffort = async (
     });
   }
 
+  console.log(groups)
+  console.log(groupInsertData);
+
   await promiseBasedQuery(
     "INSERT IGNORE INTO lab_group (unit_off_lab_id, group_number) VALUES ?;",
     [groupInsertData]
@@ -251,13 +229,11 @@ const createGroupsEffort = async (
     [unitCode, year, period]
   );
   // for each group, pop a group from the lab key in object and form the allocation
-  console.log(numGroups)
   for (let i = 0; i < numGroups; i++) {
     const group = groupData.pop();
     let groupStudents = groups[group.unit_off_lab_id].pop();
     for (let i=0; i<groupStudents.length; i++) {
         let student = groupStudents[i];
-        console.log(student)
         groupAllocInsertData.push([student.id, group.lab_group_id]);
     }
   }
@@ -270,9 +246,7 @@ const createGroupsEffort = async (
 };
 
 const belbinSplit = (labStudents, groupSize, totalCount) => {
-  console.log(labStudents);
-
-  //set space to store groups
+  // set space to store groups
   let allocation = [];
 
   //determine number of groups
@@ -289,7 +263,7 @@ const belbinSplit = (labStudents, groupSize, totalCount) => {
 
   let currentGroup = 0;
 
-  //divde action members
+  // divide action members
   if (labStudents["action"].length != 0) {
     for (let r = 0; r < labStudents["action"].length; r++) {
       allocation[currentGroup].push(labStudents["action"][r]);
@@ -302,7 +276,7 @@ const belbinSplit = (labStudents, groupSize, totalCount) => {
     }
   }
 
-  //divde thinking members
+  // divide thinking members
   if (labStudents["thinking"].length != 0) {
     for (let t = 0; t < labStudents["thinking"].length; t++) {
       allocation[currentGroup].push(labStudents["thinking"][t]);
@@ -315,7 +289,7 @@ const belbinSplit = (labStudents, groupSize, totalCount) => {
     }
   }
 
-  //divde people members
+  // divide people members
   if (labStudents["people"].length != 0) {
     for (let z = 0; z < labStudents["people"].length; z++) {
       allocation[currentGroup].push(labStudents["people"][z]);
@@ -332,13 +306,7 @@ const belbinSplit = (labStudents, groupSize, totalCount) => {
   return allocation;
 };
 
-const createGroupsBelbin = async (
-  unitCode,
-  year,
-  period,
-  groupSize,
-  variance
-) => {
+const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) => {
   /**
    * Given a unit offering, group size and acceptable group variance from a group size,
    * forms groups within the units labs using student Belbin types
@@ -360,11 +328,11 @@ const createGroupsBelbin = async (
       "   AND unit.unit_off_year=? " +
       "   AND unit.unit_off_period=? " +
       "   AND test.test_type=? " +
-      "   AND test.unit_off_id=? " +
       "ORDER BY unit_off_lab_id;",
-    [unitCode, year, period, "belbin", unitOffId]
+    [unitCode, year, period, "belbin"]
   );
 
+  console.log(students)
   /* SPLIT BY LAB | labStudents = [ lab_id: [student_unique_ids], lab_id: [student_unique_ids] ] */
   const labStudents = {};
   students.forEach((student) => {
@@ -379,7 +347,7 @@ const createGroupsBelbin = async (
 
   //storage for group allocation within labs
   let laballocation = {};
-
+  console.log(labStudents)
   //Split labs into three groups based off belbin type
   for (var key in labStudents) {
     var currentLabstudents = labStudents[key];
@@ -421,6 +389,8 @@ const createGroupsBelbin = async (
       groupInsertData.push([lab, numGroups]);
     });
   }
+  console.log(laballocation)
+  console.log(groupInsertData)
 
   await promiseBasedQuery(
     "INSERT IGNORE INTO lab_group (unit_off_lab_id, group_number) VALUES ?;",
@@ -469,13 +439,7 @@ const groupFormationStrategies = {
   belbin: createGroupsBelbin,
 };
 
-const splitGroupsRandom = (
-  unitOffId,
-  labId,
-  studentsList,
-  groupSize,
-  variance
-) => {
+const splitGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) => {
   /**
    * Splits students into groups of groupSize +/- variance
    *
@@ -491,10 +455,6 @@ const splitGroupsRandom = (
   const numRemStud = studentsList.length % groupSize; // students who didn't end up in full groups i.e. remainder
   const lastGroup = groups[groups.length - 1];
 
-  // console.log(`size: ${groupSize}, ${typeof groupSize} variance: ${variance}, ${typeof variance}`)
-  // console.log("Full groups before adjustment")
-  // console.log(groups);
-
   // if we cannot form even groups from all students or the last group is not within variance limits
   if (numRemStud !== 0 && numRemStud < groupSize - variance) {
     // can the students not in a full group be shared between full groups?
@@ -503,8 +463,6 @@ const splitGroupsRandom = (
       // students not in a full group are distributed amongst the full groups until no more remain
       let lastGroupLen = lastGroup.length; // defined here to avoid re-evaluation of value in loop condition
       for (let i = 0; i < lastGroupLen; i++) {
-        // console.log("group that is to be distributed")
-        // console.log(groups[i])
         groups[i].push(lastGroup.pop());
       }
       groups.pop();

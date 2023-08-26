@@ -138,7 +138,6 @@ const insertStudentLabAllocations = async (requestBody, unitOffId) => {
 
             // get the primary key of the lab in question
             const labPrimaryKey = labNumberPrimaryKeyPairs[labNumber];
-            // console.log(labNumber, labPrimaryKey, labStudentKeys);
 
             // combine data into a form compatible with the database schema
             const insertData = labStudentKeys.map((studentKey) => {

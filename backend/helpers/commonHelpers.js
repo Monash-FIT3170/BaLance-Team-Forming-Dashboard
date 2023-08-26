@@ -20,7 +20,7 @@ const promiseBasedQuery = (query, values) => {
 const selectUnitOffKey = async (unitCode, year, period) => {
     /**
      * obtains the primary key for a unit offering
-     * result is used to form enrolment fata for that unit offering
+     * result is used to form enrolment data for that unit offering
      */
     try {
         const [{unit_off_id}] = await promiseBasedQuery(

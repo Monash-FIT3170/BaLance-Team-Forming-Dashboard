@@ -28,7 +28,7 @@ function StudentRowGroupDisplay({studentData, numberOfGroups}) {
 
   const handleDeleteStudentGroupAlloc = (event) => {
     console.log("delete student");
-    fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}/${student_id}/${last_name}`, {
+    fetch(`http://localhost:8080/api/students/groupAlloc/${unitCode}/${year}/${period}/${student_id}`, {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',

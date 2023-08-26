@@ -22,7 +22,7 @@ const {
 
 const multer = require('multer');
 
-const storage = multer.diskStorage({
+const storage = multer.diskStorage({ // fixme is this not in middleware/uploadMiddleware.js?
     destination(req, file, cb) {
       cb(null, './tmp/my-uploads')
     },
@@ -32,8 +32,6 @@ const storage = multer.diskStorage({
 })
 
 const upload = multer({ storage });
-
-// Api Structure /api/groups/{unitId}/{groupId}
 
 // get all groups for a specific unit
 router.get('/:unitCode/:year/:period', getAllGroups);
