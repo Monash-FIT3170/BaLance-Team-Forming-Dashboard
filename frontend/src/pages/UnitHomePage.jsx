@@ -82,6 +82,7 @@ function UnitPage() {
     fetch('http://localhost:8080/api/units/')
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         setUnits(data);
       })
       .catch((err) => {

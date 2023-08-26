@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import {
-  Table,
-  Thead,
-  Select,
-  Tr,
-  Th,
-  Tbody,
-  Button,
-  ButtonGroup,
-  HStack,
-  Spacer,
-  Heading,
-  Center,
-  useDisclosure,
-  Text,
-  VStack,
-  Box,
-  Container,
+    Table,
+    Thead,
+    Select,
+    Tr,
+    Th,
+    Tbody,
+    Button,
+    ButtonGroup,
+    HStack,
+    Spacer,
+    Heading,
+    Center,
+    useDisclosure,
+    Text,
+    VStack,
+    Box,
+    Container,
 } from '@chakra-ui/react';
 import StudentRowStudentDisplay from '../components/StudentRowStudentDisplay';
 import { Link, useNavigate } from 'react-router-dom';
@@ -25,40 +25,40 @@ import { ShuffleGroups } from '../components/ShuffleGroups';
 import { AddIcon, EditIcon } from '@chakra-ui/icons';
 
 function Students() {
-  const [students, setStudents] = useState([]);
-  const [numberOfGroups, setNumberOfGroups] = useState(0);
-  const cancelRef = React.useRef();
-  const navigate = useNavigate();
-  const {
-    isOpen,
-    onOpen,
-    onClose
-  } = useDisclosure();
+    const [students, setStudents] = useState([]);
+    const [numberOfGroups, setNumberOfGroups] = useState(0);
+    const cancelRef = React.useRef();
+    const navigate = useNavigate();
+    const {
+        isOpen,
+        onOpen,
+        onClose
+    } = useDisclosure();
 
-  const {
-    groupStrategy,
-    groupSize,
-    variance,
-    unitCode,
-    year,
-    period
-  } = useParams();
+    const {
+        groupStrategy,
+        groupSize,
+        variance,
+        unitCode,
+        year,
+        period
+    } = useParams();
 
-  const navigateToStudentUpload = () => {
-    navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
-  };
+    const navigateToStudentUpload = () => {
+        navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
+    };
 
-  const navigateToWorkEthicUpload = () =>{
-    navigate(`/infoImport/${unitCode}/${year}/${period}`);
-  };
+    const navigateToWorkEthicUpload = () => {
+        navigate(`/infoImport/${unitCode}/${year}/${period}`);
+    };
 
-  const navigateToBelbinUpload = () => {
-    navigate(`/belbinImport/${unitCode}/${year}/${period}`);
-  }
-  
-  const navigateToCreateGroups = () => {
-    navigate(`/createGroups/${unitCode}/${year}/${period}`);
-  }
+    const navigateToBelbinUpload = () => {
+        navigate(`/belbinImport/${unitCode}/${year}/${period}`);
+    }
+
+    const navigateToCreateGroups = () => {
+        navigate(`/createGroups/${unitCode}/${year}/${period}`);
+    }
 
   const navigateToUnitAnalytics = () => {
     navigate(`/unitAnalytics/${unitCode}/${year}/${period}`);

@@ -39,7 +39,7 @@ const GroupCard = ({groupData, numberOfGroups}) => {
     <Card border="1px" margin="20px">
       <CardHeader>
         <Heading>
-          Lab: {lab_number} Group: {group_number}
+          Lab: {lab_number}, Group: {group_number}
         </Heading>
       <Button
         me="12px"
