@@ -1,9 +1,12 @@
-import { Image, Container } from '@chakra-ui/react';
+import { Image, Container, Button, Box, Grid, GridItem, Stack, HStack } from '@chakra-ui/react';
 import logo from '../assets/logo_separated.png';
 import { useNavigate } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 
-export default function NavBar() {
+export default function NavBar({ authenticated }) {
   const navigate = useNavigate();
+
+  const { loginWithRedirect, logout } = useAuth0();
 
   const navigateToHomePage = () => {
     navigate('/');
@@ -25,10 +28,25 @@ export default function NavBar() {
       overflow="hidden"
       zIndex={999}
     >
-      <button onClick={navigateToHomePage}>
+      <HStack w="100%">
+        <Box width='40%'>
+
+
+        </Box>
+        <button onClick={navigateToHomePage} width="10%">
         {' '}
         <Image height="8vh" src={logo} alt="BaLance: Team Forming Dashboard" />
       </button>
+      <Box width='30%'>
+
+      </Box>
+      {!authenticated && (
+        <Button onClick={loginWithRedirect} height="8vh">Login</Button>
+      )}
+      {authenticated && (
+        <Button onClick={logout} height="8vh">Logout</Button>
+      )}
+      </HStack>
     </Container>
   );
 }

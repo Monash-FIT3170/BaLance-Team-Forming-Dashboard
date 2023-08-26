@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Box, ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { Box, ChakraProvider, Container, Heading, extendTheme} from '@chakra-ui/react';
 import { useAuth0 } from '@auth0/auth0-react';
 
 import ImportStudents from './pages/ImportStudents';
@@ -24,18 +24,17 @@ const theme = extendTheme({
 
 function App() {
 
-  const { loginWithRedirect, logout, user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
 
   return (
     <ChakraProvider theme={theme}>
-      {!isAuthenticated && (
-        <button onClick={loginWithRedirect}>Login</button>
-      )}
-      {isAuthenticated && (
       <BrowserRouter>
-        <NavBar />
+        <NavBar 
+          authenticated={isAuthenticated}
+        />
         <Box pt="12vh" />
         <div className="App">
+        {isAuthenticated && (
           <Routes>
             <Route path="/" element={<UnitHomePage />} />
             <Route path="/groups/:unitCode/:year/:period" element={<Groups />} />
@@ -47,10 +46,19 @@ function App() {
             <Route path="/belbinImport/:unitCode/:year/:period" element={<BelbinImporter />} />
             <Route path="/infoImport/:unitCode/:year/:period" element={<InfoImporter />} />
           </Routes>
+        )}
+        {!isAuthenticated && (
+          <Container centerContent>
+            <Box height='100px'>
+
+            </Box>
+          <Heading as='h3' size='xl'>
+            <button onClick={loginWithRedirect}><Heading as='h2' size='xl' variant='underline'>Login</Heading></button> to Create Groups!
+          </Heading>
+          </Container>
+        )}
         </div>
-        <button onClick={logout}>Logout</button>
       </BrowserRouter>
-      )}
     </ChakraProvider>
   );
 }
