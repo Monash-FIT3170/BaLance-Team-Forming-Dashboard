@@ -217,10 +217,10 @@ const deleteUnit = async function (req, res) {
         [unitCode, year, period]
     )
 
-    await promiseBasedQuery( // todo delete relevant personality test attempts
-        "DELETE FROM belbin_result " +
-        "WHERE belbin_result_id IN ( " +
-        "   SELECT subquery.belbin_result_id " +
+    await promiseBasedQuery( // delete relevant personality test attempts
+        "DELETE FROM personality_test_attempt " +
+        "WHERE test_attempt_id IN ( " +
+        "   SELECT subquery.test_attempt_id " +
         "   FROM ( " +
         "       SELECT pt.test_attempt_id " +
         "       FROM personality_test_attempt pt " +
