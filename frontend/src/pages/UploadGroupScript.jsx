@@ -183,6 +183,12 @@ const [variance, setVariance] = useState(initialVariance);
 					<Center>
 						<UploadPy pyFile={pyFile} handleUpload={handleUpload} />
 					</Center>
+          {scriptContent && (
+          <>
+            <h3>Script Preview:</h3>
+            <pre>{scriptContent}</pre>
+          </>
+          )}
 					{pyFile && (
 						<Button mt={4} colorScheme="green" leftIcon={<ArrowForwardIcon />} onClick={handleSubmit}>
 							Upload Script
