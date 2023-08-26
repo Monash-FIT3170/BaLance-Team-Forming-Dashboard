@@ -261,6 +261,8 @@ const addStudentBelbin = async (req, res) => {
     const {unitCode, year, period} = req.params
     const students = req.body;
 
+    console.log(students)
+
         // error handling for unexpected issues
 
         for(let i = 0; i < students.length; i++){
@@ -309,6 +311,8 @@ const addStudentBelbin = async (req, res) => {
 const addStudentEffort = async (req, res) => {
     const {unitCode, year, period} = req.params
     const students = req.body;
+
+    console.log(students)
 
     for(let i = 0; i < students.length; i++){
 

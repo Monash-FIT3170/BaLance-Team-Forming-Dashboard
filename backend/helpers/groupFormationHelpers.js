@@ -125,8 +125,6 @@ const createGroupsEffort = async (unitCode, year, period, groupSize, variance) =
    */
 
   /* GET ALL OF THE STUDENTS ASSOCIATED WITH THIS UNIT SORTED BY LAB */
-  const unitOffId = await selectUnitOffKey(unitCode, year, period);
-
   const students = await promiseBasedQuery(
     "SELECT stud.stud_unique_id, alloc.unit_off_lab_id, eff.assignment_avg, eff.time_commitment_hrs, eff.marks_per_hour " +
       "FROM student stud " +
@@ -140,11 +138,10 @@ const createGroupsEffort = async (unitCode, year, period, groupSize, variance) =
       "   AND unit.unit_off_year=? " +
       "   AND unit.unit_off_period=? " +
       "   AND test.test_type=? " +
-      "   AND test.unit_off_id=? " +
       "ORDER BY unit_off_lab_id;",
-    [unitCode, year, period, "effort", unitOffId]
+    [unitCode, year, period, "effort"]
   );
-
+  console.log(students)
   /* SPLIT BY LAB | labStudents = [ lab_id: [student_unique_ids], lab_id: [student_unique_ids] ] */
   const labStudents = {};
   students.forEach((student) => {
@@ -209,6 +206,7 @@ const createGroupsEffort = async (unitCode, year, period, groupSize, variance) =
     });
   }
 
+  console.log(groups)
   console.log(groupInsertData);
 
   await promiseBasedQuery(
@@ -330,11 +328,11 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
       "   AND unit.unit_off_year=? " +
       "   AND unit.unit_off_period=? " +
       "   AND test.test_type=? " +
-      "   AND test.unit_off_id=? " +
       "ORDER BY unit_off_lab_id;",
-    [unitCode, year, period, "belbin", unitOffId]
+    [unitCode, year, period, "belbin"]
   );
 
+  console.log(students)
   /* SPLIT BY LAB | labStudents = [ lab_id: [student_unique_ids], lab_id: [student_unique_ids] ] */
   const labStudents = {};
   students.forEach((student) => {
@@ -349,7 +347,7 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
 
   //storage for group allocation within labs
   let laballocation = {};
-
+  console.log(labStudents)
   //Split labs into three groups based off belbin type
   for (var key in labStudents) {
     var currentLabstudents = labStudents[key];
@@ -391,7 +389,7 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
       groupInsertData.push([lab, numGroups]);
     });
   }
-
+  console.log(laballocation)
   console.log(groupInsertData)
 
   await promiseBasedQuery(
