@@ -59,36 +59,43 @@ const [variance, setVariance] = useState(initialVariance);
 	};
 
 	const handleSubmit = async () => {
-		// Handle the file submission here, e.g., send it to the server
 		if (pyFile) {
-			const formData = new FormData();
-			formData.append('pythonFile', pyFile); // Changed to 'pythonFile' here
-
-			try {
-				const response = await fetch(
-					`http://localhost:8080/api/groups/${unitCode}/${year}/${period}/uploadScript`,
-					{
-						method: 'POST',
-						body: formData
-						// Note: fetch, by default, detects the form data and sets the correct content type
+			// Read the file content
+			const reader = new FileReader();
+			reader.readAsText(pyFile);
+			reader.onload = async (event) => {
+				const scriptContent = event.target.result;
+				console.log(scriptContent);
+	
+				try {
+					const response = await fetch(
+						`http://localhost:8080/api/groups/${unitCode}/${year}/${period}/uploadScript`,
+						{
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+							},
+							body: JSON.stringify({ scriptContent })
+						}
+					);
+	
+					if (response.ok) {
+						console.log('Script executed successfully.');
+						// Optionally navigate the user to another page or show a success message.
+					} else {
+						console.error('Error executing the script:', await response.text());
+						// Optionally show an error message to the user.
 					}
-				);
-
-				if (response.ok) {
-					console.log('File uploaded successfully.');
-					// Optionally navigate the user to another page or show a success message.
-				} else {
-					console.error('Error uploading the script:', await response.text());
+				} catch (error) {
+					console.error('Error executing the script:', error);
 					// Optionally show an error message to the user.
 				}
-			} catch (error) {
-				console.error('Error uploading the script:', error);
-				// Optionally show an error message to the user.
-			}
+			};
 		} else {
-			console.log('No file uploaded.');
+			console.log('No file selected.');
 		}
 	};
+	
 
 	const navigateToOfferingDashboard = () => {
 		navigate(`/createGroups/${unitCode}/${year}/${period}`);
