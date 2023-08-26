@@ -287,34 +287,39 @@ const getGroupAnalyticsEffort = async (unitCode, year, period, groupNumber) => {
         "INNER JOIN student s ON s.stud_unique_id = pa.stud_unique_id\n" +
         "INNER JOIN group_allocation ga ON ga.stud_unique_id = s.stud_unique_id\n" +
         "INNER JOIN lab_group g ON g.lab_group_id = ga.lab_group_id\n" +
-        "   WHERE u.unit_code='f'\n" +
-        "   AND u.unit_off_year=2\n" +
-        "   AND u.unit_off_period='S2'\n" +
-        "   AND g.group_number=1\n" +
+        "   WHERE u.unit_code=?\n" +
+        "   AND u.unit_off_year=?\n" +
+        "   AND u.unit_off_period=?\n" +
+        "   AND g.group_number=?\n" +
         "GROUP BY letter_grade;",
         [unitCode, year, period, groupNumber]
     )
 
+    console.log(gradeResults)
+
     const hourResults = await promiseBasedQuery(
-        "SELECT CASE " +
-        "       WHEN e.time_commitment_hrs <4 THEN '0-4' " +
-        "       WHEN e.time_commitment_hrs <8 THEN '4-8' " +
-        "       WHEN e.time_commitment_hrs <12 THEN '8-12' " +
-        "       WHEN e.time_commitment_hrs >=12 THEN '12+' " +
-        "   END AS hours, count(e.time_commitment_hrs) AS 'count' " +
-        "FROM unit_offering u " +
-        "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
-        "INNER JOIN effort_result e ON e.personality_test_attempt = pa.test_attempt_id " +
-        "INNER JOIN student s ON s.stud_unique_id = pa.stud_unique_id " +
-        "INNER JOIN group_allocation ga ON ga.stud_unique_id = s.stud_unique_id " +
-        "INNER JOIN lab_group g ON g.lab_group_id = ga.lab_group_id " +
-        "   WHERE u.unit_code=? " +
-        "   AND u.unit_off_year=? " +
-        "   AND u.unit_off_period=? " +
-        "   AND g.group_number=? " +
+        "SELECT CASE\n" +
+        "WHEN e.time_commitment_hrs <4 THEN '0-4'\n" +
+        "WHEN e.time_commitment_hrs <8 THEN '4-8'\n" +
+        "WHEN e.time_commitment_hrs <12 THEN '8-12'\n" +
+        "WHEN e.time_commitment_hrs >=12 THEN '12+'\n" +
+        "END AS hours, count(e.time_commitment_hrs) AS 'count'\n" +
+        "FROM unit_offering u\n" +
+        "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id\n" +
+        "INNER JOIN effort_result e ON e.personality_test_attempt = pa.test_attempt_id\n" +
+        "INNER JOIN student s ON s.stud_unique_id = pa.stud_unique_id\n" +
+        "INNER JOIN group_allocation ga ON ga.stud_unique_id = s.stud_unique_id\n" +
+        "INNER JOIN lab_group g ON g.lab_group_id = ga.lab_group_id\n" +
+        "   WHERE u.unit_code=?\n" +
+        "   AND u.unit_off_year=?\n" +
+        "   AND u.unit_off_period=?\n" +
+        "   AND g.group_number=?\n" +
         "GROUP BY hours;",
         [unitCode, year, period, groupNumber]
     )
+
+    console.log(unitCode, year, period, groupNumber)
+    console.log(hourResults)
 
     const effortResults = await promiseBasedQuery(
         "SELECT e.marks_per_hour AS effort, count(e.time_commitment_hrs) AS 'count' " +

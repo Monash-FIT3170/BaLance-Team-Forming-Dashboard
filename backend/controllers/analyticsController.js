@@ -16,7 +16,6 @@ const getUnitAnalytics = async (req,res) => {
         period
     } = req.params;
 
-    console.log("getting unit analytics")
     const unitAnalyticData = [];
 
     // loop through the strategies and append their results to the data array
@@ -25,7 +24,6 @@ const getUnitAnalytics = async (req,res) => {
         unitAnalyticData.push(analytics);
     }
 
-    console.log(JSON.stringify(unitAnalyticData))
     res.status(200).json(unitAnalyticData);
 }
 
@@ -37,7 +35,7 @@ const getGroupAnalytics = async (req,res) => {
         groupNumber
     } = req.params;
 
-    console.log("getting unit analytics")
+    console.log(unitCode, year, period, groupNumber)
     const groupAnalyticData = [];
 
     // loop through the strategies and append their results to the data array
@@ -46,7 +44,6 @@ const getGroupAnalytics = async (req,res) => {
         groupAnalyticData.push(analytics);
     }
 
-    console.log(JSON.stringify(groupAnalyticData))
     res.status(200).json(groupAnalyticData);
 }
 

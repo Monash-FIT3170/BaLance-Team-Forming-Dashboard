@@ -16,13 +16,16 @@ ChartJS.register(ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarCon
 
 const UnitAnalytics = () => {
     const [analytics, setAnalytics] = useState([]);
-
     const { unitCode, year, period, groupNumber } = useParams();
 
     useEffect(() => {
+        console.log(groupNumber)
         fetch(`http://localhost:8080/api/analytics/${unitCode}/${year}/${period}/${groupNumber}`)
             .then((res) => res.json())
-            .then((data) => setAnalytics(data))
+            .then((data) => {
+                console.log(data)
+                setAnalytics(data)
+            })
             .catch((err) => {
                 console.error('Error fetching analytics:', err);
             });
