@@ -80,6 +80,7 @@ function Students() {
       .catch((err) => console.error(err));
 
     // fetch groups from the backend
+    /*
     fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`,
     {
       method: 'get',
@@ -92,9 +93,11 @@ function Students() {
         setNumberOfGroups(res.length);
       })
       .catch((err) => console.error(err));
-
+      */
     });
+    
   }, [getAccessTokenSilently]);
+    
 
   const handleShuffleGroups = () => {
     // Close confirmation dialog
@@ -201,7 +204,7 @@ function Students() {
           <Spacer />
           <ButtonGroup colorScheme="#282c34" variant="outline" size="lg" isAttached>
             <Link to={`/groups/${unitCode}/${year}/${period}`}>
-              <Button isDisabled={numberOfGroups===0}>  Groups  </Button>
+              <Button isDisabled={students.length===0}>  Groups  </Button>
             </Link>
             <Button isDisabled={true}>
               Students

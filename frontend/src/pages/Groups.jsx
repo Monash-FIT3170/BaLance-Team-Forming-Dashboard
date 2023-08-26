@@ -73,7 +73,7 @@ function Groups() {
       )
       .catch((err) => console.error(err));
       });
-    }, [getAccessTokenSilently]);
+    }, [getAccessTokenSilently, period, unitCode, year]);
 
   const handleShuffleGroups = () => {
     // Close confirmation dialog
