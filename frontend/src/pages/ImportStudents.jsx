@@ -6,6 +6,7 @@ import { ConfirmClearSelection } from '../components/ConfirmClearSelection';
 import { UploadCSV } from '../components/UploadCSV';
 import { FormField } from '../components/FormField';
 import { CsvInfoButton } from '../components/CsvInfoButton';
+import { useAuth0 } from '@auth0/auth0-react';
 
 import {
   Box,
@@ -48,6 +49,9 @@ import {
 import { AddIcon, QuestionOutlineIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
 
 function ImportPage() {
+
+  const { getAccessTokenSilently } = useAuth0();
+
   class Student {
     constructor(
       studentId,
@@ -133,12 +137,16 @@ function ImportPage() {
 
   //create unit for new students
   const handleAddProfilesClick = async () => {
+
+    getAccessTokenSilently().then((token) => {
     // Make API call
     fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: new Headers({
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }),
       body: JSON.stringify(profiles),
     })
       .then((response) => {
@@ -153,6 +161,7 @@ function ImportPage() {
 
     // After successful creation
     setShowAlert(true);
+    });
   };
 
   // Logic for table sorting by column

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 import { useParams } from 'react-router';
 import {
   Table,
@@ -25,6 +26,7 @@ import { ShuffleGroups } from '../components/ShuffleGroups';
 import { AddIcon, EditIcon } from '@chakra-ui/icons';
 
 function Students() {
+  const { getAccessTokenSilently } = useAuth0();
   const [students, setStudents] = useState([]);
   const [numberOfGroups, setNumberOfGroups] = useState(0);
   const cancelRef = React.useRef();
@@ -61,8 +63,16 @@ function Students() {
   }
 
   useEffect(() => {
+    getAccessTokenSilently().then((token) => {
+
     // fetch students from the backend
-    fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}`)
+    fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}`,
+    {
+      method: 'get',
+      headers: new Headers({
+        'Authorization': `Bearer ${token}`
+      })
+    })
       .then((res) => res.json())
       .then((res) => {
         setStudents(res);
@@ -70,23 +80,35 @@ function Students() {
       .catch((err) => console.error(err));
 
     // fetch groups from the backend
-    fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`)
+    fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`,
+    {
+      method: 'get',
+      headers: new Headers({
+        'Authorization': `Bearer ${token}`
+      })
+    })
       .then((res) => res.json())
       .then((res) => {
         setNumberOfGroups(res.length);
       })
       .catch((err) => console.error(err));
 
-  }, []);
+    });
+  }, [getAccessTokenSilently]);
 
   const handleShuffleGroups = () => {
     // Close confirmation dialog
     onClose();
 
+    getAccessTokenSilently().then((token) => {
     // API call to create groups from scratch - will automatically delete existing groups first
     fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: new Headers({
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }),
       body: JSON.stringify({
         groupSize: groupSize,
         variance: variance,
@@ -95,6 +117,7 @@ function Students() {
     })
       .catch((error) => { console.error('Error:', error); })
       .finally(() => { window.location.reload(); });
+    });
   }
 
   let studentsDisplay = students.length === 0 ?

@@ -2,6 +2,7 @@ import { Tr, Td, HStack, Spacer, Button } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { useParams } from 'react-router';
 import ChangeStudentGroupModal from './ChangeStudentGroupModal';
+import { useAuth0 } from '@auth0/auth0-react';
 //import {unit_code, unit_off_year, unit_off_period} from './GroupCard.jsx';
 
 function StudentRowGroupDisplay({studentData, numberOfGroups}) {
@@ -20,17 +21,21 @@ function StudentRowGroupDisplay({studentData, numberOfGroups}) {
         period
     } = useParams();
 
-  console.log(studentData);
+
+    const { getAccessTokenSilently } = useAuth0();
+
 
   const handleDeleteStudent = (event) => {
-    console.log("delete student")
+    getAccessTokenSilently().then((token) => {
     fetch(`http://localhost:8080/api/units/${unitCode}/${year}/${period}/${student_id}`, {
       method: 'DELETE',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
+      headers: new Headers({
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }),
     });
+  });
   }
 
     return (

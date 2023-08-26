@@ -6,6 +6,7 @@ import { ConfirmClearSelection } from '../components/ConfirmClearSelection';
 import { UploadCSV } from '../components/UploadCSV';
 import { FormField } from '../components/FormField';
 import { CsvInfoButton } from '../components/CsvInfoButton';
+import { useAuth0 } from '@auth0/auth0-react';
 
 import {
   Box,
@@ -48,6 +49,7 @@ import {
 import { AddIcon, QuestionOutlineIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
 
 function InfoImporter() {
+  const { getAccessTokenSilently } = useAuth0();
   class Student {
     constructor(
       studentId,
@@ -130,11 +132,14 @@ function InfoImporter() {
   //create unit for new students
   const handleAddProfilesClick = async () => {
     // Make API call
+    getAccessTokenSilently().then((token) => {
     fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: new Headers({
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }),
       body: JSON.stringify(profiles),
     })
       .then((response) => {
@@ -146,6 +151,7 @@ function InfoImporter() {
         console.error('Error sending data to the REST API:', error);
         // Handle the error from the API if needed
       });
+    });
 
     // After successful creation
     setShowAlert(true);

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
+import { useAuth0 } from '@auth0/auth0-react';
 
 import {
     Table,
@@ -33,6 +34,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 
 function CreateGroups() {
+    const { getAccessTokenSilently } = useAuth0();
     const [strategy, setStrategy] = useState("random");
     const [groupSize, setGroupSize] = useState(2);
     const [variance, setVariance] = useState(1);
@@ -52,6 +54,8 @@ function CreateGroups() {
     const handleSubmitGroupOptions = async (event) => {
         event.preventDefault();
 
+        const token = await getAccessTokenSilently();
+
         if (strategy === "custom") {
             navigateUploadScript();
             navigate(
@@ -63,7 +67,11 @@ function CreateGroups() {
             /* Call to shuffle groups */
             fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: new Headers({
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                  }),
                 body: JSON.stringify({
                     groupSize: groupSize,
                     variance: variance,
@@ -76,9 +84,11 @@ function CreateGroups() {
         /*
         await fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: new Headers({
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }),
             body: JSON.stringify({
                 groupSize: groupSize,
                 variance: variance,

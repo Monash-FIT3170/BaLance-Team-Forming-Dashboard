@@ -1,5 +1,6 @@
 import GroupCard from '../components/GroupCard';
 import { useParams } from 'react-router';
+import { useAuth0 } from '@auth0/auth0-react';
 import React, { useState, useEffect } from 'react';
 import {
   Button,
@@ -24,6 +25,7 @@ function Groups() {
   const cancelRef = React.useRef();
   const navigate = useNavigate();
   const [groups, setGroups] = useState([]);
+  const { getAccessTokenSilently } = useAuth0();
 
   // Confirmation popup for shuffling groups
   const {
@@ -55,7 +57,14 @@ function Groups() {
   }
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`)
+    getAccessTokenSilently().then((token) => {
+    fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`,
+    {
+      method: 'get',
+      headers: new Headers({
+        'Authorization': `Bearer ${token}`
+      })
+    })
       .then((res) =>
         res.json().then(function (res) {
           console.log(res)
@@ -63,25 +72,30 @@ function Groups() {
         })
       )
       .catch((err) => console.error(err));
-  }, []);
+      });
+    }, [getAccessTokenSilently]);
 
   const handleShuffleGroups = () => {
     // Close confirmation dialog
     onClose();
 
+    getAccessTokenSilently().then((token) => {
     // API call to create groups from scratch - will automatically delete existing groups first
     // then call createUnitGroups under the hood
     fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
       method: 'POST',
-      headers: {
+      headers: new Headers({
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
         'Content-Type': 'application/json'
-      },
+      }),
       body: JSON.stringify({
         groupSize: groupSize,
         variance: variance,
         strategy: groupStrategy,
       })
     })
+  })
       .then((res) => res.json())
       .catch((error) => {
         console.error('Error:', error);
