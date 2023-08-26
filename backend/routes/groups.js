@@ -50,7 +50,7 @@ router.post('/shuffle/:unitCode/:year/:period', shuffleUnitGroups);
 // add a new group to a unit
 router.post('/:unitCode/:year/:period/new', addGroup);
 
-router.post('/:unitCode/:year/:period/uploadScript', upload.single('pythonFile'), uploadCustomScript, )
+router.post('/:unitCode/:year/:period/uploadScript', uploadCustomScript );
 
 // delete a specific group from a unit
 router.delete('/:unitCode/:year/:period/:groupNumber', deleteGroup);
