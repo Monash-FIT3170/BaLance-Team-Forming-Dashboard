@@ -179,7 +179,16 @@ const [variance, setVariance] = useState(initialVariance);
 							<AlertIcon />
 							<Text>
 								Please upload a Python script (.py) that will be used for custom group formation. Make
-								sure the script adheres to the requirements.
+								sure the script adheres to the following requirements:
+								<Center>
+									<ul>
+										<li>The script should be written in Python.</li>
+										<li>The main function or processing logic should be encapsulated under if __name__ == "__main__":.</li>
+										<li>The script should accept input in JSON format as a command-line argument. (This will contain the student data.)</li>
+										<li>The script should output results in JSON format to stdout.</li>
+										<li>Avoid using external libraries.</li>
+									</ul>
+								</Center>
 							</Text>
 						</Alert>
 					</Center>
