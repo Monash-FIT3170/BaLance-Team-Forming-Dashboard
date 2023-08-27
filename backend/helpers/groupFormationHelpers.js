@@ -208,6 +208,10 @@ const createGroupsEffort = async (unitCode, year, period, groupSize, variance) =
 
   console.log(groups)
   console.log(groupInsertData);
+  if (groupInsertData.length === 0) {
+    console.log("You shall not pass");
+    throw new Error('You have not inserted effort results for all students')
+  }
 
   await promiseBasedQuery(
     "INSERT IGNORE INTO lab_group (unit_off_lab_id, group_number) VALUES ?;",
@@ -391,7 +395,10 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
   }
   console.log(laballocation)
   console.log(groupInsertData)
-
+  if (groupInsertData.length === 0) {
+    console.log("You shall not pass");
+    throw new Error('You have not inserted belbin results for all students')
+  }
   await promiseBasedQuery(
     "INSERT IGNORE INTO lab_group (unit_off_lab_id, group_number) VALUES ?;",
     [groupInsertData]

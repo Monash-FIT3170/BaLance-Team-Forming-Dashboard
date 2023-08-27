@@ -294,7 +294,7 @@ const addStudentBelbin = async (req, res) => {
 
                 const updateQuery =
                     "insert into belbin_result (personality_test_attempt, belbin_type) " +
-                    "values ((select test_attempt_id from personality_test_attempt where stud_unique_id like (select stud_unique_id from student where student_id like ? and test_type = 'belbin') and unit_off_id like (select unit_off_id from unit_offering where unit_code like ? and unit_off_year like ? and lower(unit_off_period) like ?)), ?)" ;
+                    "values ((select test_attempt_id from personality_test_attempt where test_type like 'belbin' and stud_unique_id like (select stud_unique_id from student where student_id like ? and test_type = 'belbin') and unit_off_id like (select unit_off_id from unit_offering where unit_code like ? and unit_off_year like ? and lower(unit_off_period) like ?)), ?)" ;
                 // updated values for the student
         
                 await promiseBasedQuery(updateQuery, [student.studentId, unitCode, year, period, student.belbinType]);
@@ -343,7 +343,7 @@ const addStudentEffort = async (req, res) => {
 
             const updateQuery =
                 "insert into effort_result (personality_test_attempt, time_commitment_hrs, assignment_avg, marks_per_hour) " +
-                "values ((select test_attempt_id from personality_test_attempt where stud_unique_id like (select stud_unique_id from student where student_id like ? ) and unit_off_id like (select unit_off_id from unit_offering where unit_code like ? and unit_off_year like ? and lower(unit_off_period) like ?)), ?, ?, ?)" ;
+                "values ((select test_attempt_id from personality_test_attempt where test_type like 'effort' and stud_unique_id like (select stud_unique_id from student where student_id like ? ) and unit_off_id like (select unit_off_id from unit_offering where unit_code like ? and unit_off_year like ? and lower(unit_off_period) like ?)), ?, ?, ?)" ;
             // updated values for the student
     
             await promiseBasedQuery(updateQuery, [student.studentId, unitCode, year, period, student.hours, student.averageMark, student.marksPerHour]);

@@ -52,6 +52,10 @@ function Groups() {
         navigate(`/belbinImport/${unitCode}/${year}/${period}`);
     };
 
+    const navigateToWorkEthicUpload = () => {
+        navigate(`/infoImport/${unitCode}/${year}/${period}`);
+    };
+
     const navigateToCreateGroups = () => {
         navigate(`/createGroups/${unitCode}/${year}/${period}`);
     }
@@ -190,7 +194,7 @@ function Groups() {
                     </Button>
                     <Button
                         width="100%"
-                        onClick={navigateToStudentUploadInfo}
+                        onClick={navigateToWorkEthicUpload}
                         colorScheme="gray"
                         margin-left="20">
                         <HStack>

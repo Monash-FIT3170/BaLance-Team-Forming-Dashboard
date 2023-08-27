@@ -41,7 +41,7 @@ const GroupCard = ({groupData, numberOfGroups}) => {
         <Heading>
           Lab: {lab_number}, Group: {group_number}
         </Heading>
-      <Button
+      {/* {<Button
         me="12px"
         align="right"
         justify="right"
@@ -50,7 +50,7 @@ const GroupCard = ({groupData, numberOfGroups}) => {
         onClick={navigateToGroupAnalytics}
         colorScheme="green">
         <HStack><p>Group Analytics</p></HStack>
-      </Button>
+      </Button>} */}
         <Spacer />
       </CardHeader>
 
