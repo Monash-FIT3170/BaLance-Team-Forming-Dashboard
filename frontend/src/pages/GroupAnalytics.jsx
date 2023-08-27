@@ -8,15 +8,21 @@ import {
     Heading,
     Text,
     Center,
+    Button,
+    HStack,
+    Spacer,
 } from '@chakra-ui/react';
 import { Doughnut, Bar } from 'react-chartjs-2';
+import { Link, useNavigate } from 'react-router-dom';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarController, BarElement } from 'chart.js';
+import { ArrowBackIcon } from '@chakra-ui/icons';
 
 ChartJS.register(ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarController, BarElement);
 
 const UnitAnalytics = () => {
     const [analytics, setAnalytics] = useState([]);
     const { unitCode, year, period, groupNumber } = useParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
         console.log(groupNumber)
@@ -44,8 +50,27 @@ const UnitAnalytics = () => {
         return colors;
     };
 
+    const navigateToOfferingDashboard = () => {
+        navigate(`/students/${unitCode}/${year}/${period}`);
+    };
+
     return (
         <div>
+            <Box as="header" p="4" textAlign="center">
+                <Text fontSize="2xl" fontWeight="bold">
+                    {`Configure Groups for: ${unitCode} - ${period}, ${year}`}
+                </Text>
+            </Box>
+
+            <Center>
+                <Button onClick={navigateToOfferingDashboard}>
+                    <HStack>
+                        <ArrowBackIcon />
+                        <Spacer />
+                        <Text>Return to offering dashboard</Text>
+                    </HStack>
+                </Button>
+            </Center>
             {analytics.length === 0 ? (
                 <Center>
                     <Heading>No analytics data available.</Heading>

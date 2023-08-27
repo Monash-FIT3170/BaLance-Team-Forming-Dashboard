@@ -8,16 +8,28 @@ import {
     Heading,
     Text,
     Center,
+    Button,
+    HStack,
+    Spacer,
 } from '@chakra-ui/react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarController, BarElement } from 'chart.js';
+import { ArrowBackIcon } from '@chakra-ui/icons';
 
 ChartJS.register(ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarController, BarElement);
 
 const UnitAnalytics = () => {
+
+    const navigate = useNavigate();
+
     const [analytics, setAnalytics] = useState([]);
 
     const { unitCode, year, period } = useParams();
+
+    const navigateToOfferingDashboard = () => {
+        navigate(`/students/${unitCode}/${year}/${period}`);
+    };
 
     useEffect(() => {
         fetch(`http://localhost:8080/api/analytics/${unitCode}/${year}/${period}`)
@@ -27,6 +39,8 @@ const UnitAnalytics = () => {
                 console.error('Error fetching analytics:', err);
             });
     }, []);
+
+    console.log(analytics)
 
     const generatePastelColors = (count) => {
         const colors = [];
@@ -43,6 +57,21 @@ const UnitAnalytics = () => {
 
     return (
         <div>
+            <Box as="header" p="4" textAlign="center">
+                <Text fontSize="2xl" fontWeight="bold">
+                    {`Offering Analytics for: ${unitCode} - ${period}, ${year}`}
+                </Text>
+            </Box>
+
+            <Center>
+                <Button onClick={navigateToOfferingDashboard}>
+                    <HStack>
+                        <ArrowBackIcon />
+                        <Spacer />
+                        <Text>Return to offering dashboard</Text>
+                    </HStack>
+                </Button>
+            </Center>
             {analytics.length === 0 ? (
                 <Center>
                     <Heading>No analytics data available.</Heading>
