@@ -147,7 +147,7 @@ function Groups() {
     return (
         <div>
             <Heading alignContent={'center'}>
-                <Center margin="10">{unitCode}</Center>
+                <Center margin="10">{`${unitCode} - ${period}, ${year}`}</Center>
             </Heading>
 
             <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>

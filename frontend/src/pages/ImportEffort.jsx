@@ -333,7 +333,7 @@ function InfoImporter() {
     <>
       <Box as="header" p="4" textAlign="center">
         <Text fontSize="2xl" fontWeight="bold">
-          Add Student Work Ethic Information to: {`${unitCode} - ${period} ${year}, **CAMPUS**`}
+          Add Student Work Ethic Information to: {`${unitCode} - ${period}, ${year}`}
         </Text>
       </Box>
 

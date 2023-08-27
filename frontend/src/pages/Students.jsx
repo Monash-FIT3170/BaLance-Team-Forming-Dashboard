@@ -133,7 +133,7 @@ function Students() {
   return (
     <div>
       <Heading alignContent={'center'}>
-        <Center margin="10">{unitCode}</Center>
+      <Center margin="10">{`${unitCode} - ${period}, ${year}`}</Center>
       </Heading>
       <Button
         me="12px"

@@ -333,7 +333,7 @@ function ImportPage() {
     <>
       <Box as="header" p="4" textAlign="center">
         <Text fontSize="2xl" fontWeight="bold">
-          Add Student Profiles to: {`${unitCode} - ${period} ${year}, **CAMPUS**`}
+          Add Student Profiles to: {`${unitCode} - ${period}, ${year}`}
         </Text>
       </Box>
 

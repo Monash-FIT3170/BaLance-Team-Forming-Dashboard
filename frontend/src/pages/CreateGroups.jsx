@@ -86,7 +86,7 @@ function CreateGroups() {
         <>
             <Box as="header" p="4" textAlign="center">
                 <Text fontSize="2xl" fontWeight="bold">
-                    {`${unitCode} - ${period} ${year}, **CAMPUS**`}
+                    {`Configure Groups for: ${unitCode} - ${period}, ${year}`}
                 </Text>
             </Box>
 
