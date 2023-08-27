@@ -331,7 +331,7 @@ function ImportPage() {
     };
 
     const navigateToOfferingDashboard = () => {
-        navigate(`/groups/${unitCode}/${year}/${period}`);
+        navigate(`/students/${unitCode}/${year}/${period}`);
     };
 
     return (
