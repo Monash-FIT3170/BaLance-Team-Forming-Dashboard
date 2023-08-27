@@ -217,16 +217,6 @@ function Students() {
                                 <Text>Create/Reconfigure Groups</Text>
                             </HStack>
                         </Button>
-                        <Center><Text fontWeight={"semibold"}>Show Students from Class:</Text></Center>
-                        <Select
-                            placeholder={"All"}
-                            value={`unitSemesterOffering`}
-                            onChange={(event) => `setUnitSemesterOffering(event.target.value)`}
-                        >
-                            {`<option value="S1">S1</option>
-                      <option value="S2">S2</option>
-                      <option value="FY">FY</option>`}
-                        </Select>
                     </VStack>
                 </HStack>
             </HStack>
