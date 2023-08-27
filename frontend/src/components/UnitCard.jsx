@@ -121,7 +121,6 @@ const UnitCard = (unit) => {
           <ModalBody>
             <VStack>
               <p>{`${unit_off_year}, Semester ${unit_off_period}`}</p>
-              <p>{`${enrolment_count} students enrolled`}</p>
             </VStack>
           </ModalBody>
 

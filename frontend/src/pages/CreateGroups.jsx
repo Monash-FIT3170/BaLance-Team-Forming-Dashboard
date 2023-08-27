@@ -49,6 +49,18 @@ function CreateGroups() {
         "variance": variance
     }
 
+    const navigateToOfferingDashboardGroups = () => {
+        navigate(`/groups/${unitCode}/${year}/${period}`);
+    };
+
+    const navigateToOfferingDashboardStudents = () => {
+        navigate(`/students/${unitCode}/${year}/${period}`);
+    };
+
+    const navigateUploadScript = () => {
+        navigate(`/uploadGroupScript/${unitCode}/${year}/${period}`);
+    };
+    
     const handleSubmitGroupOptions = async (event) => {
         event.preventDefault();
 
@@ -58,7 +70,7 @@ function CreateGroups() {
                 `/uploadGroupScript/${unitCode}/${year}/${period}`,
                 {state: { groupDetails }});
         } else { 
-            navigateToOfferingDashboard();
+            navigateToOfferingDashboardGroups();
 
             /* Call to shuffle groups */
             fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
@@ -71,26 +83,19 @@ function CreateGroups() {
                 })
             }).catch((error) => { console.error('Error:', error); })
         }
+        window.location.reload();
     }
-
-    const navigateToOfferingDashboard = () => {
-        navigate(`/groups/${unitCode}/${year}/${period}`);
-    };
-
-    const navigateUploadScript = () => {
-        navigate(`/uploadGroupScript/${unitCode}/${year}/${period}`);
-    };
 
     return (
         <>
             <Box as="header" p="4" textAlign="center">
                 <Text fontSize="2xl" fontWeight="bold">
-                    {`${unitCode} - ${period} ${year}, **CAMPUS**`}
+                    {`Configure Groups for: ${unitCode} - ${period}, ${year}`}
                 </Text>
             </Box>
 
             <Center>
-                <Button onClick={navigateToOfferingDashboard}>
+                <Button onClick={navigateToOfferingDashboardStudents}>
                     <HStack>
                         <ArrowBackIcon />
                         <Spacer />

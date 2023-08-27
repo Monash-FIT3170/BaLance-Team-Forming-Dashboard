@@ -57,8 +57,12 @@ function Groups() {
     }
 
     const navigateToStudentUploadInfo = () => {
-        navigate(`/infoImport/${unitCode}/${year}/${period}`);
+        navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
     }
+
+    const navigateToUnitAnalytics = () => {
+        navigate(`/unitAnalytics/${unitCode}/${year}/${period}`);
+      }
 
     useEffect(() => {
         fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`)
@@ -80,14 +84,14 @@ function Groups() {
         <Container className="groups" maxW="80vw">
             {groups.map((group) => {
                 const cardKey = `${group.lab_number}_${group.group_number}`;
-                console.log(typeof(filteredClass), typeof(group.lab_number))
+                console.log(typeof (filteredClass), typeof (group.lab_number))
                 if (filteredClass == "All" | filteredClass == group.lab_number) {
                     return (<GroupCard groupData={group} numberOfGroups={groups.length} key={cardKey} />);
                 }
             })}
         </Container>
 
-    const classFilterOptions = [{value: "All", label: "All labs"}]
+    const classFilterOptions = [{ value: "All", label: "All labs" }]
     const foundClasses = []
     for (const group of groups) {
         if (foundClasses.indexOf(group.lab_number) === -1) {
@@ -147,9 +151,19 @@ function Groups() {
     return (
         <div>
             <Heading alignContent={'center'}>
-                <Center margin="10">{unitCode}</Center>
+                <Center margin="10">{`${unitCode} - ${period}, ${year}`}</Center>
             </Heading>
 
+            <Button
+                me="12px"
+                align="right"
+                justify="right"
+                borderRadius="12px"
+                style={{ position: 'absolute', top: 125, right: 10 }}
+                onClick={navigateToUnitAnalytics}
+                colorScheme="green">
+                <HStack><p>View Unit Analytics</p></HStack>
+            </Button>
             <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>
                 <VStack>
                     <Button
@@ -235,7 +249,7 @@ function Groups() {
             </HStack>
             <Center>
                 <VStack>
-                    {groups.length > 0 && (<Button>Export group data to .csv</Button>)}
+                    {groups.length > 0 && (<Button onClick={handleExportToCSV}>Export group data to .csv</Button>)}
                     {groupsDisplay}
                 </VStack>
 
