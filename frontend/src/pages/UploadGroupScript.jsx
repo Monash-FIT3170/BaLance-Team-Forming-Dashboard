@@ -98,13 +98,13 @@ const [variance, setVariance] = useState(initialVariance);
 	};
 	
 
-	const navigateToOfferingDashboard = () => {
+	const navigateToCreateGroupsDashboard = () => {
 		navigate(`/createGroups/${unitCode}/${year}/${period}`);
 	};
 
 	return (
 		<Box padding="4">
-			<Button onClick={navigateToOfferingDashboard}>
+			<Button onClick={navigateToCreateGroupsDashboard}>
 				<ArrowBackIcon />
 				Return to Create Groups Page
 			</Button>
