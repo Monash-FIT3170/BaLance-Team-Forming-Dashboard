@@ -235,7 +235,7 @@ function Groups() {
             </HStack>
             <Center>
                 <VStack>
-                    {groups.length > 0 && (<Button>Export group data to .csv</Button>)}
+                    {groups.length > 0 && (<Button onClick={handleExportToCSV}>Export group data to .csv</Button>)}
                     {groupsDisplay}
                 </VStack>
 
