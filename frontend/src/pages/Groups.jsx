@@ -57,7 +57,7 @@ function Groups() {
     }
 
     const navigateToStudentUploadInfo = () => {
-        navigate(`/infoImport/${unitCode}/${year}/${period}`);
+        navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
     }
 
     const navigateToUnitAnalytics = () => {
