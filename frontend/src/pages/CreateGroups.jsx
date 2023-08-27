@@ -71,6 +71,7 @@ function CreateGroups() {
                 })
             }).catch((error) => { console.error('Error:', error); })
         }
+        window.location.reload();
     }
 
     const navigateToOfferingDashboard = () => {
