@@ -54,7 +54,7 @@ const uploadCustomScript = async (req, res) => {
 
 			pythonProcess.stderr.on('error', (data) => {
 				console.error(data.toString());
-				reject(new Error('An error occurred while processing the script.'));
+				reject(new Error('An error occurred while processing the script.' + data.toString()));
 			});
 		});
 
