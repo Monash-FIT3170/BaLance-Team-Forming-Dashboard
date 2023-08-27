@@ -82,6 +82,7 @@ const [variance, setVariance] = useState(initialVariance);
 					if (response.ok) {
 						console.log('Script executed successfully.');
 						// Optionally navigate the user to another page or show a success message.
+						navigateToOfferingDashboard();
 					} else {
 						console.error('Error executing the script:', await response.text());
 						// Optionally show an error message to the user.
@@ -101,6 +102,10 @@ const [variance, setVariance] = useState(initialVariance);
 	const navigateToCreateGroupsDashboard = () => {
 		navigate(`/createGroups/${unitCode}/${year}/${period}`);
 	};
+
+	const navigateToOfferingDashboard = () => {
+        navigate(`/groups/${unitCode}/${year}/${period}`);
+    };
 
 	return (
 		<Box padding="4">
