@@ -85,6 +85,7 @@ const [variance, setVariance] = useState(initialVariance);
 					} else {
 						console.error('Error executing the script:', await response.text());
 						// Optionally show an error message to the user.
+						alert(response.text());
 					}
 				} catch (error) {
 					console.error('Error executing the script:', error);
