@@ -17,10 +17,10 @@ export class UploadCSV extends React.Component {
           </Text>
           <ButtonGroup>
             <Button mb={2} colorScheme="red" onClick={this.props.handleClearSelection}>
-                  Clear Profiles      
+                    Clear        
             </Button>
             <Button onClick={this.props.handleAddProfilesClick}>
-              Add Profiles To Unit
+              Add To Offering
             </Button>
           </ButtonGroup>
 

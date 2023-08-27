@@ -8,7 +8,7 @@ import NavBar from './components/NavBar';
 import Groups from './pages/Groups';
 import Students from './pages/Students';
 import BelbinImporter from './pages/ImportBelbin';
-import InfoImporter from './pages/ImportStudentInfo';
+import EffortImporter from './pages/ImportEffort';
 import UnitAnalytics from './pages/UnitAnalytics';
 import GroupAnalytics from './pages/GroupAnalytics';
 
@@ -36,7 +36,7 @@ function App() {
             <Route path="/uploadGroupScript/:unitCode/:year/:period" element={<UploadGroupScript />} />
             <Route path="/createGroups/:unitCode/:year/:period" element={<CreateGroups/>} />
             <Route path="/belbinImport/:unitCode/:year/:period" element={<BelbinImporter />} />
-            <Route path="/infoImport/:unitCode/:year/:period" element={<InfoImporter />} />
+            <Route path="/infoImport/:unitCode/:year/:period" element={<EffortImporter />} />
             <Route path="/unitAnalytics/:unitCode/:year/:period" element={<UnitAnalytics />} />
             <Route path="/groupAnalytics/:unitCode/:year/:period/:groupNumber" element={<GroupAnalytics />} />
           </Routes>

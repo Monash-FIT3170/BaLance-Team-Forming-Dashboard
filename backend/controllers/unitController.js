@@ -50,6 +50,25 @@ const getUnit = async (req, res) => {
     res.status(200).json(unitData);
 }
 
+
+const getEnrolmentCount = async(req, res) => {
+    const {
+        unitCode,
+        offYear,
+        offPeriod
+    } = req.params;
+
+    const [enrolmentCount] = promiseBasedQuery(
+        'select count(enrolment_id)' + 
+        'from unit_enrolment ' + 
+        'where unit_off_id like (select unit_off_id from unit_offering where upper(unit_code) like ? and unit_off_year like ? and unit_off_period like ?);',
+        [unitCode, Number(offYear), offPeriod]
+    );
+    
+    console.log(enrolmentCount);
+    res.status(200).json(unitData);
+}
+
 // add a new unit to a TAs dashboard
 const addUnit = async (req, res) => {
     // get the req body
@@ -371,11 +390,13 @@ const uploadCustomScript = async (req, res) => {
     }
 };
 
+
 module.exports = {
     getAllUnits,
     getUnit,
     addUnit,
     deleteUnit,
     updateUnit,
-    uploadCustomScript
+    uploadCustomScript,
+    getEnrolmentCount
 };
