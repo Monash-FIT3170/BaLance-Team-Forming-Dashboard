@@ -66,7 +66,31 @@ Run locally
 
 # Contributers
 
-...
+[Abigail Lithwick](https://github.com/abigail-rose)
+
+[Ahmed Khadawardi]()
+
+[Alex Kanellis](https://github.com/akanel15)
+
+[Baaset Moslih](https://github.com/AbBaSaMo)
+
+[Cheryl Lau](https://github.com/clau-0016)
+
+[Francis Anthony](https://github.com/francisanthony17)
+
+[James Hunt](https://github.com/jhun0012)
+
+[Jon Yip](https://github.com/jon65)
+
+[Luke Bonso](https://github.com/lbon0008)
+
+[Mariah McCleery](https://github.com/MariahMcCleery)
+
+[Mark Mikhail](https://github.com/Mark-Mikhail)
+
+[Matthew Finis](https://github.com/mfin0008)
+
+[Nethara Athukorala](https://github.com/nath0002)
 
 # License
 
