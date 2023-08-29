@@ -8,6 +8,19 @@ and work productively.
 It makes use of student personality data to determine the optimal team formations and provides a variety of team
 formation strategies for teaching associates to select from.
 
+# Table of Contents
+
+1. [Features](#features)
+2. [Basic Usage](#basic-usage)
+    - [Dependencies](#dependencies)
+    - [Running the application](#running-the-application)
+    - [Walkthrough](#walkthrough)
+3. [Additional notes](#additional-notes)
+    - [Known issues](#known-issues)
+    - [Miscellaneous](#miscellaneous)
+4[Contributors](#contributors)
+5[License](#license)
+
 # Features
 
 * Forms groups between students using one of multiple available formation strategies
@@ -45,10 +58,26 @@ formation strategies for teaching associates to select from.
 against
 
 4. Select your group formation strategy and form groups
-!
+
 5. Optionally export group information as a csv to upload to your learning management system
 
 ![Basic runthrough](docs/videos/basic-runthrough.gif)
+
+# Additional notes
+
+## Known issues
+
+* Frontend analytics view displays title and descriptor in analytics card for analytics
+that have no data in the backend rather than an empty state
+* App crashes when non-integer values are supplied for unit year on unit creation
+
+## Miscellaneous
+
+* Group formation strategies can be extended in backend/helpers/groupFormationHelpers.js by declaring a new function 
+that contains the logic for the new strategy and adding it to the strategies object. Frontend strategy selection
+dropdown must include a value with the same name as the key in the aforementioned strategies object
+* Analytics for new strategies can be added by adding a new function in backend/helpers/groupAnalyticHelpers.js that
+retrieves distribution statistics in the right format and returns it as an object
 
 # Contributors
 
