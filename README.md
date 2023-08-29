@@ -1,4 +1,4 @@
-![Balance Logo](/docs/balance-logo.png)
+![Balance Logo](/docs/images/balance-logo.png)
 
 # BaLance - Team Forming Dashboard
 
@@ -10,42 +10,24 @@ formation strategies for teaching associates to select from.
 
 # Features
 
-
 * Forms groups between students using one of multiple available formation strategies
 * View group by group and cohort wide analytics on personality distribution
 * Export group allocation data in CSV format for use with your learning management system
 
-[insert video running through features]
-
-
 # Basic Usage
 
----
+1. To use the team forming dashboard, create a new offering for the unit you are currently running
 
-To use the team forming dashboard, create a new offering for the unit you are currently running
+2. Enter the unit and upload your csv list of students with their student details
 
-[insert image here]
-
-Enter the unit and upload your csv list of students with their student details
-
-[insert image here]
-
-Upload student personality data in accordance with the strategy you would like to form teams
+3. Upload student personality data in accordance with the strategy you would like to form teams
 against
 
-[insert image here]
+4. Select your group formation strategy and form groups
+!
+5. Optionally export group information as a csv to upload to your learning management system
 
-Select your group formation strategy and form groups
-
-[insert image here]
-
-Optionally export group information as a csv to upload to your learning management system
-
-[insert image here]
-
-# Getting started
-
----
+![Basic runthrough](docs/videos/basic-runthrough.gif)
 
 ## Dependencies
 
@@ -66,7 +48,7 @@ Optionally export group information as a csv to upload to your learning manageme
 
 5. Run the application in frontend/ `npm start`
 
-# Contributers
+# Contributors
 
 [Abigail Lithwick](https://github.com/abigail-rose)
 
@@ -96,7 +78,5 @@ Optionally export group information as a csv to upload to your learning manageme
 
 # License
 
----
-
-[GPL v3](https://www.gnu.org/licenses/quick-guide-gplv3.html)
+The license we use for this project is the [GPL v3](https://www.gnu.org/licenses/quick-guide-gplv3.html)
 
