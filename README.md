@@ -16,19 +16,6 @@ formation strategies for teaching associates to select from.
 
 # Basic Usage
 
-1. To use the team forming dashboard, create a new offering for the unit you are currently running
-
-2. Enter the unit and upload your csv list of students with their student details
-
-3. Upload student personality data in accordance with the strategy you would like to form teams
-against
-
-4. Select your group formation strategy and form groups
-!
-5. Optionally export group information as a csv to upload to your learning management system
-
-![Basic runthrough](docs/videos/basic-runthrough.gif)
-
 ## Dependencies
 
 [Install node v18.16.0 or later](https://nodejs.org/en/download/package-manager)
@@ -47,6 +34,21 @@ against
 4. Run the server in backend/ `nodemon server.js`
 
 5. Run the application in frontend/ `npm start`
+
+## Walkthrough
+
+1. To use the team forming dashboard, create a new offering for the unit you are currently running
+
+2. Enter the unit and upload your csv list of students with their student details
+
+3. Upload student personality data in accordance with the strategy you would like to form teams
+against
+
+4. Select your group formation strategy and form groups
+!
+5. Optionally export group information as a csv to upload to your learning management system
+
+![Basic runthrough](docs/videos/basic-runthrough.gif)
 
 # Contributors
 
