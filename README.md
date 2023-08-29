@@ -49,20 +49,24 @@ Optionally export group information as a csv to upload to your learning manageme
 
 ---
 
-To run the project locally:
+## Dependencies
 
-Change you directory to the project backend
-### `cd backend`
-Install dependencies if you haven't already done so 
-### `npm install`
-Run the backend
-### `node server.js`
-Open new terminal -> change current directory to the frontend
-### `cd frontend`
-Install dependencies if you haven't already done so
-### `npm install`
-Run locally 
-### `npm start`
+[Install node v18.16.0 or later](https://nodejs.org/en/download/package-manager)
+
+[Install MYSQL server v8.0.33 or later](https://dev.mysql.com/downloads/mysql/) 
+
+
+## Running the application
+
+1. Clone the repository `git clone https://github.com/Monash-FIT3170/baLance.git`
+
+2. In the repository root run `cd backend; npm i; cd ../frontend; npm i; cd ../`
+
+3. Run database/schemaCreation.sql using mySQL
+
+4. Run the server in backend/ `nodemon server.js`
+
+5. Run the application in frontend/ `npm start`
 
 # Contributers
 
@@ -94,6 +98,7 @@ Run locally
 
 # License
 
-...
+---
 
+[GPL v3](https://www.gnu.org/licenses/quick-guide-gplv3.html)
 
