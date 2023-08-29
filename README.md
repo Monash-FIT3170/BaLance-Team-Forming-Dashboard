@@ -18,8 +18,8 @@ formation strategies for teaching associates to select from.
 3. [Additional notes](#additional-notes)
     - [Known issues](#known-issues)
     - [Miscellaneous](#miscellaneous)
-4[Contributors](#contributors)
-5[License](#license)
+4. [Contributors](#contributors)
+5. [License](#license)
 
 # Features
 
