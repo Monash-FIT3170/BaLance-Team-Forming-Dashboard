@@ -1,17 +1,15 @@
-[insert logo here]
+![Balance Logo](/docs/balance-logo.png)
 
 # BaLance - Team Forming Dashboard
 
----
-
-BaLance is a tool for teaching associates to split student cohorts into well Balanced teams that gel well together and work productively.
+BaLance is a tool for teaching associates to split student cohorts into well Balanced teams that gel well together 
+and work productively.
 
 It makes use of student personality data to determine the optimal team formations and provides a variety of team
 formation strategies for teaching associates to select from.
 
 # Features
 
----
 
 * Forms groups between students using one of multiple available formation strategies
 * View group by group and cohort wide analytics on personality distribution
