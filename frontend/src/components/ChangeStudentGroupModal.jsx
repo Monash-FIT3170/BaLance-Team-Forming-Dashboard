@@ -18,6 +18,7 @@ import {
     Text,
     useDisclosure,
 } from '@chakra-ui/react';
+import { MockAuth } from '../mockAuth/mockAuth';
 
 export default function ChangeStudentGroupModal({studentData, numberOfGroups}) {
     const {
@@ -40,7 +41,12 @@ export default function ChangeStudentGroupModal({studentData, numberOfGroups}) {
 
     const [group, setGroup] = useState(group_number);
 
-    const { getAccessTokenSilently } = useAuth0();
+    let authService = {
+        "DEV": MockAuth,
+        "TEST": useAuth0
+      }
+    
+      const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
     // an array of viable groups the student can be changed to
     const groupOptions = [];

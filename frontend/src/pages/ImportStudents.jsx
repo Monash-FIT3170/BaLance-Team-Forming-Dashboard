@@ -47,10 +47,16 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { AddIcon, QuestionOutlineIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
+import { MockAuth } from '../mockAuth/mockAuth';
 
 function ImportPage() {
 
-  const { getAccessTokenSilently } = useAuth0();
+  let authService = {
+    "DEV": MockAuth,
+    "TEST": useAuth0
+  }
+
+  const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
   class Student {
     constructor(

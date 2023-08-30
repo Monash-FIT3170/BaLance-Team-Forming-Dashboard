@@ -2,11 +2,17 @@ import { Image, Container, Button, Box, Grid, GridItem, Stack, HStack } from '@c
 import logo from '../assets/logo_separated.png';
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
+import { MockAuth } from '../mockAuth/mockAuth';
 
 export default function NavBar({ authenticated }) {
   const navigate = useNavigate();
 
-  const { loginWithRedirect, logout } = useAuth0();
+  let authService = {
+    "DEV": MockAuth,
+    "TEST": useAuth0
+  }
+
+  const { loginWithRedirect, logout } = authService[process.env.REACT_APP_AUTH]();
 
   const navigateToHomePage = () => {
     navigate('/');

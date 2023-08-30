@@ -32,9 +32,16 @@ import {
 } from '@chakra-ui/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowBackIcon } from '@chakra-ui/icons';
+import { MockAuth } from '../mockAuth/mockAuth';
 
 function CreateGroups() {
-    const { getAccessTokenSilently } = useAuth0();
+    let authService = {
+        "DEV": MockAuth,
+        "TEST": useAuth0
+      }
+    
+      const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
+
     const [strategy, setStrategy] = useState("random");
     const [groupSize, setGroupSize] = useState(2);
     const [variance, setVariance] = useState(1);

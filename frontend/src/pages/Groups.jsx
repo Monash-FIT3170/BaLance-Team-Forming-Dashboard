@@ -20,12 +20,19 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { ShuffleGroups } from '../components/ShuffleGroups';
 import { AddIcon, EditIcon } from '@chakra-ui/icons';
+import { MockAuth } from '../mockAuth/mockAuth';
 
 function Groups() {
   const cancelRef = React.useRef();
   const navigate = useNavigate();
   const [groups, setGroups] = useState([]);
-  const { getAccessTokenSilently } = useAuth0();
+
+  let authService = {
+    "DEV": MockAuth,
+    "TEST": useAuth0
+  }
+
+  const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
   // Confirmation popup for shuffling groups
   const {
@@ -73,7 +80,7 @@ function Groups() {
       )
       .catch((err) => console.error(err));
       });
-    }, [getAccessTokenSilently, period, unitCode, year]);
+    }, []);
 
   const handleShuffleGroups = () => {
     // Close confirmation dialog

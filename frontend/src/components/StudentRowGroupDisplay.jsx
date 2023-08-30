@@ -3,6 +3,7 @@ import { DeleteIcon } from '@chakra-ui/icons';
 import { useParams } from 'react-router';
 import ChangeStudentGroupModal from './ChangeStudentGroupModal';
 import { useAuth0 } from '@auth0/auth0-react';
+import { MockAuth } from '../mockAuth/mockAuth';
 //import {unit_code, unit_off_year, unit_off_period} from './GroupCard.jsx';
 
 function StudentRowGroupDisplay({studentData, numberOfGroups}) {
@@ -22,7 +23,12 @@ function StudentRowGroupDisplay({studentData, numberOfGroups}) {
     } = useParams();
 
 
-    const { getAccessTokenSilently } = useAuth0();
+    let authService = {
+      "DEV": MockAuth,
+      "TEST": useAuth0
+    }
+  
+    const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
 
   const handleDeleteStudent = (event) => {

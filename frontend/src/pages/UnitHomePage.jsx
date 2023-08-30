@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import UnitCard from '../components/UnitCard';
 import '../pages/UnitHomePage.css';
+import { MockAuth } from '../mockAuth/mockAuth';
 
 // Chakra imports
 import {
@@ -33,7 +34,12 @@ import { Center, Heading } from '@chakra-ui/react';
 
 function UnitPage() {
 
-  const { getAccessTokenSilently } = useAuth0();
+  let authService = {
+    "DEV": MockAuth,
+    "TEST": useAuth0
+  }
+
+  const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
 
   let iconColor = useColorModeValue('brand.200', 'white');
@@ -102,7 +108,7 @@ function UnitPage() {
         console.error('Error fetching units:', err)
       })
     })
-  }, [getAccessTokenSilently]);
+  },[]);
 
   return (
     <div>

@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Box, ChakraProvider, Container, Heading, extendTheme} from '@chakra-ui/react';
 import { useAuth0 } from '@auth0/auth0-react';
-
+import { MockAuth } from './mockAuth/mockAuth';
 import ImportStudents from './pages/ImportStudents';
 import UploadGroupScript from './pages/UploadGroupScript';
 import CreateGroups from './pages/CreateGroups';
@@ -22,9 +22,15 @@ const theme = extendTheme({
   },
 });
 
+
 function App() {
 
-  const { isAuthenticated, loginWithRedirect } = useAuth0();
+  let authService = {
+    "DEV": MockAuth,
+    "TEST": useAuth0
+  }
+
+  const { isAuthenticated, loginWithRedirect } = authService[process.env.REACT_APP_AUTH]();
 
   return (
     <ChakraProvider theme={theme}>

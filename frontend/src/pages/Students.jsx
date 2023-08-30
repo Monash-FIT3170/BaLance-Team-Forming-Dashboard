@@ -24,9 +24,16 @@ import StudentRowStudentDisplay from '../components/StudentRowStudentDisplay';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShuffleGroups } from '../components/ShuffleGroups';
 import { AddIcon, EditIcon } from '@chakra-ui/icons';
+import { MockAuth } from '../mockAuth/mockAuth';
 
 function Students() {
-  const { getAccessTokenSilently } = useAuth0();
+  let authService = {
+    "DEV": MockAuth,
+    "TEST": useAuth0
+  }
+
+  const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
+
   const [students, setStudents] = useState([]);
   const [numberOfGroups, setNumberOfGroups] = useState(0);
   const cancelRef = React.useRef();
@@ -96,7 +103,7 @@ function Students() {
       */
     });
     
-  }, [getAccessTokenSilently]);
+  }, []);
     
 
   const handleShuffleGroups = () => {
