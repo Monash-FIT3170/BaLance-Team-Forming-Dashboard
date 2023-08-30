@@ -31,51 +31,70 @@ app.use((req, res, next) => {
     next();
 });
 
-const verifyJwt = auth({
-    audience: 'balance-api-endpoint',
-    issuerBaseURL: 'https://balance.au.auth0.com/',
-    tokenSigningAlg: 'RS256'
-  });
+if (process.env.AUTH == "TEST"){
+    const verifyJwt = auth({
+        audience: 'balance-api-endpoint',
+        issuerBaseURL: 'https://balance.au.auth0.com/',
+        tokenSigningAlg: 'RS256'
+      });
 
-app.use(verifyJwt);
+    app.use(verifyJwt);
 
-async function getUserDetails(req) {
-    const accessToken = req.auth.token;
-        const userResponse = await axios.get('https://balance.au.auth0.com/userinfo',
-        {
-            headers: {
-                authorization: `Bearer ${accessToken}`
-            }
-        })
 
-        return userResponse.data;
-}
+    async function getUserDetails(req) {
+        const accessToken = req.auth.token;
+            const userResponse = await axios.get('https://balance.au.auth0.com/userinfo',
+            {
+                headers: {
+                    authorization: `Bearer ${accessToken}`
+                }
+            })
 
-async function delay(time) {
-    return new Promise(resolve => setTimeout(resolve, time));
-  }
-
-app.use(async (req, res, next) => {
-    try {
-        req.user = await getUserDetails(req);
-        next();
+            return userResponse.data;
     }
-    catch(err){
+
+    async function delay(time) {
+        return new Promise(resolve => setTimeout(resolve, time));
+    }
+
+    app.use(async (req, res, next) => {
         try {
-            console.log("Waiting")
-            await delay(10000);
-            console.log("Complete")
-            req.user = await getUserDetails(req)
+            req.user = await getUserDetails(req);
             next();
         }
-
         catch(err){
-            return res.sendStatus(500);
+            try {
+                await delay(10000);
+                req.user = await getUserDetails(req)
+                next();
+            }
+
+            catch(err){
+                return res.sendStatus(500);
+            }
+
+        }
+        
+    })
+}
+
+if (process.env.AUTH == "DEV"){
+
+    app.use((req, res, next) =>{
+
+        if (req.get('authorization') != "Bearer 0000"){
+            return res.sendStatus(401);
         }
 
-    }
+        req.user = {
+            email: "test_user@monash.edu",
+            nickname: "tuse0001"
+        };
+        next(); 
+    })
     
-})
+
+}
 
 app.use(async (req, res, next) => {
 
