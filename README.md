@@ -15,11 +15,12 @@ formation strategies for teaching associates to select from.
     - [Dependencies](#dependencies)
     - [Running the application](#running-the-application)
     - [Walkthrough](#walkthrough)
-3. [Additional notes](#additional-notes)
+4. [Authentication](#authentication)
+4. [Additional notes](#additional-notes)
     - [Known issues](#known-issues)
     - [Miscellaneous](#miscellaneous)
-4. [Contributors](#contributors)
-5. [License](#license)
+5. [Contributors](#contributors)
+6. [License](#license)
 
 # Features
 
@@ -62,6 +63,29 @@ against
 5. Optionally export group information as a csv to upload to your learning management system
 
 ![Basic runthrough](docs/videos/basic-runthrough.gif)
+
+## Authentication
+
+Authentication is done using Auth0. An Auth0 account is required to use this authentication. Follow the guide here: https://www.youtube.com/watch?v=GGGjnBkN8xk to setup the Auth0 account and applications.
+
+A summary of what is needed in Auth0 is a Single Page Application and a Machine to Machine API. Make sure when creating the Single Page Application, "Allowed Callback URLs", "Allowed Logout URLs" and "Allowed Web Origins" all have the address "http://localhost:3000/" in them.
+
+For the frontend you need to note down the following details:
+ - domain
+ - clientId
+
+For the backend you need to note down the following details:
+ - issuerBaseURL (same as domain)
+
+Place these details in the .env file for both backend and frontend.
+
+Authentication has both a TEST and DEV envrionment set in both the frontend/.env (REACT_APP_AUTH) and backend/.env (AUTH) files.
+
+The Auth DEV envrionment uses a mock authentication service. This is for when developing and testing new API calls.
+
+The Auth TEST envrionment uses Auth0 authentication. Auth0 authentication when using the free tier has a rate limit, which is reached very quickly if navigating the app quickly.
+
+Use Auth DEV most of the time, and switch to Auth TEST to confirm that the implementation works with the actual authentication.
 
 # Additional notes
 
