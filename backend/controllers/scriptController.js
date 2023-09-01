@@ -101,9 +101,21 @@ async function uploadCustomScript(req, res) {
 	console.log('Students:', students);
 
 	const studentLabAllocations = await getStudentLabAllocations(students);
-	console.log('Student Lab Allocations:', studentLabAllocations);
+	const labGroups = {};
+
+	for (const labAllocation of studentLabAllocations) {
+		const labId = labAllocation.unit_off_lab_id;
+		const labStudents = students.filter((student) => student.stud_unique_id === labAllocation.stud_unique_id);
+
+		if (!labGroups[labId]) {
+			labGroups[labId] = [];
+		}
+
+		labGroups[labId].push(labStudents);
+	}
 
 	const groupSize = req.body.groupSize || 5; // assuming a default group size of 5 if not provided
+	console.log('LAB GROUPS:', labGroups);
 
 	try {
 		const { scriptContent } = req.body;
@@ -111,24 +123,40 @@ async function uploadCustomScript(req, res) {
 
 		// Modified pythonArgs to include the studentLabAllocations and groupSize
 		const pythonArgs = [ JSON.stringify(students), JSON.stringify(studentLabAllocations), groupSize.toString() ];
-		const pythonProcess = spawn('python', [ '-c', scriptContent, ...pythonArgs ]);
 
-		let output = '';
-		await new Promise((resolve, reject) => {
-			pythonProcess.stdout.on('data', (data) => {
-				output += data.toString();
-			});
-			pythonProcess.stderr.on('error', (data) => {
-				reject(new Error('Error in script execution. ' + data.toString()));
-			});
-			pythonProcess.on('close', (code) => {
-				if (code === 0) resolve();
-				else reject(new Error(`Python script exited with code: ${code}`));
-			});
-		});
+		// Run the Python script for each lab group
+		for (const labId in labGroups) {
+			const labStudents = labGroups[labId];
 
-		const parsedOutput = JSON.parse(output);
-		await storeGroupsInDatabase(unitCode, year, period, parsedOutput);
+			// Modify the pythonArgs to include only the labStudents for the current lab
+			const labPythonArgs = [ unitCode, year, period, JSON.stringify(labStudents) ];
+
+			// Serialize the labPythonArgs array into a JSON string
+			const labPythonArgsJSON = JSON.stringify(labPythonArgs);
+			console.log(labPythonArgsJSON);
+			const pythonProcess = spawn('python', [ '-c', scriptContent, ...labPythonArgs ]);
+
+			let output = '';
+			await new Promise((resolve, reject) => {
+				pythonProcess.stdout.on('data', (data) => {
+					//console.log('DATA: ', data);
+					output += data.toString();
+				});
+				pythonProcess.stderr.on('error', (data) => {
+					reject(new Error('Error in script execution. ' + data.toString()));
+				});
+				pythonProcess.on('close', (code) => {
+					if (code === 0) resolve();
+					else reject(new Error(`Python script exited with code: ${code}`));
+				});
+			});
+
+			console.log('OUTPUT: ', output);
+			const parsedOutput = JSON.parse(output);
+			console.log('PARSED OUTPUT: ', parsedOutput);
+			await storeGroupsInDatabase(unitCode, year, period, parsedOutput);
+		}
+
 		res.json({ message: 'Groups generated and stored successfully.' });
 	} catch (error) {
 		console.error('An unexpected error occurred:', error);
