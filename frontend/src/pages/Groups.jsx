@@ -1,5 +1,6 @@
 import GroupCard from '../components/GroupCard';
 import { useParams } from 'react-router';
+import { useAuth0 } from '@auth0/auth0-react';
 import React, { useState, useEffect } from 'react';
 import {
     Button,
@@ -25,11 +26,20 @@ import {
 
 import { Link, useNavigate } from 'react-router-dom';
 import { AddIcon, EditIcon } from '@chakra-ui/icons';
+import { MockAuth } from '../mockAuth/mockAuth';
+
 function Groups() {
     const cancelRef = React.useRef();
     const navigate = useNavigate();
     const [groups, setGroups] = useState([]);
     const [filteredClass, setFilteredClass] = useState(["All"]);
+
+  let authService = {
+    "DEV": MockAuth,
+    "TEST": useAuth0
+  }
+
+  const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
     // Confirmation popup for shuffling groups
     const {
@@ -69,13 +79,21 @@ function Groups() {
       }
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`)
+      getAccessTokenSilently().then((token) => {
+        fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`,
+        {
+          method: 'get',
+          headers: new Headers({
+            'Authorization': `Bearer ${token}`
+          })
+        })
             .then((res) =>
                 res.json().then(function (res) {
                     setGroups(res);
                 })
             )
             .catch((err) => console.error(err));
+        });
     }, []);
 
     let groupsDisplay = groups.length === 0 ?

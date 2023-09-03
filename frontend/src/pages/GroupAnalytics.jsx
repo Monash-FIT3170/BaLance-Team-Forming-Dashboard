@@ -16,18 +16,31 @@ import { Doughnut, Bar } from 'react-chartjs-2';
 import { Link, useNavigate } from 'react-router-dom';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarController, BarElement } from 'chart.js';
 import { ArrowBackIcon } from '@chakra-ui/icons';
+import { MockAuth } from '../mockAuth/mockAuth';
+import { useAuth0 } from '@auth0/auth0-react';
 
 ChartJS.register(ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarController, BarElement);
 
 const UnitAnalytics = () => {
+    let authService = {
+        "DEV": MockAuth,
+        "TEST": useAuth0
+      }
+
+      const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
+
     const [analytics, setAnalytics] = useState([]);
     const { unitCode, year, period, groupNumber } = useParams();
     const navigate = useNavigate();
 
     useEffect(() => {
         console.log(groupNumber)
-        fetch(`http://localhost:8080/api/analytics/${unitCode}/${year}/${period}/${groupNumber}`)
-            .then((res) => res.json())
+        getAccessTokenSilently().then((token) => {
+        fetch(`http://localhost:8080/api/analytics/${unitCode}/${year}/${period}/${groupNumber}`, {
+        headers: new Headers({
+            'Authorization': `Bearer ${token}`
+        })
+    }).then((res) => res.json())
             .then((data) => {
                 console.log(data)
                 setAnalytics(data)
@@ -35,7 +48,8 @@ const UnitAnalytics = () => {
             .catch((err) => {
                 console.error('Error fetching analytics:', err);
             });
-    }, []);
+    })}
+    , []);
 
     const generatePastelColors = (count) => {
         const colors = [];

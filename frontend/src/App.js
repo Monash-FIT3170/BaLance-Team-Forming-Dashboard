@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Box, ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { Box, ChakraProvider, Container, Heading, extendTheme} from '@chakra-ui/react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { MockAuth } from './mockAuth/mockAuth';
 import ImportStudents from './pages/ImportStudents';
 import UploadGroupScript from './pages/UploadGroupScript';
 import CreateGroups from './pages/CreateGroups';
@@ -21,13 +23,25 @@ const theme = extendTheme({
   },
 });
 
+
 function App() {
+
+  let authService = {
+    "DEV": MockAuth,
+    "TEST": useAuth0
+  }
+
+  const { isAuthenticated, loginWithRedirect } = authService[process.env.REACT_APP_AUTH]();
+
   return (
     <ChakraProvider theme={theme}>
       <BrowserRouter>
-        <NavBar />
+        <NavBar 
+          authenticated={isAuthenticated}
+        />
         <Box pt="12vh" />
         <div className="App">
+        {isAuthenticated && (
           <Routes>
             <Route path="/" element={<UnitHomePage />} />
             <Route path="/groups/:unitCode/:year/:period" element={<Groups />} />
@@ -40,6 +54,17 @@ function App() {
             <Route path="/unitAnalytics/:unitCode/:year/:period" element={<UnitAnalytics />} />
             <Route path="/groupAnalytics/:unitCode/:year/:period/:groupNumber" element={<GroupAnalytics />} />
           </Routes>
+        )}
+        {!isAuthenticated && (
+          <Container centerContent>
+            <Box height='100px'>
+
+            </Box>
+          <Heading as='h3' size='xl'>
+            <button onClick={loginWithRedirect}><Heading as='h2' size='xl' variant='underline'>Login</Heading></button> to Create Groups!
+          </Heading>
+          </Container>
+        )}
         </div>
       </BrowserRouter>
     </ChakraProvider>

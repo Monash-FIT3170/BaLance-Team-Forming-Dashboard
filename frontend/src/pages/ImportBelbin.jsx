@@ -6,6 +6,7 @@ import { ConfirmClearSelection } from '../components/ConfirmClearSelection';
 import { UploadCSV } from '../components/UploadCSV';
 import { FormField } from '../components/FormField';
 import { CsvInfoButton } from '../components/CsvInfoButton';
+import { useAuth0 } from '@auth0/auth0-react';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 
 
@@ -48,8 +49,16 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { AddIcon, QuestionOutlineIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
+import { MockAuth } from '../mockAuth/mockAuth';
 
 function ImportPage() {
+  let authService = {
+    "DEV": MockAuth,
+    "TEST": useAuth0
+  }
+
+  const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
+
     class Student {
         constructor(
             studentId,
@@ -135,11 +144,14 @@ function ImportPage() {
     //create unit for new students
     const handleAddProfilesClick = async () => {
         // Make API call
-        fetch(`http://localhost:8080/api/students/belbin/${unitCode}/${year}/${period}`, {
+        getAccessTokenSilently().then((token) => {
+    fetch(`http://localhost:8080/api/students/belbin/${unitCode}/${year}/${period}`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: new Headers({
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }),
             body: JSON.stringify(profiles),
         })
             .then((response) => {
@@ -151,6 +163,7 @@ function ImportPage() {
                 console.error('Error sending data to the REST API:', error);
                 // Handle the error from the API if needed
             });
+    });
 
         // After successful creation
         setShowAlert(true);

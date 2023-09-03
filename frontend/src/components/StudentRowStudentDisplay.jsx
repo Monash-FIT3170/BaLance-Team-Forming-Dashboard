@@ -2,8 +2,16 @@ import { Tr, Td, useDisclosure} from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { useParams } from 'react-router';
 import ChangeStudentGroupModal from './ChangeStudentGroupModal';
+import { MockAuth } from '../mockAuth/mockAuth';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const StudentRowStudentDisplay = ({ studentData, numberOfGroups, onDelete }) => {
+    let authService = {
+        "DEV": MockAuth,
+        "TEST": useAuth0
+      }
+
+      const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
     /* HTML component for each student in each group in the 'List Students' View */
     const {
         onClose: onCloseDetails,
@@ -25,12 +33,15 @@ const StudentRowStudentDisplay = ({ studentData, numberOfGroups, onDelete }) => 
   const handleDeleteStudentEnrolment = (event) => {
     event.preventDefault();
     console.log("delete student");
+    getAccessTokenSilently().then((token) => {
     fetch(`http://localhost:8080/api/students/enrolment/${unitCode}/${year}/${period}/${student_id}`, {
       method: 'DELETE',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
+      headers: new Headers({
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }),
+    });
     });
 
     let answer = window.confirm('Student deleted successfully from enrolment');

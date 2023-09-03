@@ -16,10 +16,19 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarController, BarElement } from 'chart.js';
 import { ArrowBackIcon } from '@chakra-ui/icons';
+import { MockAuth } from '../mockAuth/mockAuth';
+import { useAuth0 } from '@auth0/auth0-react';
 
 ChartJS.register(ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarController, BarElement);
 
 const UnitAnalytics = () => {
+
+    let authService = {
+        "DEV": MockAuth,
+        "TEST": useAuth0
+      }
+
+      const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
     const navigate = useNavigate();
 
@@ -32,13 +41,18 @@ const UnitAnalytics = () => {
     };
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/analytics/${unitCode}/${year}/${period}`)
+        getAccessTokenSilently().then((token) => {
+        fetch(`http://localhost:8080/api/analytics/${unitCode}/${year}/${period}`, {
+            headers: new Headers({
+                'Authorization': `Bearer ${token}`
+            })
+        })
             .then((res) => res.json())
             .then((data) => setAnalytics(data))
             .catch((err) => {
                 console.error('Error fetching analytics:', err);
             });
-    }, []);
+    })}, []);
 
     console.log(analytics)
 

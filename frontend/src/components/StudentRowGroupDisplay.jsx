@@ -2,6 +2,8 @@ import { Tr, Td, HStack, Spacer, Button, useDisclosure } from '@chakra-ui/react'
 import { DeleteIcon } from '@chakra-ui/icons';
 import { useParams } from 'react-router';
 import ChangeStudentGroupModal from './ChangeStudentGroupModal';
+import { useAuth0 } from '@auth0/auth0-react';
+import { MockAuth } from '../mockAuth/mockAuth';
 //import {unit_code, unit_off_year, unit_off_period} from './GroupCard.jsx';
 
 function StudentRowGroupDisplay({studentData, numberOfGroups}) {
@@ -24,17 +26,26 @@ function StudentRowGroupDisplay({studentData, numberOfGroups}) {
         period,
     } = useParams();
 
-  console.log(studentData);
+
+    let authService = {
+      "DEV": MockAuth,
+      "TEST": useAuth0
+    }
+  
+    const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
+
 
   const handleDeleteStudentGroupAlloc = (event) => {
-    console.log("delete student");
+    getAccessTokenSilently().then((token) => {;
     fetch(`http://localhost:8080/api/students/groupAlloc/${unitCode}/${year}/${period}/${student_id}`, {
       method: 'DELETE',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
+      headers: new Headers({
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }),
     });
+  });
 
     let answer = window.confirm('Student deleted from labs and groups');
     if (answer) {

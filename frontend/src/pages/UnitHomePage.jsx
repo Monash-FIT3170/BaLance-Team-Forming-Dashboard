@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 import UnitCard from '../components/UnitCard';
 import '../pages/UnitHomePage.css';
+import { MockAuth } from '../mockAuth/mockAuth';
 
 // Chakra imports
 import {
@@ -31,6 +33,15 @@ import { AddIcon } from '@chakra-ui/icons';
 import { Center, Heading } from '@chakra-ui/react';
 
 function UnitPage() {
+
+  let authService = {
+    "DEV": MockAuth,
+    "TEST": useAuth0
+  }
+
+  const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
+
+
   let iconColor = useColorModeValue('brand.200', 'white');
   const { isOpen: isOpenAdd, onOpen: onOpenAdd, onClose: onCloseAdd } = useDisclosure();
 
@@ -55,14 +66,17 @@ function UnitPage() {
       period: unitSemesterOffering
     };
 
+    getAccessTokenSilently().then((token) => {
     fetch('http://localhost:8080/api/units/', {
       method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
+      headers: new Headers({
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }),
       body: JSON.stringify(unitObject),
-    });
+    })
+  });
 
     let answer = window.confirm('Unit created successfully');
     if (answer) {
@@ -79,8 +93,14 @@ function UnitPage() {
 
   // fetch unit data from the backend
   useEffect(() => {
-    fetch('http://localhost:8080/api/units/')
-      .then((res) => res.json())
+    getAccessTokenSilently().then((token) => {
+    fetch('http://localhost:8080/api/units/', 
+    {
+      method: 'get',
+      headers: new Headers({
+        'Authorization': `Bearer ${token}`
+      })
+    }).then((res) => res.json())
       .then((data) => {
         console.log(data);
         setUnits(data);
@@ -88,7 +108,8 @@ function UnitPage() {
       .catch((err) => {
         console.error('Error fetching units:', err)
       })
-  }, []);
+    })
+  },[]);
 
   return (
     <div>

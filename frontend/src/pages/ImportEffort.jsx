@@ -46,8 +46,18 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { AddIcon, QuestionOutlineIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
+import { MockAuth } from '../mockAuth/mockAuth';
+import { useAuth0 } from '@auth0/auth0-react';
 
 function InfoImporter() {
+
+    let authService = {
+        "DEV": MockAuth,
+        "TEST": useAuth0
+      }
+
+      const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
+
     class Student {
         constructor(
             studentId,
@@ -132,12 +142,15 @@ function InfoImporter() {
 
     //create unit for new students
     const handleAddProfilesClick = async () => {
+        getAccessTokenSilently().then((token) => {
         // Make API call
         fetch(`http://localhost:8080/api/students/effort/${unitCode}/${year}/${period}`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: new Headers({
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }),
             body: JSON.stringify(profiles),
         })
             .then((response) => {
@@ -152,6 +165,7 @@ function InfoImporter() {
 
         // After successful creation
         setShowAlert(true);
+    })
     };
 
     // Logic for table sorting by column
