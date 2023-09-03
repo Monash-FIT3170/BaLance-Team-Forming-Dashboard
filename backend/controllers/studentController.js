@@ -25,12 +25,18 @@ const getAllStudents = async (req, res) => {
         year,
         period
     } = req.params
-    console.log("IM HERE");
+
     const studentsData = await promiseBasedQuery(
-        "SELECT stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val FROM student stud inner join unit_enrolment ue on ue.stud_unique_id=stud.stud_unique_id inner join unit_offering unit on ue.unit_off_id=unit.unit_off_id WHERE unit.unit_code=? AND unit.unit_off_year=? AND unit.unit_off_period=?",
+        "SELECT stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val " +
+        "FROM student stud " +
+        "inner join unit_enrolment ue on ue.stud_unique_id=stud.stud_unique_id " +
+        "inner join unit_offering unit on ue.unit_off_id=unit.unit_off_id " +
+        "WHERE unit.unit_code=? " +
+        "AND unit.unit_off_year=? " +
+        "AND unit.unit_off_period=?",
         [unitCode, year, period]
     )
-    console.log(studentsData)
+
     res.status(200).json(studentsData);
 }
 
@@ -78,89 +84,120 @@ const deleteStudentEnrolment = async (req, res) => {
         studentId
     } = req.params;
 
-    // error handling for unexpected issues
-    try {
-        // Delete the student unit enrolment
-        const enrolment_id = await promiseBasedQuery(
-            "SELECT enrolment_id FROM unit_offering u " +
-             "INNER JOIN unit_enrolment ue ON ue.unit_off_id=u.unit_off_id " +
-             "INNER JOIN student s ON s.stud_unique_id=ue.stud_unique_id " +
-             "WHERE " +
-                "u.unit_code=? " +
-                "AND u.unit_off_year=? " +
-                "AND u.unit_off_period=? " +
-                "AND s.student_id=?;",
-                [unitCode, year, period, studentId]
-        );
+    await promiseBasedQuery( // delete effort personality test results for student
+        "DELETE FROM effort_result " +
+        "WHERE effort_result_id IN ( " +
+        "   SELECT subquery.effort_result_id " +
+        "   FROM ( " +
+        "       SELECT e.effort_result_id " +
+        "       FROM unit_offering u " +
+        "           INNER JOIN personality_test_attempt pt ON pt.unit_off_id = u.unit_off_id " +
+        "           INNER JOIN effort_result e ON e.personality_test_attempt = pt.test_attempt_id " +
+        "           INNER JOIN student s ON s.stud_unique_id = pt.stud_unique_id " +
+        "       WHERE u.unit_code=? " +
+        "           AND u.unit_off_year=? " +
+        "           AND u.unit_off_period=? " +
+        "           AND s.student_id=? " +
+        "   ) AS subquery " +
+        ");",
+        [unitCode, year, period, studentId]
+    )
 
-        await promiseBasedQuery(
-            "DELETE FROM unit_enrolment " +
-             "WHERE enrolment_id=?; ",
-             [enrolment_id]
-        );
+    await promiseBasedQuery( // delete belbin personality test results for student
+        "DELETE FROM belbin_result " +
+        "WHERE belbin_result_id IN ( " +
+        "   SELECT subquery.belbin_result_id " +
+        "   FROM ( " +
+        "       SELECT b.belbin_result_id " +
+        "       FROM unit_offering u " +
+        "           INNER JOIN personality_test_attempt pt ON pt.unit_off_id = u.unit_off_id " +
+        "           INNER JOIN belbin_result b ON b.personality_test_attempt = pt.test_attempt_id " +
+        "           INNER JOIN student s ON s.stud_unique_id = pt.stud_unique_id " +
+        "       WHERE u.unit_code=? " +
+        "           AND u.unit_off_year=? " +
+        "           AND u.unit_off_period=? " +
+        "           AND s.student_id=? " +
+        "   ) AS subquery " +
+        "); ",
+        [unitCode, year, period, studentId]
+    )
 
-        if (!enrolment_id) {
-            return res.status(404).send({ message: "Student enrolment not found" });
-        }
+    await promiseBasedQuery( // delete personality test attempt for student
+        "DELETE FROM personality_test_attempt " +
+        "WHERE test_attempt_id IN ( " +
+        "   SELECT subquery.test_attempt_id " +
+        "   FROM ( " +
+        "       SELECT pt.test_attempt_id " +
+        "       FROM unit_offering u " +
+        "           INNER JOIN personality_test_attempt pt ON pt.unit_off_id = u.unit_off_id " +
+        "           INNER JOIN student s ON s.stud_unique_id = pt.stud_unique_id " +
+        "       WHERE u.unit_code=? " +
+        "           AND u.unit_off_year=? " +
+        "           AND u.unit_off_period=? " +
+        "           AND s.student_id=? " +
+        "   ) AS subquery " +
+        ");",
+        [unitCode, year, period, studentId]
+    )
 
-        // todo delete lab allocation for this student
-        const stud_lab_alloc_id = await promiseBasedQuery(
-            "SELECT stud_lab_alloc_id FROM student s " +
-            "INNER JOIN student_lab_allocation sa ON s.stud_unique_id=sa.stud_unique_id " +
-            "INNER JOIN unit_off_lab ul ON ul.unit_off_lab_id=sa.unit_off_lab_id " +
-            "INNER JOIN unit_offering u ON u.unit_off_id=ul.unit_off_id" +
-            "WHERE" +
-                "u.unit_code=? " +
-                "AND u.unit_off_year=? " +
-                "AND u.unit_off_period=? " +
-                "AND s.student_id=?; ",
-                [unitCode, year, period, studentId]
-        );
+    await promiseBasedQuery( // delete group allocation for student
+        "DELETE FROM group_allocation " +
+        "WHERE group_alloc_id IN ( " +
+        "   SELECT subquery.group_alloc_id " +
+        "   FROM ( " +
+        "       SELECT ga.group_alloc_id " +
+        "       FROM unit_offering u " +
+        "           INNER JOIN unit_off_lab l ON u.unit_off_id = l.unit_off_id " +
+        "           INNER JOIN lab_group g ON g.unit_off_lab_id = l.unit_off_lab_id " +
+        "           INNER JOIN group_allocation ga ON ga.lab_group_id = g.lab_group_id " +
+        "           INNER JOIN student s ON s.stud_unique_id = ga.stud_unique_id " +
+        "       WHERE u.unit_code=? " +
+        "           AND u.unit_off_year=? " +
+        "           AND u.unit_off_period=? " +
+        "           AND s.student_id=? " +
+        "   ) AS subquery " +
+        ");",
+        [unitCode, year, period, studentId]
+    )
 
-        await promiseBasedQuery(
-            "DELETE FROM student_lab_allocation " +
-            "WHERE stud_lab_alloc_id=?; ",
-            [stud_lab_alloc_id]
-        );
+    await promiseBasedQuery( // delete lab allocation for student
+        "DELETE FROM student_lab_allocation " +
+        "WHERE stud_lab_alloc_id IN ( " +
+        "   SELECT subquery.stud_lab_alloc_id " +
+        "   FROM ( " +
+        "       SELECT la.stud_lab_alloc_id " +
+        "       FROM unit_offering u " +
+        "           INNER JOIN unit_off_lab l ON u.unit_off_id = l.unit_off_id " +
+        "           INNER JOIN student_lab_allocation la ON la.unit_off_lab_id = l.unit_off_lab_id " +
+        "           INNER JOIN student s ON s.stud_unique_id = la.stud_unique_id " +
+        "       WHERE u.unit_code=? " +
+        "           AND u.unit_off_year=? " +
+        "           AND u.unit_off_period=? " +
+        "           AND s.student_id=? " +
+        "   ) AS subquery " +
+        ");",
+        [unitCode, year, period, studentId]
+    )
 
-        if (!stud_lab_alloc_id) {
-            return res.status(404).send({ message: "Student lab allocation not found" });
-        }
+    await promiseBasedQuery( // delete unit enrolment for student
+        "DELETE FROM unit_enrolment " +
+        "WHERE enrolment_id IN ( " +
+        "   SELECT subquery.enrolment_id " +
+        "   FROM ( " +
+        "       SELECT ue.enrolment_id " +
+        "       FROM unit_offering u " +
+        "           INNER JOIN unit_enrolment ue ON u.unit_off_id = ue.unit_off_id " +
+        "           INNER JOIN student s ON s.stud_unique_id = ue.stud_unique_id " +
+        "       WHERE u.unit_code=? " +
+        "           AND u.unit_off_year=? " +
+        "           AND u.unit_off_period=? " +
+        "           AND s.student_id=? " +
+        "   ) AS subquery " +
+        ");",
+        [unitCode, year, period, studentId]
+    )
 
-        // todo delete group allocation for this student
-        const group_alloc_id = await promiseBasedQuery(
-            "SELECT group_alloc_id " +
-            "FROM student s " +
-            "INNER JOIN group_allocation ga ON ga.stud_unique_id=s.stud_unique_id " +
-            "INNER JOIN lab_group lg ON lg.lab_group_id=ga.lab_group_id " +
-            "INNER JOIN unit_off_lab ul ON ul.unit_off_lab_id=lg.unit_off_lab_id " +
-            "INNER JOIN unit_offering u ON u.unit_off_id=ul.unit_off_id " +
-            "WHERE " +
-            "u.unit_code=? " +
-            "AND u.unit_off_year=? " +
-            "AND u.unit_off_period=? " +
-            "AND s.student_id=?;",
-            [unitCode, year, period, studentId]
-        );
-
-        await promiseBasedQuery(
-            "DELETE FROM group_allocation " +
-            "WHERE group_alloc_id=?;",
-            [group_alloc_id]
-        )
-
-        if (!enrolment_id) {
-            return res.status(404).send({ message: "Student group allocation not found" });
-        }
-
-        // Respond with success message
-        res.status(200).send({ message: "Student successfully deleted from specified unit"});
-
-    } catch (err) {
-        // Respond with error message
-        console.error("An error occurred while deleting", err);
-        res.status(500).send({ message: "An error occurred while deleting"});
-    }
+    res.status(200).send();
 }
 
 // delete a single student from group
@@ -171,36 +208,28 @@ const deleteStudentGroupAlloc = async (req, res) => {
         period,
         studentId
     } = req.params;
-    // error handling for unexpected issues
-    try {
-         // Delete student from group
-        const group_alloc_id = await promiseBasedQuery(
-            "SELECT group_alloc_id " +
-            "FROM student s " +
-            "INNER JOIN group_allocation ga ON ga.stud_unique_id=s.stud_unique_id " +
-            "INNER JOIN lab_group lg ON lg.lab_group_id=ga.lab_group_id " +
-            "INNER JOIN unit_off_lab ul ON ul.unit_off_lab_id=lg.unit_off_lab_id " +
-            "INNER JOIN unit_offering u ON u.unit_off_id=ul.unit_off_id " +
-            "WHERE " +
-            "u.unit_code=? " +
-            "AND u.unit_off_year=? " +
-            "AND u.unit_off_period=? " +
-            "AND s.student_id=?;",
-            [unitCode, year, period, studentId]
-        );
 
-        await promiseBasedQuery(
-            "DELETE FROM group_allocation " +
-            "WHERE group_alloc_id=?;",
-            [group_alloc_id]
-        )
-         // Respond with success message todo later, look into best practices for res messages in DEL requests
-         res.status(200).send({ message: "Student successfully deleted from lab allocations"});
-    } catch (err) {
-        // Respond with error message
-        console.error("An error occurred while deleting", err);
-        res.status(500).send({ message: "An error occurred while deleting"});
-    }
+    await promiseBasedQuery(
+        "DELETE FROM group_allocation " +
+        "WHERE group_alloc_id IN ( " +
+        "   SELECT subquery.group_alloc_id " +
+        "   FROM ( " +
+        "       SELECT ga.group_alloc_id " +
+        "       FROM unit_offering u " +
+        "           INNER JOIN unit_off_lab l ON u.unit_off_id = l.unit_off_id " +
+        "           INNER JOIN lab_group g ON g.unit_off_lab_id = l.unit_off_lab_id " +
+        "           INNER JOIN group_allocation ga ON ga.lab_group_id = g.lab_group_id " +
+        "           INNER JOIN student s ON s.stud_unique_id = ga.stud_unique_id " +
+        "       WHERE u.unit_code=? " +
+        "           AND u.unit_off_year=? " +
+        "           AND u.unit_off_period=? " +
+        "           AND s.student_id=? " +
+        "   ) AS subquery " +
+        ");",
+        [unitCode, year, period, studentId]
+    )
+
+    res.status(200).send();
 }
 
 // update a student's details
@@ -228,11 +257,113 @@ const updateStudent = async (req, res) => {
     }
 }
 
+const addStudentBelbin = async (req, res) => {
+    const {unitCode, year, period} = req.params
+    const students = req.body;
+
+    console.log(students)
+
+        // error handling for unexpected issues
+
+        for(let i = 0; i < students.length; i++){
+
+            let student = students[i];
+            
+            try {
+                const updateQuery =
+                    "insert into personality_test_attempt (test_type, stud_unique_id, unit_off_id) " +
+                    "values ('belbin', (select stud_unique_id from student where student_id like ?), (select unit_off_id from unit_offering where unit_code like ? and unit_off_year like ? and lower(unit_off_period) like ?) ) " ;
+                // updated values for the student
+        
+                await promiseBasedQuery(updateQuery, [student.studentId, unitCode, year, period]);
+                // Respond with success message
+                //res.status(200).send({ message: "Student details updated"});
+        
+            } catch (err) {
+                // Respond with error message
+                console.log("Error while updating student ", err);
+                //res.status(500).send({ error: "Error occurred while updating student details" })
+            }
+        }
+
+        for(let i = 0; i < students.length; i++){
+
+            let student = students[i];
+
+            try {
+
+                const updateQuery =
+                    "insert into belbin_result (personality_test_attempt, belbin_type) " +
+                    "values ((select test_attempt_id from personality_test_attempt where test_type like 'belbin' and stud_unique_id like (select stud_unique_id from student where student_id like ? and test_type = 'belbin') and unit_off_id like (select unit_off_id from unit_offering where unit_code like ? and unit_off_year like ? and lower(unit_off_period) like ?)), ?)" ;
+                // updated values for the student
+        
+                await promiseBasedQuery(updateQuery, [student.studentId, unitCode, year, period, student.belbinType]);
+                // Respond with success message
+        
+            } catch (err) {
+                // Respond with error message
+                console.log("Error while updating student ", err);
+            }
+
+        }
+}
+
+const addStudentEffort = async (req, res) => {
+    const {unitCode, year, period} = req.params
+    const students = req.body;
+
+    console.log(students)
+
+    for(let i = 0; i < students.length; i++){
+
+        let student = students[i];
+        
+        try {
+            const updateQuery =
+                "insert into personality_test_attempt (test_type, stud_unique_id, unit_off_id) " +
+                "values ('effort', (select stud_unique_id from student where student_id like ?), (select unit_off_id from unit_offering where unit_code like ? and unit_off_year like ? and lower(unit_off_period) like ?) ) " ;
+            // updated values for the student
+    
+            await promiseBasedQuery(updateQuery, [student.studentId, unitCode, year, period]);
+            // Respond with success message
+            //res.status(200).send({ message: "Student details updated"});
+    
+        } catch (err) {
+            // Respond with error message
+            console.log("Error while updating student ", err);
+            //res.status(500).send({ error: "Error occurred while updating student details" })
+        }
+    }
+
+    for(let i = 0; i < students.length; i++){
+
+        let student = students[i];
+
+        try {
+
+            const updateQuery =
+                "insert into effort_result (personality_test_attempt, time_commitment_hrs, assignment_avg, marks_per_hour) " +
+                "values ((select test_attempt_id from personality_test_attempt where test_type like 'effort' and stud_unique_id like (select stud_unique_id from student where student_id like ? ) and unit_off_id like (select unit_off_id from unit_offering where unit_code like ? and unit_off_year like ? and lower(unit_off_period) like ?)), ?, ?, ?)" ;
+            // updated values for the student
+    
+            await promiseBasedQuery(updateQuery, [student.studentId, unitCode, year, period, student.hours, student.averageMark, student.marksPerHour]);
+            // Respond with success message
+    
+        } catch (err) {
+            // Respond with error message
+            console.log("Error while updating student ", err);
+        }
+
+    }
+}
+
 module.exports = {
     getAllStudents,
     getStudent,
     addAllStudents,
     deleteStudentEnrolment,
     deleteStudentGroupAlloc,
-    updateStudent
+    updateStudent,
+    addStudentBelbin,
+    addStudentEffort 
 };

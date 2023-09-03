@@ -1,9 +1,22 @@
-import { Tr, Td} from '@chakra-ui/react';
+import { Tr, Td, useDisclosure} from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
+import { useParams } from 'react-router';
 import ChangeStudentGroupModal from './ChangeStudentGroupModal';
+import { MockAuth } from '../mockAuth/mockAuth';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const StudentRowStudentDisplay = ({ studentData, numberOfGroups, onDelete }) => {
+    let authService = {
+        "DEV": MockAuth,
+        "TEST": useAuth0
+      }
+
+      const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
     /* HTML component for each student in each group in the 'List Students' View */
+    const {
+        onClose: onCloseDetails,
+    } = useDisclosure();
+
     const {
         student_id,
         preferred_name,
@@ -11,9 +24,32 @@ const StudentRowStudentDisplay = ({ studentData, numberOfGroups, onDelete }) => 
         email_address,
     } = studentData;
 
-    const handleDelete = () => {
-        onDelete(student_id);
+    const {
+        unitCode,
+        year,
+        period
+    } = useParams();
+
+  const handleDeleteStudentEnrolment = (event) => {
+    event.preventDefault();
+    console.log("delete student");
+    getAccessTokenSilently().then((token) => {
+    fetch(`http://localhost:8080/api/students/enrolment/${unitCode}/${year}/${period}/${student_id}`, {
+      method: 'DELETE',
+      headers: new Headers({
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }),
+    });
+    });
+
+    let answer = window.confirm('Student deleted successfully from enrolment');
+    if (answer) {
+        onCloseDetails();
     }
+    window.location.reload();
+  }
 
     return (
         <Tr>
@@ -24,6 +60,7 @@ const StudentRowStudentDisplay = ({ studentData, numberOfGroups, onDelete }) => 
             <Td>
                 <DeleteIcon
                     style={{ cursor: 'pointer' }}
+                    onClick={handleDeleteStudentEnrolment}
                 />
             </Td>
         </Tr>

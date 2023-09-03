@@ -1,2 +1,30 @@
-node_modules
+# DEPENDENCIES
+backend/node_modules
+frontend/node_modules
+frontend/.pnp
+frontend/.pnp.js
+
+# TESTING
+frontend/coverage
+
+# PRODUCTION
+frontend/build
+
+# MISC
 backend/.env
+backend/.DS_Store
+backend/.env.local
+backend/.env.development.local
+backend/.env.test.local
+backend/.env.production.loca
+frontend/.DS_Store
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+.idea/
+
+# DEBUG/LOGS
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*

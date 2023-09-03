@@ -102,6 +102,7 @@ function UnitPage() {
       })
     }).then((res) => res.json())
       .then((data) => {
+        console.log(data);
         setUnits(data);
       })
       .catch((err) => {

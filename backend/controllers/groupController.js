@@ -4,13 +4,12 @@
  *
  */
 const {
-    promiseBasedQuery,
-    selectUnitOffKey
+    promiseBasedQuery
 } = require("../helpers/commonHelpers");
 
 const {
     groupFormationStrategies,
-} = require("../helpers/groupControllerHelpers")
+} = require("../helpers/groupFormationHelpers")
 
 // get all groups from a unit
 const getAllGroups = async (req, res) => {
@@ -62,7 +61,6 @@ const getAllGroups = async (req, res) => {
         })
 
         // if the next student is in a new group or this is the last student, push this group
-        //console.log(i, studentData[i+1]['groupNumber'], studentData[i]['groupNumber'])
         if(i+1 === studentData.length || studentData[i+1].group_number !== studentData[i].group_number) {
             responseData.push(group);
         }
@@ -75,56 +73,6 @@ const getAllGroups = async (req, res) => {
 const getGroup = async (req, res) => {
     res.status(200).send({wip: "test"});
 }
-// DRAFT OF getGroup, testing in progress
-// const getGroup = async (req, res) => {
-//     const {
-//         unitCode,
-//         year,
-//         period,
-//         groupNumber // assuming group number is part of the request parameters
-//     } = req.params;
-
-//     /* GET A SPECIFIC GROUP */
-//     const groupData = await promiseBasedQuery(
-//         'SELECT stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val, l_group.group_number, lab.lab_number ' +
-//         'FROM student stud ' +
-//         'INNER JOIN group_allocation g_alloc ON stud.stud_unique_id=g_alloc.stud_unique_id ' +
-//         'INNER JOIN lab_group l_group ON g_alloc.lab_group_id=l_group.lab_group_id ' +
-//         'INNER JOIN unit_off_lab lab ON lab.unit_off_lab_id=l_group.unit_off_lab_id ' +
-//         'INNER JOIN unit_offering unit ON unit.unit_off_id=lab.unit_off_id ' +
-//         'WHERE' +
-//         '   unit.unit_code=? ' +
-//         '   AND unit.unit_off_year=? ' +
-//         '   AND unit.unit_off_period=? ' +
-//         '   AND l_group.group_number=? ' +
-//         'ORDER BY l_group.group_number;',
-//         [unitCode, year, period, groupNumber]
-//     );
-
-//     const group = {group_number: groupNumber, lab_number: groupData[0].lab_number, students: []};
-//     for(let i=0; i<groupData.length; i++) {
-//         // add student to the groups list of students
-//         const {
-//             student_id,
-//             preferred_name,
-//             last_name,
-//             email_address,
-//             wam_val
-//         } = groupData[i];
-
-//         group.students.push({
-//             student_id: student_id,
-//             preferred_name: preferred_name,
-//             last_name: last_name,
-//             email_address: email_address,
-//             wam_val: wam_val
-//         });
-//     }
-
-//     res.status(200).send(group);
-// }
-
-
 
 // create all the groups (based on csv)
 const createUnitGroups = async (req, res) => {
@@ -148,6 +96,44 @@ const createUnitGroups = async (req, res) => {
     if (!strategy) {
         strategy='random';
     }
+
+    /* DELETE ALL PREVIOUS GROUP ALLOCATIONS */
+    await promiseBasedQuery(
+        'DELETE FROM group_allocation ' +
+        'WHERE group_alloc_id IN (' +
+        '  SELECT subquery.group_alloc_id ' +
+        '  FROM (' +
+        '    SELECT ga.group_alloc_id ' +
+        '    FROM lab_group g ' +
+        '    INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id ' +
+        '    INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id ' +
+        '    INNER JOIN group_allocation ga ON ga.lab_group_id = g.lab_group_id ' +
+        '    WHERE u.unit_code = ? ' +
+        '      AND u.unit_off_year = ? ' +
+        '      AND u.unit_off_period = ? ' +
+        '  ) AS subquery' +
+        ');',
+        [unitCode, year, period]
+    );
+
+    /* DELETE ALL PREVIOUS GROUPS THEMSELVES */
+    await promiseBasedQuery(
+        'DELETE FROM lab_group ' +
+        'WHERE lab_group_id IN ( ' +
+        '  SELECT subquery.lab_group_id ' +
+        '  FROM ( ' +
+        '    SELECT g.lab_group_id ' +
+        '    FROM lab_group g ' +
+        '    INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id ' +
+        '    INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id ' +
+        '    WHERE ' +
+        '      u.unit_code = ? ' +
+        '      AND u.unit_off_year = ? ' +
+        '      AND u.unit_off_period = ? ' +
+        '  ) AS subquery' +
+        ');',
+        [unitCode, year, period]
+    );
 
     await groupFormationStrategies[strategy](unitCode, year, period, groupSize, variance);
     res.status(200).send();
@@ -215,7 +201,6 @@ const deleteGroup = async (req, res) => {
 
 // move a student from one group to another
 const moveStudent = async (req, res) => {
-    /* REQUIRES OFFERING, STUDENT, OLD GROUP, NEW GROUP */
     const {
         unitCode,
         year,
@@ -223,8 +208,6 @@ const moveStudent = async (req, res) => {
         studentId
     } = req.params;
     const { newGroup } = req.body;
-
-    console.log(unitCode, year, period, studentId, newGroup);
 
     /* OBTAIN ALLOCATION AND ASSIGNMENT DATA REQUIRED FOR UPDATES */
     // get the id of the new group we are changing to as well as the id of the lab it is in
@@ -277,6 +260,10 @@ const moveStudent = async (req, res) => {
     }
 
     res.status(200).send({wip: "test"});
+}
+
+const createGroupsCustomScript = (unitOffId, labId, studentsList, groupSize, variance) => {
+    let groups = [];
 }
 
 module.exports = {

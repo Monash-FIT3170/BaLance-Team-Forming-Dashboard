@@ -1,4 +1,4 @@
-import { Tr, Td, HStack, Spacer, Button } from '@chakra-ui/react';
+import { Tr, Td, HStack, Spacer, Button, useDisclosure } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { useParams } from 'react-router';
 import ChangeStudentGroupModal from './ChangeStudentGroupModal';
@@ -8,6 +8,10 @@ import { MockAuth } from '../mockAuth/mockAuth';
 
 function StudentRowGroupDisplay({studentData, numberOfGroups}) {
   /* HTML component for each student in each group in the 'View Groups' View */
+    const {
+        onClose: onCloseDetails,
+    } = useDisclosure();
+
     const {
         student_id,
         preferred_name,
@@ -19,7 +23,7 @@ function StudentRowGroupDisplay({studentData, numberOfGroups}) {
     const {
         unitCode,
         year,
-        period
+        period,
     } = useParams();
 
 
@@ -31,9 +35,9 @@ function StudentRowGroupDisplay({studentData, numberOfGroups}) {
     const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
 
-  const handleDeleteStudent = (event) => {
-    getAccessTokenSilently().then((token) => {
-    fetch(`http://localhost:8080/api/units/${unitCode}/${year}/${period}/${student_id}`, {
+  const handleDeleteStudentGroupAlloc = (event) => {
+    getAccessTokenSilently().then((token) => {;
+    fetch(`http://localhost:8080/api/students/groupAlloc/${unitCode}/${year}/${period}/${student_id}`, {
       method: 'DELETE',
       headers: new Headers({
         'Authorization': `Bearer ${token}`,
@@ -42,6 +46,12 @@ function StudentRowGroupDisplay({studentData, numberOfGroups}) {
       }),
     });
   });
+
+    let answer = window.confirm('Student deleted from labs and groups');
+    if (answer) {
+        onCloseDetails();
+    }
+    window.location.reload();
   }
 
     return (
@@ -62,7 +72,7 @@ function StudentRowGroupDisplay({studentData, numberOfGroups}) {
             <Td>
                 <DeleteIcon
                  style={{ cursor: 'pointer'}}
-                 onClick={handleDeleteStudent}
+                 onClick={handleDeleteStudentGroupAlloc}
                  />
             </Td>
         </Tr>

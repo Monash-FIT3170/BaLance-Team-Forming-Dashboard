@@ -58,6 +58,18 @@ function CreateGroups() {
         "variance": variance
     }
 
+    const navigateToOfferingDashboardGroups = () => {
+        navigate(`/groups/${unitCode}/${year}/${period}`);
+    };
+
+    const navigateToOfferingDashboardStudents = () => {
+        navigate(`/students/${unitCode}/${year}/${period}`);
+    };
+
+    const navigateUploadScript = () => {
+        navigate(`/uploadGroupScript/${unitCode}/${year}/${period}`);
+    };
+    
     const handleSubmitGroupOptions = async (event) => {
         event.preventDefault();
 
@@ -69,7 +81,7 @@ function CreateGroups() {
                 `/uploadGroupScript/${unitCode}/${year}/${period}`,
                 {state: { groupDetails }});
         } else { 
-            navigateToOfferingDashboard();
+            navigateToOfferingDashboardGroups();
 
             /* Call to shuffle groups */
             fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
@@ -86,43 +98,19 @@ function CreateGroups() {
                 })
             }).catch((error) => { console.error('Error:', error); })
         }
-
-        /* Creating new groups */
-        /*
-        await fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`, {
-            method: 'POST',
-            headers: new Headers({
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }),
-            body: JSON.stringify({
-                groupSize: groupSize,
-                variance: variance,
-                strategy: strategy
-            })
-        });
-        */
+        window.location.reload();
     }
-
-    const navigateToOfferingDashboard = () => {
-        navigate(`/groups/${unitCode}/${year}/${period}`);
-    };
-
-    const navigateUploadScript = () => {
-        navigate(`/uploadGroupScript/${unitCode}/${year}/${period}`);
-    };
 
     return (
         <>
             <Box as="header" p="4" textAlign="center">
                 <Text fontSize="2xl" fontWeight="bold">
-                    {`${unitCode} - ${period} ${year}, **CAMPUS**`}
+                    {`Configure Groups for: ${unitCode} - ${period}, ${year}`}
                 </Text>
             </Box>
 
             <Center>
-                <Button onClick={navigateToOfferingDashboard}>
+                <Button onClick={navigateToOfferingDashboardStudents}>
                     <HStack>
                         <ArrowBackIcon />
                         <Spacer />
