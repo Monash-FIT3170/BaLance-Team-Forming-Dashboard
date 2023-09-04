@@ -14,6 +14,7 @@ async function storeGroupsInDatabase(unitCode, year, period, parsedOutput) {
 	const unitOffId = unitOffIdResult[0].unit_off_id;
 
 	for (let labId in parsedOutput) {
+		console.log('LAB ID:', labId);
 		// Check if the lab exists
 		const labExists = await promiseBasedQuery(
 			'SELECT unit_off_lab_id FROM unit_off_lab WHERE lab_number = ? AND unit_off_id = ?',
@@ -55,7 +56,7 @@ async function storeGroupsInDatabase(unitCode, year, period, parsedOutput) {
 				);
 			}
 
-			console.log(group);
+			//console.log(group);
 			var labGroupId;
 			const result = await promiseBasedQuery('SELECT lab_group_id FROM lab_group WHERE unit_off_lab_id = ?', [
 				currentLabId
@@ -66,7 +67,7 @@ async function storeGroupsInDatabase(unitCode, year, period, parsedOutput) {
 				throw new Error('No corresponding lab_group_id found for given unit_off_lab_id');
 			}
 
-			for (let student of group.members) {
+			for (let student of group) {
 				await promiseBasedQuery('INSERT INTO group_allocation (stud_unique_id, lab_group_id) VALUES (?, ?);', [
 					student.stud_unique_id,
 					labGroupId
@@ -76,7 +77,7 @@ async function storeGroupsInDatabase(unitCode, year, period, parsedOutput) {
 	}
 }
 
-async function getStudentData(unitCode, year, period) {
+async function getUnitStudentData(unitCode, year, period) {
 	return await promiseBasedQuery(
 		'SELECT stud.stud_unique_id, stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val ' +
 			'FROM student stud ' +
@@ -87,53 +88,84 @@ async function getStudentData(unitCode, year, period) {
 	);
 }
 
-async function getStudentLabAllocations(students) {
-	const studentIds = students.map((s) => s.stud_unique_id);
+async function getLabsInUnit(unit_off_id) {
+	return await promiseBasedQuery('SELECT unit_off_lab_id FROM unit_off_lab WHERE unit_off_id = ?', [ unit_off_id ]);
+}
+
+async function getUnitOffId(unit_code) {
+	return await promiseBasedQuery('SELECT unit_off_id FROM unit_offering WHERE unit_code = ?', [ unit_code ]);
+}
+
+async function getStudedntsInLab(unit_off_lab_id) {
+	//const studentIds = students.map((s) => s.stud_unique_id);
+	return await promiseBasedQuery('SELECT stud_unique_id FROM student_lab_allocation WHERE unit_off_lab_id = ?', [
+		unit_off_lab_id
+	]);
+}
+
+async function getStudentData(stud_unique_id) {
 	return await promiseBasedQuery(
-		'SELECT stud_unique_id, unit_off_lab_id FROM student_lab_allocation WHERE stud_unique_id IN (?)',
-		[ studentIds ]
+		'SELECT stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val ' +
+			'FROM student stud WHERE stud_unique_id = ?',
+		[ stud_unique_id ]
 	);
 }
 
 async function uploadCustomScript(req, res) {
 	const { unitCode, year, period } = req.params;
-	const students = await getStudentData(unitCode, year, period);
-	console.log('Students:', students);
+	const studentsInUnit = await getUnitStudentData(unitCode, year, period);
+	//console.log('STUDENTS IN unit:', studentsInUnit);
 
-	const studentLabAllocations = await getStudentLabAllocations(students);
+	const unit_off_id = await getUnitOffId(unitCode);
+	const unit_off_lab_ids = await getLabsInUnit(unit_off_id[0].unit_off_id);
+	//console.log('UNIT OFF LAB IDS: ', unit_off_lab_ids);
 	const labGroups = {};
 
-	for (const labAllocation of studentLabAllocations) {
-		const labId = labAllocation.unit_off_lab_id;
-		const labStudents = students.filter((student) => student.stud_unique_id === labAllocation.stud_unique_id);
+	for (const unit_off_lab_id of unit_off_lab_ids) {
+		// Get students assigned to current lab
+		const unit_off_lab_id_data = unit_off_lab_id.unit_off_lab_id;
+		const labStudents = await getStudedntsInLab(unit_off_lab_id_data);
+		//console.log('LAB STUDENTS: ', labStudents);
+		//console.log('UNIT OFF LAB ID: ', unit_off_lab_id.unit_off_lab_id);
+		//const labStudents = studentInUnit.filter((student) => student.stud_unique_id === labAllocation.stud_unique_id);
 
-		if (!labGroups[labId]) {
-			labGroups[labId] = [];
+		if (!labGroups[unit_off_lab_id_data]) {
+			labGroups[unit_off_lab_id_data] = [];
 		}
 
-		labGroups[labId].push(labStudents);
+		labGroups[unit_off_lab_id_data].push(labStudents);
 	}
 
 	const groupSize = req.body.groupSize || 5; // assuming a default group size of 5 if not provided
-	console.log('LAB GROUPS:', labGroups);
+	//console.log('LAB GROUPS:', labGroups);
 
 	try {
 		const { scriptContent } = req.body;
 		if (!scriptContent) throw new Error('Script content is missing.');
 
 		// Modified pythonArgs to include the studentLabAllocations and groupSize
-		const pythonArgs = [ JSON.stringify(students), JSON.stringify(studentLabAllocations), groupSize.toString() ];
+		//const pythonArgs = [ JSON.stringify(students), JSON.stringify(studentLabAllocations), groupSize.toString() ];
+
+		// Set up the output for the groups
+		var parsedOutput = {};
 
 		// Run the Python script for each lab group
 		for (const labId in labGroups) {
-			const labStudents = labGroups[labId];
+			const labStudents = labGroups[labId][0];
+			const labStudentsData = [];
 
+			// Get full student data
+			for (let i = 0; i < labStudents.length; i++) {
+				const stud_unique_id = labStudents[i].stud_unique_id;
+				const labStudentData = await getStudentData(stud_unique_id);
+				labStudentsData.push(labStudentData);
+			}
+
+			//console.log('LAB STUDENTS DATA: ', labStudentsData);
 			// Modify the pythonArgs to include only the labStudents for the current lab
-			const labPythonArgs = [ unitCode, year, period, JSON.stringify(labStudents) ];
+			const labPythonArgs = [ unitCode, year, period, JSON.stringify(labStudentsData) ];
 
-			// Serialize the labPythonArgs array into a JSON string
-			const labPythonArgsJSON = JSON.stringify(labPythonArgs);
-			console.log(labPythonArgsJSON);
+			//console.log(labPythonArgsJSON);
 			const pythonProcess = spawn('python', [ '-c', scriptContent, ...labPythonArgs ]);
 
 			let output = '';
@@ -151,12 +183,11 @@ async function uploadCustomScript(req, res) {
 				});
 			});
 
-			console.log('OUTPUT: ', output);
-			const parsedOutput = JSON.parse(output);
-			console.log('PARSED OUTPUT: ', parsedOutput);
-			await storeGroupsInDatabase(unitCode, year, period, parsedOutput);
+			parsedOutput[labId] = JSON.parse(output);
 		}
 
+		console.log('PARSED OUTPUT: ', parsedOutput);
+		//await storeGroupsInDatabase(unitCode, year, period, parsedOutput);
 		res.json({ message: 'Groups generated and stored successfully.' });
 	} catch (error) {
 		console.error('An unexpected error occurred:', error);
