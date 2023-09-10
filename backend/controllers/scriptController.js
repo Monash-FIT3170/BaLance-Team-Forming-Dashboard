@@ -1,7 +1,7 @@
 const multer = require('multer');
 const { spawn } = require('child_process');
 
-const { promiseBasedQuery } = require('../helpers/commonHelpers');
+const { promiseBasedQuery, selectUnitOffKey } = require('../helpers/commonHelpers');
 
 async function storeGroupsInDatabase(unitCode, year, period, parsedOutput) {
 	const unitOffIdResult = await promiseBasedQuery(
@@ -11,69 +11,77 @@ async function storeGroupsInDatabase(unitCode, year, period, parsedOutput) {
 
 	if (!unitOffIdResult.length) throw new Error('Invalid unit code, year, or period provided.');
 
-	const unitOffId = unitOffIdResult[0].unit_off_id;
+	const unitOffId = await selectUnitOffKey(unitCode, year, period);
 
-	for (let labId in parsedOutput) {
-		console.log('LAB ID:', labId);
-		// Check if the lab exists
-		const labExists = await promiseBasedQuery(
-			'SELECT unit_off_lab_id FROM unit_off_lab WHERE lab_number = ? AND unit_off_id = ?',
-			[ labId, unitOffId ]
+	const students = await promiseBasedQuery(
+		'SELECT stud.stud_unique_id, alloc.unit_off_lab_id ' +
+			'FROM student stud ' +
+			'INNER JOIN student_lab_allocation alloc ON stud.stud_unique_id=alloc.stud_unique_id ' +
+			'INNER JOIN unit_off_lab lab ON lab.unit_off_lab_id=alloc.unit_off_lab_id ' +
+			'INNER JOIN unit_offering unit ON unit.unit_off_id=lab.unit_off_id ' +
+			'WHERE ' +
+			'   unit.unit_code=? ' +
+			'   AND unit.unit_off_year=? ' +
+			'   AND unit.unit_off_period=? ' +
+			'ORDER BY unit_off_lab_id;',
+		[ unitCode, year, period ]
+	);
+
+	var labStudents = {};
+	labStudents = await transformParsedOutput(parsedOutput);
+
+	//console.log('LAB STUDENTS: ', labStudents);
+
+	const groupInsertData = [];
+	let numGroups = 0;
+	for (let labId in labStudents) {
+		//console.log('LAB ID:', labId);
+
+		/* INSERT THE NEW GROUPS INTO THE DATABASE */
+		// determine the number of groups to be inserted to database -> inserted as [unit_off_lab_id, group_number]
+		labStudents[labId].forEach((student) => {
+			numGroups++;
+			groupInsertData.push([ labId, numGroups ]);
+		});
+
+		await promiseBasedQuery('INSERT IGNORE INTO lab_group (unit_off_lab_id, group_number) VALUES ?;', [
+			groupInsertData
+		]);
+
+		/* INSERT THE ALLOCATIONS TO GROUPS INTO THE DATABASE */
+		// get all groups in this unit as [ >> group_id <<, lab_id]
+		const groupAllocInsertData = [];
+		const groupData = await promiseBasedQuery(
+			'SELECT g.lab_group_id, g.unit_off_lab_id ' +
+				'FROM lab_group g ' +
+				'INNER JOIN unit_off_lab l ON g.unit_off_lab_id=l.unit_off_lab_id ' +
+				'INNER JOIN unit_offering u ON u.unit_off_id=l.unit_off_id ' +
+				'WHERE ' +
+				'   u.unit_code=? ' +
+				'   AND u.unit_off_year=? ' +
+				'   AND u.unit_off_period=?;',
+			[ unitCode, year, period ]
 		);
 
-		let currentLabId;
-
-		if (!labExists.length) {
-			const result = await promiseBasedQuery(
-				'INSERT INTO unit_off_lab (unit_off_id, lab_number) VALUES (?, ?);',
-				[ unitOffId, parseInt(labId) ]
-			);
-			currentLabId = result.insertId; // Capture the generated primary key
-		} else {
-			currentLabId = labExists[0].unit_off_lab_id; // Use the existing lab's ID
+		console.log('GROUP DATA: ', groupData);
+		// for each group, pop a group from the lab key in object and form the allocation
+		for (let i = 0; i < numGroups; i++) {
+			const group = groupData.pop();
+			console.log('GROUP: ', group);
+			const groupStudents = labStudents[group.unit_off_lab_id].pop();
+			console.log('GROUP STUDENTS: ', groupStudents);
+			if (!groupStudents) {
+				break;
+			}
+			groupStudents.forEach((studentId) => {
+				groupAllocInsertData.push([ studentId, group.lab_group_id ]);
+			});
 		}
 
-		const groupsInThisLab = parsedOutput[labId];
-		for (let i = 0; i < groupsInThisLab.length; i++) {
-			const group = groupsInThisLab[i];
-			const groupNumber = i + 1;
-
-			// Check if the combination already exists
-			const labGroupExists = await promiseBasedQuery(
-				'SELECT * FROM lab_group WHERE unit_off_lab_id = ? AND group_number = ?',
-				[ currentLabId, groupNumber ]
-			);
-
-			if (!labGroupExists.length) {
-				// If it doesn't exist, perform the insertion
-				await promiseBasedQuery('INSERT INTO lab_group (unit_off_lab_id, group_number) VALUES (?, ?);', [
-					currentLabId,
-					groupNumber
-				]);
-			} else {
-				console.warn(
-					`Lab Group with unit_off_lab_id: ${currentLabId} and group_number: ${groupNumber} already exists.`
-				);
-			}
-
-			//console.log(group);
-			var labGroupId;
-			const result = await promiseBasedQuery('SELECT lab_group_id FROM lab_group WHERE unit_off_lab_id = ?', [
-				currentLabId
-			]);
-			if (result && result.length > 0) {
-				labGroupId = result[0].lab_group_id;
-			} else {
-				throw new Error('No corresponding lab_group_id found for given unit_off_lab_id');
-			}
-
-			for (let student of group) {
-				await promiseBasedQuery('INSERT INTO group_allocation (stud_unique_id, lab_group_id) VALUES (?, ?);', [
-					student.stud_unique_id,
-					labGroupId
-				]);
-			}
-		}
+		// student allocations are created as [~~group_alloc_id~~, stud_unique_id, lab_group_id]
+		await promiseBasedQuery('INSERT IGNORE INTO group_allocation (stud_unique_id, lab_group_id) VALUES ?;', [
+			groupAllocInsertData
+		]);
 	}
 }
 
@@ -109,6 +117,37 @@ async function getStudentData(stud_unique_id) {
 			'FROM student stud WHERE stud_unique_id = ?',
 		[ stud_unique_id ]
 	);
+}
+
+async function getStudentUniqueId(student_id) {
+	return await promiseBasedQuery('SELECT stud.stud_unique_id ' + 'FROM student stud WHERE student_id = ?', [
+		student_id
+	]);
+}
+
+async function transformParsedOutput(parsedOutput) {
+	const labStudents = {};
+
+	for (const labId in parsedOutput) {
+		const labData = parsedOutput[labId];
+
+		// Process each group within the labData
+		const groups = [];
+		for (const group of labData) {
+			const studentIdsInGroup = await Promise.all(
+				group.map(async (student) => {
+					//console.log('STUDENT ID: ', parseInt(student[0].student_id));
+					const result = await getStudentUniqueId(parseInt(student[0].student_id));
+					return result[0].stud_unique_id;
+				})
+			);
+			groups.push(studentIdsInGroup);
+		}
+
+		labStudents[labId] = groups;
+	}
+	console.log('RETURN: ', labStudents);
+	return labStudents;
 }
 
 async function uploadCustomScript(req, res) {
@@ -187,7 +226,7 @@ async function uploadCustomScript(req, res) {
 		}
 
 		console.log('PARSED OUTPUT: ', parsedOutput);
-		//await storeGroupsInDatabase(unitCode, year, period, parsedOutput);
+		await storeGroupsInDatabase(unitCode, year, period, parsedOutput);
 		res.json({ message: 'Groups generated and stored successfully.' });
 	} catch (error) {
 		console.error('An unexpected error occurred:', error);
