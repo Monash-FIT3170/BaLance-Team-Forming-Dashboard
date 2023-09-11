@@ -17,7 +17,6 @@ const {
     insertStudentLabAllocations
 } = require("../helpers/studentControllerHelpers");
 
-/* CONTROLLER FUNCTIONS */
 // gets all students for a unit
 const getAllStudents = async (req, res) => {
     const { // get the URL params
@@ -257,104 +256,123 @@ const updateStudent = async (req, res) => {
     }
 }
 
-const addStudentBelbin = async (req, res) => {
-    const {unitCode, year, period} = req.params
-    const students = req.body;
+// add a cohorts personality data to a specific unit
+const addPersonalityData = async (req, res) => {
+    const {
+        unitCode,
+        year,
+        period
+    } = req.params
+    const {
+        students,
+        testType
+    } = req.body;
 
+    /* GET VALUES NEEDED FOR INSERT QUERY FOR PERSONALITY_TEST_ATTEMPT */
+    const unitOffKey = await selectUnitOffKey(unitCode, year, period);
+    const studentIds = students.map(student => student.studentId)
+
+    const studentIdKeyData = await promiseBasedQuery(
+        "SELECT s.stud_unique_id, s.student_id FROM unit_enrolment e " +
+        " INNER JOIN unit_offering u ON u.unit_off_id = e.unit_off_id " +
+        " INNER JOIN student s ON s.stud_unique_id = e.stud_unique_id " +
+        "WHERE " +
+        " u.unit_code=? " +
+        " AND u.unit_off_year=? " +
+        " AND u.unit_off_period=? " +
+        " AND s.student_id IN (?);",
+        [unitCode, year, period, studentIds]
+    )
+
+    /* CONVERT VALUES INTO AN APPROPRIATE FORMAT FOR INSERT QUERY FOR PERSONALITY_TEST_ATTEMPT */
+    // [[testType, unitOffKey, studentPrimaryKey], ...] for insert to personality_test_attempt
+    const testAttemptInsertData = [];
+    studentIdKeyData.forEach((student) => {
+        testAttemptInsertData.push([testType, unitOffKey, student.stud_unique_id])
+    })
+
+    /* INSERT PERSONALITY TEST ATTEMPT */
+    try {
+        await promiseBasedQuery(
+            "INSERT IGNORE INTO personality_test_attempt (test_type, unit_off_id, stud_unique_id) " +
+            "VALUES ?;",
+            [testAttemptInsertData]
+        );
+    } catch (err) {
+        console.log(err);
+    }
+
+    /* GET VALUES NEEDED FOR INSERT QUERY FOR BELBIN_RESULT */
+    // this gets ALL personality test attempts but not just the ones of this type fixme
+    const personalityTestAttemptKeys = await promiseBasedQuery(
+        "SELECT t.test_attempt_id, s.student_id " +
+        "FROM personality_test_attempt t " +
+        "   INNER JOIN student s ON s.stud_unique_id=t.stud_unique_id " +
+        "   INNER JOIN unit_enrolment e ON e.stud_unique_id=t.stud_unique_id " +
+        "WHERE " +
+        "   e.unit_off_id=? " +
+        "   AND t.test_type=? " +
+        "   AND s.student_id IN (?);",
+        [unitOffKey, testType, studentIds]
+    )
+
+    console.log("TEST TYPE | TEST KEYS | STUDENTS")
+    console.log(testType)
+    console.log(personalityTestAttemptKeys)
     console.log(students)
-
-        // error handling for unexpected issues
-
-        for(let i = 0; i < students.length; i++){
-
-            let student = students[i];
-            
-            try {
-                const updateQuery =
-                    "insert into personality_test_attempt (test_type, stud_unique_id, unit_off_id) " +
-                    "values ('belbin', (select stud_unique_id from student where student_id like ?), (select unit_off_id from unit_offering where unit_code like ? and unit_off_year like ? and lower(unit_off_period) like ?) ) " ;
-                // updated values for the student
-        
-                await promiseBasedQuery(updateQuery, [student.studentId, unitCode, year, period]);
-                // Respond with success message
-                //res.status(200).send({ message: "Student details updated"});
-        
-            } catch (err) {
-                // Respond with error message
-                console.log("Error while updating student ", err);
-                //res.status(500).send({ error: "Error occurred while updating student details" })
-            }
-        }
-
-        for(let i = 0; i < students.length; i++){
-
-            let student = students[i];
-
-            try {
-
-                const updateQuery =
-                    "insert into belbin_result (personality_test_attempt, belbin_type) " +
-                    "values ((select test_attempt_id from personality_test_attempt where test_type like 'belbin' and stud_unique_id like (select stud_unique_id from student where student_id like ? and test_type = 'belbin') and unit_off_id like (select unit_off_id from unit_offering where unit_code like ? and unit_off_year like ? and lower(unit_off_period) like ?)), ?)" ;
-                // updated values for the student
-        
-                await promiseBasedQuery(updateQuery, [student.studentId, unitCode, year, period, student.belbinType]);
-                // Respond with success message
-        
-            } catch (err) {
-                // Respond with error message
-                console.log("Error while updating student ", err);
-            }
-
-        }
+    console.log("INSERT DATA")
+    addTestResultFunctionStrats[testType](personalityTestAttemptKeys, students)
+    res.status(200).send();
 }
 
-const addStudentEffort = async (req, res) => {
-    const {unitCode, year, period} = req.params
-    const students = req.body;
+const addStudentBelbin = async (personalityTestAttemptKeys, students) => {
+    // [[personality_test_attempt, belbin_type], ...] for insert to belbin_result
+    const resultInsertData = []
+    personalityTestAttemptKeys.forEach((attempt) => {
+        // find the student who made this attempt
+        const [student] = students.filter((student) => {return student.studentId === attempt.student_id})
+        resultInsertData.push([attempt.test_attempt_id, student.belbinType])
+    })
 
-    console.log(students)
+    console.log(resultInsertData);
 
-    for(let i = 0; i < students.length; i++){
-
-        let student = students[i];
-        
-        try {
-            const updateQuery =
-                "insert into personality_test_attempt (test_type, stud_unique_id, unit_off_id) " +
-                "values ('effort', (select stud_unique_id from student where student_id like ?), (select unit_off_id from unit_offering where unit_code like ? and unit_off_year like ? and lower(unit_off_period) like ?) ) " ;
-            // updated values for the student
-    
-            await promiseBasedQuery(updateQuery, [student.studentId, unitCode, year, period]);
-            // Respond with success message
-            //res.status(200).send({ message: "Student details updated"});
-    
-        } catch (err) {
-            // Respond with error message
-            console.log("Error while updating student ", err);
-            //res.status(500).send({ error: "Error occurred while updating student details" })
-        }
+    try {
+        await promiseBasedQuery(
+            "INSERT IGNORE INTO belbin_result (personality_test_attempt, belbin_type) " +
+            "VALUES ?;",
+            [resultInsertData]
+        )
+    } catch (err) {
+        console.log(err);
     }
+}
 
-    for(let i = 0; i < students.length; i++){
+const addStudentEffort = async (personalityTestAttemptKeys, students) => {
+    // [[personality_test_attempt, belbin_type], ...] for insert to belbin_result
+    const resultInsertData = []
+    personalityTestAttemptKeys.forEach((attempt) => {
+        // find the student who made this attempt
+        const [student] = students.filter((student) => {return student.studentId === attempt.student_id})
+        resultInsertData.push([attempt.test_attempt_id, student.averageMark, student.hours, student.marksPerHour])
+    })
 
-        let student = students[i];
+    console.log(resultInsertData);
 
-        try {
-
-            const updateQuery =
-                "insert into effort_result (personality_test_attempt, time_commitment_hrs, assignment_avg, marks_per_hour) " +
-                "values ((select test_attempt_id from personality_test_attempt where test_type like 'effort' and stud_unique_id like (select stud_unique_id from student where student_id like ? ) and unit_off_id like (select unit_off_id from unit_offering where unit_code like ? and unit_off_year like ? and lower(unit_off_period) like ?)), ?, ?, ?)" ;
-            // updated values for the student
-    
-            await promiseBasedQuery(updateQuery, [student.studentId, unitCode, year, period, student.hours, student.averageMark, student.marksPerHour]);
-            // Respond with success message
-    
-        } catch (err) {
-            // Respond with error message
-            console.log("Error while updating student ", err);
-        }
-
+    try {
+        await promiseBasedQuery(
+            "INSERT IGNORE INTO effort_result " +
+            "(personality_test_attempt, assignment_avg, time_commitment_hrs, marks_per_hour) " +
+            "VALUES ?;",
+            [resultInsertData]
+        )
+    } catch (err) {
+        console.log(err);
     }
+}
+
+const addTestResultFunctionStrats = {
+    'belbin': addStudentBelbin,
+    'effort': addStudentEffort
 }
 
 module.exports = {
@@ -364,6 +382,5 @@ module.exports = {
     deleteStudentEnrolment,
     deleteStudentGroupAlloc,
     updateStudent,
-    addStudentBelbin,
-    addStudentEffort 
+    addPersonalityData
 };

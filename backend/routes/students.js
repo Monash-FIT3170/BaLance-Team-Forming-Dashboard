@@ -13,8 +13,7 @@ const { // import controller functions for route handlers
     deleteStudentEnrolment,
     deleteStudentGroupAlloc,
     updateStudent,
-    addStudentBelbin,
-    addStudentEffort  
+    addPersonalityData
 } = require('../controllers/studentController');
 
 // get all students from a unit
@@ -26,11 +25,8 @@ router.get('/:unitCode/:year/:period/:studId', getStudent);
 // add an array of students to a unit
 router.post('/:unitCode/:year/:period', addAllStudents);
 
-// add belbin types to students
-router.post('/belbin/:unitCode/:year/:period', addStudentBelbin);
-
-// add belbin types to students
-router.post('/effort/:unitCode/:year/:period', addStudentEffort);
+// add personality data to students
+router.post('/personality/:unitCode/:year/:period', addPersonalityData);
 
 // delete a specific student from a unit
 router.delete('/enrolment/:unitCode/:year/:period/:studentId', deleteStudentEnrolment);

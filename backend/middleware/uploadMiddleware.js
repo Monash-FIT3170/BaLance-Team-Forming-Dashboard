@@ -13,5 +13,6 @@ const storage = multer.diskStorage({
       cb(null, `${file.fieldname}-${Date.now()}`)
     }
 })
+
 module.exports.upload = multer({ storage });
 

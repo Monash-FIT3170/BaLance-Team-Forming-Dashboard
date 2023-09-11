@@ -145,14 +145,17 @@ function ImportPage() {
     const handleAddProfilesClick = async () => {
         // Make API call
         getAccessTokenSilently().then((token) => {
-    fetch(`http://localhost:8080/api/students/belbin/${unitCode}/${year}/${period}`, {
+    fetch(`http://localhost:8080/api/students/personality/${unitCode}/${year}/${period}`, {
             method: 'POST',
             headers: new Headers({
                 'Authorization': `Bearer ${token}`,
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }),
-            body: JSON.stringify(profiles),
+            body: JSON.stringify({
+                'students': profiles,
+                'testType': 'belbin'
+            }),
         })
             .then((response) => {
                 if (!response.ok) {

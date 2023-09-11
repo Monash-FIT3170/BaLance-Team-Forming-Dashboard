@@ -111,7 +111,8 @@ CREATE TABLE IF NOT EXISTS effort_result ( -- information on student's effort fa
     assignment_avg INT,
     time_commitment_hrs INT,
     marks_per_hour INT,
-    CONSTRAINT pk_effort_result PRIMARY KEY (effort_result_id)
+    CONSTRAINT pk_effort_result PRIMARY KEY (effort_result_id),
+    CONSTRAINT ck_belbin_result UNIQUE (personality_test_attempt)
 );
 ALTER TABLE effort_result AUTO_INCREMENT=100000000; 
 
@@ -119,7 +120,8 @@ CREATE TABLE IF NOT EXISTS belbin_result ( -- information on student's belbin pe
 	belbin_result_id INT AUTO_INCREMENT COMMENT 'unique identifier for the belbin test result',
     personality_test_attempt INT,
     belbin_type ENUM ('people', 'action', 'thinking'),
-    CONSTRAINT pk_belbin_result PRIMARY KEY (belbin_result_id)
+    CONSTRAINT pk_belbin_result PRIMARY KEY (belbin_result_id),
+    CONSTRAINT ck_belbin_result UNIQUE (personality_test_attempt)
 );
 ALTER TABLE belbin_result AUTO_INCREMENT=100000000; 
 

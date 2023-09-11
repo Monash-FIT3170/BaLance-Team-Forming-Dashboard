@@ -2,98 +2,23 @@
 */
 
 USE student_group_db;
+-- Get all info and then append belbin data to it
+SELECT * FROM student;
+SELECT * FROM unit_enrolment;
+SELECT * FROM personality_test_attempt;
+SELECT * FROM belbin_result;
 
--- delete group
-DELETE FROM lab_group
-WHERE group_alloc_id IN (
-    SELECT subquery.group_alloc_id
-    FROM (
-        SELECT g.lab_group_id
-        FROM lab_group g
-            INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id
-            INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id
-        WHERE u.unit_code=?
-            AND u.unit_off_year=?
-            AND u.unit_off_period=?
-    ) AS subquery
-);
-
--- delete lab alloc todo
-DELETE FROM student_lab_allocation
-WHERE stud_lab_alloc_id IN (
-    SELECT subquery.stud_lab_alloc_id
-    FROM (
-        SELECT la.stud_lab_alloc_id
-        FROM student_lab_allocation la
-            INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id
-            INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id
-            INNER JOIN student_lab_allocation la ON la.unit_off_lab_id = l.unit_off_lab_id
-        WHERE u.unit_code=?
-            AND u.unit_off_year=?
-            AND u.unit_off_period=?
-    ) AS subquery
-);
-
--- delete lab todo
-DELETE FROM group_allocation
-WHERE group_alloc_id IN (
-SELECT subquery.group_alloc_id
-FROM (
-SELECT ga.group_alloc_id
-FROM lab_group g
-INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id
-INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id
-INNER JOIN group_allocation ga ON ga.lab_group_id = g.lab_group_id
-WHERE u.unit_code = ''
-AND u.unit_off_year = ?
-AND u.unit_off_period = ''
-) AS subquery
-);
-
--- delete effort result todo
-DELETE FROM group_allocation
-WHERE group_alloc_id IN (
-SELECT subquery.group_alloc_id
-FROM (
-SELECT ga.group_alloc_id
-FROM lab_group g
-INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id
-INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id
-INNER JOIN group_allocation ga ON ga.lab_group_id = g.lab_group_id
-WHERE u.unit_code = ''
-AND u.unit_off_year = ?
-AND u.unit_off_period = ''
-) AS subquery
-);
-
--- delete belbin result todo
-DELETE FROM group_allocation
-WHERE group_alloc_id IN (
-SELECT subquery.group_alloc_id
-FROM (
-SELECT ga.group_alloc_id
-FROM lab_group g
-INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id
-INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id
-INNER JOIN group_allocation ga ON ga.lab_group_id = g.lab_group_id
-WHERE u.unit_code = ''
-AND u.unit_off_year = ?
-AND u.unit_off_period = ''
-) AS subquery
-);
-
--- delete personality test attempt todo
-DELETE FROM group_allocation
-WHERE group_alloc_id IN (
-SELECT subquery.group_alloc_id
-FROM (
-SELECT ga.group_alloc_id
-FROM lab_group g
-INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id
-INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id
-INNER JOIN group_allocation ga ON ga.lab_group_id = g.lab_group_id
-WHERE u.unit_code = ''
-AND u.unit_off_year = ?
-AND u.unit_off_period = ''
-) AS subquery
-);
+SELECT *
+FROM personality_test_attempt t 
+   INNER JOIN student s ON s.stud_unique_id=t.stud_unique_id
+   INNER JOIN unit_enrolment e ON e.unit_off_id=t.unit_off_id
+WHERE
+	e.unit_off_id=100000000;
+    
+     
+SET @stud_ids:= (
+	'54321867', '12345678', '12345677', '12398267', '39187204', '40887212', '32459103', '45310009',
+	'12569024', '34251045', '33333333', '10982943', '56783124', '40981234', '10986402', '45670987',
+    '10908070', '54210982', '19749075', '30982934', '38976210', '37609812');
+    
+    

@@ -144,14 +144,17 @@ function InfoImporter() {
     const handleAddProfilesClick = async () => {
         getAccessTokenSilently().then((token) => {
         // Make API call
-        fetch(`http://localhost:8080/api/students/effort/${unitCode}/${year}/${period}`, {
+        fetch(`http://localhost:8080/api/students/personality/${unitCode}/${year}/${period}`, {
             method: 'POST',
             headers: new Headers({
                 'Authorization': `Bearer ${token}`,
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }),
-            body: JSON.stringify(profiles),
+            body: JSON.stringify({
+                'students': profiles,
+                'testType': 'effort'
+            }),
         })
             .then((response) => {
                 if (!response.ok) {
