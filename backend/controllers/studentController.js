@@ -303,6 +303,7 @@ const addPersonalityData = async (req, res) => {
     }
 
     /* GET VALUES NEEDED FOR INSERT QUERY FOR BELBIN_RESULT */
+    // this gets ALL personality test attempts but not just the ones of this type fixme
     const personalityTestAttemptKeys = await promiseBasedQuery(
         "SELECT t.test_attempt_id, s.student_id " +
         "FROM personality_test_attempt t " +
@@ -310,11 +311,16 @@ const addPersonalityData = async (req, res) => {
         "   INNER JOIN unit_enrolment e ON e.stud_unique_id=t.stud_unique_id " +
         "WHERE " +
         "   e.unit_off_id=? " +
+        "   AND t.test_type=? " +
         "   AND s.student_id IN (?);",
-        [unitOffKey, studentIds]
+        [unitOffKey, testType, studentIds]
     )
 
+    console.log("TEST TYPE | TEST KEYS | STUDENTS")
     console.log(testType)
+    console.log(personalityTestAttemptKeys)
+    console.log(students)
+    console.log("INSERT DATA")
     addTestResultFunctionStrats[testType](personalityTestAttemptKeys, students)
     res.status(200).send();
 }
