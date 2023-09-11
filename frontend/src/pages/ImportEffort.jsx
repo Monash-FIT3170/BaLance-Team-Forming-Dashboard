@@ -151,7 +151,10 @@ function InfoImporter() {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }),
-            body: JSON.stringify(profiles),
+            body: JSON.stringify({
+                'students': profiles,
+                'testType': 'belbin'
+            }),
         })
             .then((response) => {
                 if (!response.ok) {

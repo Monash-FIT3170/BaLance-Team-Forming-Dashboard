@@ -344,36 +344,80 @@ const addStudentEffort = async (req, res) => {
         year,
         period
     } = req.params
-    const students = req.body;
+    const {
+        students,
+        testType
+    } = req.body;
 
-    console.log(students)
+    /* GET VALUES NEEDED FOR INSERT QUERY FOR PERSONALITY_TEST_ATTEMPT */
+    const unitOffKey = await selectUnitOffKey(unitCode, year, period);
+    const studentIds = students.map(student => student.studentId)
+
+    const studentIdKeyData = await promiseBasedQuery(
+        "SELECT s.stud_unique_id, s.student_id FROM unit_enrolment e " +
+        " INNER JOIN unit_offering u ON u.unit_off_id = e.unit_off_id " +
+        " INNER JOIN student s ON s.stud_unique_id = e.stud_unique_id " +
+        "WHERE " +
+        " u.unit_code=? " +
+        " AND u.unit_off_year=? " +
+        " AND u.unit_off_period=? " +
+        " AND s.student_id IN (?);",
+        [unitCode, year, period, studentIds]
+    )
+
+    /* CONVERT VALUES INTO AN APPROPRIATE FORMAT FOR INSERT QUERY FOR PERSONALITY_TEST_ATTEMPT */
+    // [[testType, unitOffKey, studentPrimaryKey], ...] for insert to personality_test_attempt
+    const testAttemptInsertData = [];
+    studentIdKeyData.forEach((student) => {
+        testAttemptInsertData.push([testType, unitOffKey, student.stud_unique_id])
+    })
+
     /* INSERT PERSONALITY TEST ATTEMPT */
-    for(let i = 0; i < students.length; i++){
-        let student = students[i];
-        try {
-            await promiseBasedQuery(
-                "insert into personality_test_attempt (test_type, stud_unique_id, unit_off_id) " +
-                "values ('effort', (select stud_unique_id from student where student_id like ?), (select unit_off_id from unit_offering where unit_code like ? and unit_off_year like ? and lower(unit_off_period) like ?) ) ",
-                [student.studentId, unitCode, year, period]
-            );
-        } catch (err) {
-            console.log("Error while updating student ", err);
-        }
+    try {
+        await promiseBasedQuery(
+            "INSERT IGNORE INTO personality_test_attempt (test_type, unit_off_id, stud_unique_id) " +
+            "VALUES ?;",
+            [testAttemptInsertData]
+        );
+    } catch (err) {
+        console.log(err);
     }
 
-    /* INSERT THE ACTUAL BELBIN RESULT */
-    for(let i = 0; i < students.length; i++){
-        let student = students[i];
-        try {
-            await promiseBasedQuery(
-                "insert into effort_result (personality_test_attempt, time_commitment_hrs, assignment_avg, marks_per_hour) " +
-                "values ((select test_attempt_id from personality_test_attempt where test_type like 'effort' and stud_unique_id like (select stud_unique_id from student where student_id like ? ) and unit_off_id like (select unit_off_id from unit_offering where unit_code like ? and unit_off_year like ? and lower(unit_off_period) like ?)), ?, ?, ?)",
-                [student.studentId, unitCode, year, period, student.hours, student.averageMark, student.marksPerHour]
-            );
-        } catch (err) {
-            console.log("Error while updating student ", err);
-        }
+    /* GET VALUES NEEDED FOR INSERT QUERY FOR BELBIN_RESULT */
+    const personalityTestAttemptKeys = await promiseBasedQuery(
+        "SELECT t.test_attempt_id, s.student_id " +
+        "FROM personality_test_attempt t " +
+        "   INNER JOIN student s ON s.stud_unique_id=t.stud_unique_id " +
+        "   INNER JOIN unit_enrolment e ON e.stud_unique_id=t.stud_unique_id " +
+        "WHERE " +
+        "   e.unit_off_id=? " +
+        "   AND s.student_id IN (?);",
+        [unitOffKey, studentIds]
+    )
+
+    // todo refactor this part onwards to go outside
+    // [[personality_test_attempt, belbin_type], ...] for insert to belbin_result
+    const resultInsertData = []
+    personalityTestAttemptKeys.forEach((attempt) => {
+        // find the student who made this attempt
+        const [student] = students.filter((student) => {return student.studentId === attempt.student_id})
+        resultInsertData.push([attempt.test_attempt_id, student.averageMark, student.hours, student.marksPerHour])
+    })
+
+    console.log(resultInsertData);
+
+    try {
+        await promiseBasedQuery(
+            "INSERT IGNORE INTO effort_result " +
+            "(personality_test_attempt, assignment_avg, time_commitment_hrs, marks_per_hour) " +
+            "VALUES ?;",
+            [resultInsertData]
+        )
+    } catch (err) {
+        console.log(err);
     }
+
+    res.status(200).send();
 }
 
 module.exports = {

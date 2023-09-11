@@ -1,6 +1,6 @@
 /**
  * A module containing controller functions for routes related to
- * group data within a unit.
+ * group analytics data within a unit.
  *
  */
 
