@@ -145,7 +145,7 @@ function ImportPage() {
     const handleAddProfilesClick = async () => {
         // Make API call
         getAccessTokenSilently().then((token) => {
-    fetch(`http://localhost:8080/api/students/belbin/${unitCode}/${year}/${period}`, {
+    fetch(`http://localhost:8080/api/students/personality/${unitCode}/${year}/${period}`, {
             method: 'POST',
             headers: new Headers({
                 'Authorization': `Bearer ${token}`,

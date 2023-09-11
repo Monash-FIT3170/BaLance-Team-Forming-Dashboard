@@ -257,7 +257,7 @@ const updateStudent = async (req, res) => {
 }
 
 // add a cohorts personality data to a specific unit
-const addStudentBelbin = async (req, res) => {
+const addPersonalityData = async (req, res) => {
     const {
         unitCode,
         year,
@@ -314,7 +314,12 @@ const addStudentBelbin = async (req, res) => {
         [unitOffKey, studentIds]
     )
 
-    // todo refactor this part onwards to go outside
+    console.log(testType)
+    addTestResultFunctionStrats[testType](personalityTestAttemptKeys, students)
+    res.status(200).send();
+}
+
+const addStudentBelbin = async (personalityTestAttemptKeys, students) => {
     // [[personality_test_attempt, belbin_type], ...] for insert to belbin_result
     const resultInsertData = []
     personalityTestAttemptKeys.forEach((attempt) => {
@@ -334,68 +339,9 @@ const addStudentBelbin = async (req, res) => {
     } catch (err) {
         console.log(err);
     }
-
-    res.status(200).send();
 }
 
-const addStudentEffort = async (req, res) => {
-    const {
-        unitCode,
-        year,
-        period
-    } = req.params
-    const {
-        students,
-        testType
-    } = req.body;
-
-    /* GET VALUES NEEDED FOR INSERT QUERY FOR PERSONALITY_TEST_ATTEMPT */
-    const unitOffKey = await selectUnitOffKey(unitCode, year, period);
-    const studentIds = students.map(student => student.studentId)
-
-    const studentIdKeyData = await promiseBasedQuery(
-        "SELECT s.stud_unique_id, s.student_id FROM unit_enrolment e " +
-        " INNER JOIN unit_offering u ON u.unit_off_id = e.unit_off_id " +
-        " INNER JOIN student s ON s.stud_unique_id = e.stud_unique_id " +
-        "WHERE " +
-        " u.unit_code=? " +
-        " AND u.unit_off_year=? " +
-        " AND u.unit_off_period=? " +
-        " AND s.student_id IN (?);",
-        [unitCode, year, period, studentIds]
-    )
-
-    /* CONVERT VALUES INTO AN APPROPRIATE FORMAT FOR INSERT QUERY FOR PERSONALITY_TEST_ATTEMPT */
-    // [[testType, unitOffKey, studentPrimaryKey], ...] for insert to personality_test_attempt
-    const testAttemptInsertData = [];
-    studentIdKeyData.forEach((student) => {
-        testAttemptInsertData.push([testType, unitOffKey, student.stud_unique_id])
-    })
-
-    /* INSERT PERSONALITY TEST ATTEMPT */
-    try {
-        await promiseBasedQuery(
-            "INSERT IGNORE INTO personality_test_attempt (test_type, unit_off_id, stud_unique_id) " +
-            "VALUES ?;",
-            [testAttemptInsertData]
-        );
-    } catch (err) {
-        console.log(err);
-    }
-
-    /* GET VALUES NEEDED FOR INSERT QUERY FOR BELBIN_RESULT */
-    const personalityTestAttemptKeys = await promiseBasedQuery(
-        "SELECT t.test_attempt_id, s.student_id " +
-        "FROM personality_test_attempt t " +
-        "   INNER JOIN student s ON s.stud_unique_id=t.stud_unique_id " +
-        "   INNER JOIN unit_enrolment e ON e.stud_unique_id=t.stud_unique_id " +
-        "WHERE " +
-        "   e.unit_off_id=? " +
-        "   AND s.student_id IN (?);",
-        [unitOffKey, studentIds]
-    )
-
-    // todo refactor this part onwards to go outside
+const addStudentEffort = async (personalityTestAttemptKeys, students) => {
     // [[personality_test_attempt, belbin_type], ...] for insert to belbin_result
     const resultInsertData = []
     personalityTestAttemptKeys.forEach((attempt) => {
@@ -416,8 +362,11 @@ const addStudentEffort = async (req, res) => {
     } catch (err) {
         console.log(err);
     }
+}
 
-    res.status(200).send();
+const addTestResultFunctionStrats = {
+    'belbin': addStudentBelbin,
+    'effort': addStudentEffort
 }
 
 module.exports = {
@@ -427,6 +376,5 @@ module.exports = {
     deleteStudentEnrolment,
     deleteStudentGroupAlloc,
     updateStudent,
-    addStudentBelbin,
-    addStudentEffort 
+    addPersonalityData
 };
