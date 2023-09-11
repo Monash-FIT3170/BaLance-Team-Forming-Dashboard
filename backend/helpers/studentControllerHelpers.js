@@ -47,7 +47,7 @@ const insertStudentEnrolment = async (studentKeys, unitOffId) => {
         const enrolmentInsertData = studentKeys.map((student) => {
             return [student.stud_unique_id, unitOffId]
         })
-
+        console.log(enrolmentInsertData)
         return promiseBasedQuery(
             'INSERT IGNORE INTO unit_enrolment ' +
             '(stud_unique_id, unit_off_id) VALUES ?;',
@@ -143,6 +143,7 @@ const insertStudentLabAllocations = async (requestBody, unitOffId) => {
             const insertData = labStudentKeys.map((studentKey) => {
                 return [labPrimaryKey, studentKey.stud_unique_id]
             });
+
             // insert the data into the database
             await promiseBasedQuery(
                 "INSERT IGNORE INTO student_lab_allocation " +

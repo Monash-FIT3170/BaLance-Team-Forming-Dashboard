@@ -291,14 +291,12 @@ const addStudentBelbin = async (req, res) => {
         testAttemptInsertData.push([testType, unitOffKey, student.stud_unique_id])
     })
 
-    console.log(testAttemptInsertData)
-
     /* INSERT PERSONALITY TEST ATTEMPT */
     try {
         await promiseBasedQuery(
             "INSERT IGNORE INTO personality_test_attempt (test_type, unit_off_id, stud_unique_id) " +
-            "VALUES (?);",
-            testAttemptInsertData
+            "VALUES ?;",
+            [testAttemptInsertData]
         );
     } catch (err) {
         console.log(err);
@@ -309,15 +307,13 @@ const addStudentBelbin = async (req, res) => {
         "SELECT t.test_attempt_id, s.student_id " +
         "FROM personality_test_attempt t " +
         "   INNER JOIN student s ON s.stud_unique_id=t.stud_unique_id " +
-        "   INNER JOIN unit_enrolment e ON e.unit_off_id=t.unit_off_id " +
+        "   INNER JOIN unit_enrolment e ON e.stud_unique_id=t.stud_unique_id " +
         "WHERE " +
         "   e.unit_off_id=? " +
         "   AND s.student_id IN (?);",
         [unitOffKey, studentIds]
     )
 
-    console.log([unitOffKey, studentIds])
-    console.log(personalityTestAttemptKeys)
     // todo refactor this part onwards to go outside
     // [[personality_test_attempt, belbin_type], ...] for insert to belbin_result
     const resultInsertData = []
@@ -331,9 +327,9 @@ const addStudentBelbin = async (req, res) => {
 
     try {
         await promiseBasedQuery(
-            "INSERT IGNORE INTO belbin_result (personality_test_attempt, belbin_type)\n" +
-            "VALUES (?);",
-            resultInsertData
+            "INSERT IGNORE INTO belbin_result (personality_test_attempt, belbin_type) " +
+            "VALUES ?;",
+            [resultInsertData]
         )
     } catch (err) {
         console.log(err);
