@@ -267,43 +267,44 @@ const addStudentBelbin = async (req, res) => {
         students,
         testType
     } = req.body;
-    const unitOffKey = selectUnitOffKey(unitCode, year, period);
 
-    // [[unitCode, year, period, studentId, unitOffKey], ...] for insert to personality_test_attempt
+    /* GET VALUES NEEDED FOR INSERT QUERY FOR PERSONALITY_TEST_ATTEMPT */
+    const unitOffKey = await selectUnitOffKey(unitCode, year, period);
+    const studentIds = students.map(student => student.studentId)
+
+    const studentIdKeyData = await promiseBasedQuery(
+        "SELECT s.stud_unique_id, s.student_id FROM unit_enrolment e " +
+        " INNER JOIN unit_offering u ON u.unit_off_id = e.unit_off_id " +
+        " INNER JOIN student s ON s.stud_unique_id = e.stud_unique_id " +
+        "WHERE " +
+        " u.unit_code=? " +
+        " AND u.unit_off_year=? " +
+        " AND u.unit_off_period=? " +
+        " AND s.student_id IN (?);",
+        [unitCode, year, period, studentIds]
+    )
+
+    /* CONVERT VALUES INTO AN APPROPRIATE FORMAT FOR INSERT QUERY FOR PERSONALITY_TEST_ATTEMPT */
+    // [[testType, unitOffKey, studentPrimaryKey], ...] for insert to personality_test_attempt
     const testAttemptInsertData = [];
-    students.forEach((student) => {
-        testAttemptInsertData.push([testType, unitCode, year, period, student.studentId, unitOffKey])
+    studentIdKeyData.forEach((student) => {
+        testAttemptInsertData.push([testType, unitOffKey, student.stud_unique_id])
     })
+
+    console.log(testAttemptInsertData)
 
     /* INSERT PERSONALITY TEST ATTEMPT */
     try {
         await promiseBasedQuery(
             "INSERT IGNORE INTO personality_test_attempt (test_type, unit_off_id, stud_unique_id) " +
-            "VALUES ( " +
-            "   ?, ?, ( " +
-            "       SELECT s.stud_unique_id FROM unit_enrolment e " +
-            "           INNER JOIN unit_offering u ON u.unit_off_id = e.unit_off_id " +
-            "           INNER JOIN student s ON s.stud_unique_id = e.stud_unique_id " +
-            "       WHERE " +
-            "           u.unit_code=? " +
-            "           AND u.unit_off_year=? " +
-            "           AND u.unit_off_period=? " +
-            "           AND s.student_id=? " +
-            "   )" +
-            ");",
-            [testAttemptInsertData]
+            "VALUES (?);",
+            testAttemptInsertData
         );
     } catch (err) {
         console.log(err);
     }
 
-    /* INSERT THE ACTUAL BELBIN RESULT */
-    // find test attempts associated with each studentId
-    const testAttemptSelectData = [];
-    students.forEach((student) => {
-        testAttemptSelectData.push([unitOffKey, student.studentId])
-    })
-
+    /* GET VALUES NEEDED FOR INSERT QUERY FOR BELBIN_RESULT */
     const personalityTestAttemptKeys = await promiseBasedQuery(
         "SELECT t.test_attempt_id, s.student_id " +
         "FROM personality_test_attempt t " +
@@ -311,16 +312,18 @@ const addStudentBelbin = async (req, res) => {
         "   INNER JOIN unit_enrolment e ON e.unit_off_id=t.unit_off_id " +
         "WHERE " +
         "   e.unit_off_id=? " +
-        "   AND s.student_id=?;",
-        [testAttemptSelectData]
+        "   AND s.student_id IN (?);",
+        [unitOffKey, studentIds]
     )
 
+    console.log([unitOffKey, studentIds])
+    console.log(personalityTestAttemptKeys)
     // todo refactor this part onwards to go outside
-    // [[personality_test_attempt, belbin_type], ...] for belbin_result
+    // [[personality_test_attempt, belbin_type], ...] for insert to belbin_result
     const resultInsertData = []
     personalityTestAttemptKeys.forEach((attempt) => {
         // find the student who made this attempt
-        const [student] = students.filter((student) => {return student.studentId === attempt.studentId})
+        const [student] = students.filter((student) => {return student.studentId === attempt.student_id})
         resultInsertData.push([attempt.test_attempt_id, student.belbinType])
     })
 
@@ -329,8 +332,8 @@ const addStudentBelbin = async (req, res) => {
     try {
         await promiseBasedQuery(
             "INSERT IGNORE INTO belbin_result (personality_test_attempt, belbin_type)\n" +
-            "VALUES (?, ?);",
-            [resultInsertData]
+            "VALUES (?);",
+            resultInsertData
         )
     } catch (err) {
         console.log(err);
