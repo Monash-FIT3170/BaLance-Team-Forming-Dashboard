@@ -30,8 +30,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Api Structure /api/groups/{unitId}/{groupId}
-
 // get all groups for a specific unit
 router.get('/:unitCode/:year/:period', getAllGroups);
 
@@ -41,13 +39,7 @@ router.post('/:unitCode/:year/:period', createUnitGroups);
 // shuffle unit groups
 router.post('/shuffle/:unitCode/:year/:period', shuffleUnitGroups);
 
-// add a new group to a unit
-router.post('/:unitCode/:year/:period/new', addGroup);
-
 router.post('/:unitCode/:year/:period/uploadScript', uploadCustomScript );
-
-// delete a specific group from a unit
-router.delete('/:unitCode/:year/:period/:groupNumber', deleteGroup);
 
 // move a student between two groups
 router.patch('/:unitCode/:year/:period/move/:studentId/', moveStudent);
