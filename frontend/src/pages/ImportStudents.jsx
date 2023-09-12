@@ -17,15 +17,12 @@ import {
     Alert,
     AlertIcon,
     AlertTitle,
-    AlertDescription,
     Button,
     Table,
     Tbody,
     Tr,
     Td,
-    TableContainer,
     Divider,
-    Select,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -33,22 +30,14 @@ import {
     ModalFooter,
     ModalBody,
     useDisclosure,
-    IconButton,
     Thead,
     Th,
     HStack,
     Center,
     Spacer,
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-    PopoverArrow,
-    PopoverCloseButton,
-    PopoverHeader,
-    PopoverBody,
     VStack,
 } from '@chakra-ui/react';
-import { AddIcon, QuestionOutlineIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
+import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../mockAuth/mockAuth';
 
 function ImportPage() {
