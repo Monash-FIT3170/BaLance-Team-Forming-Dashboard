@@ -80,9 +80,7 @@ function CreateGroups() {
             navigate(
                 `/uploadGroupScript/${unitCode}/${year}/${period}`,
                 {state: { groupDetails }});
-        } else { 
-            navigateToOfferingDashboardGroups();
-
+        } else {
             /* Call to shuffle groups */
             fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
                 method: 'POST',
@@ -96,9 +94,16 @@ function CreateGroups() {
                     variance: variance,
                     strategy: strategy,
                 })
-            }).catch((error) => { console.error('Error:', error); })
+            })
+                .then((res) => {
+                    if(res.status === 200){
+                        navigateToOfferingDashboardGroups();
+                    } else {
+                        res.json().then(json => console.log(json))
+                    }
+                })
+                .catch((error) => { console.error('Error:', error); })
         }
-        window.location.reload();
     }
 
     return (

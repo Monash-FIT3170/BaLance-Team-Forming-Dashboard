@@ -97,10 +97,12 @@ const createUnitGroups = async (req, res) => {
         strategy='random';
     }
 
+    console.log(strategy)
+
     /* CHECK IF THE USER IS ALLOWED TO FORM GROUPS WITH THE SELECTED STRATEGY */
     if (strategy !== 'random') {
         // check the database to make sure EVERY student has an associated test result for the selected strategy
-        const { missingValues } = await promiseBasedQuery(
+        const [{missingValues}] = await promiseBasedQuery(
             "SELECT (count(*) > 0) AS `missingValues` " +
             "FROM student s " +
             "    INNER JOIN unit_enrolment e ON e.stud_unique_id=s.stud_unique_id " +
@@ -125,9 +127,10 @@ const createUnitGroups = async (req, res) => {
         )
 
         if (missingValues) {
-            res.status(400).send(
-                `Error: student data does not exist for ${strategy} type. Please upload ${strategy} data first.`
-            )
+            res.status(400).json({
+                'Error': `student data does not exist for ${strategy} strategy. Please upload ${strategy} data first.`
+            })
+            return;
         }
     }
 
@@ -297,9 +300,9 @@ const moveStudent = async (req, res) => {
     res.status(200).send({wip: "test"});
 }
 
-const createGroupsCustomScript = (unitOffId, labId, studentsList, groupSize, variance) => {
-    let groups = [];
-}
+// const createGroupsCustomScript = (unitOffId, labId, studentsList, groupSize, variance) => {
+//     let groups = [];
+// }
 
 module.exports = {
     getAllGroups,
