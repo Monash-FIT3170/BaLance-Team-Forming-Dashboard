@@ -300,6 +300,7 @@ const addPersonalityData = async (req, res) => {
         );
     } catch (err) {
         console.log(err);
+        res.status(500).send();
     }
 
     /* GET VALUES NEEDED FOR INSERT QUERY FOR BELBIN_RESULT */
@@ -316,11 +317,6 @@ const addPersonalityData = async (req, res) => {
         [unitOffKey, testType, studentIds]
     )
 
-    console.log("TEST TYPE | TEST KEYS | STUDENTS")
-    console.log(testType)
-    console.log(personalityTestAttemptKeys)
-    console.log(students)
-    console.log("INSERT DATA")
     addTestResultFunctionStrats[testType](personalityTestAttemptKeys, students)
     res.status(200).send();
 }
@@ -334,8 +330,6 @@ const addStudentBelbin = async (personalityTestAttemptKeys, students) => {
         resultInsertData.push([attempt.test_attempt_id, student.belbinType])
     })
 
-    console.log(resultInsertData);
-
     try {
         await promiseBasedQuery(
             "INSERT IGNORE INTO belbin_result (personality_test_attempt, belbin_type) " +
@@ -344,6 +338,7 @@ const addStudentBelbin = async (personalityTestAttemptKeys, students) => {
         )
     } catch (err) {
         console.log(err);
+        res.status(500).send();
     }
 }
 
@@ -356,8 +351,6 @@ const addStudentEffort = async (personalityTestAttemptKeys, students) => {
         resultInsertData.push([attempt.test_attempt_id, student.averageMark, student.hours, student.marksPerHour])
     })
 
-    console.log(resultInsertData);
-
     try {
         await promiseBasedQuery(
             "INSERT IGNORE INTO effort_result " +
@@ -367,6 +360,7 @@ const addStudentEffort = async (personalityTestAttemptKeys, students) => {
         )
     } catch (err) {
         console.log(err);
+        res.status(500).send();
     }
 }
 
