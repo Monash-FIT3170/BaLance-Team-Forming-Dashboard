@@ -69,11 +69,6 @@ const getAllGroups = async (req, res) => {
     res.status(200).send(responseData);
 }
 
-// get a single group from a unit
-const getGroup = async (req, res) => {
-    res.status(200).send({wip: "test"});
-}
-
 // create all the groups (based on csv)
 const createUnitGroups = async (req, res) => {
     const {
@@ -227,16 +222,6 @@ const shuffleUnitGroups = async (req, res) => {
     await createUnitGroups(req, res);
 }
 
-// add a new group to a unit
-const addGroup = async (req, res) => {
-    res.status(200).send({wip: "test"});
-}
-
-// delete a specific group from a unit
-const deleteGroup = async (req, res) => {
-    res.status(200).send({wip: "test"});
-}
-
 // move a student from one group to another
 const moveStudent = async (req, res) => {
     const {
@@ -306,9 +291,6 @@ const moveStudent = async (req, res) => {
 
 module.exports = {
     getAllGroups,
-    getGroup,
-    addGroup,
-    deleteGroup,
     createUnitGroups,
     shuffleUnitGroups,
     moveStudent
