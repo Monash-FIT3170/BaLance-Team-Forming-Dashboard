@@ -7,11 +7,10 @@ import { UploadCSV } from '../components/UploadCSV';
 import { FormField } from '../components/FormField';
 import { CsvInfoButton } from '../components/CsvInfoButton';
 import { useAuth0 } from '@auth0/auth0-react';
-import { ArrowForwardIcon } from '@chakra-ui/icons';
-
-
+import { AddIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import {
     Box,
+    ButtonGroup,
     Text,
     Flex,
     Alert,
@@ -252,7 +251,9 @@ function ImportPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setProfiles([...profiles, currProfile]);
+        setCurrProfile({...currProfile,enrolmentStatus:'ACTIVE'})
+        setCurrProfile({...currProfile,discPersonality:'DOMINANT'});
+        setProfiles([...profiles,currProfile]);
         setCurrProfile(blankStudent);
         onAddProfileClose();
     };
@@ -373,14 +374,23 @@ function ImportPage() {
                             infoText="Accepted .csv files will have the following attributes: DISPLAY_SUBJECT_CODE SUBJECT_CODE ACTIVITY_GROUP_CODE SHORT_CODE STUDENT_CODE LAST_NAME PREFERRED_NAME EMAIL_ADDRESS WAM_DISPLAY WAM_VAL GENDER"
                         />)}
 
-                        <UploadCSV
+                        {sortedProfiles.length === 0 ? (<UploadCSV
                             isFileChosen={isFileChosen}
                             csvFile={csvFile}
                             handleClearSelection={handleClearSelection}
                             handleAddProfilesClick={handleAddProfilesClick}
                             handleUpload={handleUpload}
                             setIsFileChosen={setIsFileChosen}
-                        />
+                        />):( 
+                            <ButtonGroup>
+                            <Button mb={2} colorScheme="red" onClick={handleClearSelection}>
+                                    Clear        
+                            </Button>
+                            <Button onClick={handleAddProfilesClick}>
+                            Add To Offering
+                            </Button>
+                            </ButtonGroup>)
+                        }
 
                         {showAlert && (
                             <Alert
@@ -525,10 +535,20 @@ function ImportPage() {
                     </VStack>
 
                 </HStack>
-
+                <Button
+                    width="80%"
+                    onClick={onAddProfileOpen}
+                    colorScheme="gray"
+                    margin-left="20">
+                    <HStack>
+                        <AddIcon />
+                        <Spacer />
+                            <Text>Add Student</Text>
+                        </HStack>
+                </Button>
                 {sortedProfiles.length === 0 ? (<Box bg='#E6EBF0' p={4} alignContent="center" width="80%">
                     <Center>
-                        No students have yet been added to the offering.
+                        No new student added.
                     </Center>
                 </Box>) : (<Table variant="striped" size="sm" maxWidth="90vw" marginBottom="3vh">
                     <Thead>
@@ -575,9 +595,6 @@ function ImportPage() {
                     </Tbody>
                 </Table>)}
             </VStack>
-
-
-
 
             <Modal isOpen={isAddProfileOpen} onClose={onAddProfileClose}>
                 <ModalOverlay />
