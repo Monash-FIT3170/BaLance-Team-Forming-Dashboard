@@ -69,11 +69,6 @@ const getAllGroups = async (req, res) => {
     res.status(200).send(responseData);
 }
 
-// get a single group from a unit
-const getGroup = async (req, res) => {
-    res.status(200).send({wip: "test"});
-}
-
 // create all the groups (based on csv)
 const createUnitGroups = async (req, res) => {
     const {
@@ -95,6 +90,43 @@ const createUnitGroups = async (req, res) => {
     }
     if (!strategy) {
         strategy='random';
+    }
+
+    console.log(strategy)
+
+    /* CHECK IF THE USER IS ALLOWED TO FORM GROUPS WITH THE SELECTED STRATEGY */
+    if (strategy !== 'random') {
+        // check the database to make sure EVERY student has an associated test result for the selected strategy
+        const [{missingValues}] = await promiseBasedQuery(
+            "SELECT (count(*) > 0) AS `missingValues` " +
+            "FROM student s " +
+            "    INNER JOIN unit_enrolment e ON e.stud_unique_id=s.stud_unique_id " +
+            "    INNER JOIN unit_offering u ON u.unit_off_id=e.unit_off_id " +
+            "WHERE " +
+            "    u.unit_code=? " +
+            "    AND u.unit_off_year=? " +
+            "    AND u.unit_off_period=? " +
+            "    AND s.stud_unique_id NOT IN ( " +
+            "        SELECT s.stud_unique_id " +
+            "        FROM student s " +
+            "            INNER JOIN unit_enrolment e ON e.stud_unique_id=s.stud_unique_id " +
+            "            INNER JOIN unit_offering u ON u.unit_off_id=e.unit_off_id " +
+            "            INNER JOIN personality_test_attempt t ON t.stud_unique_id=s.stud_unique_id " +
+            "        WHERE " +
+            "            u.unit_code=? " +
+            "            AND u.unit_off_year=? " +
+            "            AND u.unit_off_period=? " +
+            "            AND t.test_type=? " +
+            "    );",
+            [unitCode, year, period, unitCode, year, period, strategy]
+        )
+
+        if (missingValues) {
+            res.status(400).json({
+                'Error': `student data does not exist for ${strategy} strategy. Please upload ${strategy} data first.`
+            })
+            return;
+        }
     }
 
     /* DELETE ALL PREVIOUS GROUP ALLOCATIONS */
@@ -135,6 +167,7 @@ const createUnitGroups = async (req, res) => {
         [unitCode, year, period]
     );
 
+    /* NOW FINALLY, FORM THE GROUPS */
     await groupFormationStrategies[strategy](unitCode, year, period, groupSize, variance);
     res.status(200).send();
 }
@@ -187,16 +220,6 @@ const shuffleUnitGroups = async (req, res) => {
 
     /* RE-CREATE THE UNIT GROUPS */
     await createUnitGroups(req, res);
-}
-
-// add a new group to a unit
-const addGroup = async (req, res) => {
-    res.status(200).send({wip: "test"});
-}
-
-// delete a specific group from a unit
-const deleteGroup = async (req, res) => {
-    res.status(200).send({wip: "test"});
 }
 
 // move a student from one group to another
@@ -262,15 +285,12 @@ const moveStudent = async (req, res) => {
     res.status(200).send({wip: "test"});
 }
 
-const createGroupsCustomScript = (unitOffId, labId, studentsList, groupSize, variance) => {
-    let groups = [];
-}
+// const createGroupsCustomScript = (unitOffId, labId, studentsList, groupSize, variance) => {
+//     let groups = [];
+// }
 
 module.exports = {
     getAllGroups,
-    getGroup,
-    addGroup,
-    deleteGroup,
     createUnitGroups,
     shuffleUnitGroups,
     moveStudent

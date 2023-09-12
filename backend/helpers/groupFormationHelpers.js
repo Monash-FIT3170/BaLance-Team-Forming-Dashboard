@@ -141,7 +141,7 @@ const createGroupsEffort = async (unitCode, year, period, groupSize, variance) =
       "ORDER BY unit_off_lab_id;",
     [unitCode, year, period, "effort"]
   );
-  console.log(students)
+
   /* SPLIT BY LAB | labStudents = [ lab_id: [student_unique_ids], lab_id: [student_unique_ids] ] */
   const labStudents = {};
   students.forEach((student) => {
@@ -206,10 +206,7 @@ const createGroupsEffort = async (unitCode, year, period, groupSize, variance) =
     });
   }
 
-  console.log(groups)
-  console.log(groupInsertData);
   if (groupInsertData.length === 0) {
-    console.log("You shall not pass");
     throw new Error('You have not inserted effort results for all students')
   }
 
@@ -336,7 +333,6 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
     [unitCode, year, period, "belbin"]
   );
 
-  console.log(students)
   /* SPLIT BY LAB | labStudents = [ lab_id: [student_unique_ids], lab_id: [student_unique_ids] ] */
   const labStudents = {};
   students.forEach((student) => {
@@ -351,7 +347,7 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
 
   //storage for group allocation within labs
   let laballocation = {};
-  console.log(labStudents)
+
   //Split labs into three groups based off belbin type
   for (var key in labStudents) {
     var currentLabstudents = labStudents[key];
@@ -393,10 +389,8 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
       groupInsertData.push([lab, numGroups]);
     });
   }
-  console.log(laballocation)
-  console.log(groupInsertData)
+
   if (groupInsertData.length === 0) {
-    console.log("You shall not pass");
     throw new Error('You have not inserted belbin results for all students')
   }
   await promiseBasedQuery(

@@ -8,9 +8,6 @@ const express = require('express');
 const router = express.Router();
 const { // import controller functions for route handlers
     getAllGroups,
-    getGroup,
-    addGroup,
-    deleteGroup,
     createUnitGroups,
     shuffleUnitGroups,
     moveStudent
@@ -37,9 +34,6 @@ const upload = multer({ storage });
 
 // get all groups for a specific unit
 router.get('/:unitCode/:year/:period', getAllGroups);
-
-// get a specific group for a specific unit
-router.get('/:unitCode/:year/:period/:groupNumber', getGroup);
 
 // create unit groups
 router.post('/:unitCode/:year/:period', createUnitGroups);
