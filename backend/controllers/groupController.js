@@ -97,6 +97,40 @@ const createUnitGroups = async (req, res) => {
         strategy='random';
     }
 
+    /* CHECK IF THE USER IS ALLOWED TO FORM GROUPS WITH THE SELECTED STRATEGY */
+    if (strategy !== 'random') {
+        // check the database to make sure EVERY student has an associated test result for the selected strategy
+        const { missingValues } = await promiseBasedQuery(
+            "SELECT (count(*) > 0) AS `missingValues` " +
+            "FROM student s " +
+            "    INNER JOIN unit_enrolment e ON e.stud_unique_id=s.stud_unique_id " +
+            "    INNER JOIN unit_offering u ON u.unit_off_id=e.unit_off_id " +
+            "WHERE " +
+            "    u.unit_code=? " +
+            "    AND u.unit_off_year=? " +
+            "    AND u.unit_off_period=? " +
+            "    AND s.stud_unique_id NOT IN ( " +
+            "        SELECT s.stud_unique_id " +
+            "        FROM student s " +
+            "            INNER JOIN unit_enrolment e ON e.stud_unique_id=s.stud_unique_id " +
+            "            INNER JOIN unit_offering u ON u.unit_off_id=e.unit_off_id " +
+            "            INNER JOIN personality_test_attempt t ON t.stud_unique_id=s.stud_unique_id " +
+            "        WHERE " +
+            "            u.unit_code=? " +
+            "            AND u.unit_off_year=? " +
+            "            AND u.unit_off_period=? " +
+            "            AND t.test_type=? " +
+            "    );",
+            [unitCode, year, period, unitCode, year, period, strategy]
+        )
+
+        if (missingValues) {
+            res.status(400).send(
+                `Error: student data does not exist for ${strategy} type. Please upload ${strategy} data first.`
+            )
+        }
+    }
+
     /* DELETE ALL PREVIOUS GROUP ALLOCATIONS */
     await promiseBasedQuery(
         'DELETE FROM group_allocation ' +
@@ -135,6 +169,7 @@ const createUnitGroups = async (req, res) => {
         [unitCode, year, period]
     );
 
+    /* NOW FINALLY, FORM THE GROUPS */
     await groupFormationStrategies[strategy](unitCode, year, period, groupSize, variance);
     res.status(200).send();
 }
