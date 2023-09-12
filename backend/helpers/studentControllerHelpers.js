@@ -47,7 +47,7 @@ const insertStudentEnrolment = async (studentKeys, unitOffId) => {
         const enrolmentInsertData = studentKeys.map((student) => {
             return [student.stud_unique_id, unitOffId]
         })
-
+        console.log(enrolmentInsertData)
         return promiseBasedQuery(
             'INSERT IGNORE INTO unit_enrolment ' +
             '(stud_unique_id, unit_off_id) VALUES ?;',
@@ -138,12 +138,12 @@ const insertStudentLabAllocations = async (requestBody, unitOffId) => {
 
             // get the primary key of the lab in question
             const labPrimaryKey = labNumberPrimaryKeyPairs[labNumber];
-            // console.log(labNumber, labPrimaryKey, labStudentKeys);
 
             // combine data into a form compatible with the database schema
             const insertData = labStudentKeys.map((studentKey) => {
                 return [labPrimaryKey, studentKey.stud_unique_id]
             });
+
             // insert the data into the database
             await promiseBasedQuery(
                 "INSERT IGNORE INTO student_lab_allocation " +

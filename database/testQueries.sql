@@ -2,72 +2,23 @@
 */
 
 USE student_group_db;
-
-SELECT * FROM unit_offering;
+-- Get all info and then append belbin data to it
 SELECT * FROM student;
 SELECT * FROM unit_enrolment;
-SELECT * FROM unit_off_lab;
-SELECT * FROM student_lab_allocation;
+SELECT * FROM personality_test_attempt;
+SELECT * FROM belbin_result;
+
+SELECT *
+FROM personality_test_attempt t 
+   INNER JOIN student s ON s.stud_unique_id=t.stud_unique_id
+   INNER JOIN unit_enrolment e ON e.unit_off_id=t.unit_off_id
+WHERE
+	e.unit_off_id=100000000;
     
-DELETE FROM group_allocation 
-WHERE group_alloc_id IN (
-  SELECT subquery.group_alloc_id
-  FROM (
-    SELECT ga.group_alloc_id
-    FROM lab_group g 
-    INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id 
-    INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id 
-    INNER JOIN group_allocation ga ON ga.lab_group_id = g.lab_group_id 
-    WHERE u.unit_code = "FIT2099"
-      AND u.unit_off_year = 2023
-      AND u.unit_off_period = "S1"
-  ) AS subquery
-);
-
+     
+SET @stud_ids:= (
+	'54321867', '12345678', '12345677', '12398267', '39187204', '40887212', '32459103', '45310009',
+	'12569024', '34251045', '33333333', '10982943', '56783124', '40981234', '10986402', '45670987',
+    '10908070', '54210982', '19749075', '30982934', '38976210', '37609812');
     
-DELETE FROM lab_group
-WHERE lab_group_id IN (
-  SELECT subquery.lab_group_id
-  FROM (
-    SELECT g.lab_group_id
-    FROM lab_group g
-    INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id
-    INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id
-    WHERE
-      u.unit_code = "FIT2099"
-      AND u.unit_off_year = 2023
-      AND u.unit_off_period = "S1"
-  ) AS subquery
-);
-
-DELETE FROM lab_group
-WHERE lab_group_id IN (
-  SELECT subquery.lab_group_id
-  FROM (
-    SELECT ue.enrolment_id
-    FROM unit_enrolment ue
-    INNER JOIN unit_offering u ON ue.unit_off_id = u.unit_off_id
-    WHERE
-      u.unit_code = "FIT2099"
-      AND u.unit_off_year = 2023
-      AND u.unit_off_period = "S1"
-  ) AS subquery
-);
-
-DELETE FROM table_
-WHERE primary_key IN (
-  SELECT subquery.primary_key
-  FROM (
-  
-    SELECT table_ t1
-    FROM primary_key
-    INNER JOIN other_table t2 ON t1.primary_key = t2.primary_key
-    WHERE
-      u.unit_code = "?"
-      AND u.unit_off_year = "?"
-      AND u.unit_off_period = "?"
-      
-  ) AS subquery
-);
-
-
+    

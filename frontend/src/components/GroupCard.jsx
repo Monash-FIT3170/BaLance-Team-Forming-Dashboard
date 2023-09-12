@@ -11,25 +11,46 @@ import {
   Heading,
   Spacer,
   HStack,
+  Button,
 } from '@chakra-ui/react';
+import { useParams } from 'react-router';
 import StudentRowGroupDisplay from './StudentRowGroupDisplay';
+import { useNavigate } from 'react-router-dom';
 
 const GroupCard = ({groupData, numberOfGroups}) => {
   const {
-    unit_code,
-    unit_off_year,
-    unit_off_period,
     lab_number,
     group_number,
     students
   } = groupData;
 
+  const {
+    unitCode,
+    year,
+    period
+  } = useParams();
+
+  const navigate = useNavigate();
+  const navigateToGroupAnalytics = () => {
+    navigate(`/groupAnalytics/${unitCode}/${year}/${period}/${lab_number}/${group_number}`);
+  };
+
   return (
     <Card border="1px" margin="20px">
       <CardHeader>
         <Heading>
-          Lab: {lab_number} Group: {group_number}
+          Lab: {lab_number}, Group: {group_number}
         </Heading>
+      {/* {<Button
+        me="12px"
+        align="right"
+        justify="right"
+        borderRadius="12px"
+        style={{ position: 'absolute', top: 25, right: 10 }}
+        onClick={navigateToGroupAnalytics}
+        colorScheme="green">
+        <HStack><p>Group Analytics</p></HStack>
+      </Button>} */}
         <Spacer />
       </CardHeader>
 

@@ -1,6 +1,7 @@
 import { EditIcon } from '@chakra-ui/icons';
 import { useState } from 'react';
 import { useParams } from 'react-router';
+import { useAuth0 } from '@auth0/auth0-react';
 
 import {
     Button,
@@ -17,6 +18,7 @@ import {
     Text,
     useDisclosure,
 } from '@chakra-ui/react';
+import { MockAuth } from '../mockAuth/mockAuth';
 
 export default function ChangeStudentGroupModal({studentData, numberOfGroups}) {
     const {
@@ -39,6 +41,13 @@ export default function ChangeStudentGroupModal({studentData, numberOfGroups}) {
 
     const [group, setGroup] = useState(group_number);
 
+    let authService = {
+        "DEV": MockAuth,
+        "TEST": useAuth0
+      }
+    
+      const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
+
     // an array of viable groups the student can be changed to
     const groupOptions = [];
     for(let i=1; i<=numberOfGroups; i++) {
@@ -51,13 +60,19 @@ export default function ChangeStudentGroupModal({studentData, numberOfGroups}) {
     }
 
     // handles modal confirmation for changing a students group
+
     const handleStudentGroupChange = async () => {
         onClose();
+        let token = await getAccessTokenSilently()
         await fetch(
             `http://localhost:8080/api/groups/${unitCode}/${year}/${period}/move/${student_id}/`, {
                 method: 'PATCH',
                 body: JSON.stringify({newGroup: group}),
-                headers: {'Content-type': 'application/json; charset=UTF-8'}
+                headers: new Headers({
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
+                    'Content-type': 'application/json; charset=UTF-8'
+                  }),
             }
         );
         window.location.reload();

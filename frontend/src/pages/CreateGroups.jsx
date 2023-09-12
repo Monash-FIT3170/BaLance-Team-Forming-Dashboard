@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
+import { useAuth0 } from '@auth0/auth0-react';
 
 import {
     Table,
@@ -31,8 +32,16 @@ import {
 } from '@chakra-ui/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowBackIcon } from '@chakra-ui/icons';
+import { MockAuth } from '../mockAuth/mockAuth';
 
 function CreateGroups() {
+    let authService = {
+        "DEV": MockAuth,
+        "TEST": useAuth0
+      }
+    
+      const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
+
     const [strategy, setStrategy] = useState("random");
     const [groupSize, setGroupSize] = useState(2);
     const [variance, setVariance] = useState(1);
@@ -49,8 +58,22 @@ function CreateGroups() {
         "variance": variance
     }
 
+    const navigateToOfferingDashboardGroups = () => {
+        navigate(`/groups/${unitCode}/${year}/${period}`);
+    };
+
+    const navigateToOfferingDashboardStudents = () => {
+        navigate(`/students/${unitCode}/${year}/${period}`);
+    };
+
+    const navigateUploadScript = () => {
+        navigate(`/uploadGroupScript/${unitCode}/${year}/${period}`);
+    };
+    
     const handleSubmitGroupOptions = async (event) => {
         event.preventDefault();
+
+        const token = await getAccessTokenSilently();
 
         if (strategy === "custom") {
             navigateUploadScript();
@@ -58,12 +81,16 @@ function CreateGroups() {
                 `/uploadGroupScript/${unitCode}/${year}/${period}`,
                 {state: { groupDetails }});
         } else { 
-            navigateToOfferingDashboard();
+            navigateToOfferingDashboardGroups();
 
             /* Call to shuffle groups */
             fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: new Headers({
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                  }),
                 body: JSON.stringify({
                     groupSize: groupSize,
                     variance: variance,
@@ -71,41 +98,19 @@ function CreateGroups() {
                 })
             }).catch((error) => { console.error('Error:', error); })
         }
-
-        /* Creating new groups */
-        /*
-        await fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                groupSize: groupSize,
-                variance: variance,
-                strategy: strategy
-            })
-        });
-        */
+        window.location.reload();
     }
-
-    const navigateToOfferingDashboard = () => {
-        navigate(`/groups/${unitCode}/${year}/${period}`);
-    };
-
-    const navigateUploadScript = () => {
-        navigate(`/uploadGroupScript/${unitCode}/${year}/${period}`);
-    };
 
     return (
         <>
             <Box as="header" p="4" textAlign="center">
                 <Text fontSize="2xl" fontWeight="bold">
-                    {`${unitCode} - ${period} ${year}, **CAMPUS**`}
+                    {`Configure Groups for: ${unitCode} - ${period}, ${year}`}
                 </Text>
             </Box>
 
             <Center>
-                <Button onClick={navigateToOfferingDashboard}>
+                <Button onClick={navigateToOfferingDashboardStudents}>
                     <HStack>
                         <ArrowBackIcon />
                         <Spacer />
