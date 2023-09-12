@@ -1,4 +1,3 @@
-const multer = require('multer');
 const { spawn } = require('child_process');
 
 const { promiseBasedQuery, selectUnitOffKey } = require('../helpers/commonHelpers');
@@ -70,12 +69,13 @@ async function storeGroupsInDatabase(unitCode, year, period, parsedOutput) {
 			console.log('GROUP: ', group);
 			const groupStudents = labStudents[group.unit_off_lab_id].pop();
 			console.log('GROUP STUDENTS: ', groupStudents);
-			if (!groupStudents) {
+			if (groupStudents === undefined) {
 				break;
+			}else{
+				groupStudents.forEach((studentId) => {
+					groupAllocInsertData.push([ studentId, group.lab_group_id ]);
+				});
 			}
-			groupStudents.forEach((studentId) => {
-				groupAllocInsertData.push([ studentId, group.lab_group_id ]);
-			});
 		}
 
 		// student allocations are created as [~~group_alloc_id~~, stud_unique_id, lab_group_id]
