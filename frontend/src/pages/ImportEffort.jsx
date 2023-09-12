@@ -158,7 +158,7 @@ function InfoImporter() {
         })
             .then((response) => {
                 if (!response.ok) {
-                    throw new Error('Error sending data to the REST API');
+                    response.json().then(json => console.log(json))
                 }
             })
             .catch((error) => {

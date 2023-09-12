@@ -268,6 +268,27 @@ const addPersonalityData = async (req, res) => {
         testType
     } = req.body;
 
+    /* MAKE SURE ALL STUDENT'S ARE ADDRESSED IN THE DATA BEING UPLOADED */
+    // get count of enrolled students
+    // compare to length of body
+    const [{ numEnrolledStudents }] = await promiseBasedQuery(
+        "SELECT count(*) AS `numEnrolledStudents` FROM student s " +
+        "   INNER JOIN unit_enrolment e ON e.stud_unique_id=s.stud_unique_id " +
+        "   INNER JOIN unit_offering u ON u.unit_off_id=e.unit_off_id " +
+        "WHERE" +
+        "   u.unit_code=? " +
+        "   AND u.unit_off_year=? " +
+        "   AND u.unit_off_period=?;",
+        [unitCode, year, period]
+    )
+
+    if(numEnrolledStudents !== students.length) {
+        res.status(400).json({
+            'error': 'personality data does not address all enrolled students'
+        })
+        return;
+    }
+
     /* GET VALUES NEEDED FOR INSERT QUERY FOR PERSONALITY_TEST_ATTEMPT */
     const unitOffKey = await selectUnitOffKey(unitCode, year, period);
     const studentIds = students.map(student => student.studentId)
