@@ -183,7 +183,7 @@ function Students() {
                         <HStack>
                             <AddIcon />
                             <Spacer />
-                            <Text>Add Students</Text>
+                            <Text>Import Students Data</Text>
                         </HStack>
                     </Button>
                     <Button
@@ -195,7 +195,7 @@ function Students() {
                         <HStack>
                             <AddIcon />
                             <Spacer />
-                            <Text>Add Personality Data</Text>
+                            <Text>Import Personality Data</Text>
                         </HStack>
                     </Button>
                     <Button
@@ -207,7 +207,7 @@ function Students() {
                         <HStack>
                             <AddIcon />
                             <Spacer />
-                            <Text>Add Work Ethic Data</Text>
+                            <Text>Import Work Ethic Data</Text>
                         </HStack>
                     </Button>
                 </VStack>
@@ -247,7 +247,7 @@ function Students() {
                     </VStack>
                 </HStack>
             </HStack>
-
+            
             <Center>
                 {studentsDisplay}
             </Center>
