@@ -3,7 +3,7 @@ name: Balance App GitHub CICD
 on:
   push:
     branches:
-      - feat/githubactions
+      - feature/website-deployment
 
 jobs:
   build:
