@@ -13,6 +13,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
+      
+      - name: Change directory to frontend
+        run: cd frontend
       - run: npm ci
       - run: npm test
 
