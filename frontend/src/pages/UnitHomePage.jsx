@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import UnitCard from '../components/UnitCard';
 import '../pages/UnitHomePage.css';
+import getToastSettings from '../components/ToastSettings';
 import { MockAuth } from '../mockAuth/mockAuth';
 
 // Chakra imports
@@ -41,14 +42,8 @@ function UnitPage() {
 
     const toast = useToast();
     const getToast = (title, status) => {
-        toast({
-            title: title,
-            status: status,
-            isClosable: true,
-            duration: 2000,
-            variant: "subtle",
-            position: "top"
-        })
+        toast.closeAll();
+        toast(getToastSettings(title, status))
     }
 
     const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
@@ -106,7 +101,7 @@ function UnitPage() {
             else {
                 navigate(`/uploadStudents/${unitCode}/${unitYearOffering}/${unitSemesterOffering}`);
             }
-        }, 2000)
+        }, 1500)
 
 
 

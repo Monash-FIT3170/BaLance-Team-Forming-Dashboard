@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
+import {useToast} from '@chakra-ui/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router';
 import { DeleteProfile } from '../components/DeleteProfile';
@@ -48,6 +49,7 @@ import {
 import { AddIcon, QuestionOutlineIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../mockAuth/mockAuth';
 import { useAuth0 } from '@auth0/auth0-react';
+import getToastSettings from '../components/ToastSettings';
 
 function InfoImporter() {
 
@@ -57,6 +59,12 @@ function InfoImporter() {
       }
 
       const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
+
+      const toast = useToast();
+      const getToast = (title, status) => {
+        toast.closeAll();
+        toast(getToastSettings(title, status));
+      }
 
     class Student {
         constructor(
@@ -110,7 +118,6 @@ function InfoImporter() {
     const [isFileChosen, setIsFileChosen] = useState(false);
     const [csvFile, setCsvFile] = useState(null);
     const [isConfirmationClearOpen, setIsConfirmationClearOpen] = useState(false);
-    const [showAlert, setShowAlert] = useState(false);
     const [currProfile, setCurrProfile] = useState(blankStudent);
 
     // Define state for the current sort order and column
@@ -158,7 +165,13 @@ function InfoImporter() {
         })
             .then((response) => {
                 if (!response.ok) {
+                    // if the addition is unsuccessful
                     response.json().then(json => console.log(json))
+                    getToast('There was an error adding the personality data to the offering. Please check that the number of students in the offering matches the number in the .csv file', 'error')
+                }
+                else {
+                    // if the addition is successful
+                    getToast("The student's personality data has successfully been added to the offering", 'success');
                 }
             })
             .catch((error) => {
@@ -166,8 +179,7 @@ function InfoImporter() {
                 // Handle the error from the API if needed
             });
 
-        // After successful creation
-        setShowAlert(true);
+        
     })
     };
 
@@ -339,7 +351,6 @@ function InfoImporter() {
         setProfiles([]); // Clear the table data
         setIsFileChosen(false); // Reset the file chosen state
         setIsConfirmationClearOpen(false); // Close the modal
-        setShowAlert(false);
     };
 
     const handleCloseConfirmation = () => {
@@ -392,23 +403,6 @@ function InfoImporter() {
                             handleUpload={handleUpload}
                             setIsFileChosen={setIsFileChosen}
                         />
-
-                        {showAlert && (
-                            <Alert
-                                status="success"
-                                variant="subtle"
-                                flexDirection="column"
-                                alignItems="center"
-                                justifyContent="center"
-                                textAlign="center"
-                                height="200px"
-                            >
-                                <AlertIcon boxSize="40px" mr={0} />
-                                <AlertTitle mt={4} mb={1} fontSize="lg">
-                                    Profiles Added Successfully
-                                </AlertTitle>
-                            </Alert>
-                        )}
 
                         <ConfirmClearSelection
                             isConfirmationClearOpen={isConfirmationClearOpen}
