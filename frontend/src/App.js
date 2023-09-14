@@ -13,6 +13,7 @@ import BelbinImporter from './pages/ImportBelbin';
 import EffortImporter from './pages/ImportEffort';
 import UnitAnalytics from './pages/UnitAnalytics';
 import GroupAnalytics from './pages/GroupAnalytics';
+import ImportPage from './pages/ImportPage';
 
 const theme = extendTheme({
   colors: {
@@ -46,11 +47,11 @@ function App() {
             <Route path="/" element={<UnitHomePage />} />
             <Route path="/groups/:unitCode/:year/:period" element={<Groups />} />
             <Route path="/students/:unitCode/:year/:period" element={<Students />} />
-            <Route path="/uploadStudents/:unitCode/:year/:period" element={<ImportStudents />} />
+            <Route path="/upload/:data/:unitCode/:year/:period" element={<ImportPage />} />
             <Route path="/uploadGroupScript/:unitCode/:year/:period" element={<UploadGroupScript />} />
             <Route path="/createGroups/:unitCode/:year/:period" element={<CreateGroups/>} />
-            <Route path="/belbinImport/:unitCode/:year/:period" element={<BelbinImporter />} />
-            <Route path="/infoImport/:unitCode/:year/:period" element={<EffortImporter />} />
+            <Route path="/upload/:data/:unitCode/:year/:period" element={<ImportPage />} />
+            <Route path="/upload/:data/:unitCode/:year/:period" element={<ImportPage />} />
             <Route path="/unitAnalytics/:unitCode/:year/:period" element={<UnitAnalytics />} />
             <Route path="/groupAnalytics/:unitCode/:year/:period/:groupNumber" element={<GroupAnalytics />} />
           </Routes>
