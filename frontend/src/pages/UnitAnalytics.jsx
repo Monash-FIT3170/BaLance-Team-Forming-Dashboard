@@ -28,7 +28,7 @@ const UnitAnalytics = () => {
         "TEST": useAuth0
       }
 
-      const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
+    const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
     const navigate = useNavigate();
 
