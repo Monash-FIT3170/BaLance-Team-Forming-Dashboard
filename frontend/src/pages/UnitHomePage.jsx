@@ -42,10 +42,12 @@ function UnitPage() {
     const toast = useToast();
     const getToast = (title, status) => {
         toast({
-            title: title, 
+            title: title,
             status: status,
             isClosable: true,
-            duration: 4000
+            duration: 2000,
+            variant: "subtle",
+            position: "top"
         })
     }
 
@@ -95,16 +97,20 @@ function UnitPage() {
 
         onCloseAdd();
         // if the user wants to add the student data later, reload the page, otherwise take them directly to that offering's upload students page
-        if (addDataOption === "Add Later") {
-            window.location.reload();
-        }
-        else {
-            navigate(`/uploadStudents/${unitCode}/${unitYearOffering}/${unitSemesterOffering}`);
-        }
-
         getToast('Unit created successfully', 'success');
-    }
 
+        setTimeout(() => {
+            if (addDataOption === "Add Later") {
+                window.location.reload();
+            }
+            else {
+                navigate(`/uploadStudents/${unitCode}/${unitYearOffering}/${unitSemesterOffering}`);
+            }
+        }, 2000)
+
+
+
+    }
 
     // fetch unit data from the backend
     useEffect(() => {
@@ -190,12 +196,6 @@ function UnitPage() {
                                                 <NumberDecrementStepper />
                                             </NumberInputStepper>
                                         </NumberInput>
-                                        {/* <Input
-                                            placeholder="year"
-                                            mb="5"
-                                            value={unitYearOffering}
-                                            onChange={(event) => handleYearUpdate(event.target.value)}
-                                        /> */}
 
                                         <Select
                                             placeholder="Semester"
@@ -234,8 +234,6 @@ function UnitPage() {
                     </ModalContent>
                 </Modal>
             </Center>
-
-
 
             {/* display the units from the data fetched from the backend */}
 

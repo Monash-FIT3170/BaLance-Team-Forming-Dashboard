@@ -42,8 +42,9 @@ const UnitCard = (unit) => {
             title: title,
             status: status,
             isClosable: true,
-            duration: 4000,
-            position: "top"
+            duration: 2000,
+            position: "top",
+            variant: "subtle"
         })
     }
 
@@ -69,7 +70,7 @@ const UnitCard = (unit) => {
 
     // handle delete unit and posting it to the backend
     const handleDeleteUnit = (event) => {
-        event.preventDefault();
+        //event.preventDefault();
         console.log("deleting unit")
 
         fetch(`http://localhost:8080/api/units/${unit_code}/${unit_off_year}/${unit_off_period}`, {
@@ -80,10 +81,12 @@ const UnitCard = (unit) => {
             },
         });
         
-        onCloseDetails();
+        getToast('Unit deleted successfully', 'success');
         
-        window.location.reload();
-        getToast("Unit deleted successfully", "success");
+        setTimeout(() => {
+            onCloseDetails();
+            window.location.reload();
+        }, 2000);
     }
 
     return (
