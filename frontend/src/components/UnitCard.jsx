@@ -23,7 +23,7 @@ import {
     useToast,
 } from '@chakra-ui/react';
 import { BsTrash } from 'react-icons/bs';
-
+import getToastSettings from './ToastSettings'
 import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 
@@ -38,14 +38,7 @@ const UnitCard = (unit) => {
 
     const toast = useToast();
     const getToast = (title, status) => {
-        toast({
-            title: title,
-            status: status,
-            isClosable: true,
-            duration: 2000,
-            position: "top",
-            variant: "subtle"
-        })
+        toast(getToastSettings(title, status))
     }
 
     const {
@@ -86,7 +79,7 @@ const UnitCard = (unit) => {
         setTimeout(() => {
             onCloseDetails();
             window.location.reload();
-        }, 2000);
+        }, 1500);
     }
 
     return (
