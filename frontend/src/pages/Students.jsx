@@ -27,21 +27,21 @@ import { AddIcon, EditIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../mockAuth/mockAuth';
 
 function Students() {
-  let authService = {
-    "DEV": MockAuth,
-    "TEST": useAuth0
-  }
+    let authService = {
+        "DEV": MockAuth,
+        "TEST": useAuth0
+    }
 
-  const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
-  const [students, setStudents] = useState([]);
-  const [numberOfGroups, setNumberOfGroups] = useState(0);
-  const cancelRef = React.useRef();
-  const navigate = useNavigate();
-  const {
-    isOpen,
-    onOpen,
-    onClose
-  } = useDisclosure();
+    const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
+    const [students, setStudents] = useState([]);
+    const [numberOfGroups, setNumberOfGroups] = useState(0);
+    const cancelRef = React.useRef();
+    const navigate = useNavigate();
+    const {
+        isOpen,
+        onOpen,
+        onClose
+    } = useDisclosure();
 
     const {
         groupStrategy,
@@ -72,61 +72,62 @@ function Students() {
         navigate(`/unitAnalytics/${unitCode}/${year}/${period}`);
     }
 
-  useEffect(() => {
-    getAccessTokenSilently().then((token) => {
-    // fetch students from the backend
-    fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}`,
-    {
-      method: 'get',
-      headers: new Headers({
-        'Authorization': `Bearer ${token}`
-      })
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        setStudents(res);
-      })
-      .catch((err) => console.error(err));
+    useEffect(() => {
+        getAccessTokenSilently().then((token) => {
+            // fetch students from the backend
+            fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}`,
+                {
+                    method: 'get',
+                    headers: new Headers({
+                        'Authorization': `Bearer ${token}`
+                    })
+                })
+                .then((res) => res.json())
+                .then((res) => {
+                    setStudents(res);
+                })
+                .catch((err) => console.error(err));
 
-    // fetch groups from the backend
-    fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`,
-    {
-      method: 'get',
-      headers: new Headers({
-        'Authorization': `Bearer ${token}`
-      })
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        setNumberOfGroups(res.length);
-      })
-      .catch((err) => console.error(err));
+            // fetch groups from the backend
+            fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`,
+                {
+                    method: 'get',
+                    headers: new Headers({
+                        'Authorization': `Bearer ${token}`
+                    })
+                })
+                .then((res) => res.json())
+                .then((res) => {
+                    setNumberOfGroups(res.length);
+                })
+                .catch((err) => console.error(err));
 
-  })}, []);
+        })
+    }, []);
 
-  const handleShuffleGroups = () => {
-    // Close confirmation dialog
-    onClose();
+    const handleShuffleGroups = () => {
+        // Close confirmation dialog
+        onClose();
 
-    getAccessTokenSilently().then((token) => {
-    // API call to create groups from scratch - will automatically delete existing groups first
-    fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
-      method: 'POST',
-      headers: new Headers({
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }),
-      body: JSON.stringify({
-        groupSize: groupSize,
-        variance: variance,
-        strategy: groupStrategy,
-      })
-    })
-      .catch((error) => { console.error('Error:', error); })
-      .finally(() => { window.location.reload(); });
-  });
-  }
+        getAccessTokenSilently().then((token) => {
+            // API call to create groups from scratch - will automatically delete existing groups first
+            fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
+                method: 'POST',
+                headers: new Headers({
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }),
+                body: JSON.stringify({
+                    groupSize: groupSize,
+                    variance: variance,
+                    strategy: groupStrategy,
+                })
+            })
+                .catch((error) => { console.error('Error:', error); })
+                .finally(() => { window.location.reload(); });
+        });
+    }
 
     let studentsDisplay = students.length === 0 ?
         <Box bg='#E6EBF0' w='60vw' p={4} alignContent="center">
@@ -215,18 +216,18 @@ function Students() {
 
                 <Spacer />
 
-        <HStack m="40px">
-          <Spacer />
-          <ButtonGroup colorScheme="#282c34" variant="outline" size="lg" isAttached>
-            <Link to={`/groups/${unitCode}/${year}/${period}`}>
-              <Button isDisabled={students.length===0}>  Groups  </Button>
-            </Link>
-            <Button isDisabled={true}>
-              Students
-            </Button>
-          </ButtonGroup>
-          <Spacer />
-        </HStack>
+                <HStack m="40px">
+                    <Spacer />
+                    <ButtonGroup colorScheme="#282c34" variant="outline" size="lg" isAttached>
+                        <Link to={`/groups/${unitCode}/${year}/${period}`}>
+                            <Button isDisabled={students.length === 0}>  Groups  </Button>
+                        </Link>
+                        <Button isDisabled={true}>
+                            Students
+                        </Button>
+                    </ButtonGroup>
+                    <Spacer />
+                </HStack>
 
                 <Spacer />
 
