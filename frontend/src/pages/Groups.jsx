@@ -82,6 +82,7 @@ function Groups() {
 
     const toast = useToast();
     const getToast = (title, status) => {
+        toast.closeAll();
         toast(getToastSettings(title, status))
     }
 

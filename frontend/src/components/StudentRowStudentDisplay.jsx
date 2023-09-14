@@ -19,6 +19,7 @@ const StudentRowStudentDisplay = ({ studentData, numberOfGroups, onDelete }) => 
 
     const toast = useToast();
     const getToast = (title, status) => {
+        toast.closeAll();
         toast(getToastSettings(title, status))
     }
 
