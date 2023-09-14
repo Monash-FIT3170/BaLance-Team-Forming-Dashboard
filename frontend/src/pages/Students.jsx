@@ -53,15 +53,15 @@ function Students() {
     } = useParams();
 
     const navigateToStudentUpload = () => {
-        navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
+        navigate(`/upload/students/${unitCode}/${year}/${period}`);
     };
 
     const navigateToWorkEthicUpload = () => {
-        navigate(`/infoImport/${unitCode}/${year}/${period}`);
+        navigate(`/upload/effort/${unitCode}/${year}/${period}`);
     };
 
     const navigateToBelbinUpload = () => {
-        navigate(`/belbinImport/${unitCode}/${year}/${period}`);
+        navigate(`/upload/personality/${unitCode}/${year}/${period}`);
     }
 
     const navigateToCreateGroups = () => {
