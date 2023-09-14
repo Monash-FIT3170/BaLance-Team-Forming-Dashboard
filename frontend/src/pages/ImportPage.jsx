@@ -156,7 +156,8 @@ function ImportPage() {
   const handleAddProfilesClick = async () => {
 
     getAccessTokenSilently().then((token) => {
-    // Make API call
+    // Make API call 
+    //data parameter is the type of data, eg students,effort,personality
     fetch(`http://localhost:8080/api/${data}/${unitCode}/${year}/${period}`, {
       method: 'POST',
       headers: new Headers({
@@ -355,7 +356,7 @@ function ImportPage() {
     const handleConfirmDelete = () => {
         if (profileToDelete !== null) {
             const newProfiles = profiles.filter(
-                (profile) => profile.studentEmailAddress !== profileToDelete.studentEmailAddress
+                (profile) => profile.studentId !== profileToDelete.studentId
             );
             setProfiles(newProfiles);
             setProfileToDelete(null);
