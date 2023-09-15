@@ -297,13 +297,13 @@ function ImportPage() {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (currProfile.enrolmentStatus === ""){
-            setCurrProfile({...currProfile,enrolmentStatus:'ACTIVE'})
+            currProfile.enrolmentStatus= 'ACTIVE'
         }
         if (currProfile.belbinType === ""){
-            setCurrProfile({...currProfile,belbinType:'ACTION'});
+            currProfile.belbinType='ACTION';
         }
         if (currProfile.averageMark !== "" && currProfile.hours !== ""){
-            setCurrProfile({...currProfile,marksPerHour:currProfile.averageMark/currProfile.hours})
+            currProfile['marksPerHour']=currProfile.averageMark/currProfile.hours
         }
         setProfiles([...profiles,currProfile]);
         setCurrProfile(blankStudent);
