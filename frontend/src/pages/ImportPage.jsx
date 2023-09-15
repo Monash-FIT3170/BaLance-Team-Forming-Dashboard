@@ -123,7 +123,7 @@ function ImportPage() {
         PREFERRED_NAME: 'studentFirstName',
     };
 
-    if (data == 'students'){
+    if (data === 'students'){
         headers.push(['studentEmailAddress', 'Email Address'],
         ['wamAverage', 'WAM'],
         ['gender', 'Gender'],
@@ -133,7 +133,7 @@ function ImportPage() {
         headerMapping['WAM_VAL'] = 'wamAverage'
         headerMapping['GENDER'] = 'gender'
 
-    } else if (data == 'effort'){
+    } else if (data === 'effort'){
         headers.push(['labId', 'Lab ID'],
         ['enrolmentStatus', 'Enrolment Status'],
         ['hours', 'Hours'],
@@ -142,7 +142,7 @@ function ImportPage() {
         headerMapping['HOURS']= 'hours'
         headerMapping['AVERAGE_MARK'] = 'averageMark'
         
-    } else if (data == 'personality'){
+    } else if (data === 'personality'){
         headers.push(['labId', 'Lab ID'],
         ['enrolmentStatus', 'Enrolment Status'],
         ['belbinType', 'Belbin Type'])
@@ -155,10 +155,16 @@ function ImportPage() {
   //create unit for new students
   const handleAddProfilesClick = async () => {
 
+    let apiCall= ""
+    if (data === 'effort'){
+        apiCall = 'personality'
+    }else{
+        apiCall = data
+    }
     getAccessTokenSilently().then((token) => {
     // Make API call 
     //data parameter is the type of data, eg students,effort,personality
-    fetch(`http://localhost:8080/api/${data}/${unitCode}/${year}/${period}`, {
+    fetch(`http://localhost:8080/api/${apiCall}/${unitCode}/${year}/${period}`, {
       method: 'POST',
       headers: new Headers({
         'Authorization': `Bearer ${token}`,
@@ -211,16 +217,14 @@ function ImportPage() {
             setCsvFile(file);
 
             const profilesWithDefaultValues = csvDict.map((profile) => {
-                console.log(`${data}`)
-                console.log(profile)
-                if (data == 'students'){
+                if (data === 'students'){
                     return{
                         ...profile,
                         enrolmentStatus: 'ACTIVE',
                         discPersonality: 'DOMINANT',
                     }
                 }
-                else if (data == 'effort'){
+                else if (data === 'effort'){
                     return{
                         ...profile,
                         enrolmentStatus: 'ACTIVE',
@@ -228,7 +232,7 @@ function ImportPage() {
                         marksPerHour: profile.averageMark / profile.hours
                     }
                 }
-                else if (data == 'personality'){
+                else if (data === 'personality'){
                     return{
                         ...profile,
                         enrolmentStatus: 'ACTIVE',
@@ -292,13 +296,13 @@ function ImportPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (currProfile.enrolmentStatus == ""){
+        if (currProfile.enrolmentStatus === ""){
             setCurrProfile({...currProfile,enrolmentStatus:'ACTIVE'})
         }
-        if (currProfile.belbinType == ""){
+        if (currProfile.belbinType === ""){
             setCurrProfile({...currProfile,belbinType:'ACTION'});
         }
-        if (currProfile.averageMark != "" && currProfile.hours != ""){
+        if (currProfile.averageMark !== "" && currProfile.hours !== ""){
             setCurrProfile({...currProfile,marksPerHour:currProfile.averageMark/currProfile.hours})
         }
         setProfiles([...profiles,currProfile]);
@@ -321,7 +325,7 @@ function ImportPage() {
         const index = profiles.findIndex(
             (profile) => profile.studentEmailAddress === currProfile.studentEmailAddress
         );
-        if (updatedProfile.averageMark != "" && updatedProfile.hours != ""){
+        if (updatedProfile.averageMark !== "" && updatedProfile.hours !== ""){
             updatedProfile['marksPerHour'] = updatedProfile.averageMark/updatedProfile.hours
         }
         // Update the profile object with the new values
