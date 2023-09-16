@@ -22,8 +22,10 @@ import {
     ModalCloseButton,
     ModalBody,
     ModalFooter,
+    useToast
 } from '@chakra-ui/react';
 
+import getToastSettings from '../components/ToastSettings';
 import { Link, useNavigate } from 'react-router-dom';
 import { AddIcon, EditIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../mockAuth/mockAuth';
@@ -34,12 +36,12 @@ function Groups() {
     const [groups, setGroups] = useState([]);
     const [filteredClass, setFilteredClass] = useState(["All"]);
 
-  let authService = {
-    "DEV": MockAuth,
-    "TEST": useAuth0
-  }
+    let authService = {
+        "DEV": MockAuth,
+        "TEST": useAuth0
+    }
 
-  const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
+    const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
     // Confirmation popup for shuffling groups
     const {
@@ -76,23 +78,29 @@ function Groups() {
 
     const navigateToUnitAnalytics = () => {
         navigate(`/unitAnalytics/${unitCode}/${year}/${period}`);
-      }
+    }
+
+    const toast = useToast();
+    const getToast = (title, status) => {
+        toast.closeAll();
+        toast(getToastSettings(title, status))
+    }
 
     useEffect(() => {
-      getAccessTokenSilently().then((token) => {
-        fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`,
-        {
-          method: 'get',
-          headers: new Headers({
-            'Authorization': `Bearer ${token}`
-          })
-        })
-            .then((res) =>
-                res.json().then(function (res) {
-                    setGroups(res);
+        getAccessTokenSilently().then((token) => {
+            fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`,
+                {
+                    method: 'get',
+                    headers: new Headers({
+                        'Authorization': `Bearer ${token}`
+                    })
                 })
-            )
-            .catch((err) => console.error(err));
+                .then((res) =>
+                    res.json().then(function (res) {
+                        setGroups(res);
+                    })
+                )
+                .catch((err) => console.error(err));
         });
     }, []);
 
@@ -148,6 +156,7 @@ function Groups() {
             link.setAttribute("download", file_name);
             document.body.appendChild(link); // Required for FF
             link.click();
+            getToast("Your group data is being downloaded...", "info")
         } catch (error) {
             console.log(error);
         }

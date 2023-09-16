@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import UnitCard from '../components/UnitCard';
 import '../pages/UnitHomePage.css';
+import getToastSettings from '../components/ToastSettings';
 import { MockAuth } from '../mockAuth/mockAuth';
 
 // Chakra imports
@@ -26,7 +27,7 @@ import {
     Select,
     Container,
     Spacer,
-    Radio, RadioGroup, Stack, Text, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper
+    Radio, RadioGroup, Stack, Text, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, useToast
 } from '@chakra-ui/react';
 
 import { AddIcon } from '@chakra-ui/icons';
@@ -37,6 +38,12 @@ function UnitPage() {
     let authService = {
         "DEV": MockAuth,
         "TEST": useAuth0
+    }
+
+    const toast = useToast();
+    const getToast = (title, status) => {
+        toast.closeAll();
+        toast(getToastSettings(title, status))
     }
 
     const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
@@ -50,7 +57,7 @@ function UnitPage() {
     const [unitCode, setUnitCode] = useState('');
     const [unitName, setUnitName] = useState('');
     const [addDataOption, setAddDataOption] = React.useState('Add Now');
-    const [unitYearOffering, setUnitYearOffering] = useState('');
+    const [unitYearOffering, setUnitYearOffering] = useState(new Date().getFullYear());
     const [unitSemesterOffering, setUnitSemesterOffering] = useState('');
 
     const navigate = useNavigate();
@@ -83,18 +90,22 @@ function UnitPage() {
             })
         });
 
-        let answer = window.confirm('Unit created successfully');
-        if (answer) {
-            onCloseAdd();
-            // if the user wants to add the student data later, reload the page, otherwise take them directly to that offering's upload students page
+        onCloseAdd();
+        // if the user wants to add the student data later, reload the page, otherwise take them directly to that offering's upload students page
+        getToast('Unit created successfully', 'success');
+
+        setTimeout(() => {
             if (addDataOption === "Add Later") {
                 window.location.reload();
             }
             else {
                 navigate(`/uploadStudents/${unitCode}/${unitYearOffering}/${unitSemesterOffering}`);
             }
-        }
-    };
+        }, 1500)
+
+
+
+    }
 
     // fetch unit data from the backend
     useEffect(() => {
@@ -173,19 +184,13 @@ function UnitPage() {
                                     <FormLabel>Offering</FormLabel>
 
                                     <Flex direction="row" spacing={4}>
-                                        <NumberInput allowMouseWheel size='sm' defaultValue={new Date().getFullYear()} min={new Date().getFullYear()} onChange={(event)=>setUnitYearOffering(event)}>
+                                        <NumberInput allowMouseWheel size='md' defaultValue={unitYearOffering} min={new Date().getFullYear()} onChange={(event) => setUnitYearOffering(event)}>
                                             <NumberInputField />
                                             <NumberInputStepper>
                                                 <NumberIncrementStepper />
                                                 <NumberDecrementStepper />
                                             </NumberInputStepper>
                                         </NumberInput>
-                                        {/* <Input
-                                            placeholder="year"
-                                            mb="5"
-                                            value={unitYearOffering}
-                                            onChange={(event) => handleYearUpdate(event.target.value)}
-                                        /> */}
 
                                         <Select
                                             placeholder="Semester"
@@ -224,8 +229,6 @@ function UnitPage() {
                     </ModalContent>
                 </Modal>
             </Center>
-
-
 
             {/* display the units from the data fetched from the backend */}
 
