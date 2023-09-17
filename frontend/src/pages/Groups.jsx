@@ -61,11 +61,11 @@ function Groups() {
     } = useParams();
 
     const navigateToBelbinUpload = () => {
-        navigate(`/belbinImport/${unitCode}/${year}/${period}`);
+        navigate(`/upload/personality/${unitCode}/${year}/${period}`);
     };
 
     const navigateToWorkEthicUpload = () => {
-        navigate(`/infoImport/${unitCode}/${year}/${period}`);
+        navigate(`/upload/personality/${unitCode}/${year}/${period}`);
     };
 
     const navigateToCreateGroups = () => {
@@ -73,7 +73,7 @@ function Groups() {
     }
 
     const navigateToStudentUploadInfo = () => {
-        navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
+        navigate(`/upload/students/${unitCode}/${year}/${period}`);
     }
 
     const navigateToUnitAnalytics = () => {
@@ -205,7 +205,7 @@ function Groups() {
                         <HStack>
                             <AddIcon />
                             <Spacer />
-                            <Text>Add Students</Text>
+                            <Text>Import Students Data</Text>
                         </HStack>
                     </Button>
                     <Button
@@ -216,7 +216,7 @@ function Groups() {
                         <HStack>
                             <AddIcon />
                             <Spacer />
-                            <Text>Add Personality Data</Text>
+                            <Text>Import Personality Data</Text>
                         </HStack>
                     </Button>
                     <Button
@@ -227,7 +227,7 @@ function Groups() {
                         <HStack>
                             <AddIcon />
                             <Spacer />
-                            <Text>Add Work Ethic Data</Text>
+                            <Text>Import Work Ethic Data</Text>
                         </HStack>
                     </Button>
                 </VStack>
