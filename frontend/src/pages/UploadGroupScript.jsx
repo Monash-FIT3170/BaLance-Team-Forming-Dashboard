@@ -198,12 +198,8 @@ const [variance, setVariance] = useState(initialVariance);
 							</Text>
 						</Alert>
 					</Center>
-					<PyInfoButton
-						infoHeader=".py file format"
-						infoText="Accepted .py files should contain the necessary script for custom group formation."
-					/>
 					<Center>
-						<UploadPy pyFile={pyFile} handleUpload={handleUpload} />
+						<UploadPy pyFile={pyFile} handleUpload={handleUpload}/>
 					</Center>
           {scriptContent && (
           <>
