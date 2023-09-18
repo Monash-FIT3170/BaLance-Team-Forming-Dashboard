@@ -26,13 +26,20 @@ import { useParams } from 'react-router-dom';
 import PyInfoButton from '../components/PyInfoButton'; // Import your PyInfoButton component
 import UploadPy from '../components/UploadPy'; // Import your UploadPy component
 import { useNavigate, useLocation } from 'react-router-dom'; // Import the useNavigate hook
+import { MockAuth } from '../mockAuth/mockAuth';
+import { useAuth0 } from '@auth0/auth0-react';
 
 function UploadGroupScript() {
+	let authService = {
+        "DEV": MockAuth,
+        "TEST": useAuth0
+    }
+	const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 	const [ scriptContent, setScriptContent ] = useState('');
 	const [ pyFile, setPyFile ] = useState(null);
 	const { unitCode, year, period } = useParams();
 	const navigate = useNavigate();
-  const location = useLocation();
+  	const location = useLocation();
 
 // Extract groupDetails or set it to default values
 const groupDetails = location.state?.groupDetails || { groupSize: 2, variance: 1 };
@@ -67,36 +74,38 @@ const [variance, setVariance] = useState(initialVariance);
 				const scriptContent = event.target.result;
 				console.log(scriptContent);
 	
-				try {
-					const response = await fetch(
-						`http://localhost:8080/api/groups/${unitCode}/${year}/${period}/uploadScript`,
-						{
-							method: 'POST',
-							headers: {
-								'Content-Type': 'application/json',
-							},
-							body: JSON.stringify({ scriptContent })
+				getAccessTokenSilently().then((token) => {
+					fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}/uploadScript`, {
+						method: 'POST',
+						headers: new Headers({
+							'Authorization': `Bearer ${token}`,
+							'Accept': 'application/json',
+							'Content-Type': 'application/json'
+						}),
+						body: JSON.stringify({ scriptContent }),
+					})
+					.then(response => {
+						if (response.ok) {
+							console.log('Script executed successfully.');
+							navigateToOfferingDashboard();
+						} else {
+							return response.text().then(responseText => {
+								console.error('Error executing the script:', responseText);
+								alert(responseText);
+							});
 						}
-					);
-	
-					if (response.ok) {
-						console.log('Script executed successfully.');
-						// Optionally navigate the user to another page or show a success message.
-						navigateToOfferingDashboard();
-					} else {
-						console.error('Error executing the script:', await response.text());
+					})
+					.catch(error => {
+						console.error('Error executing the script:', error);
 						// Optionally show an error message to the user.
-						alert(response.text());
-					}
-				} catch (error) {
-					console.error('Error executing the script:', error);
-					// Optionally show an error message to the user.
-				}
+					});
+				});
 			};
 		} else {
 			console.log('No file selected.');
 		}
 	};
+	
 	
 
 	const navigateToCreateGroupsDashboard = () => {
