@@ -183,12 +183,12 @@ function ImportPage() {
                 .then((response) => {
                     if (!response.ok) {
                         // if the import is not successful
-                        getToast("There was an error importing your student file!", "error")
+                        getToast("There was an error importing your file!", "error")
                         throw new Error('Error sending data to the REST API');
                     }
                     else {
                         // if the import is successful
-                        getToast("Students have been imported successfully!", "success")
+                        getToast("Your file has been imported successfully!", "success")
                     }
                 })
                 .catch((error) => {
