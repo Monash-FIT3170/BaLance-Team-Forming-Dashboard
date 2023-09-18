@@ -6,6 +6,7 @@ import { ConfirmClearSelection } from '../components/ConfirmClearSelection';
 import { UploadCSV } from '../components/UploadCSV';
 import { FormField } from '../components/FormField';
 import { CsvInfoButton } from '../components/CsvInfoButton';
+import getToastSettings from '../components/ToastSettings';
 import { useAuth0 } from '@auth0/auth0-react';
 import { AddIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import {
@@ -35,18 +36,19 @@ import {
     Center,
     Spacer,
     VStack,
+    useToast
 } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../mockAuth/mockAuth';
 
 function ImportPage() {
 
-  let authService = {
-    "DEV": MockAuth,
-    "TEST": useAuth0
-  }
+    let authService = {
+        "DEV": MockAuth,
+        "TEST": useAuth0
+    }
 
-  const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
+    const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
     class Student {
         constructor(
@@ -78,7 +80,6 @@ function ImportPage() {
     const [isFileChosen, setIsFileChosen] = useState(false);
     const [csvFile, setCsvFile] = useState(null);
     const [isConfirmationClearOpen, setIsConfirmationClearOpen] = useState(false);
-    const [showAlert, setShowAlert] = useState(false);
     const [currProfile, setCurrProfile] = useState(blankStudent);
 
     // Define state for the current sort order and column
@@ -106,7 +107,7 @@ function ImportPage() {
         onClose: onEditProfileClose,
     } = useDisclosure();
 
-    const { data,unitCode, year, period } = useParams();
+    const { data, unitCode, year, period } = useParams();
 
     // Formatted headers for different possible variables
     const headers = [
@@ -123,70 +124,80 @@ function ImportPage() {
         PREFERRED_NAME: 'studentFirstName',
     };
 
-    if (data === 'students'){
+    if (data === 'students') {
         headers.push(['studentEmailAddress', 'Email Address'],
-        ['wamAverage', 'WAM'],
-        ['gender', 'Gender'],
-        ['labId', 'Lab ID'],
-        ['enrolmentStatus', 'Enrolment Status'])
+            ['wamAverage', 'WAM'],
+            ['gender', 'Gender'],
+            ['labId', 'Lab ID'],
+            ['enrolmentStatus', 'Enrolment Status'])
         headerMapping['EMAIL_ADDRESS'] = 'studentEmailAddress'
         headerMapping['WAM_VAL'] = 'wamAverage'
         headerMapping['GENDER'] = 'gender'
 
-    } else if (data === 'effort'){
+    } else if (data === 'effort') {
         headers.push(['labId', 'Lab ID'],
-        ['enrolmentStatus', 'Enrolment Status'],
-        ['hours', 'Hours'],
-        ['averageMark', 'Average Mark'],
-        ['marksPerHour', 'Marks per Hour'])
-        headerMapping['HOURS']= 'hours'
+            ['enrolmentStatus', 'Enrolment Status'],
+            ['hours', 'Hours'],
+            ['averageMark', 'Average Mark'],
+            ['marksPerHour', 'Marks per Hour'])
+        headerMapping['HOURS'] = 'hours'
         headerMapping['AVERAGE_MARK'] = 'averageMark'
-        
-    } else if (data === 'personality'){
+
+    } else if (data === 'personality') {
         headers.push(['labId', 'Lab ID'],
-        ['enrolmentStatus', 'Enrolment Status'],
-        ['belbinType', 'Belbin Type'])
+            ['enrolmentStatus', 'Enrolment Status'],
+            ['belbinType', 'Belbin Type'])
         headerMapping['EMAIL_ADDRESS'] = 'studentEmailAddress'
         headerMapping['WAM_VAL'] = 'wamAverage'
         headerMapping['GENDER'] = 'gender'
         headerMapping['BELBIN_TYPE'] = 'belbinType'
     }
 
-  //create unit for new students
-  const handleAddProfilesClick = async () => {
-
-    let apiCall= ""
-    if (data === 'effort'){
-        apiCall = 'personality'
-    }else{
-        apiCall = data
+    const toast = useToast();
+    const getToast = (title, status) => {
+        toast.closeAll();
+        toast(getToastSettings(title, status))
     }
-    getAccessTokenSilently().then((token) => {
-    // Make API call 
-    //data parameter is the type of data, eg students,effort,personality
-    fetch(`http://localhost:8080/api/${apiCall}/${unitCode}/${year}/${period}`, {
-      method: 'POST',
-      headers: new Headers({
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }),
-      body: JSON.stringify(profiles),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Error sending data to the REST API');
-        }
-      })
-      .catch((error) => {
-        console.error('Error sending data to the REST API:', error);
-        // Handle the error from the API if needed
-      });
 
-    // After successful creation
-    setShowAlert(true);
-    });
-  };
+    //create unit for new students
+    const handleAddProfilesClick = async () => {
+
+        let apiCall = ""
+        if (data === 'effort') {
+            apiCall = 'personality'
+        } else {
+            apiCall = data
+        }
+        getAccessTokenSilently().then((token) => {
+            // Make API call 
+            //data parameter is the type of data, eg students,effort,personality
+            fetch(`http://localhost:8080/api/${apiCall}/${unitCode}/${year}/${period}`, {
+                method: 'POST',
+                headers: new Headers({
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }),
+                body: JSON.stringify(profiles),
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        // if the import is not successful
+                        getToast("There was an error importing your student file!", "error")
+                        throw new Error('Error sending data to the REST API');
+                    }
+                    else {
+                        // if the import is successful
+                        getToast("Students have been imported successfully!", "success")
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error sending data to the REST API:', error);
+                    // Handle the error from the API if needed
+                });
+
+        });
+    };
 
     // Logic for table sorting by column
     const handleSort = (header) => {
@@ -217,23 +228,23 @@ function ImportPage() {
             setCsvFile(file);
 
             const profilesWithDefaultValues = csvDict.map((profile) => {
-                if (data === 'students'){
-                    return{
+                if (data === 'students') {
+                    return {
                         ...profile,
                         enrolmentStatus: 'ACTIVE',
                         discPersonality: 'DOMINANT',
                     }
                 }
-                else if (data === 'effort'){
-                    return{
+                else if (data === 'effort') {
+                    return {
                         ...profile,
                         enrolmentStatus: 'ACTIVE',
                         discPersonality: 'DOMINANT',
                         marksPerHour: profile.averageMark / profile.hours
                     }
                 }
-                else if (data === 'personality'){
-                    return{
+                else if (data === 'personality') {
+                    return {
                         ...profile,
                         enrolmentStatus: 'ACTIVE',
                         discPersonality: 'DOMINANT',
@@ -296,16 +307,16 @@ function ImportPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (currProfile.enrolmentStatus === ""){
-            currProfile.enrolmentStatus= 'ACTIVE'
+        if (currProfile.enrolmentStatus === "") {
+            currProfile.enrolmentStatus = 'ACTIVE'
         }
-        if (currProfile.belbinType === ""){
-            currProfile.belbinType='ACTION';
+        if (currProfile.belbinType === "") {
+            currProfile.belbinType = 'ACTION';
         }
-        if (currProfile.averageMark !== "" && currProfile.hours !== ""){
-            currProfile['marksPerHour']=currProfile.averageMark/currProfile.hours
+        if (currProfile.averageMark !== "" && currProfile.hours !== "") {
+            currProfile['marksPerHour'] = currProfile.averageMark / currProfile.hours
         }
-        setProfiles([...profiles,currProfile]);
+        setProfiles([...profiles, currProfile]);
         setCurrProfile(blankStudent);
         onAddProfileClose();
     };
@@ -325,8 +336,8 @@ function ImportPage() {
         const index = profiles.findIndex(
             (profile) => profile.studentEmailAddress === currProfile.studentEmailAddress
         );
-        if (updatedProfile.averageMark !== "" && updatedProfile.hours !== ""){
-            updatedProfile['marksPerHour'] = updatedProfile.averageMark/updatedProfile.hours
+        if (updatedProfile.averageMark !== "" && updatedProfile.hours !== "") {
+            updatedProfile['marksPerHour'] = updatedProfile.averageMark / updatedProfile.hours
         }
         // Update the profile object with the new values
         const updatedProfiles = [...profiles];
@@ -383,7 +394,6 @@ function ImportPage() {
         setProfiles([]); // Clear the table data
         setIsFileChosen(false); // Reset the file chosen state
         setIsConfirmationClearOpen(false); // Close the modal
-        setShowAlert(false);
     };
 
     const handleCloseConfirmation = () => {
@@ -435,33 +445,18 @@ function ImportPage() {
                             handleAddProfilesClick={handleAddProfilesClick}
                             handleUpload={handleUpload}
                             setIsFileChosen={setIsFileChosen}
-                        />):( 
+                        />) : (
                             <ButtonGroup>
-                            <Button mb={2} colorScheme="red" onClick={handleClearSelection}>
-                                    Clear        
-                            </Button>
-                            <Button onClick={handleAddProfilesClick}>
-                            Add To Offering
-                            </Button>
+                                <Button mb={2} colorScheme="red" onClick={handleClearSelection}>
+                                    Clear
+                                </Button>
+                                <Button onClick={handleAddProfilesClick}>
+                                    Add To Offering
+                                </Button>
                             </ButtonGroup>)
                         }
 
-                        {showAlert && (
-                            <Alert
-                                status="success"
-                                variant="subtle"
-                                flexDirection="column"
-                                alignItems="center"
-                                justifyContent="center"
-                                textAlign="center"
-                                height="200px"
-                            >
-                                <AlertIcon boxSize="40px" mr={0} />
-                                <AlertTitle mt={4} mb={1} fontSize="lg">
-                                    Profiles Added Successfully
-                                </AlertTitle>
-                            </Alert>
-                        )}
+
 
                         <ConfirmClearSelection
                             isConfirmationClearOpen={isConfirmationClearOpen}
@@ -608,8 +603,8 @@ function ImportPage() {
                     <HStack>
                         <AddIcon />
                         <Spacer />
-                            <Text>Add Student</Text>
-                        </HStack>
+                        <Text>Add Student</Text>
+                    </HStack>
                 </Button>
                 {sortedProfiles.length === 0 ? (<Box bg='#E6EBF0' p={4} alignContent="center" width="80%">
                     <Center>
@@ -632,25 +627,25 @@ function ImportPage() {
                         {sortedProfiles.map((profile) => (
                             <Tr key={profile.studentId}>
                                 {
-                                    headers.map((h)=>{
+                                    headers.map((h) => {
                                         return <td>{profile[h[0]]}</td>
                                     })
                                 }
-                            <Td>
-                                <EditIcon
-                                style={{ cursor: 'pointer' }}
-                                onClick={() => {
-                                    setCurrProfile(profile);
-                                    onEditProfileOpen();
-                                }}
-                                />
-                            </Td>
-                            <Td>
-                                <DeleteIcon
-                                    style={{ cursor: 'pointer', color: 'red' }}
-                                    onClick={() => handleDeleteProfile(profile.studentId)} // Call a function to delete the profiles when the icon is clicked
-                                />
-                            </Td>
+                                <Td>
+                                    <EditIcon
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => {
+                                            setCurrProfile(profile);
+                                            onEditProfileOpen();
+                                        }}
+                                    />
+                                </Td>
+                                <Td>
+                                    <DeleteIcon
+                                        style={{ cursor: 'pointer', color: 'red' }}
+                                        onClick={() => handleDeleteProfile(profile.studentId)} // Call a function to delete the profiles when the icon is clicked
+                                    />
+                                </Td>
                             </Tr>
                         ))}
                     </Tbody>
