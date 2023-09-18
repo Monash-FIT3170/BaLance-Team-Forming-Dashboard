@@ -83,37 +83,45 @@ const UnitCard = (unit) => {
         }, 1500);
     }
 
-    return (
-        <VStack marginX="2vw" width="26vw">
-            <HStack width="100%" marginX="0">
-                <Text
-                    my="auto"
-                    fontWeight="800"
-                    color={mainText}
-                    textAlign="center"
-                    fontSize="xl"
-                    me="auto"
-                    width="90%"
-                >
-                    {/* the unit name button */}
-                    <Button
-                        onClick={navigateToUnitOffering}
-                        style={{ fontWeight: 'bold', fontSize: '20px', width: "100%" }}
-                    >
-                        {`${unit_code} - ${unit_off_period}, ${unit_off_year}`}
-                    </Button>
-                </Text>
-                {/* the 3 dots button */}
-                <Button
-                    maxW="10%"
-                    align="right"
-                    justify="right"
-                    bg={iconBox}
-                    onClick={onOpenDetails}
-                >
-                    <Icon w="1.5em" h="1.5em" as={IoEllipsisHorizontalSharp} color={iconColor} />
-                </Button>
-            </HStack>
+  return (
+    <VStack marginX="2vw" width="26vw">
+      <HStack width="100%" marginX="0">
+          <Text
+      my="auto"
+      fontWeight="800"
+      color={mainText}
+      textAlign="center"
+      fontSize="xl"
+      me="auto"
+      width="90%"
+    >
+      {/* the unit name card */}
+      <div
+        style={{
+          fontWeight: 'bold',
+          fontSize: '20px',
+          width: '100%',
+          border: '1px solid #ccc', // Add a border to make it look like a card
+          padding: '10px', // Add padding for spacing
+          borderRadius: '8px', // Add rounded corners for a card-like appearance
+          backgroundColor: '#f8f8f8', // Change the background color as desired
+        }}
+      >
+        {`${unit_code} - ${unit_off_period}, ${unit_off_year}`}
+      </div>
+    </Text>
+
+        {/* the 3 dots button */}
+        <Button
+          maxW="10%"
+          align="right"
+          justify="right"
+          bg={iconBox}
+          onClick={onOpenDetails}
+        >
+          <Icon w="1.5em" h="1.5em" as={IoEllipsisHorizontalSharp} color={iconColor} />
+        </Button>
+      </HStack>
 
             {/* the popup when the 3 dots button is clicked, shows the unit details */}
             <Modal

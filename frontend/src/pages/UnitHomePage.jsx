@@ -27,7 +27,7 @@ import {
     Select,
     Container,
     Spacer,
-    Radio, RadioGroup, Stack, Text, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, useToast
+    Radio, RadioGroup, Stack, Text, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, Grid, useToast
 } from '@chakra-ui/react';
 
 import { AddIcon } from '@chakra-ui/icons';
@@ -231,8 +231,8 @@ function UnitPage() {
             </Center>
 
             {/* display the units from the data fetched from the backend */}
+            <Grid templateColumns="repeat(3, 1fr)" gap={4} className="units">
 
-            <Container className="units" maxW="92vw">
                 {units &&
                     units.map((unit) => (
                         <UnitCard
@@ -241,7 +241,7 @@ function UnitPage() {
                             className="unit"
                         />
                     ))}
-            </Container>
+            </Grid>
         </div>
     );
 }
