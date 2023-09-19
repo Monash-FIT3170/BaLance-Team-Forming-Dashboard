@@ -19,6 +19,7 @@ function UploadPy({ pyFile, handleUpload }) {
       transition="color 0.3s ease"
       _hover={{ bg: '#E2E8F0', cursor: 'pointer' }}
       cursor="pointer"
+      mt= {5}
     >
       <HStack>
         <FiUploadCloud />
