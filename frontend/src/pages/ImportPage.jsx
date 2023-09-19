@@ -7,25 +7,21 @@ import { UploadCSV } from '../components/UploadCSV';
 import { FormField } from '../components/FormField';
 import { CsvInfoButton } from '../components/CsvInfoButton';
 import { useAuth0 } from '@auth0/auth0-react';
-import { ArrowForwardIcon } from '@chakra-ui/icons';
-
-
+import { AddIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import {
     Box,
+    ButtonGroup,
     Text,
     Flex,
     Alert,
     AlertIcon,
     AlertTitle,
-    AlertDescription,
     Button,
     Table,
     Tbody,
     Tr,
     Td,
-    TableContainer,
     Divider,
-    Select,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -33,22 +29,14 @@ import {
     ModalFooter,
     ModalBody,
     useDisclosure,
-    IconButton,
     Thead,
     Th,
     HStack,
     Center,
     Spacer,
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-    PopoverArrow,
-    PopoverCloseButton,
-    PopoverHeader,
-    PopoverBody,
     VStack,
 } from '@chakra-ui/react';
-import { AddIcon, QuestionOutlineIcon, EditIcon, DeleteIcon } from '@chakra-ui/icons';
+import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../mockAuth/mockAuth';
 
 function ImportPage() {
@@ -86,29 +74,6 @@ function ImportPage() {
 
     const blankStudent = new Student('', '', '', '', '', '', '', '', '');
 
-    // Formatted headers for different possible variables
-    const headers = [
-        ['studentId', 'Student ID'],
-        ['studentFirstName', 'First Name'],
-        ['studentLastName', 'Last Name'],
-        ['studentEmailAddress', 'Email Address'],
-        ['wamAverage', 'WAM'],
-        ['gender', 'Gender'],
-        ['labId', 'Lab ID'],
-        ['enrolmentStatus', 'Enrolment Status'],
-    ];
-
-    // Mapping for CSV headers to database headers
-    const headerMapping = {
-        SHORT_CODE: 'labId',
-        STUDENT_CODE: 'studentId',
-        LAST_NAME: 'studentLastName',
-        PREFERRED_NAME: 'studentFirstName',
-        EMAIL_ADDRESS: 'studentEmailAddress',
-        WAM_VAL: 'wamAverage',
-        GENDER: 'gender',
-    };
-
     // State hooks for this page
     const [isFileChosen, setIsFileChosen] = useState(false);
     const [csvFile, setCsvFile] = useState(null);
@@ -141,14 +106,65 @@ function ImportPage() {
         onClose: onEditProfileClose,
     } = useDisclosure();
 
-    const { unitCode, year, period } = useParams();
+    const { data,unitCode, year, period } = useParams();
+
+    // Formatted headers for different possible variables
+    const headers = [
+        ['studentId', 'Student ID'],
+        ['studentFirstName', 'First Name'],
+        ['studentLastName', 'Last Name']
+    ];
+
+    // Mapping for CSV headers to database headers
+    const headerMapping = {
+        SHORT_CODE: 'labId',
+        STUDENT_CODE: 'studentId',
+        LAST_NAME: 'studentLastName',
+        PREFERRED_NAME: 'studentFirstName',
+    };
+
+    if (data === 'students'){
+        headers.push(['studentEmailAddress', 'Email Address'],
+        ['wamAverage', 'WAM'],
+        ['gender', 'Gender'],
+        ['labId', 'Lab ID'],
+        ['enrolmentStatus', 'Enrolment Status'])
+        headerMapping['EMAIL_ADDRESS'] = 'studentEmailAddress'
+        headerMapping['WAM_VAL'] = 'wamAverage'
+        headerMapping['GENDER'] = 'gender'
+
+    } else if (data === 'effort'){
+        headers.push(['labId', 'Lab ID'],
+        ['enrolmentStatus', 'Enrolment Status'],
+        ['hours', 'Hours'],
+        ['averageMark', 'Average Mark'],
+        ['marksPerHour', 'Marks per Hour'])
+        headerMapping['HOURS']= 'hours'
+        headerMapping['AVERAGE_MARK'] = 'averageMark'
+        
+    } else if (data === 'personality'){
+        headers.push(['labId', 'Lab ID'],
+        ['enrolmentStatus', 'Enrolment Status'],
+        ['belbinType', 'Belbin Type'])
+        headerMapping['EMAIL_ADDRESS'] = 'studentEmailAddress'
+        headerMapping['WAM_VAL'] = 'wamAverage'
+        headerMapping['GENDER'] = 'gender'
+        headerMapping['BELBIN_TYPE'] = 'belbinType'
+    }
 
   //create unit for new students
   const handleAddProfilesClick = async () => {
 
+    let apiCall= ""
+    if (data === 'effort'){
+        apiCall = 'personality'
+    }else{
+        apiCall = data
+    }
     getAccessTokenSilently().then((token) => {
-    // Make API call
-    fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}`, {
+    // Make API call 
+    //data parameter is the type of data, eg students,effort,personality
+    fetch(`http://localhost:8080/api/${apiCall}/${unitCode}/${year}/${period}`, {
       method: 'POST',
       headers: new Headers({
         'Authorization': `Bearer ${token}`,
@@ -201,10 +217,27 @@ function ImportPage() {
             setCsvFile(file);
 
             const profilesWithDefaultValues = csvDict.map((profile) => {
-                return {
-                    ...profile,
-                    enrolmentStatus: 'ACTIVE',
-                    discPersonality: 'DOMINANT',
+                if (data === 'students'){
+                    return{
+                        ...profile,
+                        enrolmentStatus: 'ACTIVE',
+                        discPersonality: 'DOMINANT',
+                    }
+                }
+                else if (data === 'effort'){
+                    return{
+                        ...profile,
+                        enrolmentStatus: 'ACTIVE',
+                        discPersonality: 'DOMINANT',
+                        marksPerHour: profile.averageMark / profile.hours
+                    }
+                }
+                else if (data === 'personality'){
+                    return{
+                        ...profile,
+                        enrolmentStatus: 'ACTIVE',
+                        discPersonality: 'DOMINANT',
+                    }
                 };
             });
 
@@ -263,7 +296,16 @@ function ImportPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setProfiles([...profiles, currProfile]);
+        if (currProfile.enrolmentStatus === ""){
+            currProfile.enrolmentStatus= 'ACTIVE'
+        }
+        if (currProfile.belbinType === ""){
+            currProfile.belbinType='ACTION';
+        }
+        if (currProfile.averageMark !== "" && currProfile.hours !== ""){
+            currProfile['marksPerHour']=currProfile.averageMark/currProfile.hours
+        }
+        setProfiles([...profiles,currProfile]);
         setCurrProfile(blankStudent);
         onAddProfileClose();
     };
@@ -283,7 +325,9 @@ function ImportPage() {
         const index = profiles.findIndex(
             (profile) => profile.studentEmailAddress === currProfile.studentEmailAddress
         );
-
+        if (updatedProfile.averageMark !== "" && updatedProfile.hours !== ""){
+            updatedProfile['marksPerHour'] = updatedProfile.averageMark/updatedProfile.hours
+        }
         // Update the profile object with the new values
         const updatedProfiles = [...profiles];
         updatedProfiles[index] = { ...updatedProfile };
@@ -297,9 +341,9 @@ function ImportPage() {
     };
 
     // Profile Editing functions
-    const handleDeleteProfile = (studentEmailAddress) => {
+    const handleDeleteProfile = (studentId) => {
         const selectedProfile = profiles.find(
-            (profile) => profile.studentEmailAddress === studentEmailAddress
+            (profile) => profile.studentId === studentId
         );
         setProfileToDelete(selectedProfile);
         onDeleteProfileOpen();
@@ -316,7 +360,7 @@ function ImportPage() {
     const handleConfirmDelete = () => {
         if (profileToDelete !== null) {
             const newProfiles = profiles.filter(
-                (profile) => profile.studentEmailAddress !== profileToDelete.studentEmailAddress
+                (profile) => profile.studentId !== profileToDelete.studentId
             );
             setProfiles(newProfiles);
             setProfileToDelete(null);
@@ -354,7 +398,7 @@ function ImportPage() {
         <>
             <Box as="header" p="4" textAlign="center">
                 <Text fontSize="2xl" fontWeight="bold">
-                    Add Student Profiles to: {`${unitCode} - ${period}, ${year}`}
+                    Add Student {`${data}`} to: {`${unitCode} - ${period}, ${year}`}
                 </Text>
             </Box>
 
@@ -384,14 +428,23 @@ function ImportPage() {
                             infoText="Accepted .csv files will have the following attributes: DISPLAY_SUBJECT_CODE SUBJECT_CODE ACTIVITY_GROUP_CODE SHORT_CODE STUDENT_CODE LAST_NAME PREFERRED_NAME EMAIL_ADDRESS WAM_DISPLAY WAM_VAL GENDER"
                         />)}
 
-                        <UploadCSV
+                        {sortedProfiles.length === 0 ? (<UploadCSV
                             isFileChosen={isFileChosen}
                             csvFile={csvFile}
                             handleClearSelection={handleClearSelection}
                             handleAddProfilesClick={handleAddProfilesClick}
                             handleUpload={handleUpload}
                             setIsFileChosen={setIsFileChosen}
-                        />
+                        />):( 
+                            <ButtonGroup>
+                            <Button mb={2} colorScheme="red" onClick={handleClearSelection}>
+                                    Clear        
+                            </Button>
+                            <Button onClick={handleAddProfilesClick}>
+                            Add To Offering
+                            </Button>
+                            </ButtonGroup>)
+                        }
 
                         {showAlert && (
                             <Alert
@@ -484,18 +537,29 @@ function ImportPage() {
                                         ]}
                                     />
                                     <FormField
-                                        label="DISC Personality"
+                                        label="Belbin Type"
                                         placeholder="Select Personality Type"
-                                        value={currProfile?.discPersonality}
+                                        value={currProfile?.belbinType}
                                         onChange={(e) =>
-                                            handleAttributeChange('discPersonality', e.target.value)
+                                            handleAttributeChange('belbinType', e.target.value)
                                         }
                                         options={[
-                                            { label: 'Dominant', value: 'DOMINANT' },
-                                            { label: 'Influence', value: 'INFLUENCE' },
-                                            { label: 'Steadiness', value: 'STEADINESS' },
-                                            { label: 'Conscientiousness', value: 'CONSCIENTIOUSNESS' },
+                                            { label: 'Action', value: 'action' },
+                                            { label: 'People', value: 'people' },
+                                            { label: 'Thinking', value: 'thinking' }
                                         ]}
+                                    />
+                                    <FormField
+                                        label="Hours"
+                                        placeholder="Hours"
+                                        value={currProfile?.hours}
+                                        onChange={(e) => handleAttributeChange('hours', e.target.value)}
+                                    />
+                                    <FormField
+                                        label="Average Marks"
+                                        placeholder="Average Mark"
+                                        value={currProfile?.averageMark}
+                                        onChange={(e) => handleAttributeChange('averageMark', e.target.value)}
                                     />
                                 </ModalBody>
                                 <ModalFooter>
@@ -536,10 +600,20 @@ function ImportPage() {
                     </VStack>
 
                 </HStack>
-
+                <Button
+                    width="80%"
+                    onClick={onAddProfileOpen}
+                    colorScheme="gray"
+                    margin-left="20">
+                    <HStack>
+                        <AddIcon />
+                        <Spacer />
+                            <Text>Add Student</Text>
+                        </HStack>
+                </Button>
                 {sortedProfiles.length === 0 ? (<Box bg='#E6EBF0' p={4} alignContent="center" width="80%">
                     <Center>
-                        No students have yet been added to the offering.
+                        No new student added.
                     </Center>
                 </Box>) : (<Table variant="striped" size="sm" maxWidth="90vw" marginBottom="3vh">
                     <Thead>
@@ -556,39 +630,32 @@ function ImportPage() {
                     </Thead>
                     <Tbody>
                         {sortedProfiles.map((profile) => (
-                            <Tr key={profile.studentEmailAddress}>
-                                <Td>{profile.studentId}</Td>
-                                <Td>{profile.studentFirstName}</Td>
-                                <Td>{profile.studentLastName}</Td>
-                                <Td>{profile.studentEmailAddress}</Td>
-                                <Td>{profile.wamAverage}</Td>
-                                <Td>{profile.gender}</Td>
-                                <Td>{profile.labId}</Td>
-                                <Td>{profile.enrolmentStatus}</Td>
-
-                                <Td>
-                                    <EditIcon
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={() => {
-                                            setCurrProfile(profile);
-                                            onEditProfileOpen();
-                                        }}
-                                    />
-                                </Td>
-                                <Td>
-                                    <DeleteIcon
-                                        style={{ cursor: 'pointer', color: 'red' }}
-                                        onClick={() => handleDeleteProfile(profile.studentEmailAddress)} // Call a function to delete the profile when the icon is clicked
-                                    />
-                                </Td>
+                            <Tr key={profile.studentId}>
+                                {
+                                    headers.map((h)=>{
+                                        return <td>{profile[h[0]]}</td>
+                                    })
+                                }
+                            <Td>
+                                <EditIcon
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => {
+                                    setCurrProfile(profile);
+                                    onEditProfileOpen();
+                                }}
+                                />
+                            </Td>
+                            <Td>
+                                <DeleteIcon
+                                    style={{ cursor: 'pointer', color: 'red' }}
+                                    onClick={() => handleDeleteProfile(profile.studentId)} // Call a function to delete the profiles when the icon is clicked
+                                />
+                            </Td>
                             </Tr>
                         ))}
                     </Tbody>
                 </Table>)}
             </VStack>
-
-
-
 
             <Modal isOpen={isAddProfileOpen} onClose={onAddProfileClose}>
                 <ModalOverlay />
@@ -598,7 +665,7 @@ function ImportPage() {
                         <Divider my={4} />
                         <Box as="form" onSubmit={handleSubmit} onCancel={onAddProfileClose}>
                             <FormField
-                                label="Student ID"
+                                label="Student ID*"
                                 placeholder="Enter Student ID"
                                 value={currProfile.studentId}
                                 onChange={(e) =>
@@ -606,7 +673,7 @@ function ImportPage() {
                                 }
                             />
                             <FormField
-                                label="First Name"
+                                label="First Name*"
                                 placeholder="Enter first name"
                                 value={currProfile.studentFirstName}
                                 onChange={(e) =>
@@ -614,7 +681,7 @@ function ImportPage() {
                                 }
                             />
                             <FormField
-                                label="Last Name"
+                                label="Last Name*"
                                 placeholder="Enter last name"
                                 value={currProfile.studentLastName}
                                 onChange={(e) =>
@@ -622,7 +689,7 @@ function ImportPage() {
                                 }
                             />
                             <FormField
-                                label="Email"
+                                label="Email*"
                                 placeholder="Enter email"
                                 value={currProfile.studentEmailAddress}
                                 onChange={(e) =>
@@ -630,7 +697,7 @@ function ImportPage() {
                                 }
                             />
                             <FormField
-                                label="WAM"
+                                label="WAM*"
                                 placeholder="Enter WAM"
                                 value={currProfile.wamAverage}
                                 onChange={(e) =>
@@ -638,7 +705,7 @@ function ImportPage() {
                                 }
                             />
                             <FormField
-                                label="Gender"
+                                label="Gender*"
                                 placeholder="Select gender"
                                 value={currProfile.gender}
                                 onChange={(e) =>
@@ -650,11 +717,52 @@ function ImportPage() {
                                 ]}
                             />
                             <FormField
-                                label="Lab ID"
+                                label="Lab ID*"
                                 placeholder="Enter Lab ID"
                                 value={currProfile.labId}
                                 onChange={(e) =>
                                     setCurrProfile({ ...currProfile, labId: e.target.value })
+                                }
+                            />
+                            <FormField
+                                label="Enrolment Status*"
+                                placeholder="Enter Enrolment Status"
+                                value={currProfile.enrolmentStatusd}
+                                onChange={(e) =>
+                                    setCurrProfile({ ...currProfile, enrolmentStatus: e.target.value })
+                                }
+                                options={[
+                                    { label: 'Active', value: 'ACTIVE' },
+                                    { label: 'Inactive', value: 'INACTIVE' },
+                                ]}
+                            />
+                            <FormField
+                                label="Belbin Type"
+                                placeholder="Select Belbin Type"
+                                value={currProfile.belbinType}
+                                onChange={(e) =>
+                                    setCurrProfile({ ...currProfile, belbinType: e.target.value })
+                                }
+                                options={[
+                                    { label: 'Thinking', value: 'Thinking' },
+                                    { label: 'People', value: 'People' },
+                                    { label: 'Action', value: 'Action' },
+                                ]}
+                            />
+                            <FormField
+                                label="Hours of Contribution"
+                                placeholder="Enter hours"
+                                value={currProfile.hours}
+                                onChange={(e) =>
+                                    setCurrProfile({ ...currProfile, hours: e.target.value })
+                                }
+                            />
+                            <FormField
+                                label="Average Mark"
+                                placeholder="Enter Average Mark"
+                                value={currProfile.averageMark}
+                                onChange={(e) =>
+                                    setCurrProfile({ ...currProfile, averageMark: e.target.value })
                                 }
                             />
                         </Box>

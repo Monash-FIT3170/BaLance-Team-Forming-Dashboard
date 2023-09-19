@@ -9,9 +9,7 @@ import {
   Th,
   TableContainer,
   Heading,
-  Spacer,
-  HStack,
-  Button,
+  Spacer
 } from '@chakra-ui/react';
 import { useParams } from 'react-router';
 import StudentRowGroupDisplay from './StudentRowGroupDisplay';
