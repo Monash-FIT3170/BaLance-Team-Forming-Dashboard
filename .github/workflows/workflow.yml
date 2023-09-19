@@ -17,6 +17,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
+      - name: go to frontend 
+        run: cd frontend
       - name: Install and build
         run: npm install && npm run build
       
