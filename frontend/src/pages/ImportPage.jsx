@@ -8,20 +8,13 @@ import { FormField } from '../components/importPage/FormField';
 import { CsvInfoButton } from '../components/importPage/CsvInfoButton';
 import getToastSettings from '../components/ToastSettings';
 import { useAuth0 } from '@auth0/auth0-react';
-import {AddIcon, ArrowBackIcon, ArrowForwardIcon} from '@chakra-ui/icons';
+import {AddIcon} from '@chakra-ui/icons';
 import {
     Box,
     ButtonGroup,
     Text,
     Flex,
-    Alert,
-    AlertIcon,
-    AlertTitle,
     Button,
-    Table,
-    Tbody,
-    Tr,
-    Td,
     Divider,
     Modal,
     ModalOverlay,
@@ -30,20 +23,18 @@ import {
     ModalFooter,
     ModalBody,
     useDisclosure,
-    Thead,
-    Th,
     HStack,
     Center,
     Spacer,
     VStack,
     useToast
 } from '@chakra-ui/react';
-import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../mockAuth/mockAuth';
 import CsvPreviewTable from "../components/importPage/CsvPreviewTable";
+import BackToUnitButton from "../components/BackToUnitButton";
+import PageHeader from "../components/PageHeader";
 
 function ImportPage() {
-
     let authService = {
         "DEV": MockAuth,
         "TEST": useAuth0
@@ -87,7 +78,6 @@ function ImportPage() {
     // Define state for the current sort order and column
     const [profileToDelete, setProfileToDelete] = useState(null);
     const [profiles, setProfiles] = useState([]);
-    const navigate = useNavigate();
 
     // useDisclosure variables for modals
     const {
@@ -316,8 +306,6 @@ function ImportPage() {
         onAddProfileClose();
     };
 
-    const sortedProfiles = [...profiles]
-
     const handleSaveProfile = (updatedProfile) => {
         // Find the index of the profile in the profiles array
         const index = profiles.findIndex(
@@ -387,29 +375,14 @@ function ImportPage() {
         setIsConfirmationClearOpen(false);
     };
 
-    const navigateToOfferingDashboard = () => {
-        navigate(`/students/${unitCode}/${year}/${period}`);
-    };
-
     return (
         <>
-            <Box as="header" p="4" textAlign="center">
-                <Text fontSize="2xl" fontWeight="bold">
-                    Add Student {`${data}`} to: {`${unitCode} - ${period}, ${year}`}
-                </Text>
-            </Box>
+            <PageHeader
+                fontSize={"2xl"}
+                pageDesc={`Import student data: ${unitCode} ${period} ${year}`}
+            />
 
-
-
-            <Center>
-                <Button onClick={navigateToOfferingDashboard}>
-                    <HStack>
-                        <ArrowBackIcon />
-                        <Spacer />
-                        <Text>Return to offering dashboard</Text>
-                    </HStack>
-                </Button>
-            </Center>
+            <BackToUnitButton/>
 
             {profileToDelete != null && (
                 <DeleteProfile
@@ -421,6 +394,7 @@ function ImportPage() {
             )}
 
             <VStack>
+                {/* ADD CSV BUTTON AND THE (?) */}
                 <HStack>
                     <Flex
                         height="100%"
@@ -431,19 +405,23 @@ function ImportPage() {
                         minWidth="50vw"
                         marginX="3vw"
                     >
-                        {sortedProfiles.length === 0 && (<CsvInfoButton
-                            infoHeader=".csv file format"
-                            infoText="Accepted .csv files will have the following attributes: DISPLAY_SUBJECT_CODE SUBJECT_CODE ACTIVITY_GROUP_CODE SHORT_CODE STUDENT_CODE LAST_NAME PREFERRED_NAME EMAIL_ADDRESS WAM_DISPLAY WAM_VAL GENDER"
-                        />)}
 
-                        {sortedProfiles.length === 0 ? (<UploadCSV
-                            isFileChosen={isFileChosen}
-                            csvFile={csvFile}
-                            handleClearSelection={handleClearSelection}
-                            handleAddProfilesClick={handleAddProfilesClick}
-                            handleUpload={handleUpload}
-                            setIsFileChosen={setIsFileChosen}
-                        />) : (
+                        {profiles.length === 0 ? (
+                            <div>
+                                <CsvInfoButton
+                                    infoHeader=".csv file format"
+                                    infoText="Accepted .csv files will have the following attributes: DISPLAY_SUBJECT_CODE SUBJECT_CODE ACTIVITY_GROUP_CODE SHORT_CODE STUDENT_CODE LAST_NAME PREFERRED_NAME EMAIL_ADDRESS WAM_DISPLAY WAM_VAL GENDER"
+                                />
+                                <UploadCSV
+                                    isFileChosen={isFileChosen}
+                                    csvFile={csvFile}
+                                    handleClearSelection={handleClearSelection}
+                                    handleAddProfilesClick={handleAddProfilesClick}
+                                    handleUpload={handleUpload}
+                                    setIsFileChosen={setIsFileChosen}
+                                />
+                            </div>
+                        ) : (
                             <ButtonGroup>
                                 <Button mb={2} colorScheme="red" onClick={handleClearSelection}>
                                     Clear
@@ -453,16 +431,11 @@ function ImportPage() {
                                 </Button>
                             </ButtonGroup>)
                         }
-
-
-
                         <ConfirmClearSelection
                             isConfirmationClearOpen={isConfirmationClearOpen}
                             handleConfirmClearSelection={handleConfirmClearSelection}
                             handleCloseConfirmation={handleCloseConfirmation}
                         />
-
-
                         <Modal isOpen={isEditProfileOpen} onClose={onEditProfileClose}>
                             <ModalOverlay />
                             <ModalContent>
@@ -574,11 +547,10 @@ function ImportPage() {
                                 </ModalFooter>
                             </ModalContent>
                         </Modal>
-
                     </Flex>
-
                 </HStack>
 
+                {/* ADD INDIVIDUAL STUDENTS BUTTON */}
                 <Button
                     width="80%"
                     onClick={onAddProfileOpen}
@@ -591,8 +563,8 @@ function ImportPage() {
                     </HStack>
                 </Button>
 
-                {/* LIST OF STUDENTS */}
-                {sortedProfiles.length === 0 ? (
+                {/* DISPLAY LIST OF STUDENTS IF PROFILES IS NOT EMPTY */}
+                {profiles.length === 0 ? (
                     <Box bg='#E6EBF0' p={4} alignContent="center" width="80%">
                         <Center>
                             No new students added.
@@ -602,7 +574,7 @@ function ImportPage() {
                     // REFACTOR TO COMPONENT fixme
                     <CsvPreviewTable
                         headers={headers}
-                        profiles={sortedProfiles}
+                        profiles={profiles}
                     />
                 )}
             </VStack>

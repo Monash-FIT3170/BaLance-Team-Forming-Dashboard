@@ -33,6 +33,7 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../mockAuth/mockAuth';
+import PageHeader from "../components/PageHeader";
 
 function CreateGroups() {
     let authService = {
@@ -108,11 +109,10 @@ function CreateGroups() {
 
     return (
         <>
-            <Box as="header" p="4" textAlign="center">
-                <Text fontSize="2xl" fontWeight="bold">
-                    {`Configure Groups for: ${unitCode} - ${period}, ${year}`}
-                </Text>
-            </Box>
+            <PageHeader
+                fontSize={"2xl"}
+                pageDesc={`Configure groups: ${unitCode} ${period} ${year}`}
+            />
 
             <Center>
                 <Button onClick={navigateToOfferingDashboardStudents}>
