@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router';
 import { DeleteProfile } from '../components/importPage/DeleteProfile';
 import { ConfirmClearSelection } from '../components/importPage/ConfirmClearSelection';
 import { UploadCSV } from '../components/importPage/UploadCSV';
-import { FormField } from '../components/importPage/FormField';
 import { CsvInfoButton } from '../components/importPage/CsvInfoButton';
 import getToastSettings from '../components/ToastSettings';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -15,13 +13,6 @@ import {
     Text,
     Flex,
     Button,
-    Divider,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
     useDisclosure,
     HStack,
     Center,
@@ -33,9 +24,8 @@ import { MockAuth } from '../mockAuth/mockAuth';
 import CsvPreviewTable from "../components/importPage/CsvPreviewTable";
 import BackToUnitButton from "../components/BackToUnitButton";
 import PageHeader from "../components/PageHeader";
-import AddStudentModal from "../components/importPage/AddStudentModal";
 
-function ImportPage() {
+const ImportPage = () => {
     let authService = {
         "DEV": MockAuth,
         "TEST": useAuth0
@@ -336,14 +326,6 @@ function ImportPage() {
         onDeleteProfileOpen();
     };
 
-    const handleDeleteInactiveProfiles = (profiles) => {
-        const newProfiles = profiles.filter(
-            (profile) => profile.enrolmentStatus.toLowerCase() !== 'active'
-        );
-        setProfileToDelete(newProfiles);
-        onDeleteProfileOpen();
-    };
-
     const handleConfirmDelete = () => {
         if (profileToDelete !== null) {
             const newProfiles = profiles.filter(
@@ -394,165 +376,57 @@ function ImportPage() {
             )}
 
             <VStack>
-                {/* ADD CSV BUTTON AND THE (?) */}
-                <HStack>
-                    <Flex
-                        height="100%"
-                        flexDirection="column"
-                        alignItems="center"
-                        textAlign="center"
-                        maxWidth="50vw"
-                        minWidth="50vw"
-                        marginX="3vw"
-                    >
-
-                        {profiles.length === 0 ? (
-                            <div>
-                                <CsvInfoButton
-                                    infoHeader=".csv file format"
-                                    infoText="Accepted .csv files will have the following attributes: DISPLAY_SUBJECT_CODE SUBJECT_CODE ACTIVITY_GROUP_CODE SHORT_CODE STUDENT_CODE LAST_NAME PREFERRED_NAME EMAIL_ADDRESS WAM_DISPLAY WAM_VAL GENDER"
-                                />
-                                <UploadCSV
-                                    isFileChosen={isFileChosen}
-                                    csvFile={csvFile}
-                                    handleClearSelection={handleClearSelection}
-                                    handleAddProfilesClick={handleAddProfilesClick}
-                                    handleUpload={handleUpload}
-                                    setIsFileChosen={setIsFileChosen}
-                                />
-                            </div>
-                        ) : (
-                            <ButtonGroup>
-                                <Button mb={2} colorScheme="red" onClick={handleClearSelection}>
-                                    Clear
-                                </Button>
-                                <Button onClick={handleAddProfilesClick}>
-                                    Add To Offering
-                                </Button>
-                            </ButtonGroup>)
-                        }
-                        <ConfirmClearSelection
-                            isConfirmationClearOpen={isConfirmationClearOpen}
-                            handleConfirmClearSelection={handleConfirmClearSelection}
-                            handleCloseConfirmation={handleCloseConfirmation}
+                {profiles.length === 0 ? (
+                    <div>
+                        <CsvInfoButton
+                            infoHeader=".csv file format"
+                            infoText="Accepted .csv files will have the following attributes: DISPLAY_SUBJECT_CODE SUBJECT_CODE ACTIVITY_GROUP_CODE SHORT_CODE STUDENT_CODE LAST_NAME PREFERRED_NAME EMAIL_ADDRESS WAM_DISPLAY WAM_VAL GENDER"
                         />
-                        <Modal isOpen={isEditProfileOpen} onClose={onEditProfileClose}>
-                            <ModalOverlay />
-                            <ModalContent>
-                                <ModalHeader>Edit Profile</ModalHeader>
-                                <ModalBody>
-                                    <FormField
-                                        label="Student ID"
-                                        value={currProfile?.studentId}
-                                        onChange={(e) => handleAttributeChange('studentId', e.target.value)}
-                                    />
-                                    <FormField
-                                        label="First Name"
-                                        value={currProfile?.studentFirstName}
-                                        onChange={(e) =>
-                                            handleAttributeChange('studentFirstName', e.target.value)
-                                        }
-                                    />
-                                    <FormField
-                                        label="Last Name"
-                                        value={currProfile?.studentLastName}
-                                        onChange={(e) =>
-                                            handleAttributeChange('studentLastName', e.target.value)
-                                        }
-                                    />
-                                    <FormField
-                                        label="Email Address"
-                                        placeholder="Email Address"
-                                        value={currProfile?.studentEmailAddress}
-                                        onChange={(e) =>
-                                            handleAttributeChange('studentEmailAddress', e.target.value)
-                                        }
-                                    />
-                                    <FormField
-                                        label="WAM"
-                                        placeholder="WAM"
-                                        value={currProfile?.wamAverage}
-                                        onChange={(e) => handleAttributeChange('wamAverage', e.target.value)}
-                                    />
-                                    <FormField
-                                        label="Gender"
-                                        placeholder="Select Gender"
-                                        value={currProfile?.gender}
-                                        onChange={(e) => handleAttributeChange('gender', e.target.value)}
-                                        options={[
-                                            { label: 'M', value: 'M' },
-                                            { label: 'F', value: 'F' },
-                                        ]}
-                                    />
-                                    <FormField
-                                        label="Lab ID"
-                                        placeholder="Lab ID"
-                                        value={currProfile?.labId}
-                                        onChange={(e) => handleAttributeChange('labId', e.target.value)}
-                                    />
-                                    <FormField
-                                        label="Enrolment Status"
-                                        placeholder="Select Enrolment Status"
-                                        value={currProfile?.enrolmentStatus}
-                                        onChange={(e) =>
-                                            handleAttributeChange('enrolmentStatus', e.target.value)
-                                        }
-                                        options={[
-                                            { label: 'Active', value: 'ACTIVE' },
-                                            { label: 'Inactive', value: 'INACTIVE' },
-                                        ]}
-                                    />
-                                    <FormField
-                                        label="Belbin Type"
-                                        placeholder="Select Personality Type"
-                                        value={currProfile?.belbinType}
-                                        onChange={(e) =>
-                                            handleAttributeChange('belbinType', e.target.value)
-                                        }
-                                        options={[
-                                            { label: 'Action', value: 'action' },
-                                            { label: 'People', value: 'people' },
-                                            { label: 'Thinking', value: 'thinking' }
-                                        ]}
-                                    />
-                                    <FormField
-                                        label="Hours"
-                                        placeholder="Hours"
-                                        value={currProfile?.hours}
-                                        onChange={(e) => handleAttributeChange('hours', e.target.value)}
-                                    />
-                                    <FormField
-                                        label="Average Marks"
-                                        placeholder="Average Mark"
-                                        value={currProfile?.averageMark}
-                                        onChange={(e) => handleAttributeChange('averageMark', e.target.value)}
-                                    />
-                                </ModalBody>
-                                <ModalFooter>
-                                    <Button
-                                        onClick={() => handleSaveProfile(currProfile)}
-                                        type="submit"
-                                        colorScheme="green"
-                                        mr={3}
-                                    >
-                                        Save
-                                    </Button>
-                                    <Button
-                                        onClick={() => {
-                                            onEditProfileClose();
-                                        }}
-                                    >
-                                        Cancel
-                                    </Button>
-                                </ModalFooter>
-                            </ModalContent>
-                        </Modal>
-                    </Flex>
-                </HStack>
+                        <UploadCSV
+                            isFileChosen={isFileChosen}
+                            csvFile={csvFile}
+                            handleClearSelection={handleClearSelection}
+                            handleAddProfilesClick={handleAddProfilesClick}
+                            handleUpload={handleUpload}
+                            setIsFileChosen={setIsFileChosen}
+                        />
+                        <Box bg='#E6EBF0' p={4} alignContent="center" width="80%">
+                            <Center>
+                                No new students added.
+                            </Center>
+                        </Box>
+                    </div>
+                ) : (
+                    <div>
+                        <ButtonGroup>
+                            <Button mb={2} colorScheme="red" onClick={handleClearSelection}>
+                                Clear
+                            </Button>
+                            <Button onClick={handleAddProfilesClick}>
+                                Add To Offering
+                            </Button>
+                        </ButtonGroup>
+                        {/*FIXME*/}
+                        <CsvPreviewTable
+                            headers={headers}
+                            profiles={profiles}
+                        />
+                    </div>
+                )}
 
-                {/* ADD INDIVIDUAL STUDENTS BUTTON */}
+                <ConfirmClearSelection
+                    isConfirmationClearOpen={isConfirmationClearOpen}
+                    handleConfirmClearSelection={handleConfirmClearSelection}
+                    handleCloseConfirmation={handleCloseConfirmation}
+                />
+                {/* FIXME */}
+                {/*<EditStudentModal/>*/}
+                {/* FIXME */}
+                {/*<AddStudentModal/>*/}
+
+                {/* BUTTON FOR ADDING A STUDENT */}
                 <Button
-                    width="80%"
+                    width="50%"
                     onClick={onAddProfileOpen}
                     colorScheme="gray"
                     margin-left="20">
@@ -562,25 +436,7 @@ function ImportPage() {
                         <Text>Add Student</Text>
                     </HStack>
                 </Button>
-
-                {/* DISPLAY LIST OF STUDENTS IF PROFILES IS NOT EMPTY */}
-                {profiles.length === 0 ? (
-                    <Box bg='#E6EBF0' p={4} alignContent="center" width="80%">
-                        <Center>
-                            No new students added.
-                        </Center>
-                    </Box>
-                ) : (
-                    // FIXME
-                    <CsvPreviewTable
-                        headers={headers}
-                        profiles={profiles}
-                    />
-                )}
             </VStack>
-
-            {/* FIXME */}
-            {/*<AddStudentModal/>*/}
         </div>
     );
 }
