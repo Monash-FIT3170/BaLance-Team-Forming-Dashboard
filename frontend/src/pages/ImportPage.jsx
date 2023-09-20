@@ -30,43 +30,13 @@ const ImportPage = () => {
         "DEV": MockAuth,
         "TEST": useAuth0
     }
-
     const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
-
-    // todo where is this used and can we use dictionaries instead
-    class Student {
-        constructor(
-            studentId,
-            studentFirstName,
-            studentLastName,
-            studentEmailAddress,
-            wamAverage,
-            gender,
-            labId,
-            enrolmentStatus,
-            discPersonality
-        ) {
-            this.studentId = studentId;
-            this.studentFirstName = studentFirstName;
-            this.studentLastName = studentLastName;
-            this.studentEmailAddress = studentEmailAddress;
-            this.wamAverage = wamAverage;
-            this.gender = gender;
-            this.labId = labId;
-            this.enrolmentStatus = enrolmentStatus;
-            this.discPersonality = discPersonality;
-        }
-    }
-
-    const blankStudent = new Student('', '', '', '', '', '', '', '', '');
 
     // State hooks for this page
     const [isFileChosen, setIsFileChosen] = useState(false);
     const [csvFile, setCsvFile] = useState(null);
     const [isConfirmationClearOpen, setIsConfirmationClearOpen] = useState(false); // todo what is this?
-    const [currProfile, setCurrProfile] = useState(blankStudent);
-
-    // Define state for the current sort order and column
+    const [currProfile, setCurrProfile] = useState(null);
     const [profileToDelete, setProfileToDelete] = useState(null);
     const [profiles, setProfiles] = useState([]);
 
@@ -188,9 +158,28 @@ const ImportPage = () => {
         });
     };
 
+
+    const handleFileUpload = (e) => {
+        /**
+         * Handles file upload when clicking the upload CSV button
+         */
+        e.preventDefault();
+        e.stopPropagation();
+        const file = e.target.files[0];
+        if (file) {
+            handleFile(file);
+        }
+    };
+
     // Logic for processing a file upload
     const handleFile = (file) => {
+        /**
+         * Processes a CSV file and converts it to an array of student profiles
+         *
+         */
+
         if (!file.type.match('csv.*')) {
+            // FIXME, return toast instead
             console.error('Please select a CSV file');
             return;
         }
@@ -199,19 +188,12 @@ const ImportPage = () => {
         reader.readAsText(file);
 
         reader.onload = (event) => {
+            // obtain CSV contents as string and convert to dict
             const csvString = event.target.result;
             const csvDict = csvToDict(csvString);
-            setCsvFile(file);
 
             const profilesWithDefaultValues = csvDict.map((profile) => {
-                if (data === 'students') {
-                    return {
-                        ...profile,
-                        enrolmentStatus: 'ACTIVE',
-                        discPersonality: 'DOMINANT',
-                    }
-                }
-                else if (data === 'effort') {
+                if (data === 'effort') {
                     return {
                         ...profile,
                         enrolmentStatus: 'ACTIVE',
@@ -219,31 +201,26 @@ const ImportPage = () => {
                         marksPerHour: profile.averageMark / profile.hours
                     }
                 }
-                else if (data === 'personality') {
-                    return {
-                        ...profile,
-                        enrolmentStatus: 'ACTIVE',
-                        discPersonality: 'DOMINANT',
-                    }
-                };
             });
 
+            setCsvFile(file);
             setProfiles(profilesWithDefaultValues);
         };
+
+
 
         // Convert CSV string to dictionary
         function csvToDict(csvStr) {
             // From http://techslides.com/convert-csv-to-json-in-javascript
-            var lines = csvStr.split('\r\n');
-
-            var result = [];
-
-            var csvHeaders = lines[0].split(',');
+            const lines = csvStr.split('\r\n');
+            const result = [];
+            const csvHeaders = lines[0].split(',');
+            const csvData = lines.splice(1);
 
             // Populate dictionary item
-            for (var i = 1; i < lines.length; i++) {
+            for (let i = 0; i < csvData.length; i++) {
                 var obj = {};
-                var currentline = lines[i].split(',');
+                var currentline = csvData[i].split(',');
 
                 for (var j = 0; j < csvHeaders.length; j++) {
                     if (csvHeaders[j] in headerMapping) {
@@ -256,24 +233,7 @@ const ImportPage = () => {
         }
     };
 
-    const handleDrop = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const file = e.dataTransfer.files[0];
-        if (file) {
-            handleFile(file);
-        }
-    };
-
-    const handleUpload = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const file = e.target.files[0];
-        if (file) {
-            handleFile(file);
-        }
-    };
-
+    // TODO REFACTOR HANDLER FUNCTIONS BELOW
     const handleAttributeChange = (key, value) => {
         setCurrProfile({
             ...currProfile,
@@ -293,7 +253,7 @@ const ImportPage = () => {
             currProfile['marksPerHour'] = currProfile.averageMark / currProfile.hours
         }
         setProfiles([...profiles, currProfile]);
-        setCurrProfile(blankStudent);
+        setCurrProfile(null);
         onAddProfileClose();
     };
 
@@ -311,7 +271,7 @@ const ImportPage = () => {
 
         // Update the profiles state with the updated profile object
         setProfiles(updatedProfiles);
-        setCurrProfile(blankStudent);
+        setCurrProfile(null);
 
         // Close the edit modal
         onEditProfileClose();
@@ -358,6 +318,8 @@ const ImportPage = () => {
         setIsConfirmationClearOpen(false);
     };
 
+
+    // TODO FINISH REFACTORING RENDER
     return (
         <div>
             <PageHeader
@@ -387,7 +349,7 @@ const ImportPage = () => {
                             csvFile={csvFile}
                             handleClearSelection={handleClearSelection}
                             handleAddProfilesClick={handleAddProfilesClick}
-                            handleUpload={handleUpload}
+                            handleUpload={handleFileUpload}
                             setIsFileChosen={setIsFileChosen}
                         />
                         <Box bg='#E6EBF0' p={4} alignContent="center" width="80%">
