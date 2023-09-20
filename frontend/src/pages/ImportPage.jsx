@@ -40,6 +40,7 @@ import {
 } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../mockAuth/mockAuth';
+import CsvPreviewTable from "../components/importPage/CsvPreviewTable";
 
 function ImportPage() {
 
@@ -84,7 +85,6 @@ function ImportPage() {
     const [currProfile, setCurrProfile] = useState(blankStudent);
 
     // Define state for the current sort order and column
-    const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
     const [profileToDelete, setProfileToDelete] = useState(null);
     const [profiles, setProfiles] = useState([]);
     const navigate = useNavigate();
@@ -207,19 +207,6 @@ function ImportPage() {
         });
     };
 
-    // Logic for table sorting by column
-    const handleSort = (header) => {
-        const key = header[0];
-        if (sortConfig.key === key) {
-            setSortConfig({
-                ...sortConfig,
-                direction: sortConfig.direction === 'ascending' ? 'descending' : 'ascending',
-            });
-        } else {
-            setSortConfig({ key, direction: 'ascending' });
-        }
-    };
-
     // Logic for processing a file upload
     const handleFile = (file) => {
         if (!file.type.match('csv.*')) {
@@ -329,15 +316,7 @@ function ImportPage() {
         onAddProfileClose();
     };
 
-    const sortedProfiles = [...profiles].sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
-            return sortConfig.direction === 'ascending' ? -1 : 1;
-        }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
-            return sortConfig.direction === 'ascending' ? 1 : -1;
-        }
-        return 0;
-    });
+    const sortedProfiles = [...profiles]
 
     const handleSaveProfile = (updatedProfile) => {
         // Find the index of the profile in the profiles array
@@ -420,6 +399,8 @@ function ImportPage() {
                 </Text>
             </Box>
 
+
+
             <Center>
                 <Button onClick={navigateToOfferingDashboard}>
                     <HStack>
@@ -441,7 +422,6 @@ function ImportPage() {
 
             <VStack>
                 <HStack>
-
                     <Flex
                         height="100%"
                         flexDirection="column"
@@ -620,46 +600,10 @@ function ImportPage() {
                     </Box>
                 ) : (
                     // REFACTOR TO COMPONENT fixme
-                    <Table variant="striped" size="sm" maxWidth="90vw" marginBottom="3vh">
-                    <Thead>
-                        <Tr>
-                            {headers.map((header) => (
-                                <Th key={header[0]} onClick={() => handleSort(header)}>
-                                    {header[1]}
-                                    {sortConfig.key === header[0] && (
-                                        <span>{sortConfig.direction === 'ascending' ? '▲' : '▼'}</span>
-                                    )}
-                                </Th>
-                            ))}
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {sortedProfiles.map((profile) => (
-                            <Tr key={profile.studentId}>
-                                {
-                                    headers.map((h) => {
-                                        return <td>{profile[h[0]]}</td>
-                                    })
-                                }
-                                <Td>
-                                    <EditIcon
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={() => {
-                                            setCurrProfile(profile);
-                                            onEditProfileOpen();
-                                        }}
-                                    />
-                                </Td>
-                                <Td>
-                                    <DeleteIcon
-                                        style={{ cursor: 'pointer', color: 'red' }}
-                                        onClick={() => handleDeleteProfile(profile.studentId)} // Call a function to delete the profiles when the icon is clicked
-                                    />
-                                </Td>
-                            </Tr>
-                        ))}
-                    </Tbody>
-                </Table>
+                    <CsvPreviewTable
+                        headers={headers}
+                        profiles={sortedProfiles}
+                    />
                 )}
             </VStack>
 
