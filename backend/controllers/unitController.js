@@ -7,13 +7,10 @@
 const { spawn } = require('child_process');
 const fs = require('fs')
 const { promisify } = require('util')
-
 const unlinkAsync = promisify(fs.unlink)
-
 const db_connection = require("../config/databaseConfig");
 const {
-    promiseBasedQuery,
-    selectUnitOffKey
+    promiseBasedQuery
 } = require("../helpers/commonHelpers");
 
 
@@ -48,7 +45,6 @@ const getUnit = async (req, res) => {
     console.log(unitData);
     res.status(200).json(unitData);
 }
-
 
 const getEnrolmentCount = async(req, res) => {
     const {
@@ -110,6 +106,7 @@ const addUnit = async (req, res) => {
 
 // delete a unit and associated relations
 const deleteUnit = async function (req, res) {
+    console.log('delete unit')
     const { // get the URL params
         unitCode,
         year,
@@ -388,7 +385,6 @@ const uploadCustomScript = async (req, res) => {
 
     }
 };
-
 
 module.exports = {
     getAllUnits,
