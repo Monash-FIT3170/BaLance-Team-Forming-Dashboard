@@ -140,8 +140,6 @@ const ImportPage = () => {
             })
                 .then((response) => {
                     if (!response.ok) {
-                        console.log(response)
-                        // if the import is not successful
                         getToast("There was an error importing your file!", "error")
                         throw new Error('Error sending data to the REST API');
                     }
@@ -175,12 +173,12 @@ const ImportPage = () => {
     const handleFile = (file) => {
         /**
          * Processes a CSV file and converts it to an array of student profiles
+         * containing the relevant data
          *
          */
 
         if (!file.type.match('csv.*')) {
-            // FIXME, return toast instead
-            console.error('Please select a CSV file');
+            getToast("Please select a CSV file!", "error")
             return;
         }
 
@@ -191,6 +189,7 @@ const ImportPage = () => {
             // obtain CSV contents as string and convert to dict
             const csvString = event.target.result;
             const csvDict = csvToDict(csvString);
+            console.log(csvDict)
 
             const profilesWithDefaultValues = csvDict.map((profile) => {
                 if (data === 'effort') {
@@ -207,28 +206,23 @@ const ImportPage = () => {
             setProfiles(profilesWithDefaultValues);
         };
 
-
-
         // Convert CSV string to dictionary
         function csvToDict(csvStr) {
             // From http://techslides.com/convert-csv-to-json-in-javascript
             const lines = csvStr.split('\r\n');
-            const result = [];
             const csvHeaders = lines[0].split(',');
-            const csvData = lines.splice(1);
+            const csvData = lines.slice(1);
 
-            // Populate dictionary item
-            for (let i = 0; i < csvData.length; i++) {
-                var obj = {};
-                var currentline = csvData[i].split(',');
-
-                for (var j = 0; j < csvHeaders.length; j++) {
-                    if (csvHeaders[j] in headerMapping) {
-                        obj[headerMapping[csvHeaders[j]]] = currentline[j];
+            const result = csvData.map((line) => {
+                const obj = {}
+                const data = line.split(',')
+                csvHeaders.forEach((header, index) => {
+                    if(header in headerMapping) {
+                        obj[headerMapping[header]] = data[index]
                     }
-                }
-                result.push(obj);
-            }
+                })
+                return obj
+            })
             return result;
         }
     };

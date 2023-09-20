@@ -35,7 +35,7 @@ const CsvPreviewTable = ({headers, profiles}) => {
             setSortConfig({ key, direction: 'ascending' });
         }
     };
-
+    console.log(profiles)
     return (
         <div>
             <Table variant="striped" size="sm" maxWidth="90vw" marginBottom="3vh">
