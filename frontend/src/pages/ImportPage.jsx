@@ -8,7 +8,7 @@ import { FormField } from '../components/FormField';
 import { CsvInfoButton } from '../components/CsvInfoButton';
 import getToastSettings from '../components/ToastSettings';
 import { useAuth0 } from '@auth0/auth0-react';
-import { AddIcon, ArrowForwardIcon } from '@chakra-ui/icons';
+import {AddIcon, ArrowBackIcon, ArrowForwardIcon} from '@chakra-ui/icons';
 import {
     Box,
     ButtonGroup,
@@ -50,6 +50,7 @@ function ImportPage() {
 
     const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
+    // todo where is this used and can we use dictionaries instead
     class Student {
         constructor(
             studentId,
@@ -79,7 +80,7 @@ function ImportPage() {
     // State hooks for this page
     const [isFileChosen, setIsFileChosen] = useState(false);
     const [csvFile, setCsvFile] = useState(null);
-    const [isConfirmationClearOpen, setIsConfirmationClearOpen] = useState(false);
+    const [isConfirmationClearOpen, setIsConfirmationClearOpen] = useState(false); // todo what is this?
     const [currProfile, setCurrProfile] = useState(blankStudent);
 
     // Define state for the current sort order and column
@@ -88,7 +89,7 @@ function ImportPage() {
     const [profiles, setProfiles] = useState([]);
     const navigate = useNavigate();
 
-    // UseDisclosure variables for modals
+    // useDisclosure variables for modals
     const {
         isOpen: isDeleteProfileOpen,
         onOpen: onDeleteProfileOpen,
@@ -107,16 +108,21 @@ function ImportPage() {
         onClose: onEditProfileClose,
     } = useDisclosure();
 
-    const { data, unitCode, year, period } = useParams();
+    const {
+        data,
+        unitCode,
+        year,
+        period
+    } = useParams();
 
-    // Formatted headers for different possible variables
+    // Formatted headers for different possible variables todo can this be removed?
     const headers = [
         ['studentId', 'Student ID'],
         ['studentFirstName', 'First Name'],
         ['studentLastName', 'Last Name']
     ];
 
-    // Mapping for CSV headers to database headers
+    // Mapping for CSV headers to database headers todo can this be removed
     const headerMapping = {
         SHORT_CODE: 'labId',
         STUDENT_CODE: 'studentId',
@@ -124,6 +130,7 @@ function ImportPage() {
         PREFERRED_NAME: 'studentFirstName',
     };
 
+    // todo strategy method??
     if (data === 'students') {
         headers.push(['studentEmailAddress', 'Email Address'],
             ['wamAverage', 'WAM'],
@@ -161,7 +168,7 @@ function ImportPage() {
 
     //create unit for new students
     const handleAddProfilesClick = async () => {
-
+        // todo, could use a dropdown and its value instead
         let apiCall = ""
         if (data === 'effort') {
             apiCall = 'personality'
@@ -412,6 +419,16 @@ function ImportPage() {
                 </Text>
             </Box>
 
+            <Center>
+                <Button onClick={navigateToOfferingDashboard}>
+                    <HStack>
+                        <ArrowBackIcon />
+                        <Spacer />
+                        <Text>Return to offering dashboard</Text>
+                    </HStack>
+                </Button>
+            </Center>
+
             {profileToDelete != null && (
                 <DeleteProfile
                     isModalOpen={isDeleteProfileOpen}
@@ -578,21 +595,6 @@ function ImportPage() {
                         </Modal>
 
                     </Flex>
-
-                    <Center height="20vh">
-                        <Divider orientation="vertical" />
-                    </Center>
-                    <VStack>
-                        <Text>When you're finished:</Text>
-                        <Button onClick={navigateToOfferingDashboard}>
-
-                            <HStack>
-                                <Text>Continue to offering dashboard</Text>
-                                <Spacer />
-                                <ArrowForwardIcon />
-                            </HStack>
-                        </Button>
-                    </VStack>
 
                 </HStack>
                 <Button
