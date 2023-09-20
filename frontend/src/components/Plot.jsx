@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import {
     Box,
     Card,
@@ -7,17 +6,9 @@ import {
     Heading,
     Text,
     Center,
-    Button,
-    HStack,
-    Spacer,
 } from '@chakra-ui/react';
-import { Link, useNavigate } from 'react-router-dom';
 import { Doughnut, Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarController, BarElement } from 'chart.js';
-import { ArrowBackIcon } from '@chakra-ui/icons';
-import { MockAuth } from '../mockAuth/mockAuth';
-import { Plot } from '../components/Plot';
-import { useAuth0 } from '@auth0/auth0-react';
+
 
 const Ploter = ({item, index}) =>{
 
@@ -46,6 +37,7 @@ const Ploter = ({item, index}) =>{
                 </CardHeader>
                 <CardBody>
                     {item.data.map((chartData, dataIndex) => (
+                        
                         <div key={dataIndex}>
                             <h3
                                 style={{
@@ -55,7 +47,10 @@ const Ploter = ({item, index}) =>{
                             >
                                 {chartData.title}
                             </h3>
-                            {chartData.type === 'doughnut' && (
+                            {chartData.x.length === 0 && (
+                                <Text>No Data, Please Upload {item['personality title']} Data To See Visualisation</Text>
+                            )}
+                            {chartData.type === 'doughnut' && chartData.x.length !== 0 &&(
                                 <Doughnut
                                     data={{
                                         labels: chartData.x || [],
@@ -74,7 +69,7 @@ const Ploter = ({item, index}) =>{
                                     }}
                                 />
                             )}
-                            {chartData.type === 'bar' && (
+                            {chartData.type === 'bar' && chartData.x.length !== 0 &&(
                                 <Bar
                                     data={{
                                         labels: chartData.x.map(String),
@@ -103,5 +98,5 @@ const Ploter = ({item, index}) =>{
     </Center>)
 
   }
-  
+
   export default Ploter;
