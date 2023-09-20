@@ -20,7 +20,7 @@ import {
     Box,
     Container,
 } from '@chakra-ui/react';
-import StudentRowStudentDisplay from '../components/StudentRowStudentDisplay';
+import StudentRowStudentDisplay from '../components/studentsPage/StudentRowStudentDisplay';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShuffleGroups } from '../components/ShuffleGroups';
 import { AddIcon, EditIcon } from '@chakra-ui/icons';

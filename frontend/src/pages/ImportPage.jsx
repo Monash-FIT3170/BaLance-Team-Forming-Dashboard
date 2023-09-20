@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router';
-import { DeleteProfile } from '../components/DeleteProfile';
-import { ConfirmClearSelection } from '../components/ConfirmClearSelection';
-import { UploadCSV } from '../components/UploadCSV';
-import { FormField } from '../components/FormField';
-import { CsvInfoButton } from '../components/CsvInfoButton';
+import { DeleteProfile } from '../components/importPage/DeleteProfile';
+import { ConfirmClearSelection } from '../components/importPage/ConfirmClearSelection';
+import { UploadCSV } from '../components/importPage/UploadCSV';
+import { FormField } from '../components/importPage/FormField';
+import { CsvInfoButton } from '../components/importPage/CsvInfoButton';
 import getToastSettings from '../components/ToastSettings';
 import { useAuth0 } from '@auth0/auth0-react';
 import {AddIcon, ArrowBackIcon, ArrowForwardIcon} from '@chakra-ui/icons';
@@ -189,6 +189,7 @@ function ImportPage() {
             })
                 .then((response) => {
                     if (!response.ok) {
+                        console.log(response)
                         // if the import is not successful
                         getToast("There was an error importing your file!", "error")
                         throw new Error('Error sending data to the REST API');
@@ -597,6 +598,7 @@ function ImportPage() {
                     </Flex>
 
                 </HStack>
+
                 <Button
                     width="80%"
                     onClick={onAddProfileOpen}
@@ -608,11 +610,17 @@ function ImportPage() {
                         <Text>Add Student</Text>
                     </HStack>
                 </Button>
-                {sortedProfiles.length === 0 ? (<Box bg='#E6EBF0' p={4} alignContent="center" width="80%">
-                    <Center>
-                        No new student added.
-                    </Center>
-                </Box>) : (<Table variant="striped" size="sm" maxWidth="90vw" marginBottom="3vh">
+
+                {/* LIST OF STUDENTS */}
+                {sortedProfiles.length === 0 ? (
+                    <Box bg='#E6EBF0' p={4} alignContent="center" width="80%">
+                        <Center>
+                            No new students added.
+                        </Center>
+                    </Box>
+                ) : (
+                    // REFACTOR TO COMPONENT fixme
+                    <Table variant="striped" size="sm" maxWidth="90vw" marginBottom="3vh">
                     <Thead>
                         <Tr>
                             {headers.map((header) => (
@@ -651,7 +659,8 @@ function ImportPage() {
                             </Tr>
                         ))}
                     </Tbody>
-                </Table>)}
+                </Table>
+                )}
             </VStack>
 
             <Modal isOpen={isAddProfileOpen} onClose={onAddProfileClose}>
