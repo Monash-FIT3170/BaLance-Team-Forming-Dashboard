@@ -31,10 +31,10 @@ import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 const UnitCard = (unit) => {
 
     //setting the colors of the card
-    let boxBg = useColorModeValue('white');
+    let boxBg = useColorModeValue('gray.600');
     let mainText = useColorModeValue('gray.800', 'white');
     let secondaryText = useColorModeValue('gray.600', 'gray.600');
-    let iconBox = useColorModeValue('white');
+    let iconBox = useColorModeValue('#F1EFEF');
     let iconColor = useColorModeValue('brand.200', 'white');
 
     const toast = useToast();
@@ -91,6 +91,7 @@ const UnitCard = (unit) => {
                 alignItems: 'center',
                 width: '360px',
                 height: '300px',
+                backgroundColor: '#F1EFEF',
                }}
                className='mx-auto'>
     <VStack marginX="2vw" width="26vw">
@@ -113,7 +114,7 @@ const UnitCard = (unit) => {
           //border: '1px solid #ccc', // Add a border to make it look like a card
           padding: '0px', // Add padding for spacing
           borderRadius: '8px', // Add rounded corners for a card-like appearance
-          backgroundColor: '#ffffff', // Change the background color as desired
+          backgroundColor: '#F1EFEF', // Change the background color as desired
         }}
       >
         {`${unit_code} - ${unit_off_period}, ${unit_off_year}`}
@@ -173,7 +174,7 @@ const UnitCard = (unit) => {
                     </ModalFooter>
                 </ModalContent>
             </Modal>
-            <hr style={{ width: 360, margin: 'lrem auto'}}/>
+            <hr style={{ width: 360, margin: 'lrem auto', borderTop: '1px solid #ccc'}}/>
 
             {/* the button with the image and the faculty, when clicked will also bring to the groups for this unit */}
             <Button
