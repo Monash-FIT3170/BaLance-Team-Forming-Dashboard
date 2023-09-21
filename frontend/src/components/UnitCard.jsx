@@ -1,6 +1,7 @@
 
 //imports
 import {
+    Card,
     Link,
     Flex,
     Button,
@@ -30,10 +31,10 @@ import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 const UnitCard = (unit) => {
 
     //setting the colors of the card
-    let boxBg = useColorModeValue('white !important', '#111c44 !important');
+    let boxBg = useColorModeValue('white');
     let mainText = useColorModeValue('gray.800', 'white');
     let secondaryText = useColorModeValue('gray.600', 'gray.600');
-    let iconBox = useColorModeValue('gray.100', 'whiteAlpha.200');
+    let iconBox = useColorModeValue('white');
     let iconColor = useColorModeValue('brand.200', 'white');
 
     const toast = useToast();
@@ -84,6 +85,14 @@ const UnitCard = (unit) => {
     }
 
   return (
+  <div style={{ display: 'flex', justifyContent: 'center' }}>
+  <Card style={{
+                border: '1px solid #ccc',
+                alignItems: 'center',
+                width: '360px',
+                height: '300px',
+               }}
+               className='mx-auto'>
     <VStack marginX="2vw" width="26vw">
       <HStack width="100%" marginX="0">
           <Text
@@ -101,10 +110,10 @@ const UnitCard = (unit) => {
           fontWeight: 'bold',
           fontSize: '20px',
           width: '100%',
-          border: '1px solid #ccc', // Add a border to make it look like a card
-          padding: '10px', // Add padding for spacing
+          //border: '1px solid #ccc', // Add a border to make it look like a card
+          padding: '0px', // Add padding for spacing
           borderRadius: '8px', // Add rounded corners for a card-like appearance
-          backgroundColor: '#f8f8f8', // Change the background color as desired
+          backgroundColor: '#ffffff', // Change the background color as desired
         }}
       >
         {`${unit_code} - ${unit_off_period}, ${unit_off_year}`}
@@ -164,14 +173,16 @@ const UnitCard = (unit) => {
                     </ModalFooter>
                 </ModalContent>
             </Modal>
+            <hr style={{ width: 360, margin: 'lrem auto'}}/>
 
             {/* the button with the image and the faculty, when clicked will also bring to the groups for this unit */}
             <Button
                 onClick={navigateToUnitOffering}
                 style={{ display: 'inline-block', width: '100%', height: 'auto', marginBottom: "5vh" }}
+                bg={iconBox}
             >
                 <Center>
-                    <VStack marginY="2vh">
+                    <VStack marginY="2vh" marginX="-3vw">
                         <Text
                             fontWeight="600"
                             color={secondaryText}
@@ -185,9 +196,9 @@ const UnitCard = (unit) => {
                             src="https://img.freepik.com/free-vector/gradient-purple-color-gradient-background-abstract-modern_343694-2243.jpg?w=740&t=st=1682246391~exp=1682246991~hmac=24a5e0adc73d36b09e5b9fc4b2b05aabd12bab82078f67b6556cb3800ca6d1e4"
                             style={{
                                 height: 'auto',
-                                width: '80%',
                                 display: 'flex',
                                 justifyContent: 'center',
+                                width: '80%'
                             }}
                             borderRadius="20px"
                         />
@@ -198,6 +209,8 @@ const UnitCard = (unit) => {
 
             </Button>
         </VStack>
+        </Card>
+        </div>
     );
 };
 export default UnitCard;
