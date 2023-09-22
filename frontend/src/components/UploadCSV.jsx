@@ -2,7 +2,7 @@
 // props: isFileChosen, csvFile, handleClearSelection, handleUpload, setIsFileChosen
 import * as React from 'react';
 import {
-  Box, Text, Button, Input, HStack, ButtonGroup,
+  Box, Text, Button, Input, HStack, ButtonGroup, Link
 } from '@chakra-ui/react';
 import { FiUploadCloud } from 'react-icons/fi';
 
@@ -42,11 +42,17 @@ export class UploadCSV extends React.Component {
             justifyContent="center" // Center the content horizontally
             alignItems="center" // Center the content vertically
             border="2px dashed #24265D"
-            color="#F0EDE7"
+            color="black"
             transition="color 0.3s ease"
             _hover={{ bg: '#E2E8F0', cursor: 'pointer' }}
-            cursor="pointer"
+            onDrop={(e) => {
+              this.props.handleDrop(e);
+            }}
+            onDragOver={(e) => e.preventDefault()}
           >
+            Drop file here or <Link as="span" color="black" flexDirection="column"
+            justifyContent="center"
+            alignItems="center">
             <Input
               textColor="white"
               type="file"
@@ -55,11 +61,12 @@ export class UploadCSV extends React.Component {
                 this.props.setIsFileChosen(true);
               }}
               opacity={0}
-              left={0}
-              top={0}
-              cursor="pointer"
+              width="auto"
+              position="relative"
+              zIndex={2}
               focusBorderColor='black'
-            />
+            /> select
+            </Link> from a folder
           </Box></>
       )
     );
