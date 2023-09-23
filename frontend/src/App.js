@@ -5,7 +5,7 @@ import { MockAuth } from './mockAuth/mockAuth';
 import UploadGroupScript from './pages/UploadGroupScript';
 import CreateGroups from './pages/CreateGroups';
 import UnitHomePage from './pages/UnitHomePage';
-import NavBar from './components/NavBar';
+import NavBar from './components/shared/NavBar';
 import Groups from './pages/Groups';
 import Students from './pages/Students';
 import UnitAnalytics from './pages/UnitAnalytics';

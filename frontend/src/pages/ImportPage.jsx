@@ -1,30 +1,24 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router';
-import { DeleteProfile } from '../components/importPage/DeleteProfile';
-import { ConfirmClearSelection } from '../components/importPage/ConfirmClearSelection';
+import { DeleteProfileModal } from '../components/importPage/DeleteProfileModal';
+import ConfirmClearSelection from '../components/importPage/ConfirmClearSelection';
 import UploadCSV from '../components/importPage/UploadCSV';
-import { CsvInfoButton } from '../components/importPage/CsvInfoButton';
 import getToastSettings from '../components/ToastSettings';
 import { useAuth0 } from '@auth0/auth0-react';
-import {AddIcon} from '@chakra-ui/icons';
 import {
-    Box,
-    ButtonGroup,
-    Text,
     Flex,
-    Button,
     useDisclosure,
-    HStack,
-    Center,
     Spacer,
     VStack,
     useToast,
-    Select
 } from '@chakra-ui/react';
 import { MockAuth } from '../mockAuth/mockAuth';
 import CsvPreviewTable from "../components/importPage/CsvPreviewTable";
-import BackToUnitButton from "../components/BackToUnitButton";
-import PageHeader from "../components/PageHeader";
+import BackToUnitButton from "../components/shared/BackToUnitButton";
+import PageHeader from "../components/shared/PageHeader";
+import AddButton from "../components/shared/AddButton";
+import DropdownDynamic from "../components/shared/DropdownDynamic";
+import AddStudentModal from "../components/importPage/AddStudentModal";
 
 const ImportPage = () => {
     let authService = {
@@ -36,7 +30,7 @@ const ImportPage = () => {
     // State hooks for this page
     const [isFileChosen, setIsFileChosen] = useState(false);
     const [csvFile, setCsvFile] = useState(null);
-    const [isConfirmationClearOpen, setIsConfirmationClearOpen] = useState(false); // todo what is this?
+    const [isClearModalOpen, setIsClearModalOpen] = useState(false); // todo what is this?
     const [currProfile, setCurrProfile] = useState(null);
     const [profileToDelete, setProfileToDelete] = useState(null);
     const [profiles, setProfiles] = useState([]);
@@ -275,7 +269,7 @@ const ImportPage = () => {
         onEditProfileClose();
     };
 
-    // Profile Editing functions
+    // DELETE MODAL STUFF TODO
     const handleDeleteProfile = (studentId) => {
         const selectedProfile = profiles.find(
             (profile) => profile.studentId === studentId
@@ -300,96 +294,65 @@ const ImportPage = () => {
         onDeleteProfileClose();
     };
 
-    // Clear CSV file selection
-    const handleClearSelection = () => {
-        setIsConfirmationClearOpen(true);
-    };
-
-    const handleConfirmClearSelection = () => {
-        setCsvFile(null); // Reset the file selection
-        setProfiles([]); // Clear the table data
-        setIsFileChosen(false); // Reset the file chosen state
-        setIsConfirmationClearOpen(false); // Close the modal
-    };
-
-    const handleCloseConfirmation = () => {
-        setIsConfirmationClearOpen(false);
-    };
-
-    const infoText = "bleuh"
-
-
-    // TODO FINISH REFACTORING RENDER
     return (
-        <div>
+        <VStack>
             <PageHeader
                 fontSize={"2xl"}
                 pageDesc={`Import student data: ${unitCode} ${period} ${year}`}
             />
             <BackToUnitButton/>
-            <UploadCSV
-                infoButtonHeader={".csv file format"}
-                infoButtonText={"include the following headers: BRUH, BRUH BRU"}
-                isFileChosen={isFileChosen}
-                csvFile={csvFile}
-                handleClearSelection={handleClearSelection}
-                handleAddProfilesClick={handleAddProfilesClick}
-                handleUpload={handleFileUpload}
-                setIsFileChosen={setIsFileChosen}
-                handleDrop={handleDrop}
+
+            <Flex width="80%">
+                <UploadCSV
+                    infoButtonHeader={".csv file format"}
+                    infoButtonText={"include the following headers: BRUH, BRUH BRU"}
+                    isFileChosen={isFileChosen}
+                    csvFile={csvFile}
+                    handleAddProfilesClick={handleAddProfilesClick}
+                    handleUpload={handleFileUpload}
+                    setIsConfirmationClearOpen={setIsClearModalOpen}
+                    setIsFileChosen={setIsFileChosen}
+                    width="60%"
+                />
+                <Spacer/>
+                <Flex width="33%" flexDirection="column" justifyContent="flex-end">
+                    <DropdownDynamic
+                        placeholder={'select data type'}
+                        options={['students', 'belbin', 'effort']}
+                        width="100%"
+                    />
+                </Flex>
+            </Flex>
+
+            <AddButton
+                onClick={onAddProfileOpen}
+                buttonText={"Add an entry"}
+                width="80%"
+            />
+            <CsvPreviewTable
+                headers={headers}
+                profiles={profiles}
             />
 
+            <ConfirmClearSelection
+                setCsvFile={setCsvFile}
+                setIsFileChosen={setIsFileChosen}
+                setProfiles={setProfiles}
+                isClearModalOpen={isClearModalOpen}
+                setIsClearModalOpen={setIsClearModalOpen}
+            />
 
-            <VStack>
-                {profiles.length === 0 ? (
-                    <div>
-                        <Select placeholder={'select data'}>
-                            <option value='students'>students</option>
-                            <option value='belbin'>belbin</option>
-                            <option value='effort'>effort</option>
-                        </Select>
-
-
-                    </div>
-                ) : (
-                    <CsvPreviewTable
-                        headers={headers}
-                        profiles={profiles}
-                    />
-                )}
-
-                <ConfirmClearSelection
-                    isConfirmationClearOpen={isConfirmationClearOpen}
-                    handleConfirmClearSelection={handleConfirmClearSelection}
-                    handleCloseConfirmation={handleCloseConfirmation}
-                />
-                {/* FIXME */}
-                {/*<EditStudentModal/>*/}
-                {/* FIXME */}
-                {/*<AddStudentModal/>*/}
-                {profileToDelete != null && (
-                    <DeleteProfile
-                        isModalOpen={isDeleteProfileOpen}
-                        student={profileToDelete}
-                        handleCancelDelete={handleCancelDelete}
-                        handleConfirmDelete={handleConfirmDelete}
-                    />
-                )}
-
-                {/* BUTTON FOR ADDING A STUDENT */}
-                <Button
-                    width="50%"
-                    onClick={onAddProfileOpen}
-                    colorScheme="gray"
-                    margin-left="20">
-                    <HStack>
-                        <AddIcon />
-                        <Spacer />
-                        <Text>Add Student</Text>
-                    </HStack>
-                </Button>
-            </VStack>
-        </div>
+            {/*<EditStudentModal/>*/}
+            {/*{profileToDelete != null && (*/}
+            {/*    <DeleteProfileModal*/}
+            {/*        isModalOpen={isDeleteProfileOpen}*/}
+            {/*        student={profileToDelete}*/}
+            {/*        handleCancelDelete={handleCancelDelete}*/}
+            {/*        handleConfirmDelete={handleConfirmDelete}*/}
+            {/*    />*/}
+            {/*)}*/}
+            {/* FIXME AddStudentModal is broken */}
+        </VStack>
     );
 }
 

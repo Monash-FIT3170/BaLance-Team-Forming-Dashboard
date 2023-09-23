@@ -3,31 +3,31 @@
 import * as React from 'react';
 import { FormControl, FormLabel, Select, Input } from '@chakra-ui/react';
 
-export class FormField extends React.Component {
-  render() {
+const FormField = ({label, placeholder, value, onChange, options}) => {
     return (
-      <FormControl>
-        <FormLabel>{this.props.label}</FormLabel>
-        {this.props.options ? (
-          <Select
-            placeholder={this.props.placeholder}
-            value={this.props.value}
-            onChange={this.props.onChange}
-          >
-            {this.props.options.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </Select>
-        ) : (
-          <Input
-            placeholder={this.props.placeholder}
-            value={this.props.value}
-            onChange={this.props.onChange}
-          />
-        )}
-      </FormControl>
+        <FormControl>
+            <FormLabel>{label}</FormLabel>
+            {options ? (
+                <Select
+                    placeholder={placeholder}
+                    value={value}
+                    onChange={this.props.onChange}
+                >
+                {options.map((option) => (
+                    <option key={option.value} value={option.value}>
+                        {option.label}
+                    </option>
+                ))}
+                </Select>
+            ) : (
+                <Input
+                    placeholder={placeholder}
+                    value={value}
+                    onChange={onChange}
+                />
+            )}
+        </FormControl>
     );
-  }
 }
+
+export default FormField;

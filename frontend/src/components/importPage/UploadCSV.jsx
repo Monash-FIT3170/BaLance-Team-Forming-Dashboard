@@ -4,87 +4,80 @@ import { FiUploadCloud } from 'react-icons/fi';
 import { CsvInfoButton } from './CsvInfoButton';
 
 const UploadCSV = ({
-  infoButtonHeader,
-  infoButtonText,
-  handleUpload,
-  handleClearSelection,
-  handleAddProfilesClick,
-  isFileChosen,
-  setIsFileChosen,
-  handleDrop
+    infoButtonHeader,
+    infoButtonText,
+    handleUpload,
+    handleAddProfilesClick,
+    isFileChosen,
+    setIsFileChosen,
+    setIsConfirmationClearOpen,
+    width
 }) => {
-  return isFileChosen === true ? (
-    <ButtonGroup>
-      <Button mb={2} colorScheme="red" onClick={handleClearSelection}>
-        Clear
-      </Button>
-      <Button onClick={handleAddProfilesClick}>Save data</Button>
-    </ButtonGroup>
-  ) : (
-    <VStack>
-      <CsvInfoButton infoHeader={infoButtonHeader} infoText={infoButtonText} />
-      <HStack>
-        <FiUploadCloud />
-        <Text>Submit a .csv file below to add student data to the offering</Text>
-      </HStack>
-      <Box
-        bg={isFileChosen ? '#00ADB5' : 'white'}
-        borderRadius="md"
-        width="70%"
-        height="300px"
-        margin="0 3vw 5vw 3vw"
-        fontWeight="bold"
-        display="flex"
-        flexDirection="row"
-        justifyContent="center" // Center the content horizontally
-        alignItems="center" // Center the content vertically
-        border="2px dashed #24265D"
-        color="black"
-        transition="color 0.3s ease"
-        onDrop={(e) => {
-          handleDrop(e);
-        }}
-        onDragOver={(e) => e.preventDefault()}
-      >
-        <Box display="inline-flex" alignItems="center">
-          <Text as="span">Drop file here or</Text>
-          <Box as="span" position="relative" display="inline-block" _hover={{ backgroundColor: "blue.100" }} cursor="pointer">
-            <Input
-              type="file"
-              onChange={(e) => {
-                handleUpload(e);
-                setIsFileChosen(true);
-              }}
-              opacity={0}
-              position="absolute"
-              width="100%"
-              height="100%"
-              top="0"
-              left="0"
-              cursor="pointer"
-              zIndex="2"
-            />
-            <Link 
-            color="blue.500" 
-            zIndex="1" 
-            display="inline-block" 
-            padding="10" 
-            px={2}
-            py={1}
-            borderRadius="md"
-            borderWidth="1px"
-            borderColor="blue.500"
-            cursor="pointer"
-            >
-                select
-            </Link>
-          </Box>
 
-          <Text as="span">from a folder</Text>
-        </Box>
-      </Box>
-    </VStack>
-  );
-};
+    // handleDrop
+
+    const handleClearSelection = () => {
+        setIsConfirmationClearOpen(true);
+    };
+
+    return (
+        (isFileChosen===true) ? (
+            <ButtonGroup>
+                <Button mb={2} colorScheme="red" onClick={handleClearSelection}>
+                    Clear
+                </Button>
+                <Button onClick={handleAddProfilesClick}>
+                    Save data
+                </Button>
+            </ButtonGroup>
+        ) : (
+            <VStack width={width}>
+                <CsvInfoButton
+                    infoHeader={infoButtonHeader}
+                    infoText={infoButtonText}
+                />
+                <HStack>
+                    <FiUploadCloud />
+                    <Text>Submit a .csv file below to add student data to the offering</Text>
+                </HStack>
+                <Box
+                    bg={'white'}
+                    borderRadius="md"
+                    width="100%"
+                    // height="300px"
+                    margin="0 3vw 5vw 3vw"
+                    fontWeight="bold"
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="center" // Center the content horizontally
+                    alignItems="center" // Center the content vertically
+                    border="2px dashed #24265D"
+                    color="#F0EDE7"
+                    transition="color 0.3s ease"
+                    _hover={{ bg: '#E2E8F0', cursor: 'pointer' }}
+                    cursor="pointer"
+                    onDrop={(e) => {
+                        handleDrop(e);
+                    }}
+                    onDragOver={(e) => e.preventDefault()}
+                >
+                    <Input
+                        textColor="white"
+                        type="file"
+                        onChange={(e) => {
+                            handleUpload(e);
+                            setIsFileChosen(true);
+                        }}
+                        opacity={0}
+                        left={0}
+                        top={0}
+                        cursor="pointer"
+                        focusBorderColor='black'
+                    />
+                </Box>
+            </VStack>
+        )
+    );
+}
 
 export default UploadCSV;

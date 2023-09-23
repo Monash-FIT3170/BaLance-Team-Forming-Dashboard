@@ -18,7 +18,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend, LinearScale, CategorySca
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../mockAuth/mockAuth';
 import { useAuth0 } from '@auth0/auth0-react';
-import PageHeader from "../components/PageHeader";
+import PageHeader from "../components/shared/PageHeader";
 
 ChartJS.register(ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarController, BarElement);
 
