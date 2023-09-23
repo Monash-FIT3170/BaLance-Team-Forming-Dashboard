@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router';
 import { DeleteProfileModal } from '../components/importPage/DeleteProfileModal';
-import { ConfirmClearSelection } from '../components/importPage/ConfirmClearSelection';
+import ConfirmClearSelection from '../components/importPage/ConfirmClearSelection';
 import UploadCSV from '../components/importPage/UploadCSV';
 import getToastSettings from '../components/ToastSettings';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -345,10 +345,6 @@ const ImportPage = () => {
                 handleCloseConfirmation={handleCloseConfirmation}
             />
 
-            <AddStudentModal
-
-            />
-            {/* FIXME */}
             {/*<EditStudentModal/>*/}
 
             {profileToDelete != null && (
@@ -359,6 +355,10 @@ const ImportPage = () => {
                     handleConfirmDelete={handleConfirmDelete}
                 />
             )}
+
+
+            {/* FIXME AddStudentModal is broken */}
+
         </VStack>
     );
 }
