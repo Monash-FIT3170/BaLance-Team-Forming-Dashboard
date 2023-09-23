@@ -1,9 +1,7 @@
 import * as React from 'react';
-import {
-    Box, Text, Button, Input, HStack, ButtonGroup, VStack,
-} from '@chakra-ui/react';
-import {FiUploadCloud} from 'react-icons/fi';
-import {CsvInfoButton} from "./CsvInfoButton";
+import { Box, Text, Button, Input, HStack, ButtonGroup, VStack, Link } from '@chakra-ui/react';
+import { FiUploadCloud } from 'react-icons/fi';
+import { CsvInfoButton } from './CsvInfoButton';
 
 const UploadCSV = ({
     infoButtonHeader,
@@ -15,6 +13,8 @@ const UploadCSV = ({
     setIsConfirmationClearOpen,
     width
 }) => {
+
+    // handleDrop
 
     const handleClearSelection = () => {
         setIsConfirmationClearOpen(true);
@@ -44,6 +44,7 @@ const UploadCSV = ({
                     bg={'white'}
                     borderRadius="md"
                     width="100%"
+                    // height="300px"
                     margin="0 3vw 5vw 3vw"
                     fontWeight="bold"
                     display="flex"
@@ -55,6 +56,10 @@ const UploadCSV = ({
                     transition="color 0.3s ease"
                     _hover={{ bg: '#E2E8F0', cursor: 'pointer' }}
                     cursor="pointer"
+                    onDrop={(e) => {
+                        handleDrop(e);
+                    }}
+                    onDragOver={(e) => e.preventDefault()}
                 >
                     <Input
                         textColor="white"

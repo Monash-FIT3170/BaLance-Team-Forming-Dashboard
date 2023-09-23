@@ -152,6 +152,16 @@ const ImportPage = () => {
         });
     };
 
+    const handleDrop = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const file = e.dataTransfer.files[0];
+        if (file) {
+            handleFile(file);
+        }
+    };
+
+
     const handleFileUpload = (e) => {
         /**
          * Handles file upload when clicking the upload CSV button
