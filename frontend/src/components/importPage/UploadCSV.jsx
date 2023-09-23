@@ -11,7 +11,8 @@ const UploadCSV = ({
     isFileChosen,
     setIsFileChosen,
     setIsConfirmationClearOpen,
-    width
+    width,
+    handleDrop
 }) => {
 
     // handleDrop

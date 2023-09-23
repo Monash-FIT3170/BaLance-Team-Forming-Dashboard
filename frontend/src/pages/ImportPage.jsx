@@ -313,6 +313,7 @@ const ImportPage = () => {
                     setIsConfirmationClearOpen={setIsClearModalOpen}
                     setIsFileChosen={setIsFileChosen}
                     width="60%"
+                    handleDrop={handleDrop}
                 />
                 <Spacer/>
                 <Flex width="33%" flexDirection="column" justifyContent="flex-end">
