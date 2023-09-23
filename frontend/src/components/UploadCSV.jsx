@@ -49,26 +49,27 @@ export class UploadCSV extends React.Component {
             }}
             onDragOver={(e) => e.preventDefault()}
           >
-            <Text mb="1rem">Drop file here or</Text>
-            <Link as="span" color="blue.500" position="relative">
-              <Input
-                type="file"
-                onChange={(e) => {
-                  this.props.handleUpload(e);
-                  this.props.setIsFileChosen(true);
-                }}
-                opacity={0}
-                position="asbolute"
-                width="100%"
-                height="100%"
-                left={0}
-                top={0}
-                cursor="pointer"
-                focusBorderColor='black'
-              /> select
-            </Link> 
-            <Text mt="1rem">from a folder</Text>
-          </Box></>
+            <Text>
+              Drop file here or <Link as="span" color="blue.500" position="relative">
+                <Input
+                  type="file"
+                  onChange={(e) => {
+                    this.props.handleUpload(e);
+                    this.props.setIsFileChosen(true);
+                  }}
+                  opacity={0}
+                  position="asbolute"
+                  width="100%"
+                  height="100%"
+                  left={0}
+                  top={0}
+                  cursor="pointer"
+                  focusBorderColor='black'
+                /> select
+              </Link> from a folder
+            </Text>
+          </Box>
+        </>
       )
     );
   }
