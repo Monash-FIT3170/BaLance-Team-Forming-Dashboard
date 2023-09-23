@@ -10,15 +10,29 @@ import {
   Button,
 } from '@chakra-ui/react';
 
-const ConfirmClearSelection = (
-    isConfirmationClearOpen,
-    handleCloseConfirmation,
-    handleConfirmClearSelection,
-) => {
+const ConfirmClearSelection = ({
+   setCsvFile,
+   setIsFileChosen,
+   setProfiles,
+   setIsClearModalOpen,
+   isClearModalOpen
+}) => {
+
+    const handleConfirmClearSelection = () => {
+        setCsvFile(null); // Reset the file selection
+        setProfiles([]); // Clear the table data
+        setIsFileChosen(false); // Reset the file chosen state
+        setIsClearModalOpen(false); // Close the modal
+    };
+
+    const handleCloseConfirmation = () => {
+        setIsClearModalOpen(false);
+    };
+
     return (
         <Modal
-        isOpen={isConfirmationClearOpen}
-        onClose={handleCloseConfirmation}
+            isOpen={isClearModalOpen}
+            onClose={handleCloseConfirmation}
         >
             <ModalOverlay />
             <ModalContent>

@@ -30,7 +30,7 @@ const ImportPage = () => {
     // State hooks for this page
     const [isFileChosen, setIsFileChosen] = useState(false);
     const [csvFile, setCsvFile] = useState(null);
-    const [isConfirmationClearOpen, setIsConfirmationClearOpen] = useState(false); // todo what is this?
+    const [isClearModalOpen, setIsClearModalOpen] = useState(false); // todo what is this?
     const [currProfile, setCurrProfile] = useState(null);
     const [profileToDelete, setProfileToDelete] = useState(null);
     const [profiles, setProfiles] = useState([]);
@@ -258,7 +258,7 @@ const ImportPage = () => {
         onEditProfileClose();
     };
 
-    // Profile Editing functions
+    // DELETE MODAL STUFF TODO
     const handleDeleteProfile = (studentId) => {
         const selectedProfile = profiles.find(
             (profile) => profile.studentId === studentId
@@ -283,22 +283,6 @@ const ImportPage = () => {
         onDeleteProfileClose();
     };
 
-    // Clear CSV file selection
-    const handleClearSelection = () => {
-        setIsConfirmationClearOpen(true);
-    };
-
-    const handleConfirmClearSelection = () => {
-        setCsvFile(null); // Reset the file selection
-        setProfiles([]); // Clear the table data
-        setIsFileChosen(false); // Reset the file chosen state
-        setIsConfirmationClearOpen(false); // Close the modal
-    };
-
-    const handleCloseConfirmation = () => {
-        setIsConfirmationClearOpen(false);
-    };
-
     return (
         <VStack>
             <PageHeader
@@ -313,9 +297,9 @@ const ImportPage = () => {
                     infoButtonText={"include the following headers: BRUH, BRUH BRU"}
                     isFileChosen={isFileChosen}
                     csvFile={csvFile}
-                    handleClearSelection={handleClearSelection}
                     handleAddProfilesClick={handleAddProfilesClick}
                     handleUpload={handleFileUpload}
+                    setIsConfirmationClearOpen={setIsClearModalOpen}
                     setIsFileChosen={setIsFileChosen}
                     width="60%"
                 />
@@ -340,25 +324,23 @@ const ImportPage = () => {
             />
 
             <ConfirmClearSelection
-                isConfirmationClearOpen={isConfirmationClearOpen}
-                handleConfirmClearSelection={handleConfirmClearSelection}
-                handleCloseConfirmation={handleCloseConfirmation}
+                setCsvFile={setCsvFile}
+                setIsFileChosen={setIsFileChosen}
+                setProfiles={setProfiles}
+                isClearModalOpen={isClearModalOpen}
+                setIsClearModalOpen={setIsClearModalOpen}
             />
 
             {/*<EditStudentModal/>*/}
-
-            {profileToDelete != null && (
-                <DeleteProfileModal
-                    isModalOpen={isDeleteProfileOpen}
-                    student={profileToDelete}
-                    handleCancelDelete={handleCancelDelete}
-                    handleConfirmDelete={handleConfirmDelete}
-                />
-            )}
-
-
+            {/*{profileToDelete != null && (*/}
+            {/*    <DeleteProfileModal*/}
+            {/*        isModalOpen={isDeleteProfileOpen}*/}
+            {/*        student={profileToDelete}*/}
+            {/*        handleCancelDelete={handleCancelDelete}*/}
+            {/*        handleConfirmDelete={handleConfirmDelete}*/}
+            {/*    />*/}
+            {/*)}*/}
             {/* FIXME AddStudentModal is broken */}
-
         </VStack>
     );
 }

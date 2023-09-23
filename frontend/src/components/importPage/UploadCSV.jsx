@@ -9,12 +9,16 @@ const UploadCSV = ({
     infoButtonHeader,
     infoButtonText,
     handleUpload,
-    handleClearSelection,
     handleAddProfilesClick,
     isFileChosen,
     setIsFileChosen,
+    setIsConfirmationClearOpen,
     width
 }) => {
+
+    const handleClearSelection = () => {
+        setIsConfirmationClearOpen(true);
+    };
 
     return (
         (isFileChosen===true) ? (

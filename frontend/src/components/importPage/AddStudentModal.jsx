@@ -12,13 +12,13 @@ import {
 import FormField from "./FormField";
 import React from "react";
 
-const AddStudentModal = (
+const AddStudentModal = ({
     isAddProfileOpen,
     onAddProfileClose,
     handleSubmit,
     currProfile,
-    setCurrProfile,
-) => {
+    setCurrProfile
+}) => {
 
     const fields = [
         {

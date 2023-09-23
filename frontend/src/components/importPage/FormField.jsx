@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { FormControl, FormLabel, Select, Input } from '@chakra-ui/react';
 
-const FormField = (label, placeholder, value, onChange, options) => {
+const FormField = ({label, placeholder, value, onChange, options}) => {
     return (
         <FormControl>
             <FormLabel>{label}</FormLabel>
