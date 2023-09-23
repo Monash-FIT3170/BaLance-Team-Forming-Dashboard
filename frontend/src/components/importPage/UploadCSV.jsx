@@ -30,8 +30,8 @@ const UploadCSV = ({
       <Box
         bg={isFileChosen ? '#00ADB5' : 'white'}
         borderRadius="md"
-        width="100%"
-        height="100px"
+        width="70%"
+        height="300px"
         margin="0 3vw 5vw 3vw"
         fontWeight="bold"
         display="flex"
