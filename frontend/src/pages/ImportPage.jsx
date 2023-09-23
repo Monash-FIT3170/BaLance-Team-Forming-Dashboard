@@ -1,25 +1,16 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router';
-import { DeleteProfile } from '../components/importPage/DeleteProfile';
+import { DeleteProfileModal } from '../components/importPage/DeleteProfileModal';
 import { ConfirmClearSelection } from '../components/importPage/ConfirmClearSelection';
 import UploadCSV from '../components/importPage/UploadCSV';
-import { CsvInfoButton } from '../components/importPage/CsvInfoButton';
 import getToastSettings from '../components/ToastSettings';
 import { useAuth0 } from '@auth0/auth0-react';
-import {AddIcon} from '@chakra-ui/icons';
 import {
-    Box,
-    ButtonGroup,
-    Text,
     Flex,
-    Button,
     useDisclosure,
-    HStack,
-    Center,
     Spacer,
     VStack,
     useToast,
-    Select
 } from '@chakra-ui/react';
 import { MockAuth } from '../mockAuth/mockAuth';
 import CsvPreviewTable from "../components/importPage/CsvPreviewTable";
@@ -27,6 +18,7 @@ import BackToUnitButton from "../components/shared/BackToUnitButton";
 import PageHeader from "../components/shared/PageHeader";
 import AddButton from "../components/shared/AddButton";
 import DropdownDynamic from "../components/shared/DropdownDynamic";
+import AddStudentModal from "../components/importPage/AddStudentModal";
 
 const ImportPage = () => {
     let authService = {
@@ -159,7 +151,6 @@ const ImportPage = () => {
 
         });
     };
-
 
     const handleFileUpload = (e) => {
         /**
@@ -308,10 +299,6 @@ const ImportPage = () => {
         setIsConfirmationClearOpen(false);
     };
 
-    const infoText = "bleuh"
-
-
-    // TODO FINISH REFACTORING RENDER
     return (
         <VStack>
             <PageHeader
@@ -319,6 +306,7 @@ const ImportPage = () => {
                 pageDesc={`Import student data: ${unitCode} ${period} ${year}`}
             />
             <BackToUnitButton/>
+
             <Flex width="80%">
                 <UploadCSV
                     infoButtonHeader={".csv file format"}
@@ -343,7 +331,7 @@ const ImportPage = () => {
 
             <AddButton
                 onClick={onAddProfileOpen}
-                buttonText={"Add student"}
+                buttonText={"Add an entry"}
                 width="80%"
             />
             <CsvPreviewTable
@@ -356,12 +344,15 @@ const ImportPage = () => {
                 handleConfirmClearSelection={handleConfirmClearSelection}
                 handleCloseConfirmation={handleCloseConfirmation}
             />
+
+            <AddStudentModal
+
+            />
             {/* FIXME */}
             {/*<EditStudentModal/>*/}
-            {/* FIXME */}
-            {/*<AddStudentModal/>*/}
+
             {profileToDelete != null && (
-                <DeleteProfile
+                <DeleteProfileModal
                     isModalOpen={isDeleteProfileOpen}
                     student={profileToDelete}
                     handleCancelDelete={handleCancelDelete}

@@ -12,7 +12,7 @@ import {
   Button,
 } from '@chakra-ui/react';
 
-export class DeleteProfile extends React.Component {
+export class DeleteProfileModal extends React.Component {
   render() {
     return (
       <Modal isOpen={this.props.isModalOpen} onClose={this.props.handleCancelDelete}>

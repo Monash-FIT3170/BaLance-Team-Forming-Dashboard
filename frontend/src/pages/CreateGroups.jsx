@@ -34,6 +34,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../mockAuth/mockAuth';
 import PageHeader from "../components/shared/PageHeader";
+import DropdownDynamic from "../components/shared/DropdownDynamic";
 
 function CreateGroups() {
     let authService = {
@@ -141,6 +142,7 @@ function CreateGroups() {
                             <Spacer width="15vw" />
                             <VStack>
                                 <FormLabel>Strategy</FormLabel>
+                                {/* FIXME refactor as DynamicDropdown component */}
                                 <Select marginLeft="5vw" w="12vw" placeholder='' onChange={(event) => setStrategy(event.target.value)}>
                                     <option value='random'>Random Strategy</option>
                                     <option value='effort'>WAM Based Strategy</option>
