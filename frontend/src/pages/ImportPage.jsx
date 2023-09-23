@@ -23,9 +23,10 @@ import {
 } from '@chakra-ui/react';
 import { MockAuth } from '../mockAuth/mockAuth';
 import CsvPreviewTable from "../components/importPage/CsvPreviewTable";
-import BackToUnitButton from "../components/BackToUnitButton";
-import PageHeader from "../components/PageHeader";
-import AddButton from "../components/AddButton";
+import BackToUnitButton from "../components/shared/BackToUnitButton";
+import PageHeader from "../components/shared/PageHeader";
+import AddButton from "../components/shared/AddButton";
+import DropdownDynamic from "../components/shared/DropdownDynamic";
 
 const ImportPage = () => {
     let authService = {
@@ -332,11 +333,11 @@ const ImportPage = () => {
                 />
                 <Spacer/>
                 <Flex width="33%" flexDirection="column" justifyContent="flex-end">
-                    <Select placeholder={'select data type'} width="100%">
-                        <option value='students'>students</option>
-                        <option value='belbin'>belbin</option>
-                        <option value='effort'>effort</option>
-                    </Select>
+                    <DropdownDynamic
+                        placeholder={'select data type'}
+                        options={['students', 'belbin', 'effort']}
+                        width="100%"
+                    />
                 </Flex>
             </Flex>
 

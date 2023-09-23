@@ -33,7 +33,7 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../mockAuth/mockAuth';
-import PageHeader from "../components/PageHeader";
+import PageHeader from "../components/shared/PageHeader";
 
 function CreateGroups() {
     let authService = {
