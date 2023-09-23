@@ -18,6 +18,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend, LinearScale, CategorySca
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../mockAuth/mockAuth';
 import { useAuth0 } from '@auth0/auth0-react';
+import PageHeader from "../components/PageHeader";
 
 ChartJS.register(ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarController, BarElement);
 
@@ -71,11 +72,10 @@ const UnitAnalytics = () => {
 
     return (
         <div>
-            <Box as="header" p="4" textAlign="center">
-                <Text fontSize="2xl" fontWeight="bold">
-                    {`Offering Analytics for: ${unitCode} - ${period}, ${year}`}
-                </Text>
-            </Box>
+            <PageHeader
+                fontSize={"2xl"}
+                pageDesc={`Unit analytics: ${unitCode} ${period} ${year}`}
+            />
 
             <Center>
                 <Button onClick={navigateToOfferingDashboard}>

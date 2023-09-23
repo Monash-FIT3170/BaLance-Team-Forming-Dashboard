@@ -20,7 +20,7 @@ import {
     Box,
     Container,
 } from '@chakra-ui/react';
-import StudentRowStudentDisplay from '../components/StudentRowStudentDisplay';
+import StudentRowStudentDisplay from '../components/studentsPage/StudentRowStudentDisplay';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShuffleGroups } from '../components/ShuffleGroups';
 import { AddIcon, EditIcon } from '@chakra-ui/icons';
@@ -163,6 +163,7 @@ function Students() {
             <Heading alignContent={'center'}>
                 <Center margin="10">{`${unitCode} - ${period}, ${year}`}</Center>
             </Heading>
+
             <Button
                 me="12px"
                 align="right"

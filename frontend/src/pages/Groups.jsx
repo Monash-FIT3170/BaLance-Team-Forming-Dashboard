@@ -1,4 +1,4 @@
-import GroupCard from '../components/GroupCard';
+import GroupCard from '../components/groupsPage/GroupCard';
 import { useParams } from 'react-router';
 import { useAuth0 } from '@auth0/auth0-react';
 import React, { useState, useEffect } from 'react';
