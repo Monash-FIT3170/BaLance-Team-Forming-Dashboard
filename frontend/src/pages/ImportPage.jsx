@@ -317,51 +317,34 @@ const ImportPage = () => {
                 pageDesc={`Import student data: ${unitCode} ${period} ${year}`}
             />
             <BackToUnitButton/>
-
+            <UploadCSV
+                infoButtonHeader={".csv file format"}
+                infoButtonText={"include the following headers: BRUH, BRUH BRU"}
+                isFileChosen={isFileChosen}
+                csvFile={csvFile}
+                handleClearSelection={handleClearSelection}
+                handleAddProfilesClick={handleAddProfilesClick}
+                handleUpload={handleFileUpload}
+                setIsFileChosen={setIsFileChosen}
+            />
 
 
             <VStack>
                 {profiles.length === 0 ? (
                     <div>
-                        <UploadCSV
-                            infoButtonHeader={".csv file format"}
-                            infoButtonText={"include the following headers: BRUH, BRUH BRU"}
-                            isFileChosen={isFileChosen}
-                            csvFile={csvFile}
-                            handleClearSelection={handleClearSelection}
-                            handleAddProfilesClick={handleAddProfilesClick}
-                            handleUpload={handleFileUpload}
-                            setIsFileChosen={setIsFileChosen}
-                        />
-
                         <Select placeholder={'select data'}>
                             <option value='students'>students</option>
                             <option value='belbin'>belbin</option>
                             <option value='effort'>effort</option>
                         </Select>
 
-                        <Box bg='#E6EBF0' p={4} alignContent="center" width="80%">
-                            <Center>
-                                No data uploaded.
-                            </Center>
-                        </Box>
+
                     </div>
                 ) : (
-                    <div>
-                        {/*<ButtonGroup>*/}
-                        {/*    <Button mb={2} colorScheme="red" onClick={handleClearSelection}>*/}
-                        {/*        Clear*/}
-                        {/*    </Button>*/}
-                        {/*    <Button onClick={handleAddProfilesClick}>*/}
-                        {/*        Save data*/}
-                        {/*    </Button>*/}
-                        {/*</ButtonGroup>*/}
-                        {/*FIXME*/}
-                        <CsvPreviewTable
-                            headers={headers}
-                            profiles={profiles}
-                        />
-                    </div>
+                    <CsvPreviewTable
+                        headers={headers}
+                        profiles={profiles}
+                    />
                 )}
 
                 <ConfirmClearSelection
