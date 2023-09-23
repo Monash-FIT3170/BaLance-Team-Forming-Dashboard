@@ -2,7 +2,7 @@
 // props: isFileChosen, csvFile, handleClearSelection, handleUpload, setIsFileChosen
 import * as React from 'react';
 import {
-  Box, Text, Button, Input, HStack, ButtonGroup, Link
+  Box, Text, Button, Input, HStack, ButtonGroup, Link 
 } from '@chakra-ui/react';
 import { FiUploadCloud } from 'react-icons/fi';
 
@@ -38,35 +38,36 @@ export class UploadCSV extends React.Component {
             margin="0 3vw 5vw 3vw"
             fontWeight="bold"
             display="flex"
-            flexDirection="column"
+            flexDirection="row"
             justifyContent="center" // Center the content horizontally
             alignItems="center" // Center the content vertically
             border="2px dashed #24265D"
             color="black"
             transition="color 0.3s ease"
-            _hover={{ bg: '#E2E8F0', cursor: 'pointer' }}
             onDrop={(e) => {
               this.props.handleDrop(e);
             }}
             onDragOver={(e) => e.preventDefault()}
           >
-            Drop file here or <Link as="span" color="black" flexDirection="column"
-            justifyContent="center"
-            alignItems="center">
-            <Input
-              textColor="white"
-              type="file"
-              onChange={(e) => {
-                this.props.handleUpload(e);
-                this.props.setIsFileChosen(true);
-              }}
-              opacity={0}
-              width="auto"
-              position="relative"
-              zIndex={2}
-              focusBorderColor='black'
-            /> select
-            </Link> from a folder
+            <Text mb="1rem">Drop file here or</Text>
+            <Link as="span" color="blue.500" position="relative">
+              <Input
+                type="file"
+                onChange={(e) => {
+                  this.props.handleUpload(e);
+                  this.props.setIsFileChosen(true);
+                }}
+                opacity={0}
+                position="asbolute"
+                width="100%"
+                height="100%"
+                left={0}
+                top={0}
+                cursor="pointer"
+                focusBorderColor='black'
+              /> select
+            </Link> 
+            <Text mt="1rem">from a folder</Text>
           </Box></>
       )
     );
