@@ -48,7 +48,7 @@ const UploadCSV = ({
       >
         <Box display="inline-flex" alignItems="center">
           <Text as="span">Drop file here or</Text>
-          <Box as="span" position="relative" display="inline-block">
+          <Box as="span" position="relative" display="inline-block" _hover={{ backgroundColor: "blue.100" }} cursor="pointer">
             <Input
               type="file"
               onChange={(e) => {
@@ -64,8 +64,19 @@ const UploadCSV = ({
               cursor="pointer"
               zIndex="2"
             />
-            <Link color="blue.500" zIndex="1" display="inline-block" padding="2">
-              select
+            <Link 
+            color="blue.500" 
+            zIndex="1" 
+            display="inline-block" 
+            padding="10" 
+            px={2}
+            py={1}
+            borderRadius="md"
+            borderWidth="1px"
+            borderColor="blue.500"
+            cursor="pointer"
+            >
+                select
             </Link>
           </Box>
 
