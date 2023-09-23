@@ -158,6 +158,15 @@ const ImportPage = () => {
         });
     };
 
+    const handleDrop = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const file = e.dataTransfer.files[0];
+        if (file) {
+            handleFile(file);
+        }
+    };
+
 
     const handleFileUpload = (e) => {
         /**
@@ -326,6 +335,7 @@ const ImportPage = () => {
                 handleAddProfilesClick={handleAddProfilesClick}
                 handleUpload={handleFileUpload}
                 setIsFileChosen={setIsFileChosen}
+                handleDrop={handleDrop}
             />
 
 
