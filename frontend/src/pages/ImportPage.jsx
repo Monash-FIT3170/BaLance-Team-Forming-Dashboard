@@ -348,14 +348,14 @@ const ImportPage = () => {
                     </div>
                 ) : (
                     <div>
-                        <ButtonGroup>
-                            <Button mb={2} colorScheme="red" onClick={handleClearSelection}>
-                                Clear
-                            </Button>
-                            <Button onClick={handleAddProfilesClick}>
-                                Save data
-                            </Button>
-                        </ButtonGroup>
+                        {/*<ButtonGroup>*/}
+                        {/*    <Button mb={2} colorScheme="red" onClick={handleClearSelection}>*/}
+                        {/*        Clear*/}
+                        {/*    </Button>*/}
+                        {/*    <Button onClick={handleAddProfilesClick}>*/}
+                        {/*        Save data*/}
+                        {/*    </Button>*/}
+                        {/*</ButtonGroup>*/}
                         {/*FIXME*/}
                         <CsvPreviewTable
                             headers={headers}
