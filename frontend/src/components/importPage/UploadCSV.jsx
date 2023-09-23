@@ -11,10 +11,18 @@ const UploadCSV = ({
     isFileChosen,
     setIsFileChosen,
     setIsConfirmationClearOpen,
-    width
+    width,
+    handleFile
 }) => {
 
-    // handleDrop
+    const handleDrop = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const file = e.dataTransfer.files[0];
+        if (file) {
+            handleFile(file);
+        }
+    };
 
     const handleClearSelection = () => {
         setIsConfirmationClearOpen(true);

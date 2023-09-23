@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router';
-import { DeleteProfileModal } from '../components/importPage/DeleteProfileModal';
+import DeleteProfileModal from '../components/importPage/DeleteProfileModal';
 import ConfirmClearSelection from '../components/importPage/ConfirmClearSelection';
 import UploadCSV from '../components/importPage/UploadCSV';
 import getToastSettings from '../components/ToastSettings';
@@ -152,16 +152,6 @@ const ImportPage = () => {
         });
     };
 
-    const handleDrop = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const file = e.dataTransfer.files[0];
-        if (file) {
-            handleFile(file);
-        }
-    };
-
-
     const handleFileUpload = (e) => {
         /**
          * Handles file upload when clicking the upload CSV button
@@ -269,29 +259,7 @@ const ImportPage = () => {
     };
 
     // DELETE MODAL STUFF TODO
-    const handleDeleteProfile = (studentId) => {
-        const selectedProfile = profiles.find(
-            (profile) => profile.studentId === studentId
-        );
-        setProfileToDelete(selectedProfile);
-        onDeleteProfileOpen();
-    };
 
-    const handleConfirmDelete = () => {
-        if (profileToDelete !== null) {
-            const newProfiles = profiles.filter(
-                (profile) => profile.studentId !== profileToDelete.studentId
-            );
-            setProfiles(newProfiles);
-            setProfileToDelete(null);
-            onDeleteProfileClose();
-        }
-    };
-
-    const handleCancelDelete = () => {
-        setProfileToDelete(null);
-        onDeleteProfileClose();
-    };
 
     return (
         <VStack>
@@ -312,6 +280,7 @@ const ImportPage = () => {
                     setIsConfirmationClearOpen={setIsClearModalOpen}
                     setIsFileChosen={setIsFileChosen}
                     width="60%"
+                    handleFile={handleFile}
                 />
                 <Spacer/>
                 <Flex width="33%" flexDirection="column" justifyContent="flex-end">
@@ -331,6 +300,8 @@ const ImportPage = () => {
             <CsvPreviewTable
                 headers={headers}
                 profiles={profiles}
+                setProfileToDelete={setProfileToDelete}
+                onDeleteProfileOpen={onDeleteProfileOpen}
             />
 
             <ConfirmClearSelection
@@ -341,15 +312,17 @@ const ImportPage = () => {
                 setIsClearModalOpen={setIsClearModalOpen}
             />
 
+            <DeleteProfileModal
+                isModalOpen={isDeleteProfileOpen}
+                profileToDelete={profileToDelete}
+                setProfileToDelete={setProfileToDelete}
+                profiles={profiles}
+                setProfiles={setProfiles}
+                onDeleteProfileClose={onDeleteProfileClose}
+            />
+
             {/*<EditStudentModal/>*/}
-            {/*{profileToDelete != null && (*/}
-            {/*    <DeleteProfileModal*/}
-            {/*        isModalOpen={isDeleteProfileOpen}*/}
-            {/*        student={profileToDelete}*/}
-            {/*        handleCancelDelete={handleCancelDelete}*/}
-            {/*        handleConfirmDelete={handleConfirmDelete}*/}
-            {/*    />*/}
-            {/*)}*/}
+
             {/* FIXME AddStudentModal is broken */}
         </VStack>
     );

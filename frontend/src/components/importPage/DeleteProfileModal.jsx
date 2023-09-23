@@ -1,41 +1,66 @@
-// Delete profile component
-// Props: isModalOpen, student, handleCancelDelete, handleConfirmDelete
-
 import * as React from 'react';
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    Button,
+    Spacer
 } from '@chakra-ui/react';
 
-export class DeleteProfileModal extends React.Component {
-  render() {
+const DeleteProfileModal = ({
+    isModalOpen,
+    profileToDelete,
+    setProfileToDelete,
+    profiles,
+    setProfiles,
+    onDeleteProfileClose
+}) => {
+
+    const handleConfirmDelete = () => {
+        if (profileToDelete !== null) {
+            const newProfiles = profiles.filter(
+                (profile) => profile.studentId !== profileToDelete.studentId
+            );
+            setProfiles(newProfiles);
+            setProfileToDelete(null);
+            onDeleteProfileClose();
+        }
+    };
+
+    const handleCancelDelete = () => {
+        setProfileToDelete(null);
+        onDeleteProfileClose();
+    };
+
     return (
-      <Modal isOpen={this.props.isModalOpen} onClose={this.props.handleCancelDelete}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Delete Profile</ModalHeader>
-          <ModalBody>
-            <p>Are you sure you want to delete the following profile?</p> <br />
-            <b>Name: </b>{' '}
-            <p>
-              {this.props.student.studentFirstName} {this.props.student.studentLastName}
-            </p>
-            <b>Email Address: </b> <p> {this.props.student.studentEmailAddress} </p>
-            <b>WAM: </b> <p>{this.props.student.wamAverage}</p>
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="red" mr={3} onClick={this.props.handleConfirmDelete}>
-              Delete
-            </Button>
-            <Button onClick={this.props.handleCancelDelete}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+        <Modal isOpen={isModalOpen} onClose={handleCancelDelete}>
+            <ModalOverlay />
+            <ModalContent>
+                <ModalHeader>Delete Profile</ModalHeader>
+                <ModalBody>
+                    <p>Are you sure you want to delete the following profile?</p>
+                    <br/>
+                    {profileToDelete !== null ? Object.keys(profileToDelete).map((key) => {
+                        return (
+                            <>
+                                <b>{key}</b>
+                                <p>{profileToDelete[key]}</p>
+                            </>
+                    )}) : null}
+                </ModalBody>
+
+                <ModalFooter>
+                    <Button colorScheme="red" mr={3} onClick={handleConfirmDelete}>
+                        Delete
+                    </Button>
+                    <Button onClick={handleCancelDelete}>Cancel</Button>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
     );
-  }
 }
+
+export default DeleteProfileModal;
