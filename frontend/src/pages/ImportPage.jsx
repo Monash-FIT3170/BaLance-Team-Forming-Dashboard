@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router';
 import { DeleteProfile } from '../components/importPage/DeleteProfile';
 import { ConfirmClearSelection } from '../components/importPage/ConfirmClearSelection';
-import { UploadCSV } from '../components/importPage/UploadCSV';
+import UploadCSV from '../components/importPage/UploadCSV';
 import { CsvInfoButton } from '../components/importPage/CsvInfoButton';
 import getToastSettings from '../components/ToastSettings';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -18,7 +18,8 @@ import {
     Center,
     Spacer,
     VStack,
-    useToast
+    useToast,
+    Select
 } from '@chakra-ui/react';
 import { MockAuth } from '../mockAuth/mockAuth';
 import CsvPreviewTable from "../components/importPage/CsvPreviewTable";
@@ -83,15 +84,16 @@ const ImportPage = () => {
 
     // todo strategy method??
     if (data === 'students') {
-        headers.push(['studentEmailAddress', 'Email Address'],
+        headers.push(
+            ['studentEmailAddress', 'Email Address'],
             ['wamAverage', 'WAM'],
             ['gender', 'Gender'],
             ['labId', 'Lab ID'],
-            ['enrolmentStatus', 'Enrolment Status'])
+            ['enrolmentStatus', 'Enrolment Status']
+        )
         headerMapping['EMAIL_ADDRESS'] = 'studentEmailAddress'
         headerMapping['WAM_VAL'] = 'wamAverage'
         headerMapping['GENDER'] = 'gender'
-
     } else if (data === 'effort') {
         headers.push(['labId', 'Lab ID'],
             ['enrolmentStatus', 'Enrolment Status'],
@@ -186,34 +188,14 @@ const ImportPage = () => {
         reader.readAsText(file);
 
         reader.onload = (event) => {
-            // obtain CSV contents as string and convert to dict
-            const csvString = event.target.result;
-            const csvDict = csvToDict(csvString);
-            console.log(csvDict)
+            // obtain raw data from CSV file
+            const csvLines = event.target.result.split('\r\n');
+            const csvHeaders = csvLines[0].split(',');
+            const csvData = csvLines.slice(1);
 
-            const profilesWithDefaultValues = csvDict.map((profile) => {
-                if (data === 'effort') {
-                    return {
-                        ...profile,
-                        enrolmentStatus: 'ACTIVE',
-                        discPersonality: 'DOMINANT',
-                        marksPerHour: profile.averageMark / profile.hours
-                    }
-                }
-            });
-
-            setCsvFile(file);
-            setProfiles(profilesWithDefaultValues);
-        };
-
-        // Convert CSV string to dictionary
-        function csvToDict(csvStr) {
-            // From http://techslides.com/convert-csv-to-json-in-javascript
-            const lines = csvStr.split('\r\n');
-            const csvHeaders = lines[0].split(',');
-            const csvData = lines.slice(1);
-
-            const result = csvData.map((line) => {
+            // obtained from http://techslides.com/convert-csv-to-json-in-javascript
+            // convert CSV content from string to array of objects
+            const csvDict = csvData.map((line) => {
                 const obj = {}
                 const data = line.split(',')
                 csvHeaders.forEach((header, index) => {
@@ -223,8 +205,20 @@ const ImportPage = () => {
                 })
                 return obj
             })
-            return result;
-        }
+
+            const profilesWithDefaultValues = csvDict.map((profile) => {
+                if (data === 'effort') {
+                    return {
+                        ...profile,
+                        marksPerHour: profile.averageMark / profile.hours
+                    }
+                }
+                return profile
+            });
+
+            setCsvFile(file);
+            setProfiles(profilesWithDefaultValues);
+        };
     };
 
     // TODO REFACTOR HANDLER FUNCTIONS BELOW
@@ -312,6 +306,8 @@ const ImportPage = () => {
         setIsConfirmationClearOpen(false);
     };
 
+    const infoText = "bleuh"
+
 
     // TODO FINISH REFACTORING RENDER
     return (
@@ -322,23 +318,14 @@ const ImportPage = () => {
             />
             <BackToUnitButton/>
 
-            {profileToDelete != null && (
-                <DeleteProfile
-                    isModalOpen={isDeleteProfileOpen}
-                    student={profileToDelete}
-                    handleCancelDelete={handleCancelDelete}
-                    handleConfirmDelete={handleConfirmDelete}
-                />
-            )}
+
 
             <VStack>
                 {profiles.length === 0 ? (
                     <div>
-                        <CsvInfoButton
-                            infoHeader=".csv file format"
-                            infoText="Accepted .csv files will have the following attributes: DISPLAY_SUBJECT_CODE SUBJECT_CODE ACTIVITY_GROUP_CODE SHORT_CODE STUDENT_CODE LAST_NAME PREFERRED_NAME EMAIL_ADDRESS WAM_DISPLAY WAM_VAL GENDER"
-                        />
                         <UploadCSV
+                            infoButtonHeader={".csv file format"}
+                            infoButtonText={"include the following headers: BRUH, BRUH BRU"}
                             isFileChosen={isFileChosen}
                             csvFile={csvFile}
                             handleClearSelection={handleClearSelection}
@@ -346,9 +333,16 @@ const ImportPage = () => {
                             handleUpload={handleFileUpload}
                             setIsFileChosen={setIsFileChosen}
                         />
+
+                        <Select placeholder={'select data'}>
+                            <option value='students'>students</option>
+                            <option value='belbin'>belbin</option>
+                            <option value='effort'>effort</option>
+                        </Select>
+
                         <Box bg='#E6EBF0' p={4} alignContent="center" width="80%">
                             <Center>
-                                No new students added.
+                                No data uploaded.
                             </Center>
                         </Box>
                     </div>
@@ -359,7 +353,7 @@ const ImportPage = () => {
                                 Clear
                             </Button>
                             <Button onClick={handleAddProfilesClick}>
-                                Add To Offering
+                                Save data
                             </Button>
                         </ButtonGroup>
                         {/*FIXME*/}
@@ -379,6 +373,14 @@ const ImportPage = () => {
                 {/*<EditStudentModal/>*/}
                 {/* FIXME */}
                 {/*<AddStudentModal/>*/}
+                {profileToDelete != null && (
+                    <DeleteProfile
+                        isModalOpen={isDeleteProfileOpen}
+                        student={profileToDelete}
+                        handleCancelDelete={handleCancelDelete}
+                        handleConfirmDelete={handleConfirmDelete}
+                    />
+                )}
 
                 {/* BUTTON FOR ADDING A STUDENT */}
                 <Button

@@ -1,38 +1,23 @@
-// Upload CSV component
-// props: isFileChosen, csvFile, handleClearSelection, handleUpload, setIsFileChosen
 import * as React from 'react';
 import {
-  Box, Text, Button, Input, HStack, ButtonGroup,
+    Box, Text, Button, Input, HStack, ButtonGroup, VStack,
 } from '@chakra-ui/react';
-import { FiUploadCloud } from 'react-icons/fi';
+import {FiUploadCloud} from 'react-icons/fi';
+import {CsvInfoButton} from "./CsvInfoButton";
 
-export class UploadCSV extends React.Component {
-  render() {
+const UploadCSV = ({infoButtonHeader, infoButtonText, handleUpload, setIsFileChosen}) => {
     return (
-
-      this.props.csvFile ? (
-        <>
-          <Text color="white" mb={2}>
-            File: {this.props.csvFile.name}{' '}
-          </Text>
-          <ButtonGroup>
-            <Button mb={2} colorScheme="red" onClick={this.props.handleClearSelection}>
-                    Clear        
-            </Button>
-            <Button onClick={this.props.handleAddProfilesClick}>
-              Add To Offering
-            </Button>
-          </ButtonGroup>
-
-        </>
-      ) : (
-        <>
-          <HStack>
-            <FiUploadCloud />
-            <Text>Submit a .csv file below to add students to the offering</Text>
-          </HStack>
-          <Box
-            bg={this.props.isFileChosen ? '#00ADB5' : 'white'}
+        <VStack>
+            <CsvInfoButton
+                infoHeader={infoButtonHeader}
+                infoText={infoButtonText}
+            />
+            <HStack>
+                <FiUploadCloud />
+                <Text>Submit a .csv file below to add student data to the offering</Text>
+            </HStack>
+            <Box
+            bg={'white'}
             borderRadius="md"
             width="100%"
             margin="0 3vw 5vw 3vw"
@@ -46,22 +31,23 @@ export class UploadCSV extends React.Component {
             transition="color 0.3s ease"
             _hover={{ bg: '#E2E8F0', cursor: 'pointer' }}
             cursor="pointer"
-          >
-            <Input
-              textColor="white"
-              type="file"
-              onChange={(e) => {
-                this.props.handleUpload(e);
-                this.props.setIsFileChosen(true);
-              }}
-              opacity={0}
-              left={0}
-              top={0}
-              cursor="pointer"
-              focusBorderColor='black'
-            />
-          </Box></>
-      )
+            >
+                <Input
+                    textColor="white"
+                    type="file"
+                    onChange={(e) => {
+                        handleUpload(e);
+                        setIsFileChosen(true);
+                    }}
+                    opacity={0}
+                    left={0}
+                    top={0}
+                    cursor="pointer"
+                    focusBorderColor='black'
+                />
+            </Box>
+        </VStack>
     );
-  }
 }
+
+export default UploadCSV;
