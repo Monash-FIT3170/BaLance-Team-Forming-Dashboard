@@ -88,14 +88,11 @@ const CsvPreviewTable = ({headers, profiles}) => {
 
     return (
         (profiles.length === 0) ? (
-            <div>
-                YOOOOOO
-                <Box bg='#E6EBF0' p={4} alignContent="center" width="80%" height="30px">
-                    <Center>
-                        No data uploaded.
-                    </Center>
-                </Box>
-            </div>
+            <Box bg='#E6EBF0' p={4} alignContent="center" width="80%">
+                <Center>
+                    No data uploaded.
+                </Center>
+            </Box>
         ):(
             <Table variant="striped" size="sm" maxWidth="90vw" marginBottom="3vh">
                 {renderHeader()}

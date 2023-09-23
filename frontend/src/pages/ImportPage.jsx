@@ -25,6 +25,7 @@ import { MockAuth } from '../mockAuth/mockAuth';
 import CsvPreviewTable from "../components/importPage/CsvPreviewTable";
 import BackToUnitButton from "../components/BackToUnitButton";
 import PageHeader from "../components/PageHeader";
+import AddButton from "../components/AddButton";
 
 const ImportPage = () => {
     let authService = {
@@ -311,7 +312,7 @@ const ImportPage = () => {
 
     // TODO FINISH REFACTORING RENDER
     return (
-        <div>
+        <VStack>
             <PageHeader
                 fontSize={"2xl"}
                 pageDesc={`Import student data: ${unitCode} ${period} ${year}`}
@@ -327,58 +328,40 @@ const ImportPage = () => {
                 handleUpload={handleFileUpload}
                 setIsFileChosen={setIsFileChosen}
             />
+            <Select placeholder={'select data'}>
+                <option value='students'>students</option>
+                <option value='belbin'>belbin</option>
+                <option value='effort'>effort</option>
+            </Select>
+            <AddButton
+                onClick={onAddProfileOpen}
+                buttonText={"Add student"}
+                width="50%"
+            />
+            <CsvPreviewTable
+                headers={headers}
+                profiles={profiles}
+            />
 
 
-            <VStack>
-                {profiles.length === 0 ? (
-                    <div>
-                        <Select placeholder={'select data'}>
-                            <option value='students'>students</option>
-                            <option value='belbin'>belbin</option>
-                            <option value='effort'>effort</option>
-                        </Select>
-
-
-                    </div>
-                ) : (
-                    <CsvPreviewTable
-                        headers={headers}
-                        profiles={profiles}
-                    />
-                )}
-
-                <ConfirmClearSelection
-                    isConfirmationClearOpen={isConfirmationClearOpen}
-                    handleConfirmClearSelection={handleConfirmClearSelection}
-                    handleCloseConfirmation={handleCloseConfirmation}
+            <ConfirmClearSelection
+                isConfirmationClearOpen={isConfirmationClearOpen}
+                handleConfirmClearSelection={handleConfirmClearSelection}
+                handleCloseConfirmation={handleCloseConfirmation}
+            />
+            {/* FIXME */}
+            {/*<EditStudentModal/>*/}
+            {/* FIXME */}
+            {/*<AddStudentModal/>*/}
+            {profileToDelete != null && (
+                <DeleteProfile
+                    isModalOpen={isDeleteProfileOpen}
+                    student={profileToDelete}
+                    handleCancelDelete={handleCancelDelete}
+                    handleConfirmDelete={handleConfirmDelete}
                 />
-                {/* FIXME */}
-                {/*<EditStudentModal/>*/}
-                {/* FIXME */}
-                {/*<AddStudentModal/>*/}
-                {profileToDelete != null && (
-                    <DeleteProfile
-                        isModalOpen={isDeleteProfileOpen}
-                        student={profileToDelete}
-                        handleCancelDelete={handleCancelDelete}
-                        handleConfirmDelete={handleConfirmDelete}
-                    />
-                )}
-
-                {/* BUTTON FOR ADDING A STUDENT */}
-                <Button
-                    width="50%"
-                    onClick={onAddProfileOpen}
-                    colorScheme="gray"
-                    margin-left="20">
-                    <HStack>
-                        <AddIcon />
-                        <Spacer />
-                        <Text>Add Student</Text>
-                    </HStack>
-                </Button>
-            </VStack>
-        </div>
+            )}
+        </VStack>
     );
 }
 
