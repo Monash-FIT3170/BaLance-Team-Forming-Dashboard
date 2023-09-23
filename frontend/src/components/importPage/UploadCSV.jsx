@@ -12,7 +12,8 @@ const UploadCSV = ({
     handleClearSelection,
     handleAddProfilesClick,
     isFileChosen,
-    setIsFileChosen
+    setIsFileChosen,
+    width
 }) => {
 
     return (
@@ -26,7 +27,7 @@ const UploadCSV = ({
                 </Button>
             </ButtonGroup>
         ) : (
-            <VStack>
+            <VStack width={width}>
                 <CsvInfoButton
                     infoHeader={infoButtonHeader}
                     infoText={infoButtonText}

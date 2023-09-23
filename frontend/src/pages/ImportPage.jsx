@@ -318,31 +318,37 @@ const ImportPage = () => {
                 pageDesc={`Import student data: ${unitCode} ${period} ${year}`}
             />
             <BackToUnitButton/>
-            <UploadCSV
-                infoButtonHeader={".csv file format"}
-                infoButtonText={"include the following headers: BRUH, BRUH BRU"}
-                isFileChosen={isFileChosen}
-                csvFile={csvFile}
-                handleClearSelection={handleClearSelection}
-                handleAddProfilesClick={handleAddProfilesClick}
-                handleUpload={handleFileUpload}
-                setIsFileChosen={setIsFileChosen}
-            />
-            <Select placeholder={'select data'}>
-                <option value='students'>students</option>
-                <option value='belbin'>belbin</option>
-                <option value='effort'>effort</option>
-            </Select>
+            <Flex width="80%">
+                <UploadCSV
+                    infoButtonHeader={".csv file format"}
+                    infoButtonText={"include the following headers: BRUH, BRUH BRU"}
+                    isFileChosen={isFileChosen}
+                    csvFile={csvFile}
+                    handleClearSelection={handleClearSelection}
+                    handleAddProfilesClick={handleAddProfilesClick}
+                    handleUpload={handleFileUpload}
+                    setIsFileChosen={setIsFileChosen}
+                    width="60%"
+                />
+                <Spacer/>
+                <Flex width="33%" flexDirection="column" justifyContent="flex-end">
+                    <Select placeholder={'select data type'} width="100%">
+                        <option value='students'>students</option>
+                        <option value='belbin'>belbin</option>
+                        <option value='effort'>effort</option>
+                    </Select>
+                </Flex>
+            </Flex>
+
             <AddButton
                 onClick={onAddProfileOpen}
                 buttonText={"Add student"}
-                width="50%"
+                width="80%"
             />
             <CsvPreviewTable
                 headers={headers}
                 profiles={profiles}
             />
-
 
             <ConfirmClearSelection
                 isConfirmationClearOpen={isConfirmationClearOpen}
