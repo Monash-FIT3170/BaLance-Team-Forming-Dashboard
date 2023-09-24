@@ -25,8 +25,14 @@ const ImportPage = () => {
     const [isClearModalOpen, setIsClearModalOpen] = useState(false);
     const [currProfile, setCurrProfile] = useState(null);
     const [profileToDelete, setProfileToDelete] = useState(null);
-    const [dataType, setDataType] = useState(null)
+    const [dataType, setDataType] = useState("")
     const [profiles, setProfiles] = useState([]);
+    const [headers, setHeaders] = useState([[
+        ['studentId', 'Student ID'],
+        ['studentFirstName', 'First Name'],
+        ['studentLastName', 'Last Name']
+    ]])
+
 
     const {
         isOpen: isDeleteProfileOpen,
@@ -52,7 +58,49 @@ const ImportPage = () => {
         period
     } = useParams();
 
-    const headers = [] // todo, this is in UploadCSV and used in csvtable
+    // Mapping for CSV headers to database headers
+
+
+
+
+    const headerMapping = {
+        SHORT_CODE: 'labId',
+        STUDENT_CODE: 'studentId',
+        LAST_NAME: 'studentLastName',
+        PREFERRED_NAME: 'studentFirstName',
+    };
+
+    // todo
+    if (dataType === 'students' || undefined) {
+        headers.push(
+            ['studentEmailAddress', 'Email Address'],
+            ['wamAverage', 'WAM'],
+            ['gender', 'Gender'],
+            ['labId', 'Lab ID'],
+            ['enrolmentStatus', 'Enrolment Status']
+        )
+        headerMapping['EMAIL_ADDRESS'] = 'studentEmailAddress'
+        headerMapping['WAM_VAL'] = 'wamAverage'
+        headerMapping['GENDER'] = 'gender'
+    } else if (dataType === 'effort') {
+        headers.push(['labId', 'Lab ID'],
+            ['enrolmentStatus', 'Enrolment Status'],
+            ['hours', 'Hours'],
+            ['averageMark', 'Average Mark'],
+            ['marksPerHour', 'Marks per Hour']
+        )
+        headerMapping['HOURS'] = 'hours'
+        headerMapping['AVERAGE_MARK'] = 'averageMark'
+
+    } else if (dataType === 'personality') {
+        headers.push(['labId', 'Lab ID'],
+            ['enrolmentStatus', 'Enrolment Status'],
+            ['belbinType', 'Belbin Type'])
+        headerMapping['EMAIL_ADDRESS'] = 'studentEmailAddress'
+        headerMapping['WAM_VAL'] = 'wamAverage'
+        headerMapping['GENDER'] = 'gender'
+        headerMapping['BELBIN_TYPE'] = 'belbinType'
+    }
 
     return (
         <VStack>
@@ -70,14 +118,18 @@ const ImportPage = () => {
 
             <Flex width="80%">
                 <UploadCSV
-                    infoButtonHeader={".csv file format"}
-                    infoButtonText={"include the following headers: TODO"}
                     width="60%"
                     isFileChosen={isFileChosen}
-                    csvFile={csvFile}
-                    setIsConfirmationClearOpen={setIsClearModalOpen}
                     setIsFileChosen={setIsFileChosen}
+                    csvFile={csvFile}
+                    setCsvFile={setCsvFile}
+                    setIsConfirmationClearOpen={setIsClearModalOpen}
+                    dataType={dataType}
                     csvHeaderType={dataType}
+                    profiles={profiles}
+                    setProfiles={setProfiles}
+                    headers={headers}
+                    headerMapping={headerMapping}
                 />
                 <Spacer/>
                 <Flex width="33%" flexDirection="column" justifyContent="flex-end">
@@ -85,7 +137,10 @@ const ImportPage = () => {
                         placeholder={'select data type'}
                         options={['students', 'belbin', 'effort']}
                         width="100%"
-                        setState={setDataType}
+                        onChange={(event) => {
+                            // console.log(dataType, event.target.value)
+                            setDataType(event.target.value)
+                        }}
                     />
                 </Flex>
             </Flex>

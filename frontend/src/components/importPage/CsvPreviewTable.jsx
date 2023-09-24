@@ -2,7 +2,6 @@ import {Box, Center, Table, Tbody, Td, Th, Thead, Tr, useDisclosure} from "@chak
 import {DeleteIcon, EditIcon} from "@chakra-ui/icons";
 import React, {useState} from "react";
 
-
 const CsvPreviewTable = ({
     headers,
     profiles,

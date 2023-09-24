@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Box, ChakraProvider, Container, Heading, extendTheme} from '@chakra-ui/react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { MockAuth } from './mockAuth/mockAuth';
+import { MockAuth } from './helpers/mockAuth';
 import UploadGroupScript from './pages/UploadGroupScript';
 import CreateGroups from './pages/CreateGroups';
 import UnitHomePage from './pages/UnitHomePage';

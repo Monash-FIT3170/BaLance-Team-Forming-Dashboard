@@ -4,7 +4,7 @@ import { useParams } from 'react-router';
 import ChangeGroupModal from './ChangeGroupModal';
 import getToastSettings from '../shared/ToastSettings';
 import { useAuth0 } from '@auth0/auth0-react';
-import { MockAuth } from '../../mockAuth/mockAuth';
+import { MockAuth } from '../../helpers/mockAuth';
 
 function StudentRowGroupDisplay({ studentData, numberOfGroups }) {
     /* HTML component for each student in each group in the 'View Groups' View */

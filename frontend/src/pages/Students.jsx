@@ -18,7 +18,7 @@ import {
 import StudentRowStudentDisplay from '../components/studentsPage/StudentRowStudentDisplay';
 import { Link, useNavigate } from 'react-router-dom';
 import { AddIcon, EditIcon, ViewIcon } from '@chakra-ui/icons';
-import { MockAuth } from '../mockAuth/mockAuth';
+import { MockAuth } from '../helpers/mockAuth';
 import NavButton from "../components/shared/NavButton";
 
 function Students() {

@@ -4,7 +4,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import UnitCard from '../components/unitHomePage/UnitCard';
 import '../App.css';
 import getToastSettings from '../components/shared/ToastSettings';
-import { MockAuth } from '../mockAuth/mockAuth';
+import { MockAuth } from '../helpers/mockAuth';
 
 // Chakra imports
 import {

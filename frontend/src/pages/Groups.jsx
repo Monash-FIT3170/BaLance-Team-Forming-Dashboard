@@ -20,7 +20,7 @@ import {
 import getToastSettings from '../components/shared/ToastSettings';
 import { Link, useNavigate } from 'react-router-dom';
 import { AddIcon, EditIcon, ViewIcon, DownloadIcon } from '@chakra-ui/icons';
-import { MockAuth } from '../mockAuth/mockAuth';
+import { MockAuth } from '../helpers/mockAuth';
 import NavButton from "../components/shared/NavButton";
 
 function Groups() {

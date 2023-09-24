@@ -18,7 +18,7 @@ import {
     Text,
     useDisclosure,
 } from '@chakra-ui/react';
-import { MockAuth } from '../../mockAuth/mockAuth';
+import { MockAuth } from '../../helpers/mockAuth';
 
 export default function ChangeGroupModal({studentData, numberOfGroups}) {
     const {

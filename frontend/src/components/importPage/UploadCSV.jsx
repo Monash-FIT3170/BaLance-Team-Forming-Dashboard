@@ -3,19 +3,18 @@ import {Box, Text, Button, Input, HStack, ButtonGroup, VStack, Link, useToast} f
 import { FiUploadCloud } from 'react-icons/fi';
 import { CsvInfoButton } from './CsvInfoButton';
 import getToastSettings from '../shared/ToastSettings';
-import {MockAuth} from "../../mockAuth/mockAuth";
+import {MockAuth} from "../../helpers/mockAuth";
 import {useAuth0} from "@auth0/auth0-react";
 import {useParams} from "react-router";
 
 const UploadCSV = ({
-    infoButtonHeader,
-    infoButtonText,
-    handleUpload,
     isFileChosen,
     setIsFileChosen,
     setIsConfirmationClearOpen,
     width,
     dataType,
+    headers,
+    headerMapping,
     profiles,
     setCsvFile,
     setProfiles
@@ -38,53 +37,10 @@ const UploadCSV = ({
         toast(getToastSettings(title, status))
     }
 
-    // Formatted headers for different possible variables todo can this be removed?
-    const headers = [
-        ['studentId', 'Student ID'],
-        ['studentFirstName', 'First Name'],
-        ['studentLastName', 'Last Name']
-    ];
-
-    // Mapping for CSV headers to database headers todo can this be removed
-    const headerMapping = {
-        SHORT_CODE: 'labId',
-        STUDENT_CODE: 'studentId',
-        LAST_NAME: 'studentLastName',
-        PREFERRED_NAME: 'studentFirstName',
-    };
-
-    // todo strategy method??
-    if (dataType === 'students') {
-        headers.push(
-            ['studentEmailAddress', 'Email Address'],
-            ['wamAverage', 'WAM'],
-            ['gender', 'Gender'],
-            ['labId', 'Lab ID'],
-            ['enrolmentStatus', 'Enrolment Status']
-        )
-        headerMapping['EMAIL_ADDRESS'] = 'studentEmailAddress'
-        headerMapping['WAM_VAL'] = 'wamAverage'
-        headerMapping['GENDER'] = 'gender'
-    } else if (dataType === 'effort') {
-        headers.push(['labId', 'Lab ID'],
-            ['enrolmentStatus', 'Enrolment Status'],
-            ['hours', 'Hours'],
-            ['averageMark', 'Average Mark'],
-            ['marksPerHour', 'Marks per Hour'])
-        headerMapping['HOURS'] = 'hours'
-        headerMapping['AVERAGE_MARK'] = 'averageMark'
-
-    } else if (dataType === 'personality') {
-        headers.push(['labId', 'Lab ID'],
-            ['enrolmentStatus', 'Enrolment Status'],
-            ['belbinType', 'Belbin Type'])
-        headerMapping['EMAIL_ADDRESS'] = 'studentEmailAddress'
-        headerMapping['WAM_VAL'] = 'wamAverage'
-        headerMapping['GENDER'] = 'gender'
-        headerMapping['BELBIN_TYPE'] = 'belbinType'
-    }
-
     const handleDrop = (e) => {
+        /**
+         * handler for dragging and dropping a file into input box area
+         */
         e.preventDefault();
         e.stopPropagation();
         const file = e.dataTransfer.files[0];
@@ -138,7 +94,6 @@ const UploadCSV = ({
         });
     };
 
-    // Logic for processing a file upload
     const handleFile = (file) => {
         /**
          * Processes a CSV file and converts it to an array of student profiles
@@ -183,6 +138,7 @@ const UploadCSV = ({
                 return profile
             });
 
+            console.log(profilesWithDefaultValues)
             setCsvFile(file);
             setProfiles(profilesWithDefaultValues);
         };
@@ -213,8 +169,8 @@ const UploadCSV = ({
         ) : (
             <VStack width={width}>
                 <CsvInfoButton
-                    infoHeader={infoButtonHeader}
-                    infoText={infoButtonText}
+                    infoButtonHeader={".csv file format"}
+                    infoButtonText={"include the following headers: TODO"}
                 />
                 <HStack>
                     <FiUploadCloud />
@@ -245,7 +201,7 @@ const UploadCSV = ({
                         textColor="white"
                         type="file"
                         onChange={(e) => {
-                            handleUpload(e);
+                            handleFileUpload(e);
                             setIsFileChosen(true);
                         }}
                         opacity={0}

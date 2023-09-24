@@ -32,7 +32,7 @@ import {
 } from '@chakra-ui/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { MockAuth } from '../mockAuth/mockAuth';
+import { MockAuth } from '../helpers/mockAuth';
 import PageHeader from "../components/shared/PageHeader";
 import DropdownDynamic from "../components/shared/DropdownDynamic";
 import NavButton from "../components/shared/NavButton";
