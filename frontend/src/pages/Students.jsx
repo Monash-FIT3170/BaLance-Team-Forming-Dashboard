@@ -4,26 +4,20 @@ import { useParams } from 'react-router';
 import {
     Table,
     Thead,
-    Select,
     Tr,
     Th,
     Tbody,
     Button,
     ButtonGroup,
     HStack,
-    Spacer,
     Heading,
     Center,
     useDisclosure,
-    Text,
-    VStack,
-    Box,
-    Container,
+    Box
 } from '@chakra-ui/react';
 import StudentRowStudentDisplay from '../components/studentsPage/StudentRowStudentDisplay';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShuffleGroups } from '../components/ShuffleGroups';
-import { AddIcon, EditIcon } from '@chakra-ui/icons';
+import { AddIcon, EditIcon, ViewIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../mockAuth/mockAuth';
 import NavButton from "../components/shared/NavButton";
 
@@ -159,10 +153,6 @@ function Students() {
 
             <HStack justifyContent={"center"}>
                 <NavButton
-                    buttonText="View unit analytics"
-                    buttonUrl={`/unitAnalytics/${unitCode}/${year}/${period}`}
-                />
-                <NavButton
                     buttonText="Import student data"
                     buttonUrl={`/uploadData/${unitCode}/${year}/${period}`}
                     buttonIcon={<AddIcon />}
@@ -171,6 +161,11 @@ function Students() {
                     buttonText="Create/reconfigure groups"
                     buttonUrl={`/createGroups/${unitCode}/${year}/${period}`}
                     buttonIcon={<EditIcon />}
+                />
+                <NavButton
+                    buttonText="View unit analytics"
+                    buttonUrl={`/unitAnalytics/${unitCode}/${year}/${period}`}
+                    buttonIcon={<ViewIcon/>}
                 />
             </HStack>
             <br/>

@@ -6,7 +6,6 @@ import {
     Button,
     ButtonGroup,
     HStack,
-    Spacer,
     Container,
     Heading,
     Center,
@@ -15,26 +14,16 @@ import {
     Text,
     Select,
     Box,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalCloseButton,
-    ModalBody,
-    ModalFooter,
-    useToast,
-    Flex
+    useToast, Spacer,
 } from '@chakra-ui/react';
 
 import getToastSettings from '../components/ToastSettings';
 import { Link, useNavigate } from 'react-router-dom';
-import { AddIcon, EditIcon } from '@chakra-ui/icons';
+import { AddIcon, EditIcon, ViewIcon, DownloadIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../mockAuth/mockAuth';
 import NavButton from "../components/shared/NavButton";
 
 function Groups() {
-    const cancelRef = React.useRef();
-    const navigate = useNavigate();
     const [groups, setGroups] = useState([]);
     const [filteredClass, setFilteredClass] = useState(["All"]);
 
@@ -110,7 +99,6 @@ function Groups() {
     }
 
     const handleExportToCSV = () => {
-
         /* creating the csv */
         const csvRows = [["Lab Number", "Group Number", "Student ID(s)"]];
         let newRow = [];
@@ -162,10 +150,6 @@ function Groups() {
 
             <HStack justifyContent={"center"}>
                 <NavButton
-                    buttonText="View unit analytics"
-                    buttonUrl={`/unitAnalytics/${unitCode}/${year}/${period}`}
-                />
-                <NavButton
                     buttonText="Import student data"
                     buttonUrl={`/uploadData/${unitCode}/${year}/${period}`}
                     buttonIcon={<AddIcon />}
@@ -174,6 +158,11 @@ function Groups() {
                     buttonText="Create/reconfigure groups"
                     buttonUrl={`/createGroups/${unitCode}/${year}/${period}`}
                     buttonIcon={<EditIcon />}
+                />
+                <NavButton
+                    buttonText="View unit analytics"
+                    buttonUrl={`/unitAnalytics/${unitCode}/${year}/${period}`}
+                    buttonIcon={<ViewIcon/>}
                 />
             </HStack>
 
@@ -190,7 +179,15 @@ function Groups() {
 
 
             <HStack margin="0px 20vw 5vh 20vw" justifyContent={'space-between'} alignItems={"center"}>
-                {groups.length > 0 && (<Button onClick={handleExportToCSV}>Export group data to .csv</Button>)}
+                {groups.length > 0 && (
+                    <Button onClick={handleExportToCSV}>
+                        <HStack>
+                            <DownloadIcon/>
+                            <Spacer/>
+                            <p>Export group data to .csv</p>
+                        </HStack>
+                    </Button>
+                )}
                 <VStack>
                     <Center><Text fontWeight={"semibold"}>Show Students from Class:</Text></Center>
                     <Select
