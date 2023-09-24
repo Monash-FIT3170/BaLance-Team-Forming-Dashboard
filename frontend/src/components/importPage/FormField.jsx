@@ -1,5 +1,3 @@
-// Reusable component to represent a field in a form which allows user to edit a certain attribute
-// Props: label, placeholder, value, onChange, options (for dropdowns)
 import * as React from 'react';
 import { FormControl, FormLabel, Select, Input } from '@chakra-ui/react';
 

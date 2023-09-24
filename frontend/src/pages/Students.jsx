@@ -52,17 +52,9 @@ function Students() {
         period
     } = useParams();
 
-    const navigateToStudentUpload = () => {
-        navigate(`/upload/students/${unitCode}/${year}/${period}`);
+    const navigateToUploadStudentData = () => {
+        navigate(`/uploadData/${unitCode}/${year}/${period}`);
     };
-
-    const navigateToWorkEthicUpload = () => {
-        navigate(`/upload/effort/${unitCode}/${year}/${period}`);
-    };
-
-    const navigateToBelbinUpload = () => {
-        navigate(`/upload/personality/${unitCode}/${year}/${period}`);
-    }
 
     const navigateToCreateGroups = () => {
         navigate(`/createGroups/${unitCode}/${year}/${period}`);
@@ -179,37 +171,13 @@ function Students() {
                 <VStack>
                     <Button
                         width="18vw"
-                        onClick={navigateToStudentUpload}
+                        onClick={navigateToUploadStudentData}
                         colorScheme="gray"
                         margin-left="20">
                         <HStack>
                             <AddIcon />
                             <Spacer />
-                            <Text>Import Students Data</Text>
-                        </HStack>
-                    </Button>
-                    <Button
-                        width="100%"
-                        onClick={navigateToBelbinUpload}
-                        colorScheme="gray"
-                        margin-left="20"
-                        isDisabled={students.length === 0}>
-                        <HStack>
-                            <AddIcon />
-                            <Spacer />
-                            <Text>Import Personality Data</Text>
-                        </HStack>
-                    </Button>
-                    <Button
-                        width="100%"
-                        onClick={navigateToWorkEthicUpload}
-                        colorScheme="gray"
-                        margin-left="20"
-                        isDisabled={students.length === 0}>
-                        <HStack>
-                            <AddIcon />
-                            <Spacer />
-                            <Text>Import Work Ethic Data</Text>
+                            <Text>Import Student Data</Text>
                         </HStack>
                     </Button>
                 </VStack>

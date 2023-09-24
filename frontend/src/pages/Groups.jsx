@@ -164,8 +164,8 @@ function Groups() {
         console.log("should have downloaded")
     };
 
-    const navigateToStudentUpload = () => {
-        navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
+    const navigateToUploadStudentData = () => {
+        navigate(`/uploadData/${unitCode}/${year}/${period}`);
     };
 
     useEffect(() => {
@@ -199,35 +199,13 @@ function Groups() {
                 <VStack>
                     <Button
                         width="18vw"
-                        onClick={navigateToStudentUploadInfo}
+                        onClick={navigateToUploadStudentData}
                         colorScheme="gray"
                         margin-left="20">
                         <HStack>
                             <AddIcon />
                             <Spacer />
-                            <Text>Import Students Data</Text>
-                        </HStack>
-                    </Button>
-                    <Button
-                        width="100%"
-                        onClick={navigateToBelbinUpload}
-                        colorScheme="gray"
-                        margin-left="20">
-                        <HStack>
-                            <AddIcon />
-                            <Spacer />
-                            <Text>Import Personality Data</Text>
-                        </HStack>
-                    </Button>
-                    <Button
-                        width="100%"
-                        onClick={navigateToWorkEthicUpload}
-                        colorScheme="gray"
-                        margin-left="20">
-                        <HStack>
-                            <AddIcon />
-                            <Spacer />
-                            <Text>Import Work Ethic Data</Text>
+                            <Text>Import Student Data</Text>
                         </HStack>
                     </Button>
                 </VStack>

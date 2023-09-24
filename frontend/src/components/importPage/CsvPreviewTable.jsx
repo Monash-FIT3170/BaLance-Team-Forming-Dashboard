@@ -7,7 +7,8 @@ const CsvPreviewTable = ({
     headers,
     profiles,
     setProfileToDelete,
-    onDeleteProfileOpen
+    onDeleteProfileOpen,
+    setCurrProfile
 }) => {
 
     const {
@@ -77,17 +78,15 @@ const CsvPreviewTable = ({
                             })
                         }
                         <Td>
-                            {/* FIXME */}
-                            {/*<EditIcon*/}
-                            {/*    style={{ cursor: 'pointer' }}*/}
-                            {/*    onClick={() => {*/}
-                            {/*        setCurrProfile(profile);*/}
-                            {/*        onEditProfileOpen();*/}
-                            {/*    }}*/}
-                            {/*/>*/}
+                            <EditIcon
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => {
+                                    setCurrProfile(profile);
+                                    onEditProfileOpen();
+                                }}
+                            />
                         </Td>
                         <Td>
-                             {/*FIXME */}
                             <DeleteIcon
                                 style={{ cursor: 'pointer', color: 'red' }}
                                 onClick={() => {handleDeleteProfile(profile.studentId)}}

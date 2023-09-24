@@ -15,7 +15,6 @@ import React from "react";
 const AddStudentModal = ({
     isAddProfileOpen,
     onAddProfileClose,
-    handleSubmit,
     currProfile,
     setCurrProfile
 }) => {
@@ -68,6 +67,22 @@ const AddStudentModal = ({
             ]
         }
     ];
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (currProfile.enrolmentStatus === "") {
+            currProfile.enrolmentStatus = 'ACTIVE'
+        }
+        if (currProfile.belbinType === "") {
+            currProfile.belbinType = 'ACTION';
+        }
+        if (currProfile.averageMark !== "" && currProfile.hours !== "") {
+            currProfile['marksPerHour'] = currProfile.averageMark / currProfile.hours
+        }
+        setProfiles([...profiles, currProfile]);
+        setCurrProfile(null);
+        onAddProfileClose();
+    };
 
     return (
         <></>

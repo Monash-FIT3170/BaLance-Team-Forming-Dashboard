@@ -44,11 +44,9 @@ function App() {
             <Route path="/" element={<UnitHomePage />} />
             <Route path="/groups/:unitCode/:year/:period" element={<Groups />} />
             <Route path="/students/:unitCode/:year/:period" element={<Students />} />
-            <Route path="/upload/:data/:unitCode/:year/:period" element={<ImportPage />} />
             <Route path="/uploadGroupScript/:unitCode/:year/:period" element={<UploadGroupScript />} />
             <Route path="/createGroups/:unitCode/:year/:period" element={<CreateGroups/>} />
-            <Route path="/upload/:data/:unitCode/:year/:period" element={<ImportPage />} />
-            <Route path="/upload/:data/:unitCode/:year/:period" element={<ImportPage />} />
+            <Route path="/uploadData/:unitCode/:year/:period" element={<ImportPage />} />
             <Route path="/unitAnalytics/:unitCode/:year/:period" element={<UnitAnalytics />} />
             <Route path="/groupAnalytics/:unitCode/:year/:period/:groupNumber" element={<GroupAnalytics />} />
           </Routes>
