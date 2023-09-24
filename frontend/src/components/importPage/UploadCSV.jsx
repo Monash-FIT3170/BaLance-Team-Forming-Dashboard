@@ -12,7 +12,7 @@ const UploadCSV = ({
     setIsFileChosen,
     setIsConfirmationClearOpen,
     width,
-    dataType,
+    csvHeaderType,
     headerMap,
     profiles,
     setCsvFile,
@@ -56,17 +56,10 @@ const UploadCSV = ({
     // FIXME need to consider auth stuff too
     //create unit for new students
     const handleAddProfilesClick = async () => {
-        // todo, could use a dropdown and its value instead
-        let apiCall = ""
-        if (dataType === 'effort') {
-            apiCall = 'personality'
-        } else {
-            apiCall = dataType
-        }
         getAccessTokenSilently().then((token) => {
             // Make API call
             //data parameter is the type of data, eg students,effort,personality
-            fetch(`http://localhost:8080/api/${apiCall}/${unitCode}/${year}/${period}`, {
+            fetch(`http://localhost:8080/api/${csvHeaderType}/${unitCode}/${year}/${period}`, {
                 method: 'POST',
                 headers: new Headers({
                     'Authorization': `Bearer ${token}`,
@@ -135,6 +128,7 @@ const UploadCSV = ({
                 return obj;
             })
 
+            console.log(headerMap)
             setCsvFile(file);
             setProfiles(csvDataAsObjects);
         };

@@ -69,14 +69,13 @@ const ImportPage = () => {
             </Center>
 
             <Flex width="80%">
-                <UploadCSV // FIXME headers change
+                <UploadCSV
                     width="60%"
                     isFileChosen={isFileChosen}
                     setIsFileChosen={setIsFileChosen}
                     csvFile={csvFile}
                     setCsvFile={setCsvFile}
                     setIsConfirmationClearOpen={setIsClearModalOpen}
-                    dataType={dataType}
                     csvHeaderType={dataType}
                     profiles={profiles}
                     setProfiles={setProfiles}
@@ -103,8 +102,8 @@ const ImportPage = () => {
                 buttonText={"Add an entry"}
                 width="80%"
             />
-            <CsvPreviewTable // FIXME headers change
-                headers={headerMap}
+            <CsvPreviewTable
+                headerMap={headerMap}
                 profiles={profiles}
                 setProfileToDelete={setProfileToDelete}
                 onDeleteProfileOpen={onDeleteProfileOpen}

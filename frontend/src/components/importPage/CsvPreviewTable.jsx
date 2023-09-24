@@ -3,7 +3,7 @@ import {DeleteIcon, EditIcon} from "@chakra-ui/icons";
 import React, {useState} from "react";
 
 const CsvPreviewTable = ({
-    headers,
+    headerMap,
     profiles,
     setProfileToDelete,
     onDeleteProfileOpen,
@@ -53,29 +53,19 @@ const CsvPreviewTable = ({
         return (
             <Thead>
                 <Tr>
-                    {headers.map((header) => (
-                        <Th key={header[0]} onClick={() => handleSort(header)}>
-                            {header[1]}
-                            {sortConfig.key === header[0] && (
-                                <span>{sortConfig.direction === 'ascending' ? '▲' : '▼'}</span>
-                            )}
-                        </Th>
-                    ))}
+                    {Object.keys(profiles[0]).map((key) => {return (<td>{key}</td>)})}
                 </Tr>
             </Thead>
         )
     }
 
     const renderBody = () => {
+        console.log(profiles)
         return (
             <Tbody>
                 {profiles.map((profile) => (
-                    <Tr key={profile.studentId}>
-                        {
-                            headers.map((h) => {
-                                return <td>{profile[h[0]]}</td>
-                            })
-                        }
+                    <Tr>
+                        {Object.keys(profile).map((key) => {return (<td>{profile[key]}</td>)})}
                         <Td>
                             <EditIcon
                                 style={{ cursor: 'pointer' }}
