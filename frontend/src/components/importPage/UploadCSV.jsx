@@ -53,7 +53,6 @@ const UploadCSV = ({
         setIsConfirmationClearOpen(true);
     };
 
-    // FIXME need to consider auth stuff too
     //create unit for new students
     const handleAddProfilesClick = async () => {
         getAccessTokenSilently().then((token) => {
@@ -74,7 +73,6 @@ const UploadCSV = ({
                         throw new Error('Error sending data to the REST API');
                     }
                     else {
-                        // if the import is successful
                         getToast("Your file has been imported successfully!", "success")
                     }
                 })

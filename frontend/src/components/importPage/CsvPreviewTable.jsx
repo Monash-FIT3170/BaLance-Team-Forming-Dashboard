@@ -53,7 +53,9 @@ const CsvPreviewTable = ({
         return (
             <Thead>
                 <Tr>
-                    {Object.keys(profiles[0]).map((key) => {return (<td>{key}</td>)})}
+                    {Object.keys(profiles[0]).map((key) => {
+                        return (<td><b>{key.toUpperCase()}</b></td>)
+                    })}
                 </Tr>
             </Thead>
         )
