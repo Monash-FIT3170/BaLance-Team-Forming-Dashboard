@@ -2,7 +2,7 @@ import * as React from 'react';
 import {Box, Text, Button, Input, HStack, ButtonGroup, VStack, Link, useToast} from '@chakra-ui/react';
 import { FiUploadCloud } from 'react-icons/fi';
 import { CsvInfoButton } from './CsvInfoButton';
-import getToastSettings from '../ToastSettings';
+import getToastSettings from '../shared/ToastSettings';
 import {MockAuth} from "../../mockAuth/mockAuth";
 import {useAuth0} from "@auth0/auth0-react";
 import {useParams} from "react-router";

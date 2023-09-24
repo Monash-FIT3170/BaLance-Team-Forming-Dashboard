@@ -2,7 +2,7 @@ import { Tr, Td, HStack, useDisclosure, useToast } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { useParams } from 'react-router';
 import ChangeGroupModal from './ChangeGroupModal';
-import getToastSettings from '../ToastSettings';
+import getToastSettings from '../shared/ToastSettings';
 import { useAuth0 } from '@auth0/auth0-react';
 import { MockAuth } from '../../mockAuth/mockAuth';
 

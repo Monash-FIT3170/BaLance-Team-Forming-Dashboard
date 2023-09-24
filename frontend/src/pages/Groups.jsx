@@ -17,7 +17,7 @@ import {
     useToast, Spacer,
 } from '@chakra-ui/react';
 
-import getToastSettings from '../components/ToastSettings';
+import getToastSettings from '../components/shared/ToastSettings';
 import { Link, useNavigate } from 'react-router-dom';
 import { AddIcon, EditIcon, ViewIcon, DownloadIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../mockAuth/mockAuth';
