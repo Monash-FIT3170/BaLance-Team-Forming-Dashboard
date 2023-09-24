@@ -51,6 +51,8 @@ const ImportPage = () => {
         period
     } = useParams();
 
+    const headers = [] // todo, this is in UploadCSV and used in csvtable
+
     return (
         <VStack>
             <PageHeader

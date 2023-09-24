@@ -2,10 +2,10 @@ import * as React from 'react';
 import {Box, Text, Button, Input, HStack, ButtonGroup, VStack, Link, useToast} from '@chakra-ui/react';
 import { FiUploadCloud } from 'react-icons/fi';
 import { CsvInfoButton } from './CsvInfoButton';
-import getToastSettings from '../components/ToastSettings';
+import getToastSettings from '../ToastSettings';
 import {MockAuth} from "../../mockAuth/mockAuth";
 import {useAuth0} from "@auth0/auth0-react";
-
+import {useParams} from "react-router";
 
 const UploadCSV = ({
     infoButtonHeader,
@@ -14,13 +14,23 @@ const UploadCSV = ({
     isFileChosen,
     setIsFileChosen,
     setIsConfirmationClearOpen,
-    width
+    width,
+    dataType,
+    profiles,
+    setCsvFile,
+    setProfiles
 }) => {
     let authService = {
         "DEV": MockAuth,
         "TEST": useAuth0
     }
     const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
+
+    const {
+        unitCode,
+        year,
+        period
+    } = useParams();
 
     const toast = useToast();
     const getToast = (title, status) => {
@@ -44,7 +54,7 @@ const UploadCSV = ({
     };
 
     // todo strategy method??
-    if (data === 'students') {
+    if (dataType === 'students') {
         headers.push(
             ['studentEmailAddress', 'Email Address'],
             ['wamAverage', 'WAM'],
@@ -55,7 +65,7 @@ const UploadCSV = ({
         headerMapping['EMAIL_ADDRESS'] = 'studentEmailAddress'
         headerMapping['WAM_VAL'] = 'wamAverage'
         headerMapping['GENDER'] = 'gender'
-    } else if (data === 'effort') {
+    } else if (dataType === 'effort') {
         headers.push(['labId', 'Lab ID'],
             ['enrolmentStatus', 'Enrolment Status'],
             ['hours', 'Hours'],
@@ -64,7 +74,7 @@ const UploadCSV = ({
         headerMapping['HOURS'] = 'hours'
         headerMapping['AVERAGE_MARK'] = 'averageMark'
 
-    } else if (data === 'personality') {
+    } else if (dataType === 'personality') {
         headers.push(['labId', 'Lab ID'],
             ['enrolmentStatus', 'Enrolment Status'],
             ['belbinType', 'Belbin Type'])
@@ -92,10 +102,10 @@ const UploadCSV = ({
     const handleAddProfilesClick = async () => {
         // todo, could use a dropdown and its value instead
         let apiCall = ""
-        if (data === 'effort') {
+        if (dataType === 'effort') {
             apiCall = 'personality'
         } else {
-            apiCall = data
+            apiCall = dataType
         }
         getAccessTokenSilently().then((token) => {
             // Make API call
@@ -163,7 +173,7 @@ const UploadCSV = ({
             })
 
             const profilesWithDefaultValues = csvDict.map((profile) => {
-                if (data === 'effort') {
+                if (dataType === 'effort') {
                     return {
                         ...profile,
                         marksPerHour: profile.averageMark / profile.hours

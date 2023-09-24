@@ -16,7 +16,9 @@ const AddStudentModal = ({
     isAddProfileOpen,
     onAddProfileClose,
     currProfile,
-    setCurrProfile
+    setCurrProfile,
+    setProfiles,
+    profiles
 }) => {
 
     const fields = [
