@@ -40,6 +40,5 @@ const headerMaps = {
     'effort': effortDataHeaders
 }
 
-module.exports = {
-    headerMaps
-}
+export default headerMaps;
+

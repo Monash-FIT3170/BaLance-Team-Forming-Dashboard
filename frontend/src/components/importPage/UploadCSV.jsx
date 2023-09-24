@@ -13,8 +13,7 @@ const UploadCSV = ({
     setIsConfirmationClearOpen,
     width,
     dataType,
-    headers,
-    headerMapping,
+    headerMap,
     profiles,
     setCsvFile,
     setProfiles
@@ -115,32 +114,29 @@ const UploadCSV = ({
             const csvHeaders = csvLines[0].split(',');
             const csvData = csvLines.slice(1);
 
-            // obtained from http://techslides.com/convert-csv-to-json-in-javascript
-            // convert CSV content from string to array of objects
-            const csvDict = csvData.map((line) => {
-                const obj = {}
-                const data = line.split(',')
-                csvHeaders.forEach((header, index) => {
-                    if(header in headerMapping) {
-                        obj[headerMapping[header]] = data[index]
-                    }
-                })
-                return obj
-            })
-
-            const profilesWithDefaultValues = csvDict.map((profile) => {
-                if (dataType === 'effort') {
-                    return {
-                        ...profile,
-                        marksPerHour: profile.averageMark / profile.hours
-                    }
+            // obtain the index of headers we care about
+            const headerMapKeys = Object.keys(headerMap);
+            const headerIndexes = [];
+            csvHeaders.forEach((csvHeader, index) => {
+                if(headerMapKeys.includes(csvHeader)){
+                    headerIndexes.push(index);
                 }
-                return profile
             });
 
-            console.log(profilesWithDefaultValues)
+            // derived from http://techslides.com/convert-csv-to-json-in-javascript
+            // convert csvData into a list of objects
+            const csvDataAsObjects = csvData.map((line) => {
+                const obj = {}
+                const data = line.split(',');
+                headerIndexes.forEach((index) => {
+                    obj[csvHeaders[index]] = data[index];
+                });
+
+                return obj;
+            })
+
             setCsvFile(file);
-            setProfiles(profilesWithDefaultValues);
+            setProfiles(csvDataAsObjects);
         };
     };
 
@@ -148,6 +144,7 @@ const UploadCSV = ({
         /**
          * Handles file upload when clicking the upload CSV button
          */
+
         e.preventDefault();
         e.stopPropagation();
         const file = e.target.files[0];

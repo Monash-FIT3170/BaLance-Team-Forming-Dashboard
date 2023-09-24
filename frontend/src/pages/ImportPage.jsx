@@ -3,13 +3,6 @@ import { useParams } from 'react-router';
 import DeleteProfileModal from '../components/importPage/DeleteProfileModal';
 import ConfirmClearSelection from '../components/importPage/ConfirmClearSelection';
 import UploadCSV from '../components/importPage/UploadCSV';
-import {
-    Flex,
-    useDisclosure,
-    Spacer,
-    VStack,
-    Center,
-} from '@chakra-ui/react';
 import CsvPreviewTable from "../components/importPage/CsvPreviewTable";
 import NavButton from "../components/shared/NavButton";
 import PageHeader from "../components/shared/PageHeader";
@@ -18,6 +11,14 @@ import DropdownDynamic from "../components/shared/DropdownDynamic";
 import AddStudentModal from "../components/importPage/AddStudentModal";
 import EditStudentModal from "../components/importPage/EditStudentModal";
 import {ArrowBackIcon} from "@chakra-ui/icons";
+import csvHeaderMapping from "../helpers/csvHeaderMapping";
+import {
+    Flex,
+    useDisclosure,
+    Spacer,
+    VStack,
+    Center,
+} from '@chakra-ui/react';
 
 const ImportPage = () => {
     const [isFileChosen, setIsFileChosen] = useState(false);
@@ -25,14 +26,9 @@ const ImportPage = () => {
     const [isClearModalOpen, setIsClearModalOpen] = useState(false);
     const [currProfile, setCurrProfile] = useState(null);
     const [profileToDelete, setProfileToDelete] = useState(null);
-    const [dataType, setDataType] = useState("")
+    const [dataType, setDataType] = useState(null)
     const [profiles, setProfiles] = useState([]);
-    const [headers, setHeaders] = useState([[
-        ['studentId', 'Student ID'],
-        ['studentFirstName', 'First Name'],
-        ['studentLastName', 'Last Name']
-    ]])
-
+    const [headerMap, setHeaderMap] = useState(null)
 
     const {
         isOpen: isDeleteProfileOpen,
@@ -58,50 +54,6 @@ const ImportPage = () => {
         period
     } = useParams();
 
-    // Mapping for CSV headers to database headers
-
-
-
-
-    const headerMapping = {
-        SHORT_CODE: 'labId',
-        STUDENT_CODE: 'studentId',
-        LAST_NAME: 'studentLastName',
-        PREFERRED_NAME: 'studentFirstName',
-    };
-
-    // todo
-    if (dataType === 'students' || undefined) {
-        headers.push(
-            ['studentEmailAddress', 'Email Address'],
-            ['wamAverage', 'WAM'],
-            ['gender', 'Gender'],
-            ['labId', 'Lab ID'],
-            ['enrolmentStatus', 'Enrolment Status']
-        )
-        headerMapping['EMAIL_ADDRESS'] = 'studentEmailAddress'
-        headerMapping['WAM_VAL'] = 'wamAverage'
-        headerMapping['GENDER'] = 'gender'
-    } else if (dataType === 'effort') {
-        headers.push(['labId', 'Lab ID'],
-            ['enrolmentStatus', 'Enrolment Status'],
-            ['hours', 'Hours'],
-            ['averageMark', 'Average Mark'],
-            ['marksPerHour', 'Marks per Hour']
-        )
-        headerMapping['HOURS'] = 'hours'
-        headerMapping['AVERAGE_MARK'] = 'averageMark'
-
-    } else if (dataType === 'personality') {
-        headers.push(['labId', 'Lab ID'],
-            ['enrolmentStatus', 'Enrolment Status'],
-            ['belbinType', 'Belbin Type'])
-        headerMapping['EMAIL_ADDRESS'] = 'studentEmailAddress'
-        headerMapping['WAM_VAL'] = 'wamAverage'
-        headerMapping['GENDER'] = 'gender'
-        headerMapping['BELBIN_TYPE'] = 'belbinType'
-    }
-
     return (
         <VStack>
             <PageHeader
@@ -117,7 +69,7 @@ const ImportPage = () => {
             </Center>
 
             <Flex width="80%">
-                <UploadCSV
+                <UploadCSV // FIXME headers change
                     width="60%"
                     isFileChosen={isFileChosen}
                     setIsFileChosen={setIsFileChosen}
@@ -128,8 +80,7 @@ const ImportPage = () => {
                     csvHeaderType={dataType}
                     profiles={profiles}
                     setProfiles={setProfiles}
-                    headers={headers}
-                    headerMapping={headerMapping}
+                    headerMap={headerMap}
                 />
                 <Spacer/>
                 <Flex width="33%" flexDirection="column" justifyContent="flex-end">
@@ -139,7 +90,9 @@ const ImportPage = () => {
                         width="100%"
                         onChange={(event) => {
                             // console.log(dataType, event.target.value)
-                            setDataType(event.target.value)
+                            const selection = event.target.value;
+                            setDataType(selection)
+                            setHeaderMap(csvHeaderMapping[selection])
                         }}
                     />
                 </Flex>
@@ -150,8 +103,8 @@ const ImportPage = () => {
                 buttonText={"Add an entry"}
                 width="80%"
             />
-            <CsvPreviewTable
-                headers={headers}
+            <CsvPreviewTable // FIXME headers change
+                headers={headerMap}
                 profiles={profiles}
                 setProfileToDelete={setProfileToDelete}
                 onDeleteProfileOpen={onDeleteProfileOpen}
