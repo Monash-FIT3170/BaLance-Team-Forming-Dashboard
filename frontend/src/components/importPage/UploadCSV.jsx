@@ -90,6 +90,7 @@ const UploadCSV = ({
         const file = e.dataTransfer.files[0];
         if (file) {
             handleFile(file);
+            setIsFileChosen(true);
         }
     };
 
