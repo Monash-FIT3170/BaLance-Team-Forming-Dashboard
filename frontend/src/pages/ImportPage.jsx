@@ -8,15 +8,16 @@ import {
     useDisclosure,
     Spacer,
     VStack,
-    useToast,
+    Center,
 } from '@chakra-ui/react';
 import CsvPreviewTable from "../components/importPage/CsvPreviewTable";
-import BackToUnitButton from "../components/shared/BackToUnitButton";
+import NavButton from "../components/shared/NavButton";
 import PageHeader from "../components/shared/PageHeader";
 import AddButton from "../components/shared/AddButton";
 import DropdownDynamic from "../components/shared/DropdownDynamic";
 import AddStudentModal from "../components/importPage/AddStudentModal";
 import EditStudentModal from "../components/importPage/EditStudentModal";
+import {ArrowBackIcon} from "@chakra-ui/icons";
 
 const ImportPage = () => {
     const [isFileChosen, setIsFileChosen] = useState(false);
@@ -59,7 +60,13 @@ const ImportPage = () => {
                 fontSize={"2xl"}
                 pageDesc={`Import student data: ${unitCode} ${period} ${year}`}
             />
-            <BackToUnitButton/>
+            <Center>
+                <NavButton
+                    buttonIcon={<ArrowBackIcon />}
+                    buttonText="Return to offering dashboard"
+                    buttonUrl={`/students/${unitCode}/${year}/${period}`}
+                />
+            </Center>
 
             <Flex width="80%">
                 <UploadCSV

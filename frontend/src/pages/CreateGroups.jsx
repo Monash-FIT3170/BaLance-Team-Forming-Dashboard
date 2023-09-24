@@ -35,6 +35,7 @@ import { ArrowBackIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../mockAuth/mockAuth';
 import PageHeader from "../components/shared/PageHeader";
 import DropdownDynamic from "../components/shared/DropdownDynamic";
+import NavButton from "../components/shared/NavButton";
 
 function CreateGroups() {
     let authService = {
@@ -116,13 +117,11 @@ function CreateGroups() {
             />
 
             <Center>
-                <Button onClick={navigateToOfferingDashboardStudents}>
-                    <HStack>
-                        <ArrowBackIcon />
-                        <Spacer />
-                        <Text>Return to offering dashboard</Text>
-                    </HStack>
-                </Button>
+                <NavButton
+                    buttonIcon={<ArrowBackIcon />}
+                    buttonText="Return to offering dashboard"
+                    buttonUrl={`/students/${unitCode}/${year}/${period}`}
+                />
             </Center>
 
 

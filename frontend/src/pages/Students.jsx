@@ -25,6 +25,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShuffleGroups } from '../components/ShuffleGroups';
 import { AddIcon, EditIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../mockAuth/mockAuth';
+import NavButton from "../components/shared/NavButton";
 
 function Students() {
     let authService = {
@@ -156,68 +157,33 @@ function Students() {
                 <Center margin="10">{`${unitCode} - ${period}, ${year}`}</Center>
             </Heading>
 
-            <Button
-                me="12px"
-                align="right"
-                justify="right"
-                borderRadius="12px"
-                style={{ position: 'absolute', top: 125, right: 10 }}
-                onClick={navigateToUnitAnalytics}
-                colorScheme="green">
-                <HStack><p>View Unit Analytics</p></HStack>
-            </Button>
-
-            <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>
-                <VStack>
-                    <Button
-                        width="18vw"
-                        onClick={navigateToUploadStudentData}
-                        colorScheme="gray"
-                        margin-left="20">
-                        <HStack>
-                            <AddIcon />
-                            <Spacer />
-                            <Text>Import Student Data</Text>
-                        </HStack>
-                    </Button>
-                </VStack>
-
-
-                <Spacer />
-
-                <HStack m="40px">
-                    <Spacer />
-                    <ButtonGroup colorScheme="#282c34" variant="outline" size="lg" isAttached>
-                        <Link to={`/groups/${unitCode}/${year}/${period}`}>
-                            <Button isDisabled={students.length === 0}>  Groups  </Button>
-                        </Link>
-                        <Button isDisabled={true}>
-                            Students
-                        </Button>
-                    </ButtonGroup>
-                    <Spacer />
-                </HStack>
-
-                <Spacer />
-
-                <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>
-                    <VStack>
-                        <Button
-                            width="18vw"
-                            onClick={navigateToCreateGroups}
-                            colorScheme="gray"
-                            margin-left="20"
-                            isDisabled={students.length === 0}>
-                            <HStack>
-                                <EditIcon />
-                                <Spacer />
-                                <Text>Create/Reconfigure Groups</Text>
-                            </HStack>
-                        </Button>
-                    </VStack>
-                </HStack>
+            <HStack justifyContent={"center"}>
+                <NavButton
+                    buttonText="View unit analytics"
+                    buttonUrl={`/unitAnalytics/${unitCode}/${year}/${period}`}
+                />
+                <NavButton
+                    buttonText="Import student data"
+                    buttonUrl={`/uploadData/${unitCode}/${year}/${period}`}
+                    buttonIcon={<AddIcon />}
+                />
+                <NavButton
+                    buttonText="Create/reconfigure groups"
+                    buttonUrl={`/createGroups/${unitCode}/${year}/${period}`}
+                    buttonIcon={<EditIcon />}
+                />
             </HStack>
-            
+            <br/>
+            <HStack margin="0px 20vw 5vh 20vw" justifyContent={'center'}>
+                <ButtonGroup colorScheme="#282c34" variant="outline" size="lg" isAttached>
+                    <Link to={`/groups/${unitCode}/${year}/${period}`}>
+                        <Button isDisabled={students.length === 0}>  Groups  </Button>
+                    </Link>
+                    <Button isDisabled={true}>
+                        Students
+                    </Button>
+                </ButtonGroup>
+            </HStack>
             <Center>
                 {studentsDisplay}
             </Center>
