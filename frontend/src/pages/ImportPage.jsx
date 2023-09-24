@@ -71,7 +71,6 @@ const ImportPage = () => {
                     setIsConfirmationClearOpen={setIsClearModalOpen}
                     setIsFileChosen={setIsFileChosen}
                     csvHeaderType={dataType}
-                    handleDrop={handleDrop}
                 />
                 <Spacer/>
                 <Flex width="33%" flexDirection="column" justifyContent="flex-end">
