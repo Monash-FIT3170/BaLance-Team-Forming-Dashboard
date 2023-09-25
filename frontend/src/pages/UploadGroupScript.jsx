@@ -23,10 +23,10 @@ import {
 } from '@chakra-ui/react';
 import { ArrowForwardIcon, ArrowBackIcon } from '@chakra-ui/icons';
 import { useParams } from 'react-router-dom';
-import PyInfoButton from '../components/PyInfoButton'; // Import your PyInfoButton component
-import UploadPy from '../components/UploadPy'; // Import your UploadPy component
+import PyInfoButton from '../components/uploadScriptPage/PyInfoButton'; // Import your PyInfoButton component
+import UploadPy from '../components/uploadScriptPage/UploadPy'; // Import your UploadPy component
 import { useNavigate, useLocation } from 'react-router-dom'; // Import the useNavigate hook
-import { MockAuth } from '../mockAuth/mockAuth';
+import { MockAuth } from '../helpers/mockAuth';
 import { useAuth0 } from '@auth0/auth0-react';
 
 function UploadGroupScript() {

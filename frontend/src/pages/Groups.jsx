@@ -1,4 +1,4 @@
-import GroupCard from '../components/GroupCard';
+import GroupCard from '../components/groupsPage/GroupCard';
 import { useParams } from 'react-router';
 import { useAuth0 } from '@auth0/auth0-react';
 import React, { useState, useEffect } from 'react';
@@ -6,7 +6,6 @@ import {
     Button,
     ButtonGroup,
     HStack,
-    Spacer,
     Container,
     Heading,
     Center,
@@ -15,24 +14,16 @@ import {
     Text,
     Select,
     Box,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalCloseButton,
-    ModalBody,
-    ModalFooter,
-    useToast
+    useToast, Spacer,
 } from '@chakra-ui/react';
 
-import getToastSettings from '../components/ToastSettings';
+import getToastSettings from '../components/shared/ToastSettings';
 import { Link, useNavigate } from 'react-router-dom';
-import { AddIcon, EditIcon } from '@chakra-ui/icons';
-import { MockAuth } from '../mockAuth/mockAuth';
+import { AddIcon, EditIcon, ViewIcon, DownloadIcon } from '@chakra-ui/icons';
+import { MockAuth } from '../helpers/mockAuth';
+import NavButton from "../components/shared/NavButton";
 
 function Groups() {
-    const cancelRef = React.useRef();
-    const navigate = useNavigate();
     const [groups, setGroups] = useState([]);
     const [filteredClass, setFilteredClass] = useState(["All"]);
 
@@ -52,33 +43,10 @@ function Groups() {
 
     // Retrieve route parameters
     const {
-        groupStrategy,
-        groupSize,
-        variance,
         unitCode,
         year,
         period
     } = useParams();
-
-    const navigateToBelbinUpload = () => {
-        navigate(`/upload/personality/${unitCode}/${year}/${period}`);
-    };
-
-    const navigateToWorkEthicUpload = () => {
-        navigate(`/upload/personality/${unitCode}/${year}/${period}`);
-    };
-
-    const navigateToCreateGroups = () => {
-        navigate(`/createGroups/${unitCode}/${year}/${period}`);
-    }
-
-    const navigateToStudentUploadInfo = () => {
-        navigate(`/upload/students/${unitCode}/${year}/${period}`);
-    }
-
-    const navigateToUnitAnalytics = () => {
-        navigate(`/unitAnalytics/${unitCode}/${year}/${period}`);
-    }
 
     const toast = useToast();
     const getToast = (title, status) => {
@@ -131,7 +99,6 @@ function Groups() {
     }
 
     const handleExportToCSV = () => {
-
         /* creating the csv */
         const csvRows = [["Lab Number", "Group Number", "Student ID(s)"]];
         let newRow = [];
@@ -164,10 +131,6 @@ function Groups() {
         console.log("should have downloaded")
     };
 
-    const navigateToStudentUpload = () => {
-        navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
-    };
-
     useEffect(() => {
         fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`)
             .then((res) =>
@@ -185,107 +148,66 @@ function Groups() {
                 <Center margin="10">{`${unitCode} - ${period}, ${year}`}</Center>
             </Heading>
 
-            <Button
-                me="12px"
-                align="right"
-                justify="right"
-                borderRadius="12px"
-                style={{ position: 'absolute', top: 125, right: 10 }}
-                onClick={navigateToUnitAnalytics}
-                colorScheme="green">
-                <HStack><p>View Unit Analytics</p></HStack>
-            </Button>
-            <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>
-                <VStack>
-                    <Button
-                        width="18vw"
-                        onClick={navigateToStudentUploadInfo}
-                        colorScheme="gray"
-                        margin-left="20">
-                        <HStack>
-                            <AddIcon />
-                            <Spacer />
-                            <Text>Import Students Data</Text>
-                        </HStack>
-                    </Button>
-                    <Button
-                        width="100%"
-                        onClick={navigateToBelbinUpload}
-                        colorScheme="gray"
-                        margin-left="20">
-                        <HStack>
-                            <AddIcon />
-                            <Spacer />
-                            <Text>Import Personality Data</Text>
-                        </HStack>
-                    </Button>
-                    <Button
-                        width="100%"
-                        onClick={navigateToWorkEthicUpload}
-                        colorScheme="gray"
-                        margin-left="20">
-                        <HStack>
-                            <AddIcon />
-                            <Spacer />
-                            <Text>Import Work Ethic Data</Text>
-                        </HStack>
-                    </Button>
-                </VStack>
-
-
-                <Spacer />
-
-                <HStack m="40px">
-                    <Spacer />
-                    <ButtonGroup colorScheme="#282c34" variant="outline" size="lg" isAttached>
-                        <Button isDisabled={true}>  Groups  </Button>
-                        <Link to={`/students/${unitCode}/${year}/${period}`}>
-                            <Button>
-                                Students
-                            </Button>
-                        </Link>
-                    </ButtonGroup>
-                    <Spacer />
-                </HStack>
-
-                <Spacer />
-
-                <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>
-                    <VStack>
-                        <Button
-                            width="18vw"
-                            onClick={navigateToCreateGroups}
-                            colorScheme="gray"
-                            margin-left="20">
-                            <HStack>
-                                <EditIcon />
-                                <Spacer />
-                                <Text>Create/Reconfigure Groups</Text>
-                            </HStack>
-                        </Button>
-                        <Center><Text fontWeight={"semibold"}>Show Students from Class:</Text></Center>
-
-                        <Select
-                            value={filteredClass}
-                            onChange={(event) => setFilteredClass(event.target.value)}
-                        >
-                            {classFilterOptions?.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
-                        </Select>
-                    </VStack>
-                </HStack>
+            <HStack justifyContent={"center"}>
+                <NavButton
+                    buttonText="Import student data"
+                    buttonUrl={`/uploadData/${unitCode}/${year}/${period}`}
+                    buttonIcon={<AddIcon />}
+                />
+                <NavButton
+                    buttonText="Create/reconfigure groups"
+                    buttonUrl={`/createGroups/${unitCode}/${year}/${period}`}
+                    buttonIcon={<EditIcon />}
+                />
+                <NavButton
+                    buttonText="View unit analytics"
+                    buttonUrl={`/unitAnalytics/${unitCode}/${year}/${period}`}
+                    buttonIcon={<ViewIcon/>}
+                />
             </HStack>
+
+            <HStack m="40px" justifyContent={"center"}>
+                <ButtonGroup colorScheme="#282c34" variant="outline" size="lg" isAttached>
+                    <Button isDisabled={true}>Groups</Button>
+                    <Link to={`/students/${unitCode}/${year}/${period}`}>
+                        <Button>
+                            Students
+                        </Button>
+                    </Link>
+                </ButtonGroup>
+            </HStack>
+
+
+            <HStack margin="0px 20vw 5vh 20vw" justifyContent={'space-between'} alignItems={"center"}>
+                {groups.length > 0 && (
+                    <Button onClick={handleExportToCSV}>
+                        <HStack>
+                            <DownloadIcon/>
+                            <Spacer/>
+                            <p>Export group data to .csv</p>
+                        </HStack>
+                    </Button>
+                )}
+                <VStack>
+                    <Center><Text fontWeight={"semibold"}>Show Students from Class:</Text></Center>
+                    <Select
+                        value={filteredClass}
+                        onChange={(event) => setFilteredClass(event.target.value)}
+                    >
+                        {classFilterOptions?.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </Select>
+                </VStack>
+            </HStack>
+
             <Center>
                 <VStack>
-                    {groups.length > 0 && (<Button onClick={handleExportToCSV}>Export group data to .csv</Button>)}
                     {groupsDisplay}
                 </VStack>
-
             </Center>
-
         </div>
     );
 }

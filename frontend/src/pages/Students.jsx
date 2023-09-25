@@ -4,27 +4,22 @@ import { useParams } from 'react-router';
 import {
     Table,
     Thead,
-    Select,
     Tr,
     Th,
     Tbody,
     Button,
     ButtonGroup,
     HStack,
-    Spacer,
     Heading,
     Center,
     useDisclosure,
-    Text,
-    VStack,
-    Box,
-    Container,
+    Box
 } from '@chakra-ui/react';
-import StudentRowStudentDisplay from '../components/StudentRowStudentDisplay';
+import StudentRowStudentDisplay from '../components/studentsPage/StudentRowStudentDisplay';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShuffleGroups } from '../components/ShuffleGroups';
-import { AddIcon, EditIcon } from '@chakra-ui/icons';
-import { MockAuth } from '../mockAuth/mockAuth';
+import { AddIcon, EditIcon, ViewIcon } from '@chakra-ui/icons';
+import { MockAuth } from '../helpers/mockAuth';
+import NavButton from "../components/shared/NavButton";
 
 function Students() {
     let authService = {
@@ -52,17 +47,9 @@ function Students() {
         period
     } = useParams();
 
-    const navigateToStudentUpload = () => {
-        navigate(`/upload/students/${unitCode}/${year}/${period}`);
+    const navigateToUploadStudentData = () => {
+        navigate(`/uploadData/${unitCode}/${year}/${period}`);
     };
-
-    const navigateToWorkEthicUpload = () => {
-        navigate(`/upload/effort/${unitCode}/${year}/${period}`);
-    };
-
-    const navigateToBelbinUpload = () => {
-        navigate(`/upload/personality/${unitCode}/${year}/${period}`);
-    }
 
     const navigateToCreateGroups = () => {
         navigate(`/createGroups/${unitCode}/${year}/${period}`);
@@ -163,92 +150,35 @@ function Students() {
             <Heading alignContent={'center'}>
                 <Center margin="10">{`${unitCode} - ${period}, ${year}`}</Center>
             </Heading>
-            <Button
-                me="12px"
-                align="right"
-                justify="right"
-                borderRadius="12px"
-                style={{ position: 'absolute', top: 125, right: 10 }}
-                onClick={navigateToUnitAnalytics}
-                colorScheme="green">
-                <HStack><p>View Unit Analytics</p></HStack>
-            </Button>
 
-            <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>
-                <VStack>
-                    <Button
-                        width="18vw"
-                        onClick={navigateToStudentUpload}
-                        colorScheme="gray"
-                        margin-left="20">
-                        <HStack>
-                            <AddIcon />
-                            <Spacer />
-                            <Text>Import Students Data</Text>
-                        </HStack>
-                    </Button>
-                    <Button
-                        width="100%"
-                        onClick={navigateToBelbinUpload}
-                        colorScheme="gray"
-                        margin-left="20"
-                        isDisabled={students.length === 0}>
-                        <HStack>
-                            <AddIcon />
-                            <Spacer />
-                            <Text>Import Personality Data</Text>
-                        </HStack>
-                    </Button>
-                    <Button
-                        width="100%"
-                        onClick={navigateToWorkEthicUpload}
-                        colorScheme="gray"
-                        margin-left="20"
-                        isDisabled={students.length === 0}>
-                        <HStack>
-                            <AddIcon />
-                            <Spacer />
-                            <Text>Import Work Ethic Data</Text>
-                        </HStack>
-                    </Button>
-                </VStack>
-
-
-                <Spacer />
-
-                <HStack m="40px">
-                    <Spacer />
-                    <ButtonGroup colorScheme="#282c34" variant="outline" size="lg" isAttached>
-                        <Link to={`/groups/${unitCode}/${year}/${period}`}>
-                            <Button isDisabled={students.length === 0}>  Groups  </Button>
-                        </Link>
-                        <Button isDisabled={true}>
-                            Students
-                        </Button>
-                    </ButtonGroup>
-                    <Spacer />
-                </HStack>
-
-                <Spacer />
-
-                <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>
-                    <VStack>
-                        <Button
-                            width="18vw"
-                            onClick={navigateToCreateGroups}
-                            colorScheme="gray"
-                            margin-left="20"
-                            isDisabled={students.length === 0}>
-                            <HStack>
-                                <EditIcon />
-                                <Spacer />
-                                <Text>Create/Reconfigure Groups</Text>
-                            </HStack>
-                        </Button>
-                    </VStack>
-                </HStack>
+            <HStack justifyContent={"center"}>
+                <NavButton
+                    buttonText="Import student data"
+                    buttonUrl={`/uploadData/${unitCode}/${year}/${period}`}
+                    buttonIcon={<AddIcon />}
+                />
+                <NavButton
+                    buttonText="Create/reconfigure groups"
+                    buttonUrl={`/createGroups/${unitCode}/${year}/${period}`}
+                    buttonIcon={<EditIcon />}
+                />
+                <NavButton
+                    buttonText="View unit analytics"
+                    buttonUrl={`/unitAnalytics/${unitCode}/${year}/${period}`}
+                    buttonIcon={<ViewIcon/>}
+                />
             </HStack>
-            
+            <br/>
+            <HStack margin="0px 20vw 5vh 20vw" justifyContent={'center'}>
+                <ButtonGroup colorScheme="#282c34" variant="outline" size="lg" isAttached>
+                    <Link to={`/groups/${unitCode}/${year}/${period}`}>
+                        <Button isDisabled={students.length === 0}>  Groups  </Button>
+                    </Link>
+                    <Button isDisabled={true}>
+                        Students
+                    </Button>
+                </ButtonGroup>
+            </HStack>
             <Center>
                 {studentsDisplay}
             </Center>

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
-import UnitCard from '../components/UnitCard';
-import '../pages/UnitHomePage.css';
-import getToastSettings from '../components/ToastSettings';
-import { MockAuth } from '../mockAuth/mockAuth';
+import UnitCard from '../components/unitHomePage/UnitCard';
+import '../App.css';
+import getToastSettings from '../components/shared/ToastSettings';
+import { MockAuth } from '../helpers/mockAuth';
 
 // Chakra imports
 import {
@@ -99,7 +99,7 @@ function UnitPage() {
                 window.location.reload();
             }
             else {
-                navigate(`/uploadStudents/${unitCode}/${unitYearOffering}/${unitSemesterOffering}`);
+                navigate(`/uploadData/${unitCode}/${unitYearOffering}/${unitSemesterOffering}`);
             }
         }, 1500)
 

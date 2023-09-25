@@ -1,10 +1,10 @@
 import { Tr, Td, HStack, useDisclosure, useToast } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { useParams } from 'react-router';
-import ChangeStudentGroupModal from './ChangeStudentGroupModal';
-import getToastSettings from './ToastSettings';
+import ChangeGroupModal from './ChangeGroupModal';
+import getToastSettings from '../shared/ToastSettings';
 import { useAuth0 } from '@auth0/auth0-react';
-import { MockAuth } from '../mockAuth/mockAuth';
+import { MockAuth } from '../../helpers/mockAuth';
 
 function StudentRowGroupDisplay({ studentData, numberOfGroups }) {
     /* HTML component for each student in each group in the 'View Groups' View */
@@ -66,7 +66,7 @@ function StudentRowGroupDisplay({ studentData, numberOfGroups }) {
         <Tr>
             <Td>
                 <HStack>
-                    <ChangeStudentGroupModal
+                    <ChangeGroupModal
                         studentData={studentData}
                         numberOfGroups={numberOfGroups}
                     />
