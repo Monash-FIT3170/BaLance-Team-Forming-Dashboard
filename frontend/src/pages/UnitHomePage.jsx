@@ -99,7 +99,7 @@ function UnitPage() {
                 window.location.reload();
             }
             else {
-                navigate(`/uploadStudents/${unitCode}/${unitYearOffering}/${unitSemesterOffering}`);
+                navigate(`/uploadData/${unitCode}/${unitYearOffering}/${unitSemesterOffering}`);
             }
         }, 1500)
 
