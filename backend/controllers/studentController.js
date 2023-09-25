@@ -64,7 +64,7 @@ const addAllStudents = async (req, res) => {
     await insertStudents(studentInsertData)
 
     /* CREATE UNIT ENROLMENT BETWEEN STUDENTS AND UNIT */
-    const studentEmails = requestBody.map((student) => student.studentEmailAddress);
+    const studentEmails = requestBody.map((student) => student.email);
     const studentKeys = await selectStudentsKeys(studentEmails);
     const unitOffId = await selectUnitOffKey(unitCode, year, period);
     await insertStudentEnrolment(studentKeys, unitOffId);
