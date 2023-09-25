@@ -168,15 +168,13 @@ function Groups() {
             </HStack>
             <br/>
 
-            <HStack margin="0px 20vw 5vh 20vw" justifyContent={'space-between'} alignItems={"center"}>
+            <HStack margin="0px 20vw 5vh 20vw" justifyContent={'space-between'} alignItems={"center"} maxW="80vw">
                 {groups.length > 0 && (
-                    <Button onClick={handleExportToCSV}>
-                        <HStack>
-                            <DownloadIcon/>
-                            <Spacer/>
-                            <p>Export group data to .csv</p>
-                        </HStack>
-                    </Button>
+                    <NavButton
+                        buttonText="Export group data to .csv"
+                        buttonIcon={<DownloadIcon/>}
+                        onClick={handleExportToCSV}
+                    />
                 )}
 
                 <ToggleButtonGroup
