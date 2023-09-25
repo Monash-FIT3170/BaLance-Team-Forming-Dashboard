@@ -20,6 +20,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AddIcon, EditIcon, ViewIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../helpers/mockAuth';
 import NavButton from "../components/shared/NavButton";
+import ToggleButtonGroup from "../components/shared/ToggleButtonGroup";
 
 function Students() {
     let authService = {
@@ -170,14 +171,15 @@ function Students() {
             </HStack>
             <br/>
             <HStack margin="0px 20vw 5vh 20vw" justifyContent={'center'}>
-                <ButtonGroup colorScheme="#282c34" variant="outline" size="lg" isAttached>
-                    <Link to={`/groups/${unitCode}/${year}/${period}`}>
-                        <Button isDisabled={students.length === 0}>  Groups  </Button>
-                    </Link>
-                    <Button isDisabled={true}>
-                        Students
-                    </Button>
-                </ButtonGroup>
+                <ToggleButtonGroup
+                    leftButtonIsDisabled={false}
+                    leftButtonUrl={`/groups/${unitCode}/${year}/${period}`}
+                    leftButtonText="Groups"
+                    rightButtonIsDisabled={true}
+                    rightButtonUrl={`/students/${unitCode}/${year}/${period}`}
+                    rightButtonText="Students"
+                />
+
             </HStack>
             <Center>
                 {studentsDisplay}

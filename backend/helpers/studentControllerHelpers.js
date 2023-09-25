@@ -114,7 +114,7 @@ const insertStudentLabAllocations = async (requestBody, unitOffId) => {
         *   03: [students in this lab] ...
         * }
         * */
-        requestBody.forEach((student, index) => { // FIXME studentLabNumberAllocation
+        requestBody.forEach((student, index) => {
             // get the lab number this student is in
             let labId = student.labCode;
             let split = labId.split("_");

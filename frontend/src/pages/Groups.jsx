@@ -22,6 +22,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AddIcon, EditIcon, ViewIcon, DownloadIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../helpers/mockAuth';
 import NavButton from "../components/shared/NavButton";
+import ToggleButtonGroup from "../components/shared/ToggleButtonGroup";
 
 function Groups() {
     const [groups, setGroups] = useState([]);
@@ -165,18 +166,7 @@ function Groups() {
                     buttonIcon={<ViewIcon/>}
                 />
             </HStack>
-
-            <HStack m="40px" justifyContent={"center"}>
-                <ButtonGroup colorScheme="#282c34" variant="outline" size="lg" isAttached>
-                    <Button isDisabled={true}>Groups</Button>
-                    <Link to={`/students/${unitCode}/${year}/${period}`}>
-                        <Button>
-                            Students
-                        </Button>
-                    </Link>
-                </ButtonGroup>
-            </HStack>
-
+            <br/>
 
             <HStack margin="0px 20vw 5vh 20vw" justifyContent={'space-between'} alignItems={"center"}>
                 {groups.length > 0 && (
@@ -188,6 +178,16 @@ function Groups() {
                         </HStack>
                     </Button>
                 )}
+
+                <ToggleButtonGroup
+                    leftButtonIsDisabled={true}
+                    leftButtonUrl={`/groups/${unitCode}/${year}/${period}`}
+                    leftButtonText="Groups"
+                    rightButtonIsDisabled={false}
+                    rightButtonUrl={`/students/${unitCode}/${year}/${period}`}
+                    rightButtonText="Students"
+                />
+
                 <VStack>
                     <Center><Text fontWeight={"semibold"}>Show Students from Class:</Text></Center>
                     <Select
