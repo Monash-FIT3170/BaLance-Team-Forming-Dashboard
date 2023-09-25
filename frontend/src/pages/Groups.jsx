@@ -23,6 +23,7 @@ import { AddIcon, EditIcon, ViewIcon, DownloadIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../helpers/mockAuth';
 import NavButton from "../components/shared/NavButton";
 import ToggleButtonGroup from "../components/shared/ToggleButtonGroup";
+import PageHeader from "../components/shared/PageHeader";
 
 function Groups() {
     const [groups, setGroups] = useState([]);
@@ -145,9 +146,10 @@ function Groups() {
 
     return (
         <div>
-            <Heading alignContent={'center'}>
-                <Center margin="10">{`${unitCode} - ${period}, ${year}`}</Center>
-            </Heading>
+            <PageHeader
+                fontSize={"4xl"}
+                pageDesc={`${unitCode} ${period} ${year}`}
+            />
 
             <HStack justifyContent={"center"}>
                 <NavButton
