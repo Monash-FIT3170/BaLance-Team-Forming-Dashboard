@@ -2,12 +2,16 @@ import GroupCard from '../components/groupsPage/GroupCard';
 import { useParams } from 'react-router';
 import { useAuth0 } from '@auth0/auth0-react';
 import React, { useState, useEffect } from 'react';
+import getToastSettings from '../components/shared/ToastSettings';
+import { AddIcon, EditIcon, ViewIcon, DownloadIcon } from '@chakra-ui/icons';
+import { MockAuth } from '../helpers/mockAuth';
+import NavButton from "../components/shared/NavButton";
+import ToggleButtonGroup from "../components/shared/ToggleButtonGroup";
+import PageHeader from "../components/shared/PageHeader";
 import {
-    Button,
-    ButtonGroup,
     HStack,
     Container,
-    Heading,
+    Flex,
     Center,
     useDisclosure,
     VStack,
@@ -16,12 +20,6 @@ import {
     Box,
     useToast, Spacer,
 } from '@chakra-ui/react';
-
-import getToastSettings from '../components/shared/ToastSettings';
-import { Link, useNavigate } from 'react-router-dom';
-import { AddIcon, EditIcon, ViewIcon, DownloadIcon } from '@chakra-ui/icons';
-import { MockAuth } from '../helpers/mockAuth';
-import NavButton from "../components/shared/NavButton";
 
 function Groups() {
     const [groups, setGroups] = useState([]);
@@ -33,13 +31,6 @@ function Groups() {
     }
 
     const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
-
-    // Confirmation popup for shuffling groups
-    const {
-        isOpen,
-        onOpen,
-        onClose
-    } = useDisclosure();
 
     // Retrieve route parameters
     const {
@@ -116,8 +107,8 @@ function Groups() {
 
         /* downloading the csv file */
         try {
-            var encodedUri = encodeURI(csvContent);
-            var link = document.createElement("a");
+            let encodedUri = encodeURI(csvContent);
+            let link = document.createElement("a");
             link.setAttribute("href", encodedUri);
             const file_name = `${unitCode}_${year}_${period}_groups.csv`;
             link.setAttribute("download", file_name);
@@ -127,8 +118,6 @@ function Groups() {
         } catch (error) {
             console.log(error);
         }
-
-        console.log("should have downloaded")
     };
 
     useEffect(() => {
@@ -144,9 +133,10 @@ function Groups() {
 
     return (
         <div>
-            <Heading alignContent={'center'}>
-                <Center margin="10">{`${unitCode} - ${period}, ${year}`}</Center>
-            </Heading>
+            <PageHeader
+                fontSize={"4xl"}
+                pageDesc={`${unitCode} ${period} ${year}`}
+            />
 
             <HStack justifyContent={"center"}>
                 <NavButton
@@ -165,29 +155,25 @@ function Groups() {
                     buttonIcon={<ViewIcon/>}
                 />
             </HStack>
-
-            <HStack m="40px" justifyContent={"center"}>
-                <ButtonGroup colorScheme="#282c34" variant="outline" size="lg" isAttached>
-                    <Button isDisabled={true}>Groups</Button>
-                    <Link to={`/students/${unitCode}/${year}/${period}`}>
-                        <Button>
-                            Students
-                        </Button>
-                    </Link>
-                </ButtonGroup>
-            </HStack>
-
-
-            <HStack margin="0px 20vw 5vh 20vw" justifyContent={'space-between'} alignItems={"center"}>
+            <br/>
+            <Flex justifyContent={'space-between'} alignItems={"center"} maxWidth="78vw" mx="auto">
                 {groups.length > 0 && (
-                    <Button onClick={handleExportToCSV}>
-                        <HStack>
-                            <DownloadIcon/>
-                            <Spacer/>
-                            <p>Export group data to .csv</p>
-                        </HStack>
-                    </Button>
+                    <NavButton
+                        buttonText="Export group data to .csv"
+                        buttonIcon={<DownloadIcon/>}
+                        onClick={handleExportToCSV}
+                    />
                 )}
+                <Spacer/>
+                <ToggleButtonGroup
+                    leftButtonIsDisabled={true}
+                    leftButtonUrl={`/groups/${unitCode}/${year}/${period}`}
+                    leftButtonText="Groups"
+                    rightButtonIsDisabled={false}
+                    rightButtonUrl={`/students/${unitCode}/${year}/${period}`}
+                    rightButtonText="Students"
+                />
+                <Spacer/>
                 <VStack>
                     <Center><Text fontWeight={"semibold"}>Show Students from Class:</Text></Center>
                     <Select
@@ -200,14 +186,12 @@ function Groups() {
                             </option>
                         ))}
                     </Select>
+                    <br/>
                 </VStack>
-            </HStack>
-
-            <Center>
-                <VStack>
-                    {groupsDisplay}
-                </VStack>
-            </Center>
+            </Flex>
+            <VStack>
+                {groupsDisplay}
+            </VStack>
         </div>
     );
 }

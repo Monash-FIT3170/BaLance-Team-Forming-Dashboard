@@ -145,6 +145,22 @@ const UploadCSV = ({
         }
     };
 
+    const generateInfoDesc = () => {
+        if(!headerMap){ return null }
+        const headers = Object.keys(headerMap)
+        let requiredHeaders = headers[0]
+        for(let i=1; i<headers.length; i++) {
+            requiredHeaders = `${requiredHeaders}, ${headers[i]}`
+        }
+
+        const desc = `Upload a CSV file containing ${csvHeaderType} data with the following required headers: ${requiredHeaders}`
+        return (
+            <text>
+                {desc}
+            </text>
+        )
+    }
+
     return (
         (isFileChosen===true) ? (
             <ButtonGroup>
@@ -158,8 +174,8 @@ const UploadCSV = ({
         ) : (
             <VStack width={width}>
                 <CsvInfoButton
-                    infoButtonHeader={".csv file format"}
-                    infoButtonText={"include the following headers: TODO"}
+                    infoHeader={".csv file format"}
+                    infoText={generateInfoDesc()}
                 />
                 <HStack>
                     <FiUploadCloud />

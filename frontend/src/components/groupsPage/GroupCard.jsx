@@ -34,7 +34,7 @@ const GroupCard = ({groupData, numberOfGroups}) => {
   };
 
   return (
-    <Card border="1px" margin="20px">
+    <Card border="1px" marginTop="20px" marginBottom="20px">
       <CardHeader>
         <Heading>
           Lab: {lab_number}, Group: {group_number}

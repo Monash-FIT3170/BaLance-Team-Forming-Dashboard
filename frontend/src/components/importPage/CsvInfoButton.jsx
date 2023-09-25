@@ -24,7 +24,7 @@ export const CsvInfoButton = ({infoHeader, infoText}) => {
                     icon={<QuestionOutlineIcon />}
                 />
             </PopoverTrigger>
-            <PopoverContent>
+            <PopoverContent width="30vw">
                 <PopoverArrow />
                 <PopoverCloseButton />
                 <PopoverHeader>{infoHeader}</PopoverHeader>
