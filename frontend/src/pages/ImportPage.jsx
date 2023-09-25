@@ -84,6 +84,7 @@ const ImportPage = () => {
                 <Spacer/>
                 <Flex width="33%" flexDirection="column" justifyContent="flex-end">
                     <DropdownDynamic
+                        dropDownDesc={'Select the type of data to upload'}
                         placeholder={'select data type'}
                         options={['students', 'belbin', 'effort']}
                         width="100%"
