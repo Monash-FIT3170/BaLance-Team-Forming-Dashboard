@@ -3,6 +3,9 @@
  * group data within a unit.
  *
  */
+
+const db_connection = require("../config/databaseConfig");
+
 const {
     promiseBasedQuery
 } = require("../helpers/commonHelpers");
@@ -179,44 +182,6 @@ const shuffleUnitGroups = async (req, res) => {
         year,
         period
     } = req.params;
-
-    /* DELETE ALL GROUP ALLOCATIONS */
-    await promiseBasedQuery(
-        'DELETE FROM group_allocation ' +
-        'WHERE group_alloc_id IN (' +
-        '  SELECT subquery.group_alloc_id ' +
-        '  FROM (' +
-        '    SELECT ga.group_alloc_id ' +
-        '    FROM lab_group g ' +
-        '    INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id ' +
-        '    INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id ' +
-        '    INNER JOIN group_allocation ga ON ga.lab_group_id = g.lab_group_id ' +
-        '    WHERE u.unit_code = ? ' +
-        '      AND u.unit_off_year = ? ' +
-        '      AND u.unit_off_period = ? ' +
-        '  ) AS subquery' +
-        ');',
-        [unitCode, year, period]
-    );
-
-    /* DELETE ALL GROUPS THEMSELVES */
-    await promiseBasedQuery(
-        'DELETE FROM lab_group ' +
-        'WHERE lab_group_id IN ( ' +
-        '  SELECT subquery.lab_group_id ' +
-        '  FROM ( ' +
-        '    SELECT g.lab_group_id ' +
-        '    FROM lab_group g ' +
-        '    INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id ' +
-        '    INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id ' +
-        '    WHERE ' +
-        '      u.unit_code = ? ' +
-        '      AND u.unit_off_year = ? ' +
-        '      AND u.unit_off_period = ? ' +
-        '  ) AS subquery' +
-        ');',
-        [unitCode, year, period]
-    );
 
     /* RE-CREATE THE UNIT GROUPS */
     await createUnitGroups(req, res);
