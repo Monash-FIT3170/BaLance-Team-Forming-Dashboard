@@ -41,25 +41,10 @@ function Students() {
     } = useDisclosure();
 
     const {
-        groupStrategy,
-        groupSize,
-        variance,
         unitCode,
         year,
         period
     } = useParams();
-
-    const navigateToUploadStudentData = () => {
-        navigate(`/uploadData/${unitCode}/${year}/${period}`);
-    };
-
-    const navigateToCreateGroups = () => {
-        navigate(`/createGroups/${unitCode}/${year}/${period}`);
-    }
-
-    const navigateToUnitAnalytics = () => {
-        navigate(`/unitAnalytics/${unitCode}/${year}/${period}`);
-    }
 
     useEffect(() => {
         getAccessTokenSilently().then((token) => {
@@ -90,62 +75,37 @@ function Students() {
                     setNumberOfGroups(res.length);
                 })
                 .catch((err) => console.error(err));
-
         })
     }, []);
 
-    const handleShuffleGroups = () => {
-        // Close confirmation dialog
-        onClose();
+    let studentsDisplay = (students.length === 0) ? (
+            <Box bg='#E6EBF0' w='60vw' p={4} alignContent="center">
+                <Center>
+                    No students have yet been added to the offering. Click "Add Students" to add students to the offering.
+                </Center>
+            </Box>
+        ) : (
+            <Table variant="striped" width="60vw" size="sm" marginBottom="3vh">
+                <Thead>
+                    <Tr>
+                        <Th>ID</Th>
+                        <Th>Preferred Name</Th>
+                        <Th>Last Name</Th>
+                        <Th>Email Address</Th>
+                    </Tr>
+                </Thead>
 
-        getAccessTokenSilently().then((token) => {
-            // API call to create groups from scratch - will automatically delete existing groups first
-            fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
-                method: 'POST',
-                headers: new Headers({
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }),
-                body: JSON.stringify({
-                    groupSize: groupSize,
-                    variance: variance,
-                    strategy: groupStrategy,
-                })
-            })
-                .catch((error) => { console.error('Error:', error); })
-                .finally(() => { window.location.reload(); });
-        });
-    }
-
-    let studentsDisplay = students.length === 0 ?
-        <Box bg='#E6EBF0' w='60vw' p={4} alignContent="center">
-            <Center>
-                No students have yet been added to the offering. Click "Add Students" to add students to the offering.
-            </Center>
-        </Box>
-        :
-        <Table variant="striped" width="60vw" size="sm" marginBottom="3vh">
-            <Thead>
-                <Tr>
-                    <Th>ID</Th>
-                    <Th>Preferred Name</Th>
-                    <Th>Last Name</Th>
-                    <Th>Email Address</Th>
-                </Tr>
-            </Thead>
-
-            <Tbody>
-                {students.map((student) => (
-                    <StudentRowStudentDisplay
-                        studentData={student}
-                        numberOfGroups={numberOfGroups}
-                        key={student.student_id}
-                    />
-                ))}
-            </Tbody>
-        </Table>
-        ;
+                <Tbody>
+                    {students.map((student) => (
+                        <StudentRowStudentDisplay
+                            studentData={student}
+                            numberOfGroups={numberOfGroups}
+                            key={student.student_id}
+                        />
+                    ))}
+                </Tbody>
+            </Table>
+        );
 
     return (
         <div>
@@ -153,7 +113,6 @@ function Students() {
                 fontSize={"4xl"}
                 pageDesc={`${unitCode} ${period} ${year}`}
             />
-
             <HStack justifyContent={"center"}>
                 <NavButton
                     buttonText="Import student data"
@@ -171,7 +130,7 @@ function Students() {
                     buttonIcon={<ViewIcon/>}
                 />
             </HStack>
-            <br/>
+            <br/><br/>
             <HStack margin="0px 20vw 5vh 20vw" justifyContent={'center'}>
                 <ToggleButtonGroup
                     leftButtonIsDisabled={false}
@@ -181,7 +140,6 @@ function Students() {
                     rightButtonUrl={`/students/${unitCode}/${year}/${period}`}
                     rightButtonText="Students"
                 />
-
             </HStack>
             <Center>
                 {studentsDisplay}
