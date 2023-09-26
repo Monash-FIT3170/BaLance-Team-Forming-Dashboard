@@ -24,9 +24,11 @@ import {
     useToast,
 } from '@chakra-ui/react';
 import { BsTrash } from 'react-icons/bs';
-import getToastSettings from './ToastSettings'
+import getToastSettings from '../shared/ToastSettings'
 import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { MockAuth } from '../../helpers/mockAuth';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const UnitCard = (unit) => {
 
@@ -36,6 +38,12 @@ const UnitCard = (unit) => {
     let secondaryText = useColorModeValue('gray.600', 'gray.600');
     let iconBox = useColorModeValue('#F1EFEF');
     let iconColor = useColorModeValue('brand.200', 'white');
+    let authService = {
+        "DEV": MockAuth,
+        "TEST": useAuth0
+    }
+
+    const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
     const toast = useToast();
     const getToast = (title, status) => {
@@ -65,23 +73,19 @@ const UnitCard = (unit) => {
 
     // handle delete unit and posting it to the backend
     const handleDeleteUnit = (event) => {
-        //event.preventDefault();
-        console.log("deleting unit")
-
-        fetch(`http://localhost:8080/api/units/${unit_code}/${unit_off_year}/${unit_off_period}`, {
-            method: 'DELETE',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        });
-        
-        getToast('Unit deleted successfully', 'success');
-        
-        setTimeout(() => {
-            onCloseDetails();
-            window.location.reload();
-        }, 1500);
+        getAccessTokenSilently().then((token) => {
+            fetch(`http://localhost:8080/api/units/${unit_code}/${unit_off_year}/${unit_off_period}`, {
+                method: 'DELETE',
+                headers: new Headers({
+                    'Authorization': `Bearer ${token}`
+                })
+            });
+            getToast('Unit deleted successfully', 'success');
+            setTimeout(() => {
+                onCloseDetails();
+                window.location.reload();
+            }, 1500);
+        })
     }
 
   return (

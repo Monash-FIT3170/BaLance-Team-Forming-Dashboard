@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
-import UnitCard from '../components/UnitCard';
-import '../pages/UnitHomePage.css';
-import getToastSettings from '../components/ToastSettings';
-import { MockAuth } from '../mockAuth/mockAuth';
-
-// Chakra imports
+import { MockAuth } from '../helpers/mockAuth';
 import {
     HStack,
     Flex,
@@ -27,18 +22,29 @@ import {
     Select,
     Container,
     Spacer,
-    Radio, RadioGroup, Stack, Text, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, Grid, useToast
+    Radio,
+    RadioGroup,
+    Stack,
+    Text,
+    NumberInput,
+    NumberInputField,
+    NumberInputStepper,
+    NumberIncrementStepper,
+    NumberDecrementStepper,
+    useToast
 } from '@chakra-ui/react';
-
 import { AddIcon } from '@chakra-ui/icons';
 import { Center, Heading } from '@chakra-ui/react';
+import UnitCard from '../components/unitHomePage/UnitCard';
+import '../App.css';
+import getToastSettings from '../components/shared/ToastSettings';
 
 function UnitPage() {
-
     let authService = {
         "DEV": MockAuth,
         "TEST": useAuth0
     }
+    const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
     const toast = useToast();
     const getToast = (title, status) => {
@@ -46,13 +52,9 @@ function UnitPage() {
         toast(getToastSettings(title, status))
     }
 
-    const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
-
-
     let iconColor = useColorModeValue('brand.200', 'white');
     const { isOpen: isOpenAdd, onOpen: onOpenAdd, onClose: onCloseAdd } = useDisclosure();
 
-    // useState hooks for this page
     const [units, setUnits] = useState([]);
     const [unitCode, setUnitCode] = useState('');
     const [unitName, setUnitName] = useState('');
@@ -62,12 +64,6 @@ function UnitPage() {
 
     const navigate = useNavigate();
 
-    //   const handleYearUpdate = (newYearValue) => {
-
-    //     setUnitYearOffering(newYearValue);
-    //   }
-
-    // handle submit unit and posting it to the backend
     const handleSubmitUnit = (event) => {
         event.preventDefault();
         console.log("adding unit")
@@ -99,12 +95,9 @@ function UnitPage() {
                 window.location.reload();
             }
             else {
-                navigate(`/uploadStudents/${unitCode}/${unitYearOffering}/${unitSemesterOffering}`);
+                navigate(`/uploadData/${unitCode}/${unitYearOffering}/${unitSemesterOffering}`);
             }
         }, 1500)
-
-
-
     }
 
     // fetch unit data from the backend
@@ -123,7 +116,8 @@ function UnitPage() {
                 })
                 .catch((err) => {
                     console.error('Error fetching units:', err)
-                })
+                }
+            )
         })
     }, []);
 
@@ -131,11 +125,7 @@ function UnitPage() {
         <div>
             <Center margin="40px">
                 <Heading>Unit Home Page</Heading>
-
-                {/* new unit button */}
-
                 <Button
-
                     align="right"
                     justify="right"
                     borderRadius="12px"
@@ -143,16 +133,16 @@ function UnitPage() {
                     me="12px"
                     onClick={onOpenAdd}
                 >
-                    <HStack><p>Add Offering</p><Spacer /><Icon
-                        margin-left="10%"
-                        as={AddIcon}
-                        color={iconColor}
-
-                    /></HStack>
-
+                    <HStack>
+                        <p>Add Offering</p>
+                        <Spacer />
+                        <Icon
+                            margin-left="10%"
+                            as={AddIcon}
+                            color={iconColor}
+                        />
+                    </HStack>
                 </Button>
-
-                {/* pop up when adding a new unit */}
 
                 <Modal closeOnOverlayClick={false} isOpen={isOpenAdd} onClose={onCloseAdd}>
                     <ModalOverlay />
@@ -165,9 +155,6 @@ function UnitPage() {
                                 <br></br>
                                 <FormControl isRequired>
                                     <FormLabel>Unit Code </FormLabel>
-
-                                    {/* setting the unit details which uses the setter from the use state functions */}
-
                                     <Input
                                         mb="5"
                                         value={unitCode}
@@ -191,7 +178,6 @@ function UnitPage() {
                                                 <NumberDecrementStepper />
                                             </NumberInputStepper>
                                         </NumberInput>
-
                                         <Select
                                             placeholder="Semester"
                                             value={unitSemesterOffering}
@@ -214,7 +200,6 @@ function UnitPage() {
                                             </Stack>
                                         </RadioGroup>
                                     </Center>
-
                                 </FormControl>
                             </form>
                         </ModalBody>

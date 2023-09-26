@@ -53,16 +53,18 @@ const addAllStudents = async (req, res) => {
     } = req.params
     const requestBody = req.body
 
+    console.log(requestBody)
+
     /* INSERT STUDENTS INTO DATABASE */
     // get the attributes we need and their values in prep for SQL queries
     //   e.g. {id: 5, name: 'jim'} becomes [5, 'jim'] to comply with mysql2 API
     const studentInsertData = requestBody.map(
-        ({ labId, enrolmentStatus, discPersonality, ...rest }) => {return Object.values(rest);}
+        ({ labCode, ...rest }) => {return Object.values(rest);}
     );
     await insertStudents(studentInsertData)
 
     /* CREATE UNIT ENROLMENT BETWEEN STUDENTS AND UNIT */
-    const studentEmails = requestBody.map((student) => student.studentEmailAddress);
+    const studentEmails = requestBody.map((student) => student.email);
     const studentKeys = await selectStudentsKeys(studentEmails);
     const unitOffId = await selectUnitOffKey(unitCode, year, period);
     await insertStudentEnrolment(studentKeys, unitOffId);
@@ -337,11 +339,6 @@ const addPersonalityData = async (req, res) => {
         [unitOffKey, testType, studentIds]
     )
 
-    console.log("TEST TYPE | TEST KEYS | STUDENTS")
-    console.log(testType)
-    console.log(personalityTestAttemptKeys)
-    console.log(students)
-    console.log("INSERT DATA")
     addTestResultFunctionStrats[testType](personalityTestAttemptKeys, students)
     res.status(200).send();
 }
@@ -354,8 +351,6 @@ const addStudentBelbin = async (personalityTestAttemptKeys, students) => {
         const [student] = students.filter((student) => {return student.studentId === attempt.student_id})
         resultInsertData.push([attempt.test_attempt_id, student.belbinType])
     })
-
-    console.log(resultInsertData);
 
     try {
         await promiseBasedQuery(
@@ -374,7 +369,12 @@ const addStudentEffort = async (personalityTestAttemptKeys, students) => {
     personalityTestAttemptKeys.forEach((attempt) => {
         // find the student who made this attempt
         const [student] = students.filter((student) => {return student.studentId === attempt.student_id})
-        resultInsertData.push([attempt.test_attempt_id, student.averageMark, student.hours, student.marksPerHour])
+        resultInsertData.push([
+            attempt.test_attempt_id,
+            student.avgAssignmentMark,
+            student.hourCommitment,
+            student.avgAssignmentMark/student.hourCommitment
+        ])
     })
 
     console.log(resultInsertData);

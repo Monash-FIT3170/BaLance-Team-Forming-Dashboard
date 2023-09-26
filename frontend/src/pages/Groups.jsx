@@ -1,38 +1,26 @@
-import GroupCard from '../components/GroupCard';
+import GroupCard from '../components/groupsPage/GroupCard';
 import { useParams } from 'react-router';
 import { useAuth0 } from '@auth0/auth0-react';
 import React, { useState, useEffect } from 'react';
+import getToastSettings from '../components/shared/ToastSettings';
+import { AddIcon, EditIcon, ViewIcon, DownloadIcon } from '@chakra-ui/icons';
+import { MockAuth } from '../helpers/mockAuth';
+import NavButton from "../components/shared/NavButton";
+import ToggleButtonGroup from "../components/shared/ToggleButtonGroup";
+import PageHeader from "../components/shared/PageHeader";
 import {
-    Button,
-    ButtonGroup,
     HStack,
-    Spacer,
     Container,
-    Heading,
+    Flex,
     Center,
-    useDisclosure,
     VStack,
     Text,
     Select,
     Box,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalCloseButton,
-    ModalBody,
-    ModalFooter,
-    useToast
+    useToast, Spacer,
 } from '@chakra-ui/react';
 
-import getToastSettings from '../components/ToastSettings';
-import { Link, useNavigate } from 'react-router-dom';
-import { AddIcon, EditIcon } from '@chakra-ui/icons';
-import { MockAuth } from '../mockAuth/mockAuth';
-
 function Groups() {
-    const cancelRef = React.useRef();
-    const navigate = useNavigate();
     const [groups, setGroups] = useState([]);
     const [filteredClass, setFilteredClass] = useState(["All"]);
 
@@ -43,42 +31,11 @@ function Groups() {
 
     const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
-    // Confirmation popup for shuffling groups
     const {
-        isOpen,
-        onOpen,
-        onClose
-    } = useDisclosure();
-
-    // Retrieve route parameters
-    const {
-        groupStrategy,
-        groupSize,
-        variance,
         unitCode,
         year,
         period
     } = useParams();
-
-    const navigateToBelbinUpload = () => {
-        navigate(`/upload/personality/${unitCode}/${year}/${period}`);
-    };
-
-    const navigateToWorkEthicUpload = () => {
-        navigate(`/upload/personality/${unitCode}/${year}/${period}`);
-    };
-
-    const navigateToCreateGroups = () => {
-        navigate(`/createGroups/${unitCode}/${year}/${period}`);
-    }
-
-    const navigateToStudentUploadInfo = () => {
-        navigate(`/upload/students/${unitCode}/${year}/${period}`);
-    }
-
-    const navigateToUnitAnalytics = () => {
-        navigate(`/unitAnalytics/${unitCode}/${year}/${period}`);
-    }
 
     const toast = useToast();
     const getToast = (title, status) => {
@@ -131,7 +88,6 @@ function Groups() {
     }
 
     const handleExportToCSV = () => {
-
         /* creating the csv */
         const csvRows = [["Lab Number", "Group Number", "Student ID(s)"]];
         let newRow = [];
@@ -149,8 +105,8 @@ function Groups() {
 
         /* downloading the csv file */
         try {
-            var encodedUri = encodeURI(csvContent);
-            var link = document.createElement("a");
+            let encodedUri = encodeURI(csvContent);
+            let link = document.createElement("a");
             link.setAttribute("href", encodedUri);
             const file_name = `${unitCode}_${year}_${period}_groups.csv`;
             link.setAttribute("download", file_name);
@@ -159,133 +115,75 @@ function Groups() {
             getToast("Your group data is being downloaded...", "info")
         } catch (error) {
             console.log(error);
+            getToast("Failed to download group data", "error")
         }
-
-        console.log("should have downloaded")
     };
 
-    const navigateToStudentUpload = () => {
-        navigate(`/uploadStudents/${unitCode}/${year}/${period}`);
-    };
 
-    useEffect(() => {
-        fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`)
-            .then((res) =>
-                res.json().then(function (res) {
-                    console.log(res)
-                    setGroups(res);
-                })
-            )
-            .catch((err) => console.error(err));
-    }, []);
 
     return (
         <div>
-            <Heading alignContent={'center'}>
-                <Center margin="10">{`${unitCode} - ${period}, ${year}`}</Center>
-            </Heading>
+            <PageHeader
+                fontSize={"4xl"}
+                pageDesc={`${unitCode} ${period} ${year}`}
+            />
 
-            <Button
-                me="12px"
-                align="right"
-                justify="right"
-                borderRadius="12px"
-                style={{ position: 'absolute', top: 125, right: 10 }}
-                onClick={navigateToUnitAnalytics}
-                colorScheme="green">
-                <HStack><p>View Unit Analytics</p></HStack>
-            </Button>
-            <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>
-                <VStack>
-                    <Button
-                        width="18vw"
-                        onClick={navigateToStudentUploadInfo}
-                        colorScheme="gray"
-                        margin-left="20">
-                        <HStack>
-                            <AddIcon />
-                            <Spacer />
-                            <Text>Import Students Data</Text>
-                        </HStack>
-                    </Button>
-                    <Button
-                        width="100%"
-                        onClick={navigateToBelbinUpload}
-                        colorScheme="gray"
-                        margin-left="20">
-                        <HStack>
-                            <AddIcon />
-                            <Spacer />
-                            <Text>Import Personality Data</Text>
-                        </HStack>
-                    </Button>
-                    <Button
-                        width="100%"
-                        onClick={navigateToWorkEthicUpload}
-                        colorScheme="gray"
-                        margin-left="20">
-                        <HStack>
-                            <AddIcon />
-                            <Spacer />
-                            <Text>Import Work Ethic Data</Text>
-                        </HStack>
-                    </Button>
-                </VStack>
-
-
-                <Spacer />
-
-                <HStack m="40px">
-                    <Spacer />
-                    <ButtonGroup colorScheme="#282c34" variant="outline" size="lg" isAttached>
-                        <Button isDisabled={true}>  Groups  </Button>
-                        <Link to={`/students/${unitCode}/${year}/${period}`}>
-                            <Button>
-                                Students
-                            </Button>
-                        </Link>
-                    </ButtonGroup>
-                    <Spacer />
-                </HStack>
-
-                <Spacer />
-
-                <HStack margin="0px 20vw 5vh 20vw" alignContent={'center'}>
-                    <VStack>
-                        <Button
-                            width="18vw"
-                            onClick={navigateToCreateGroups}
-                            colorScheme="gray"
-                            margin-left="20">
-                            <HStack>
-                                <EditIcon />
-                                <Spacer />
-                                <Text>Create/Reconfigure Groups</Text>
-                            </HStack>
-                        </Button>
-                        <Center><Text fontWeight={"semibold"}>Show Students from Class:</Text></Center>
-
-                        <Select
-                            value={filteredClass}
-                            onChange={(event) => setFilteredClass(event.target.value)}
-                        >
-                            {classFilterOptions?.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
-                        </Select>
-                    </VStack>
-                </HStack>
+            <HStack justifyContent={"center"}>
+                <NavButton
+                    buttonText="Import student data"
+                    buttonUrl={`/uploadData/${unitCode}/${year}/${period}`}
+                    buttonIcon={<AddIcon />}
+                />
+                <NavButton
+                    buttonText="Create/reconfigure groups"
+                    buttonUrl={`/createGroups/${unitCode}/${year}/${period}`}
+                    buttonIcon={<EditIcon />}
+                />
+                <NavButton
+                    buttonText="View unit analytics"
+                    buttonUrl={`/unitAnalytics/${unitCode}/${year}/${period}`}
+                    buttonIcon={<ViewIcon/>}
+                />
             </HStack>
-            <Center>
+            <br/>
+
+            <Flex justifyContent={'space-between'} alignItems={"center"} maxWidth="78vw" mx="auto">
+                {groups.length > 0 ? (
+                    <NavButton
+                        buttonText="Export group data to .csv"
+                        buttonIcon={<DownloadIcon/>}
+                        onClick={handleExportToCSV}
+                    />
+                ) : <Spacer/>}
+                <Spacer/>
+                <ToggleButtonGroup
+                    leftButtonIsDisabled={true}
+                    leftButtonUrl={`/groups/${unitCode}/${year}/${period}`}
+                    leftButtonText="Groups"
+                    rightButtonIsDisabled={false}
+                    rightButtonUrl={`/students/${unitCode}/${year}/${period}`}
+                    rightButtonText="Students"
+                />
+                <Spacer/>
                 <VStack>
-                    {groups.length > 0 && (<Button onClick={handleExportToCSV}>Export group data to .csv</Button>)}
-                    {groupsDisplay}
+                    <Center><Text fontWeight={"semibold"}>Show Students from Class:</Text></Center>
+                    <Select
+                        value={filteredClass}
+                        onChange={(event) => setFilteredClass(event.target.value)}
+                    >
+                        {classFilterOptions?.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </Select>
+                    <br/>
                 </VStack>
+            </Flex>
 
-            </Center>
-
+            <VStack>
+                {groupsDisplay}
+            </VStack>
         </div>
     );
 }
