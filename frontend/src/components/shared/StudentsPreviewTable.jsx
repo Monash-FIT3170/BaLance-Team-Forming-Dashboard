@@ -58,13 +58,11 @@ const StudentsPreviewTable = ({students, numberOfGroups, page, rowHeights}) => {
             });
         });
 
-        getToast(toastMsg, 'success');
+        getToast(toastMsg, 'success'); // fixme incorporate into .then chain in fetch
         setTimeout(() => {
             window.location.reload();
         }, 1500)
     }
-
-    console.log(students)
 
     return(
         (students.length === 0) ? (
@@ -91,6 +89,7 @@ const StudentsPreviewTable = ({students, numberOfGroups, page, rowHeights}) => {
                             <Td>{student.wam_val}</Td>
                             <Td>
                                 <EditIcon
+                                    style={{ cursor: 'pointer' }}
                                 />
                             </Td>
                             <Td>
