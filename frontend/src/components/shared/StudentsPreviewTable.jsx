@@ -1,12 +1,12 @@
 import {Box, Center, Table, Tbody, Td, Th, Thead, Tr, useDisclosure, useToast} from "@chakra-ui/react";
 import React from "react";
-import {DeleteIcon} from "@chakra-ui/icons";
+import {DeleteIcon, EditIcon} from "@chakra-ui/icons";
 import {useParams} from "react-router";
 import {MockAuth} from "../../helpers/mockAuth";
 import {useAuth0} from "@auth0/auth0-react";
 import getToastSettings from "./ToastSettings";
 
-const StudentsPreviewTable = ({students, numberOfGroups}) => {
+const StudentsPreviewTable = ({students, numberOfGroups, page, rowHeights}) => {
     let authService = {
         "DEV": MockAuth,
         "TEST": useAuth0
@@ -26,18 +26,29 @@ const StudentsPreviewTable = ({students, numberOfGroups}) => {
     const {
         unitCode,
         year,
-        period
+        period,
     } = useParams();
 
-    const deleteStudentEnrolment = (student) => {
+    const deleteStudent = (student) => {
         const {
             student_id,
             preferred_name,
             last_name
         } = student
 
+        let apiEndpoint;
+        let toastMsg;
+
+        if (page === 'students') {
+            apiEndpoint = `api/students/enrolment/${unitCode}/${year}/${period}/${student_id}`
+            toastMsg = `Successfully removed ${preferred_name} ${last_name} from the offering`
+        } else if (page === 'groups') {
+            apiEndpoint = `api/students/groupAlloc/${unitCode}/${year}/${period}/${student_id}`
+            toastMsg = `Successfully removed ${preferred_name} ${last_name} from the group`
+        }
+
         getAccessTokenSilently().then((token) => {
-            fetch(`http://localhost:8080/api/students/enrolment/${unitCode}/${year}/${period}/${student_id}`, {
+            fetch(`http://localhost:8080/${apiEndpoint}`, {
                 method: 'DELETE',
                 headers: new Headers({
                     'Authorization': `Bearer ${token}`,
@@ -47,7 +58,7 @@ const StudentsPreviewTable = ({students, numberOfGroups}) => {
             });
         });
 
-        getToast(`Successfully removed ${preferred_name} ${last_name} from the offering`, 'success');
+        getToast(toastMsg, 'success');
         setTimeout(() => {
             window.location.reload();
         }, 1500)
@@ -66,23 +77,28 @@ const StudentsPreviewTable = ({students, numberOfGroups}) => {
             <Table variant="striped" width="60vw" size="sm" marginBottom="3vh">
                 <Thead>
                     <Tr>
-                        <Th>Student ID</Th><Th>Preferred Name</Th><Th>Last Name</Th><Th>Email Address</Th>
+                        <Th>Student ID</Th><Th>Preferred Name</Th><Th>Last Name</Th><Th>Email Address</Th><Th>WAM</Th>
                     </Tr>
                 </Thead>
 
                 <Tbody>
                     {students.map((student) => (
-                        <Tr>
+                        <Tr h={rowHeights}>
                             <Td>{student.student_id}</Td>
                             <Td>{student.preferred_name}</Td>
                             <Td>{student.last_name}</Td>
                             <Td>{student.email_address}</Td>
+                            <Td>{student.wam_val}</Td>
+                            <Td>
+                                <EditIcon
+                                />
+                            </Td>
                             <Td>
                                 <DeleteIcon
                                     style={{ cursor: 'pointer' }}
                                     onClick={(event) => {
                                         event.preventDefault()
-                                        deleteStudentEnrolment(student)
+                                        deleteStudent(student)
                                     }}
                                 />
                             </Td>
