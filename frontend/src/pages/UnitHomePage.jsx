@@ -31,7 +31,8 @@ import {
     NumberInputStepper,
     NumberIncrementStepper,
     NumberDecrementStepper,
-    useToast
+    useToast,
+    Grid
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 import { Center, Heading } from '@chakra-ui/react';
