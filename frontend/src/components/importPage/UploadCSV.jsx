@@ -57,15 +57,17 @@ const UploadCSV = ({
     const handleAddProfilesClick = async () => {
         getAccessTokenSilently().then((token) => {
             // Make API call
+            const apiCall = csvHeaderType === 'students' ? csvHeaderType : 'students/personality'
+            const body = csvHeaderType === 'students' ? profiles : {students: profiles, testType:csvHeaderType}
             //data parameter is the type of data, eg students,effort,personality
-            fetch(`http://localhost:8080/api/${csvHeaderType}/${unitCode}/${year}/${period}`, {
+            fetch(`http://localhost:8080/api/${apiCall}/${unitCode}/${year}/${period}`, {
                 method: 'POST',
                 headers: new Headers({
                     'Authorization': `Bearer ${token}`,
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 }),
-                body: JSON.stringify(profiles),
+                body: JSON.stringify(body)
             })
                 .then((response) => {
                     if (!response.ok) {
@@ -126,7 +128,6 @@ const UploadCSV = ({
                 return obj;
             })
 
-            console.log(headerMap)
             setCsvFile(file);
             setProfiles(csvDataAsObjects);
         };

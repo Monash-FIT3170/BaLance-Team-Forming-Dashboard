@@ -62,7 +62,6 @@ const CsvPreviewTable = ({
     }
 
     const renderBody = () => {
-        console.log(profiles)
         return (
             <Tbody>
                 {profiles.map((profile) => (
