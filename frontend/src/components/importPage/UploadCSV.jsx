@@ -76,6 +76,9 @@ const UploadCSV = ({
                     }
                     else {
                         getToast("Your file has been imported successfully!", "success")
+                        setCsvFile(null); // Reset the file selection
+                        setProfiles([]); // Clear the table data
+                        setIsFileChosen(false); // Reset the file chosen state
                     }
                 })
                 .catch((error) => {
