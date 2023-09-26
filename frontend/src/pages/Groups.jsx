@@ -13,7 +13,6 @@ import {
     Container,
     Flex,
     Center,
-    useDisclosure,
     VStack,
     Text,
     Select,
@@ -32,7 +31,6 @@ function Groups() {
 
     const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
-    // Retrieve route parameters
     const {
         unitCode,
         year,
@@ -117,19 +115,11 @@ function Groups() {
             getToast("Your group data is being downloaded...", "info")
         } catch (error) {
             console.log(error);
+            getToast("Failed to download group data", "error")
         }
     };
 
-    useEffect(() => {
-        fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`)
-            .then((res) =>
-                res.json().then(function (res) {
-                    console.log(res)
-                    setGroups(res);
-                })
-            )
-            .catch((err) => console.error(err));
-    }, []);
+
 
     return (
         <div>
@@ -156,6 +146,7 @@ function Groups() {
                 />
             </HStack>
             <br/>
+
             <Flex justifyContent={'space-between'} alignItems={"center"} maxWidth="78vw" mx="auto">
                 {groups.length > 0 ? (
                     <NavButton
@@ -189,6 +180,7 @@ function Groups() {
                     <br/>
                 </VStack>
             </Flex>
+
             <VStack>
                 {groupsDisplay}
             </VStack>
