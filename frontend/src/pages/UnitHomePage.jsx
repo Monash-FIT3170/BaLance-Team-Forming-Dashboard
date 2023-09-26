@@ -31,7 +31,8 @@ import {
     NumberInputStepper,
     NumberIncrementStepper,
     NumberDecrementStepper,
-    useToast
+    useToast,
+    Grid
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 import { Center, Heading } from '@chakra-ui/react';
@@ -214,7 +215,10 @@ function UnitPage() {
                     </ModalContent>
                 </Modal>
             </Center>
-            <Container className="units" maxW="92vw">
+
+            {/* display the units from the data fetched from the backend */}
+            <Grid templateColumns="repeat(3, 1fr)" gap={4} className="units">
+
                 {units &&
                     units.map((unit) => (
                         <UnitCard
@@ -223,7 +227,7 @@ function UnitPage() {
                             className="unit"
                         />
                     ))}
-            </Container>
+            </Grid>
         </div>
     );
 }
