@@ -1,27 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useParams } from 'react-router';
-import {
-    Table,
-    Thead,
-    Tr,
-    Th,
-    Tbody,
-    Button,
-    ButtonGroup,
-    HStack,
-    Heading,
-    Center,
-    useDisclosure,
-    Box
-} from '@chakra-ui/react';
-import StudentRowStudentDisplay from '../components/studentsPage/StudentRowStudentDisplay';
-import { Link, useNavigate } from 'react-router-dom';
+import { HStack, Center, useDisclosure } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 import { AddIcon, EditIcon, ViewIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../helpers/mockAuth';
 import NavButton from "../components/shared/NavButton";
 import ToggleButtonGroup from "../components/shared/ToggleButtonGroup";
 import PageHeader from "../components/shared/PageHeader";
+import StudentsPreviewTable from "../components/shared/StudentsPreviewTable";
 
 function Students() {
     let authService = {
@@ -78,35 +65,6 @@ function Students() {
         })
     }, []);
 
-    let studentsDisplay = (students.length === 0) ? (
-            <Box bg='#E6EBF0' w='60vw' p={4} alignContent="center">
-                <Center>
-                    No students have yet been added to the offering. Click "Add Students" to add students to the offering.
-                </Center>
-            </Box>
-        ) : (
-            <Table variant="striped" width="60vw" size="sm" marginBottom="3vh">
-                <Thead>
-                    <Tr>
-                        <Th>ID</Th>
-                        <Th>Preferred Name</Th>
-                        <Th>Last Name</Th>
-                        <Th>Email Address</Th>
-                    </Tr>
-                </Thead>
-
-                <Tbody>
-                    {students.map((student) => (
-                        <StudentRowStudentDisplay
-                            studentData={student}
-                            numberOfGroups={numberOfGroups}
-                            key={student.student_id}
-                        />
-                    ))}
-                </Tbody>
-            </Table>
-        );
-
     return (
         <div>
             <PageHeader
@@ -142,7 +100,9 @@ function Students() {
                 />
             </HStack>
             <Center>
-                {studentsDisplay}
+                <StudentsPreviewTable
+                    students={students}
+                />
             </Center>
         </div>
     );
