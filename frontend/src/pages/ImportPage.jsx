@@ -134,6 +134,7 @@ const ImportPage = () => {
                 profiles={profiles}
                 setProfiles={setProfiles}
             />
+            <br/>
         </VStack>
     );
 }

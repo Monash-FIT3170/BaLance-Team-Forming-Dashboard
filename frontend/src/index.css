@@ -6,6 +6,21 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* For Webkit (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 10px; /* You can adjust the width to make it thinner or thicker */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Set the track background color */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #a5a5a5; /* Set the handle background color */
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
