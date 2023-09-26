@@ -157,13 +157,13 @@ function Groups() {
             </HStack>
             <br/>
             <Flex justifyContent={'space-between'} alignItems={"center"} maxWidth="78vw" mx="auto">
-                {groups.length > 0 && (
+                {groups.length > 0 ? (
                     <NavButton
                         buttonText="Export group data to .csv"
                         buttonIcon={<DownloadIcon/>}
                         onClick={handleExportToCSV}
                     />
-                )}
+                ) : <Spacer/>}
                 <Spacer/>
                 <ToggleButtonGroup
                     leftButtonIsDisabled={true}

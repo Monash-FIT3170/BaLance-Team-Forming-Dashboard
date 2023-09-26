@@ -34,7 +34,7 @@ function App() {
   return (
     <ChakraProvider theme={theme}>
       <BrowserRouter>
-        <NavBar 
+        <NavBar
           authenticated={isAuthenticated}
         />
         <Box pt="12vh" />

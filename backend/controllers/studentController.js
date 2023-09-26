@@ -339,11 +339,6 @@ const addPersonalityData = async (req, res) => {
         [unitOffKey, testType, studentIds]
     )
 
-    console.log("TEST TYPE | TEST KEYS | STUDENTS")
-    console.log(testType)
-    console.log(personalityTestAttemptKeys)
-    console.log(students)
-    console.log("INSERT DATA")
     addTestResultFunctionStrats[testType](personalityTestAttemptKeys, students)
     res.status(200).send();
 }
@@ -356,8 +351,6 @@ const addStudentBelbin = async (personalityTestAttemptKeys, students) => {
         const [student] = students.filter((student) => {return student.studentId === attempt.student_id})
         resultInsertData.push([attempt.test_attempt_id, student.belbinType])
     })
-
-    console.log(resultInsertData);
 
     try {
         await promiseBasedQuery(
@@ -376,7 +369,12 @@ const addStudentEffort = async (personalityTestAttemptKeys, students) => {
     personalityTestAttemptKeys.forEach((attempt) => {
         // find the student who made this attempt
         const [student] = students.filter((student) => {return student.studentId === attempt.student_id})
-        resultInsertData.push([attempt.test_attempt_id, student.averageMark, student.hours, student.marksPerHour])
+        resultInsertData.push([
+            attempt.test_attempt_id,
+            student.avgAssignmentMark,
+            student.hourCommitment,
+            student.avgAssignmentMark/student.hourCommitment
+        ])
     })
 
     console.log(resultInsertData);
