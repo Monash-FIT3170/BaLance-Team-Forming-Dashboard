@@ -1,7 +1,6 @@
 import { Spacer, HStack, VStack, Box } from '@chakra-ui/react';
 import { ViewIcon } from "@chakra-ui/icons";
 import { useParams } from 'react-router';
-import { useNavigate } from 'react-router-dom';
 import StudentsPreviewTable from "../shared/StudentsPreviewTable";
 import NavButton from "../shared/NavButton";
 import PageHeader from "../shared/PageHeader";
