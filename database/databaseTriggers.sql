@@ -7,6 +7,8 @@ DROP TRIGGER IF EXISTS enrolment_insert_trigger;
 DROP TRIGGER IF EXISTS enrolment_delete_trigger;
 
 -- UNIT_OFFERING ENROLMENT COUNT
+
+/*
 DELIMITER $$
 CREATE 
 	TRIGGER enrolment_insert_trigger 
@@ -28,6 +30,7 @@ CREATE
 		WHERE unit_off_id = OLD.unit_off_id;
 	END; $$
 DELIMITER ;
+*/
 
 -- UNIT_OFF_LAB ALLOCATION COUNT
 
