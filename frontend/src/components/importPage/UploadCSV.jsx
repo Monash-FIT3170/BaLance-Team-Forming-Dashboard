@@ -59,41 +59,43 @@ const UploadCSV = ({
     setIsConfirmationClearOpen(true);
   };
 
-    //create unit for new students
-    const handleAddProfilesClick = async () => {
-        getAccessTokenSilently().then((token) => {
-            // Make API call
-            const apiCall = csvHeaderType === 'students' ? csvHeaderType : 'students/personality'
-            const body = csvHeaderType === 'students' ? profiles : {students: profiles, testType:csvHeaderType}
-            //data parameter is the type of data, eg students,effort,personality
-            fetch(`http://localhost:8080/api/${apiCall}/${unitCode}/${year}/${period}`, {
-                method: 'POST',
-                headers: new Headers({
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }),
-                body: JSON.stringify(body)
-            })
-                .then((response) => {
-                    if (!response.ok) {
-                        getToast("There was an error importing your file!", "error")
-                        throw new Error('Error sending data to the REST API');
-                    }
-                    else {
-                        getToast("Your file has been imported successfully!", "success")
-                        setCsvFile(null); // Reset the file selection
-                        setProfiles([]); // Clear the table data
-                        setIsFileChosen(false); // Reset the file chosen state
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error sending data to the REST API:', error);
-                    // Handle the error from the API if needed
-                });
-
+  //create unit for new students
+  const handleAddProfilesClick = async () => {
+    getAccessTokenSilently().then((token) => {
+      // Make API call
+      const apiCall =
+        csvHeaderType === 'students' ? csvHeaderType : 'students/personality';
+      const body =
+        csvHeaderType === 'students'
+          ? profiles
+          : { students: profiles, testType: csvHeaderType };
+      //data parameter is the type of data, eg students,effort,personality
+      fetch(`http://localhost:8080/api/${apiCall}/${unitCode}/${year}/${period}`, {
+        method: 'POST',
+        headers: new Headers({
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        }),
+        body: JSON.stringify(body),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            getToast('There was an error importing your file!', 'error');
+            throw new Error('Error sending data to the REST API');
+          } else {
+            getToast('Your file has been imported successfully!', 'success');
+            setCsvFile(null); // Reset the file selection
+            setProfiles([]); // Clear the table data
+            setIsFileChosen(false); // Reset the file chosen state
+          }
+        })
+        .catch((error) => {
+          console.error('Error sending data to the REST API:', error);
+          // Handle the error from the API if needed
         });
-    };
+    });
+  };
 
   const handleFile = (file) => {
     /**
@@ -137,10 +139,10 @@ const UploadCSV = ({
         return obj;
       });
 
-            setCsvFile(file);
-            setProfiles(csvDataAsObjects);
-        };
+      setCsvFile(file);
+      setProfiles(csvDataAsObjects);
     };
+  };
 
   const handleFileUpload = (e) => {
     /**
@@ -165,74 +167,92 @@ const UploadCSV = ({
       requiredHeaders = `${requiredHeaders}, ${headers[i]}`;
     }
 
-        const desc = `Upload a CSV file containing ${csvHeaderType} data with the following required headers: ${requiredHeaders}`
-        return (
-            <text>
-                {desc}
-            </text>
-        )
-    }
+    const desc = `Upload a CSV file containing ${csvHeaderType} data with the following required headers: ${requiredHeaders}`;
+    return <text>{desc}</text>;
+  };
 
-    return (
-        (isFileChosen===true) ? (
-            <ButtonGroup>
-                <Button mb={2} colorScheme="red" onClick={handleClearSelection}>
-                    Clear
-                </Button>
-                <Button onClick={handleAddProfilesClick}>
-                    Save data
-                </Button>
-            </ButtonGroup>
-        ) : (
-            <VStack width={width}>
-                <CsvInfoButton
-                    infoHeader={".csv file format"}
-                    infoText={generateInfoDesc()}
-                />
-                <HStack>
-                    <FiUploadCloud />
-                    <Text>
-                        Submit a .csv file below in accordance with the data type selected in the dropdown
-                    </Text>
-                </HStack>
-                <Box
-                    bg={'white'}
-                    borderRadius="md"
-                    width="100%"
-                    // height="300px"
-                    margin="0 3vw 5vw 3vw"
-                    fontWeight="bold"
-                    display="flex"
-                    flexDirection="column"
-                    justifyContent="center" // Center the content horizontally
-                    alignItems="center" // Center the content vertically
-                    border="2px dashed #24265D"
-                    color="#F0EDE7"
-                    transition="color 0.3s ease"
-                    _hover={{ bg: '#E2E8F0', cursor: 'pointer' }}
-                    cursor="pointer"
-                    onDrop={(e) => {
-                        handleDrop(e);
-                    }}
-                    onDragOver={(e) => e.preventDefault()}
-                >
-                    <Input
-                        textColor="white"
-                        type="file"
-                        onChange={(e) => {
-                            handleFileUpload(e);
-                            setIsFileChosen(true);
-                        }}
-                        opacity={0}
-                        left={0}
-                        top={0}
-                        cursor="pointer"
-                        focusBorderColor='black'
-                    />
-                </Box>
-            </VStack>
-        )
-    );
-}
+  return isFileChosen === true ? (
+    <ButtonGroup>
+      <Button mb={2} colorScheme="red" onClick={handleClearSelection}>
+        Clear
+      </Button>
+      <Button onClick={handleAddProfilesClick}>Save data</Button>
+    </ButtonGroup>
+  ) : (
+    <VStack width={width}>
+      <CsvInfoButton infoHeader={'.csv file format'} infoText={generateInfoDesc()} />
+      <HStack>
+        <FiUploadCloud />
+        <Text>
+          Submit a .csv file below in accordance with the data type selected in the
+          dropdown
+        </Text>
+      </HStack>
+      <Box
+        bg={isFileChosen ? '#00ADB5' : 'white'}
+        borderRadius="md"
+        width="100%"
+        // height="300px"
+        margin="0 3vw 5vw 3vw"
+        fontWeight="bold"
+        display="flex"
+        flexDirection="column"
+        justifyContent="center" // Center the content horizontally
+        alignItems="center" // Center the content vertically
+        border="2px dashed #24265D"
+        color="black"
+        onDrop={(e) => {
+          handleDrop(e);
+        }}
+        onDragOver={(e) => e.preventDefault()}
+      >
+        <Box display="inline-flex" alignItems="center">
+          <Text as="span">Drop file here or</Text>
+          <Box
+            as="span"
+            position="relative"
+            display="inline-block"
+            transition="color 0.3s ease"
+            _hover={{ bg: '#E2E8F0', cursor: 'pointer' }}
+            cursor="pointer"
+            padding="10px"
+          >
+            <Input
+              type="file"
+              onChange={(e) => {
+                handleFileUpload(e);
+                setIsFileChosen(true);
+              }}
+              opacity={0}
+              position="absolute"
+              width="100%"
+              height="100%"
+              top="0"
+              left="0"
+              cursor="pointer"
+              zIndex="2"
+            />
+            <Link
+              color="blue.500"
+              zIndex="1"
+              display="inline-block"
+              padding="10"
+              px={2}
+              py={1}
+              borderRadius="md"
+              borderWidth="1px"
+              borderColor="blue.500"
+              cursor="pointer"
+            >
+              select
+            </Link>
+          </Box>
+
+          <Text as="span">from a folder</Text>
+        </Box>
+      </Box>
+    </VStack>
+  );
+};
 
 export default UploadCSV;
