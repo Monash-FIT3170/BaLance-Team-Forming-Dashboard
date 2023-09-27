@@ -183,7 +183,9 @@ const UploadCSV = ({
                 />
                 <HStack>
                     <FiUploadCloud />
-                    <Text>Submit a .csv file below to add student data to the offering</Text>
+                    <Text>
+                        Submit a .csv file below in accordance with the data type selected in the dropdown
+                    </Text>
                 </HStack>
                 <Box
                     bg={'white'}
