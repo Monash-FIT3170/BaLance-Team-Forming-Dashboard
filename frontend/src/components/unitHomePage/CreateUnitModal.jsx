@@ -22,6 +22,9 @@ import {useNavigate} from "react-router-dom";
 import getToastSettings from "../shared/ToastSettings";
 import {MockAuth} from "../../helpers/mockAuth";
 import {useAuth0} from "@auth0/auth0-react";
+import DropdownDynamic from "../shared/DropdownDynamic";
+import NumberField from "../shared/NumberField";
+import ModalFooterButtonPair from "../shared/ModalFooterButtonPair";
 
 
 const CreateUnitModal = ({
@@ -50,7 +53,6 @@ const CreateUnitModal = ({
 
     const handleSubmitUnit = (event) => {
         event.preventDefault();
-        console.log("adding unit")
         const unitObject = {
             unitCode: unitCode,
             unitName: unitName,
@@ -72,15 +74,7 @@ const CreateUnitModal = ({
 
         onCloseAdd();
         getToast('Unit created successfully', 'success');
-
-        setTimeout(() => {
-            if (addDataOption === "Add Later") {
-                window.location.reload();
-            }
-            else {
-                navigate(`/uploadData/${unitCode}/${unitYearOffering}/${unitSemesterOffering}`);
-            }
-        }, 1500)
+        // fixme cause the nav modal to open here by setting state
     }
 
     return (
@@ -94,63 +88,49 @@ const CreateUnitModal = ({
                     <form id="create-unit" onSubmit={handleSubmitUnit}>
                         <br></br>
                         <FormControl isRequired>
-                            <FormLabel>Unit Code </FormLabel>
+                            <FormLabel>Unit code </FormLabel>
                             <Input
                                 mb="5"
                                 value={unitCode}
+                                required
                                 onChange={(event) => {
                                     setUnitCode(event.target.value);
                                 }}
                             />
-                            <FormLabel>Unit Name</FormLabel>
+
+                            <FormLabel>Unit name</FormLabel>
                             <Input
                                 mb="5"
                                 value={unitName}
+                                required
                                 onChange={(event) => setUnitName(event.target.value)}
                             />
-                            <FormLabel>Offering</FormLabel>
 
-                            <Flex direction="row" spacing={4}>
-                                <NumberInput allowMouseWheel size='md' defaultValue={unitYearOffering} min={new Date().getFullYear()} onChange={(event) => setUnitYearOffering(event)}>
-                                    <NumberInputField />
-                                    <NumberInputStepper>
-                                        <NumberIncrementStepper />
-                                        <NumberDecrementStepper />
-                                    </NumberInputStepper>
-                                </NumberInput>
-                                <Select
-                                    placeholder="Semester"
-                                    value={unitSemesterOffering}
+                            <FormLabel>Unit offering</FormLabel>
+                            <Flex direction="row" spacing={4} justifyContent="space-between">
+                                <NumberField
+                                    defaultValue={unitYearOffering}
+                                    minValue={new Date().getFullYear()}
+                                    onChange={(event) => setUnitYearOffering(event)}
+                                />
+                                <DropdownDynamic
+                                    placeholder={'select semester'}
                                     onChange={(event) => setUnitSemesterOffering(event.target.value)}
-                                >
-                                    <option value="S1">Semester 1</option>
-                                    <option value="S2">Semester 2</option>
-                                    <option value="FY">Full Year</option>
-                                    <option value="Summer">Summer</option>
-                                    <option value="Winter">Winter</option>
-
-                                </Select>
+                                    options={['S1', 'S2', 'FY', 'Summer', 'Winter']}
+                                />
                             </Flex>
-                            <Text>Add student data to your offering:</Text>
-                            <Center>
-                                <RadioGroup onChange={setAddDataOption} value={addDataOption}>
-                                    <Stack direction='row'>
-                                        <Radio value='Add Now'>Now</Radio>
-                                        <Radio value='Add Later'>Later</Radio>
-                                    </Stack>
-                                </RadioGroup>
-                            </Center>
                         </FormControl>
                     </form>
                 </ModalBody>
-                <ModalFooter>
-                    <Button onClick={onCloseAdd} colorScheme="red" mr={3}>
-                        Cancel
-                    </Button>
-                    <Button type="submit" colorScheme="blue" form="create-unit">
-                        Create Unit
-                    </Button>
-                </ModalFooter>
+
+                <ModalFooterButtonPair
+                    cancelButtonColor="red"
+                    cancelButtonOnClick={onCloseAdd}
+                    cancelButtonText="Cancel"
+                    confirmButtonColor="blue"
+                    confirmButtonOnClick={handleSubmitUnit}
+                    confirmButtonText="Create unit"
+                />
             </ModalContent>
         </Modal>
     );

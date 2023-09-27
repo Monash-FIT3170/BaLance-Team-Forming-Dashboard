@@ -2,38 +2,32 @@ import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { MockAuth } from '../helpers/mockAuth';
 import {
-    HStack,
-    Button,
-    Icon,
     useColorModeValue,
     useDisclosure,
     Spacer,
-    useToast,
-    Grid
+    Grid, Flex, VStack
 } from '@chakra-ui/react';
-import { AddIcon } from '@chakra-ui/icons';
-import { Center, Heading } from '@chakra-ui/react';
 import UnitCard from '../components/unitHomePage/UnitCard';
 import '../App.css';
 import CreateUnitModal from "../components/unitHomePage/CreateUnitModal";
 import PageHeader from "../components/shared/PageHeader";
+import AddButton from "../components/shared/AddButton";
 
 function UnitPage() {
+    const [units, setUnits] = useState([]);
     let authService = {
         "DEV": MockAuth,
         "TEST": useAuth0
     }
+
     const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
+    const {
+        isOpen: isOpenAdd,
+        onOpen: onAddOpen,
+        onClose: onAddClose
+    } = useDisclosure();
 
-    let iconColor = useColorModeValue('brand.200', 'white');
-    const { isOpen: isOpenAdd, onOpen: onAddOpen, onClose: onAddClose } = useDisclosure();
-
-    const [units, setUnits] = useState([]);
-
-
-
-    // fetch unit data from the backend
     useEffect(() => {
         getAccessTokenSilently().then((token) => {
             fetch('http://localhost:8080/api/units/',
@@ -44,7 +38,6 @@ function UnitPage() {
                     })
                 }).then((res) => res.json())
                 .then((data) => {
-                    console.log(data);
                     setUnits(data);
                 })
                 .catch((err) => {
@@ -56,48 +49,39 @@ function UnitPage() {
 
     return (
         <div>
-            <Center margin="40px">
+            <Flex margin="40px">
+                <Spacer/>
+                <Spacer/>
                 <PageHeader
-                    fontSize="4x;"
+                    fontSize="4xl"
                     pageDesc="Home"
                 />
+                <Spacer/>
+                <VStack>
+                    <Spacer/>
+                    <AddButton
+                        buttonText="Add offering"
+                        onClick={onAddOpen}
+                        width="20vw"
+                    />
+                    <Spacer/>
+                </VStack>
+            </Flex>
 
-                <Button
-                    align="right"
-                    justify="right"
-                    borderRadius="12px"
-                    style={{ position: 'absolute', top: 135, right: 10 }}
-                    me="12px"
-                    onClick={onAddOpen}
-                >
-                    <HStack>
-                        <p>Add Offering</p>
-                        <Spacer />
-                        <Icon
-                            margin-left="10%"
-                            as={AddIcon}
-                            color={iconColor}
-                        />
-                    </HStack>
-                </Button>
-
-                <CreateUnitModal
-                    isOpenAdd={isOpenAdd}
-                    onCloseAdd={onAddClose}
-                />
-            </Center>
-
-            {/* display the units from the data fetched from the backend */}
             <Grid templateColumns="repeat(3, 1fr)" gap={4} className="units">
-                {units &&
-                    units.map((unit) => (
-                        <UnitCard
-                            {...unit}
-                            key={`${unit.unit_code}/${unit.unit_off_year}/${unit.unit_off_period}`}
-                            className="unit"
-                        />
-                    ))}
+                {units && units.map((unit) => (
+                    <UnitCard
+                        {...unit}
+                        key={`${unit.unit_code}/${unit.unit_off_year}/${unit.unit_off_period}`}
+                        className="unit"
+                    />
+                ))}
             </Grid>
+
+            <CreateUnitModal
+                isOpenAdd={isOpenAdd}
+                onCloseAdd={onAddClose}
+            />
         </div>
     );
 }
