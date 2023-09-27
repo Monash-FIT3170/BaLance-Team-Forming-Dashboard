@@ -55,6 +55,7 @@ function UnitPage() {
 
     let iconColor = useColorModeValue('brand.200', 'white');
     const { isOpen: isOpenAdd, onOpen: onOpenAdd, onClose: onCloseAdd } = useDisclosure();
+    const { isOpen: isOpenDataAdd, onOpen: onOpenDataAdd, onClose: onCloseDataAdd } = useDisclosure();
 
     const [units, setUnits] = useState([]);
     const [unitCode, setUnitCode] = useState('');
@@ -62,8 +63,18 @@ function UnitPage() {
     const [addDataOption, setAddDataOption] = React.useState('Add Now');
     const [unitYearOffering, setUnitYearOffering] = useState(new Date().getFullYear());
     const [unitSemesterOffering, setUnitSemesterOffering] = useState('');
-
+    const [showError, setShowError] = useState(false);
+    const [textError, showTextError] = useState('');
     const navigate = useNavigate();
+
+    const handleDoneClick = () => {
+        if (!unitCode || !unitName || !unitSemesterOffering) {
+            showTextError('Required')
+            setShowError(true);
+        } else {
+            onOpenDataAdd();
+        }
+    }
 
     const handleSubmitUnit = (event) => {
         event.preventDefault();
@@ -99,6 +110,7 @@ function UnitPage() {
                 navigate(`/uploadData/${unitCode}/${unitYearOffering}/${unitSemesterOffering}`);
             }
         }, 1500)
+        onCloseDataAdd();
     }
 
     // fetch unit data from the backend
@@ -152,7 +164,7 @@ function UnitPage() {
                         <ModalCloseButton />
                         <hr></hr>
                         <ModalBody pb={10}>
-                            <form id="create-unit" onSubmit={handleSubmitUnit}>
+                            <form>
                                 <br></br>
                                 <FormControl isRequired>
                                     <FormLabel>Unit Code </FormLabel>
@@ -189,9 +201,28 @@ function UnitPage() {
                                             <option value="FY">Full Year</option>
                                             <option value="Summer">Summer</option>
                                             <option value="Winter">Winter</option>
-
                                         </Select>
                                     </Flex>
+                                </FormControl>
+                            </form>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button onClick={onCloseAdd} mr={3}>
+                                Cancel
+                            </Button>
+                            <Button onClick={handleDoneClick}>
+                                Done
+                            </Button>
+                        </ModalFooter>
+                    </ModalContent>
+                </Modal>
+
+                {/* Modal for adding student data */}
+                <Modal isOpen={isOpenDataAdd} onClose={onCloseDataAdd}>
+                    <ModalContent>
+                        <ModalBody>
+                            <form id="create-unit" onSubmit={handleSubmitUnit}>
+                                <FormControl isRequired>
                                     <Text>Add student data to your offering:</Text>
                                     <Center>
                                         <RadioGroup onChange={setAddDataOption} value={addDataOption}>
@@ -205,7 +236,7 @@ function UnitPage() {
                             </form>
                         </ModalBody>
                         <ModalFooter>
-                            <Button onClick={onCloseAdd} colorScheme="red" mr={3}>
+                            <Button onClick={onCloseDataAdd} colorScheme="red" mr={3}>
                                 Cancel
                             </Button>
                             <Button type="submit" colorScheme="blue" form="create-unit">
