@@ -1,49 +1,43 @@
 import {
-    Button,
-    Center,
     Flex,
     FormControl,
     FormLabel,
-    Input, Modal,
+    Modal,
     ModalBody,
     ModalCloseButton,
-    ModalContent, ModalFooter,
+    ModalContent,
     ModalHeader,
     ModalOverlay,
-    NumberDecrementStepper,
-    NumberIncrementStepper,
-    NumberInput,
-    NumberInputField,
-    NumberInputStepper, Radio, RadioGroup,
-    Select, Stack, Text, useToast
+    Text,
+    useToast
 } from "@chakra-ui/react";
-import React, {useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {useState} from "react";
 import getToastSettings from "../shared/ToastSettings";
 import {MockAuth} from "../../helpers/mockAuth";
 import {useAuth0} from "@auth0/auth0-react";
 import DropdownDynamic from "../shared/DropdownDynamic";
 import NumberField from "../shared/NumberField";
 import ModalFooterButtonPair from "../shared/ModalFooterButtonPair";
-
+import TextField from "../shared/TextField";
+import {useNavigate} from "react-router-dom";
 
 const CreateUnitModal = ({
-    isOpenAdd,
-    onCloseAdd
+    isModalOpen,
+    onModalClose
 }) => {
     const [unitCode, setUnitCode] = useState('');
     const [unitName, setUnitName] = useState('');
-    const [addDataOption, setAddDataOption] = React.useState('Add Now');
-    const [unitYearOffering, setUnitYearOffering] = useState(new Date().getFullYear());
-    const [unitSemesterOffering, setUnitSemesterOffering] = useState('');
+    const [unitYear, setUnitYear] = useState(new Date().getFullYear());
+    const [unitPeriod, setUnitPeriod] = useState('');
+    const [submitted, setSubmitted] = useState(false);
 
-    const navigate = useNavigate();
     const toast = useToast();
-
     const getToast = (title, status) => {
         toast.closeAll();
         toast(getToastSettings(title, status))
     }
+
+    const navigate = useNavigate()
 
     let authService = {
         "DEV": MockAuth,
@@ -51,15 +45,8 @@ const CreateUnitModal = ({
     }
     const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
-    const handleSubmitUnit = (event) => {
+    const submitUnit = (event) => {
         event.preventDefault();
-        const unitObject = {
-            unitCode: unitCode,
-            unitName: unitName,
-            year: unitYearOffering,
-            period: unitSemesterOffering
-        };
-
         getAccessTokenSilently().then((token) => {
             fetch('http://localhost:8080/api/units/', {
                 method: 'POST',
@@ -68,69 +55,87 @@ const CreateUnitModal = ({
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 }),
-                body: JSON.stringify(unitObject),
+                body: JSON.stringify({
+                    unitCode: unitCode,
+                    unitName: unitName,
+                    year: unitYear,
+                    period: unitPeriod
+                }),
             })
         });
 
-        onCloseAdd();
+        setSubmitted(true);
         getToast('Unit created successfully', 'success');
-        // fixme cause the nav modal to open here by setting state
     }
 
+    const renderForm = () => {
+        return (
+            <form id="create-unit" onSubmit={submitUnit}>
+                <br></br>
+                <FormControl required>
+                    <TextField
+                        label="Unit code"
+                        value={unitCode}
+                        onChange={(event) => {setUnitCode(event.target.value)}}
+                    />
+                    <TextField
+                        label="Unit name"
+                        value={unitName}
+                        onChange={(event) => {setUnitName(event.target.value)}}
+                    />
+                    <FormLabel>Unit offering</FormLabel>
+                    <Flex direction="row" spacing={4} justifyContent="space-between">
+                        <NumberField
+                            defaultValue={unitYear}
+                            minValue={new Date().getFullYear()}
+                            onChange={(event) => setUnitYear(event)}
+                        />
+                        <DropdownDynamic
+                            placeholder={'select semester'}
+                            onChange={(event) => {setUnitPeriod(event.target.value)}}
+                            options={['S1', 'S2', 'FY', 'Summer', 'Winter']}
+                        />
+                    </Flex>
+                </FormControl>
+            </form>
+        )
+    }
+
+
     return (
-        <Modal closeOnOverlayClick={false} isOpen={isOpenAdd} onClose={onCloseAdd}>
+        <Modal closeOnOverlayClick={false} isOpen={isModalOpen} onClose={onModalClose}>
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader>New Unit</ModalHeader>
                 <ModalCloseButton />
-                <hr></hr>
+                <hr/>
+
                 <ModalBody pb={10}>
-                    <form id="create-unit" onSubmit={handleSubmitUnit}>
-                        <br></br>
-                        <FormControl isRequired>
-                            <FormLabel>Unit code </FormLabel>
-                            <Input
-                                mb="5"
-                                value={unitCode}
-                                required
-                                onChange={(event) => {
-                                    setUnitCode(event.target.value);
-                                }}
-                            />
-
-                            <FormLabel>Unit name</FormLabel>
-                            <Input
-                                mb="5"
-                                value={unitName}
-                                required
-                                onChange={(event) => setUnitName(event.target.value)}
-                            />
-
-                            <FormLabel>Unit offering</FormLabel>
-                            <Flex direction="row" spacing={4} justifyContent="space-between">
-                                <NumberField
-                                    defaultValue={unitYearOffering}
-                                    minValue={new Date().getFullYear()}
-                                    onChange={(event) => setUnitYearOffering(event)}
-                                />
-                                <DropdownDynamic
-                                    placeholder={'select semester'}
-                                    onChange={(event) => setUnitSemesterOffering(event.target.value)}
-                                    options={['S1', 'S2', 'FY', 'Summer', 'Winter']}
-                                />
-                            </Flex>
-                        </FormControl>
-                    </form>
+                    {!submitted ? renderForm() : <Text>Would you like to add student data to the offering?</Text>}
                 </ModalBody>
 
-                <ModalFooterButtonPair
-                    cancelButtonColor="red"
-                    cancelButtonOnClick={onCloseAdd}
-                    cancelButtonText="Cancel"
-                    confirmButtonColor="blue"
-                    confirmButtonOnClick={handleSubmitUnit}
-                    confirmButtonText="Create unit"
-                />
+                {!submitted ?
+                    <ModalFooterButtonPair
+                        cancelButtonColor="red"
+                        cancelButtonOnClick={onModalClose}
+                        cancelButtonText="Cancel"
+                        confirmButtonColor="blue"
+                        confirmButtonOnClick={submitUnit}
+                        confirmButtonText="Create unit"
+                    />
+                    :
+                    <ModalFooterButtonPair
+                        cancelButtonColor="red"
+                        cancelButtonOnClick={() => {
+                            onModalClose()
+                            window.location.reload()
+                        }}
+                        cancelButtonText="Later"
+                        confirmButtonColor="blue"
+                        confirmButtonOnClick={() => navigate(`/uploadData/${unitCode}/${unitYear}/${unitPeriod}`)}
+                        confirmButtonText="Confirm"
+                    />
+                }
             </ModalContent>
         </Modal>
     );

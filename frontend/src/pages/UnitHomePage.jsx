@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { MockAuth } from '../helpers/mockAuth';
 import {
-    useColorModeValue,
     useDisclosure,
     Spacer,
     Grid, Flex, VStack
@@ -23,9 +22,15 @@ function UnitPage() {
     const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
     const {
-        isOpen: isOpenAdd,
+        isOpen: isAddOpen,
         onOpen: onAddOpen,
         onClose: onAddClose
+    } = useDisclosure();
+
+    const {
+        isOpen: isNavOpen,
+        onOpen: onNavOpen,
+        onClose: onNavClose,
     } = useDisclosure();
 
     useEffect(() => {
@@ -79,8 +84,8 @@ function UnitPage() {
             </Grid>
 
             <CreateUnitModal
-                isOpenAdd={isOpenAdd}
-                onCloseAdd={onAddClose}
+                isModalOpen={isAddOpen}
+                onModalClose={onAddClose}
             />
         </div>
     );

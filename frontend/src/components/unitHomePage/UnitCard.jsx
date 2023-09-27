@@ -3,7 +3,6 @@
 import {
     Card,
     Link,
-    Flex,
     Button,
     Icon,
     Image,
@@ -26,7 +25,7 @@ import {
 import { BsTrash } from 'react-icons/bs';
 import getToastSettings from '../shared/ToastSettings'
 import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { MockAuth } from '../../helpers/mockAuth';
 import { useAuth0 } from '@auth0/auth0-react';
 

@@ -2,7 +2,7 @@ import {Select, Text, VStack} from "@chakra-ui/react";
 import React from "react";
 
 
-const DropdownDynamic = ({dropDownDesc, placeholder, options, width, onChange}) => {
+const DropdownDynamic = ({dropDownDesc, placeholder, required, options, width, onChange}) => {
     /**
      * options: a list of strings, each will become a dropdown choice
      */
@@ -11,6 +11,7 @@ const DropdownDynamic = ({dropDownDesc, placeholder, options, width, onChange}) 
         <VStack>
             {dropDownDesc ? <Text marginRight={"auto"}>{dropDownDesc}</Text> : null}
             <Select
+                required={required}
                 placeholder={placeholder}
                 width={width}
                 onChange={onChange}
