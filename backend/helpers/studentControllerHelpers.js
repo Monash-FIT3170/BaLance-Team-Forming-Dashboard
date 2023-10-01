@@ -47,7 +47,6 @@ const insertStudentEnrolment = async (studentKeys, unitOffId) => {
         const enrolmentInsertData = studentKeys.map((student) => {
             return [student.stud_unique_id, unitOffId]
         })
-        console.log(enrolmentInsertData)
         return promiseBasedQuery(
             'INSERT IGNORE INTO unit_enrolment ' +
             '(stud_unique_id, unit_off_id) VALUES ?;',
@@ -68,7 +67,7 @@ const insertUnitOffLabs = async (requestBody, unitOffId) => {
         // where labs are in the format n_activity where n is the lab no.
         let numLabs = 0
         for(student of requestBody) {
-            let labId = student.labId;
+            let labId = student.labCode;
             let split = labId.split("_");
             let labNum = Number(split[0]);
             numLabs = (labNum > numLabs) ? labNum : numLabs;
@@ -117,12 +116,12 @@ const insertStudentLabAllocations = async (requestBody, unitOffId) => {
         * */
         requestBody.forEach((student, index) => {
             // get the lab number this student is in
-            let labId = student.labId;
+            let labId = student.labCode;
             let split = labId.split("_");
             let labNum = Number(split[0]);
 
             // add the students email to the right key
-            studentLabNumberAllocation[labNum].push(student.studentEmailAddress);
+            studentLabNumberAllocation[labNum].push(student.email);
         });
 
         /*

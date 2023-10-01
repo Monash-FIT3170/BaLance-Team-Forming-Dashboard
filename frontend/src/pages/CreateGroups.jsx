@@ -32,7 +32,10 @@ import {
 } from '@chakra-ui/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { MockAuth } from '../mockAuth/mockAuth';
+import { MockAuth } from '../helpers/mockAuth';
+import PageHeader from "../components/shared/PageHeader";
+import DropdownDynamic from "../components/shared/DropdownDynamic";
+import NavButton from "../components/shared/NavButton";
 
 function CreateGroups() {
     let authService = {
@@ -108,20 +111,17 @@ function CreateGroups() {
 
     return (
         <>
-            <Box as="header" p="4" textAlign="center">
-                <Text fontSize="2xl" fontWeight="bold">
-                    {`Configure Groups for: ${unitCode} - ${period}, ${year}`}
-                </Text>
-            </Box>
+            <PageHeader
+                fontSize={"2xl"}
+                pageDesc={`Configure groups: ${unitCode} ${period} ${year}`}
+            />
 
             <Center>
-                <Button onClick={navigateToOfferingDashboardStudents}>
-                    <HStack>
-                        <ArrowBackIcon />
-                        <Spacer />
-                        <Text>Return to offering dashboard</Text>
-                    </HStack>
-                </Button>
+                <NavButton
+                    buttonIcon={<ArrowBackIcon />}
+                    buttonText="Return to offering dashboard"
+                    buttonUrl={`/students/${unitCode}/${year}/${period}`}
+                />
             </Center>
 
 
@@ -141,6 +141,7 @@ function CreateGroups() {
                             <Spacer width="15vw" />
                             <VStack>
                                 <FormLabel>Strategy</FormLabel>
+                                {/* FIXME refactor as DynamicDropdown component */}
                                 <Select marginLeft="5vw" w="12vw" placeholder='' onChange={(event) => setStrategy(event.target.value)}>
                                     <option value='random'>Random Strategy</option>
                                     <option value='effort'>WAM Based Strategy</option>

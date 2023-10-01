@@ -19,7 +19,7 @@ const {
 
 const multer = require('multer');
 
-const storage = multer.diskStorage({ // fixme is this not in middleware/uploadMiddleware.js?
+const storage = multer.diskStorage({
     destination(req, file, cb) {
       cb(null, './tmp/my-uploads')
     },
@@ -39,8 +39,7 @@ router.post('/:unitCode/:year/:period', createUnitGroups);
 // shuffle unit groups
 router.post('/shuffle/:unitCode/:year/:period', shuffleUnitGroups);
 
-// ...
-router.post('/:unitCode/:year/:period/uploadScript', upload.single('pythonFile'), uploadCustomScript, )
+router.post('/:unitCode/:year/:period/uploadScript', uploadCustomScript );
 
 // move a student between two groups
 router.patch('/:unitCode/:year/:period/move/:studentId/', moveStudent);

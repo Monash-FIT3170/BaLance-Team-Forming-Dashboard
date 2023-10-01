@@ -3,6 +3,7 @@
  * to student data.
  *
  * */
+const db_connection = require("../config/databaseConfig");
 
 const {
     promiseBasedQuery,
@@ -53,16 +54,18 @@ const addAllStudents = async (req, res) => {
     } = req.params
     const requestBody = req.body
 
+    console.log(requestBody)
+
     /* INSERT STUDENTS INTO DATABASE */
     // get the attributes we need and their values in prep for SQL queries
     //   e.g. {id: 5, name: 'jim'} becomes [5, 'jim'] to comply with mysql2 API
     const studentInsertData = requestBody.map(
-        ({ labId, enrolmentStatus, discPersonality, ...rest }) => {return Object.values(rest);}
+        ({ labCode, ...rest }) => {return Object.values(rest);}
     );
     await insertStudents(studentInsertData)
 
     /* CREATE UNIT ENROLMENT BETWEEN STUDENTS AND UNIT */
-    const studentEmails = requestBody.map((student) => student.studentEmailAddress);
+    const studentEmails = requestBody.map((student) => student.email);
     const studentKeys = await selectStudentsKeys(studentEmails);
     const unitOffId = await selectUnitOffKey(unitCode, year, period);
     await insertStudentEnrolment(studentKeys, unitOffId);
@@ -83,118 +86,139 @@ const deleteStudentEnrolment = async (req, res) => {
         studentId
     } = req.params;
 
-    await promiseBasedQuery( // delete effort personality test results for student
-        "DELETE FROM effort_result " +
-        "WHERE effort_result_id IN ( " +
-        "   SELECT subquery.effort_result_id " +
-        "   FROM ( " +
-        "       SELECT e.effort_result_id " +
-        "       FROM unit_offering u " +
-        "           INNER JOIN personality_test_attempt pt ON pt.unit_off_id = u.unit_off_id " +
-        "           INNER JOIN effort_result e ON e.personality_test_attempt = pt.test_attempt_id " +
-        "           INNER JOIN student s ON s.stud_unique_id = pt.stud_unique_id " +
-        "       WHERE u.unit_code=? " +
-        "           AND u.unit_off_year=? " +
-        "           AND u.unit_off_period=? " +
-        "           AND s.student_id=? " +
-        "   ) AS subquery " +
-        ");",
-        [unitCode, year, period, studentId]
-    )
+    try {
+        const connection = await db_connection.promise().getConnection();
 
-    await promiseBasedQuery( // delete belbin personality test results for student
-        "DELETE FROM belbin_result " +
-        "WHERE belbin_result_id IN ( " +
-        "   SELECT subquery.belbin_result_id " +
-        "   FROM ( " +
-        "       SELECT b.belbin_result_id " +
-        "       FROM unit_offering u " +
-        "           INNER JOIN personality_test_attempt pt ON pt.unit_off_id = u.unit_off_id " +
-        "           INNER JOIN belbin_result b ON b.personality_test_attempt = pt.test_attempt_id " +
-        "           INNER JOIN student s ON s.stud_unique_id = pt.stud_unique_id " +
-        "       WHERE u.unit_code=? " +
-        "           AND u.unit_off_year=? " +
-        "           AND u.unit_off_period=? " +
-        "           AND s.student_id=? " +
-        "   ) AS subquery " +
-        "); ",
-        [unitCode, year, period, studentId]
-    )
+        try{
 
-    await promiseBasedQuery( // delete personality test attempt for student
-        "DELETE FROM personality_test_attempt " +
-        "WHERE test_attempt_id IN ( " +
-        "   SELECT subquery.test_attempt_id " +
-        "   FROM ( " +
-        "       SELECT pt.test_attempt_id " +
-        "       FROM unit_offering u " +
-        "           INNER JOIN personality_test_attempt pt ON pt.unit_off_id = u.unit_off_id " +
-        "           INNER JOIN student s ON s.stud_unique_id = pt.stud_unique_id " +
-        "       WHERE u.unit_code=? " +
-        "           AND u.unit_off_year=? " +
-        "           AND u.unit_off_period=? " +
-        "           AND s.student_id=? " +
-        "   ) AS subquery " +
-        ");",
-        [unitCode, year, period, studentId]
-    )
+            await connection.beginTransaction()
 
-    await promiseBasedQuery( // delete group allocation for student
-        "DELETE FROM group_allocation " +
-        "WHERE group_alloc_id IN ( " +
-        "   SELECT subquery.group_alloc_id " +
-        "   FROM ( " +
-        "       SELECT ga.group_alloc_id " +
-        "       FROM unit_offering u " +
-        "           INNER JOIN unit_off_lab l ON u.unit_off_id = l.unit_off_id " +
-        "           INNER JOIN lab_group g ON g.unit_off_lab_id = l.unit_off_lab_id " +
-        "           INNER JOIN group_allocation ga ON ga.lab_group_id = g.lab_group_id " +
-        "           INNER JOIN student s ON s.stud_unique_id = ga.stud_unique_id " +
-        "       WHERE u.unit_code=? " +
-        "           AND u.unit_off_year=? " +
-        "           AND u.unit_off_period=? " +
-        "           AND s.student_id=? " +
-        "   ) AS subquery " +
-        ");",
-        [unitCode, year, period, studentId]
-    )
+            await connection.execute( // delete effort personality test results for student
+                "DELETE FROM effort_result " +
+                "WHERE effort_result_id IN ( " +
+                "   SELECT subquery.effort_result_id " +
+                "   FROM ( " +
+                "       SELECT e.effort_result_id " +
+                "       FROM unit_offering u " +
+                "           INNER JOIN personality_test_attempt pt ON pt.unit_off_id = u.unit_off_id " +
+                "           INNER JOIN effort_result e ON e.personality_test_attempt = pt.test_attempt_id " +
+                "           INNER JOIN student s ON s.stud_unique_id = pt.stud_unique_id " +
+                "       WHERE u.unit_code=? " +
+                "           AND u.unit_off_year=? " +
+                "           AND u.unit_off_period=? " +
+                "           AND s.student_id=? " +
+                "   ) AS subquery " +
+                ");",
+                [unitCode, year, period, studentId]
+            )
 
-    await promiseBasedQuery( // delete lab allocation for student
-        "DELETE FROM student_lab_allocation " +
-        "WHERE stud_lab_alloc_id IN ( " +
-        "   SELECT subquery.stud_lab_alloc_id " +
-        "   FROM ( " +
-        "       SELECT la.stud_lab_alloc_id " +
-        "       FROM unit_offering u " +
-        "           INNER JOIN unit_off_lab l ON u.unit_off_id = l.unit_off_id " +
-        "           INNER JOIN student_lab_allocation la ON la.unit_off_lab_id = l.unit_off_lab_id " +
-        "           INNER JOIN student s ON s.stud_unique_id = la.stud_unique_id " +
-        "       WHERE u.unit_code=? " +
-        "           AND u.unit_off_year=? " +
-        "           AND u.unit_off_period=? " +
-        "           AND s.student_id=? " +
-        "   ) AS subquery " +
-        ");",
-        [unitCode, year, period, studentId]
-    )
+            await connection.execute( // delete belbin personality test results for student
+                "DELETE FROM belbin_result " +
+                "WHERE belbin_result_id IN ( " +
+                "   SELECT subquery.belbin_result_id " +
+                "   FROM ( " +
+                "       SELECT b.belbin_result_id " +
+                "       FROM unit_offering u " +
+                "           INNER JOIN personality_test_attempt pt ON pt.unit_off_id = u.unit_off_id " +
+                "           INNER JOIN belbin_result b ON b.personality_test_attempt = pt.test_attempt_id " +
+                "           INNER JOIN student s ON s.stud_unique_id = pt.stud_unique_id " +
+                "       WHERE u.unit_code=? " +
+                "           AND u.unit_off_year=? " +
+                "           AND u.unit_off_period=? " +
+                "           AND s.student_id=? " +
+                "   ) AS subquery " +
+                "); ",
+                [unitCode, year, period, studentId]
+            )
 
-    await promiseBasedQuery( // delete unit enrolment for student
-        "DELETE FROM unit_enrolment " +
-        "WHERE enrolment_id IN ( " +
-        "   SELECT subquery.enrolment_id " +
-        "   FROM ( " +
-        "       SELECT ue.enrolment_id " +
-        "       FROM unit_offering u " +
-        "           INNER JOIN unit_enrolment ue ON u.unit_off_id = ue.unit_off_id " +
-        "           INNER JOIN student s ON s.stud_unique_id = ue.stud_unique_id " +
-        "       WHERE u.unit_code=? " +
-        "           AND u.unit_off_year=? " +
-        "           AND u.unit_off_period=? " +
-        "           AND s.student_id=? " +
-        "   ) AS subquery " +
-        ");",
-        [unitCode, year, period, studentId]
-    )
+            await connection.execute( // delete personality test attempt for student
+                "DELETE FROM personality_test_attempt " +
+                "WHERE test_attempt_id IN ( " +
+                "   SELECT subquery.test_attempt_id " +
+                "   FROM ( " +
+                "       SELECT pt.test_attempt_id " +
+                "       FROM unit_offering u " +
+                "           INNER JOIN personality_test_attempt pt ON pt.unit_off_id = u.unit_off_id " +
+                "           INNER JOIN student s ON s.stud_unique_id = pt.stud_unique_id " +
+                "       WHERE u.unit_code=? " +
+                "           AND u.unit_off_year=? " +
+                "           AND u.unit_off_period=? " +
+                "           AND s.student_id=? " +
+                "   ) AS subquery " +
+                ");",
+                [unitCode, year, period, studentId]
+            )
+
+            await connection.execute( // delete group allocation for student
+                "DELETE FROM group_allocation " +
+                "WHERE group_alloc_id IN ( " +
+                "   SELECT subquery.group_alloc_id " +
+                "   FROM ( " +
+                "       SELECT ga.group_alloc_id " +
+                "       FROM unit_offering u " +
+                "           INNER JOIN unit_off_lab l ON u.unit_off_id = l.unit_off_id " +
+                "           INNER JOIN lab_group g ON g.unit_off_lab_id = l.unit_off_lab_id " +
+                "           INNER JOIN group_allocation ga ON ga.lab_group_id = g.lab_group_id " +
+                "           INNER JOIN student s ON s.stud_unique_id = ga.stud_unique_id " +
+                "       WHERE u.unit_code=? " +
+                "           AND u.unit_off_year=? " +
+                "           AND u.unit_off_period=? " +
+                "           AND s.student_id=? " +
+                "   ) AS subquery " +
+                ");",
+                [unitCode, year, period, studentId]
+            )
+
+            await connection.execute( // delete lab allocation for student
+                "DELETE FROM student_lab_allocation " +
+                "WHERE stud_lab_alloc_id IN ( " +
+                "   SELECT subquery.stud_lab_alloc_id " +
+                "   FROM ( " +
+                "       SELECT la.stud_lab_alloc_id " +
+                "       FROM unit_offering u " +
+                "           INNER JOIN unit_off_lab l ON u.unit_off_id = l.unit_off_id " +
+                "           INNER JOIN student_lab_allocation la ON la.unit_off_lab_id = l.unit_off_lab_id " +
+                "           INNER JOIN student s ON s.stud_unique_id = la.stud_unique_id " +
+                "       WHERE u.unit_code=? " +
+                "           AND u.unit_off_year=? " +
+                "           AND u.unit_off_period=? " +
+                "           AND s.student_id=? " +
+                "   ) AS subquery " +
+                ");",
+                [unitCode, year, period, studentId]
+            )
+
+            await connection.execute( // delete unit enrolment for student
+                "DELETE FROM unit_enrolment " +
+                "WHERE enrolment_id IN ( " +
+                "   SELECT subquery.enrolment_id " +
+                "   FROM ( " +
+                "       SELECT ue.enrolment_id " +
+                "       FROM unit_offering u " +
+                "           INNER JOIN unit_enrolment ue ON u.unit_off_id = ue.unit_off_id " +
+                "           INNER JOIN student s ON s.stud_unique_id = ue.stud_unique_id " +
+                "       WHERE u.unit_code=? " +
+                "           AND u.unit_off_year=? " +
+                "           AND u.unit_off_period=? " +
+                "           AND s.student_id=? " +
+                "   ) AS subquery " +
+                ");",
+                [unitCode, year, period, studentId]
+            )
+
+            await connection.commit();
+            await connection.release();
+        }
+
+        catch(error) {
+            console.log(error);
+            await connection.rollback();
+            await connection.release();
+        }
+    }
+    catch(error) {
+        console.log(error);
+    }
 
     res.status(200).send();
 }
@@ -337,11 +361,6 @@ const addPersonalityData = async (req, res) => {
         [unitOffKey, testType, studentIds]
     )
 
-    console.log("TEST TYPE | TEST KEYS | STUDENTS")
-    console.log(testType)
-    console.log(personalityTestAttemptKeys)
-    console.log(students)
-    console.log("INSERT DATA")
     addTestResultFunctionStrats[testType](personalityTestAttemptKeys, students)
     res.status(200).send();
 }
@@ -354,8 +373,6 @@ const addStudentBelbin = async (personalityTestAttemptKeys, students) => {
         const [student] = students.filter((student) => {return student.studentId === attempt.student_id})
         resultInsertData.push([attempt.test_attempt_id, student.belbinType])
     })
-
-    console.log(resultInsertData);
 
     try {
         await promiseBasedQuery(
@@ -374,7 +391,12 @@ const addStudentEffort = async (personalityTestAttemptKeys, students) => {
     personalityTestAttemptKeys.forEach((attempt) => {
         // find the student who made this attempt
         const [student] = students.filter((student) => {return student.studentId === attempt.student_id})
-        resultInsertData.push([attempt.test_attempt_id, student.averageMark, student.hours, student.marksPerHour])
+        resultInsertData.push([
+            attempt.test_attempt_id,
+            student.avgAssignmentMark,
+            student.hourCommitment,
+            student.avgAssignmentMark/student.hourCommitment
+        ])
     })
 
     console.log(resultInsertData);
