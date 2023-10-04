@@ -26,7 +26,7 @@ const ImportPage = () => {
     const [isClearModalOpen, setIsClearModalOpen] = useState(false);
     const [currProfile, setCurrProfile] = useState(null);
     const [profileToDelete, setProfileToDelete] = useState(null);
-    const [dataType, setDataType] = useState(null)
+    const [dataType, setDataType] = useState('students')
     const [profiles, setProfiles] = useState([]);
     const [headerMap, setHeaderMap] = useState(null)
 
@@ -85,7 +85,6 @@ const ImportPage = () => {
                 <Flex width="33%" flexDirection="column" justifyContent="flex-end">
                     <DropdownDynamic
                         dropDownDesc={'Select the type of data to upload'}
-                        placeholder={'select data type'}
                         options={['students', 'belbin', 'effort']}
                         width="100%"
                         onChange={(event) => {

@@ -81,7 +81,7 @@ const UploadCSV = ({
       })
         .then((response) => {
           if (!response.ok) {
-            getToast('There was an error importing your file!', 'error');
+            getToast('There was an error importing your file! Please check that the upload type matches the file you uploaded.', 'error');
             throw new Error('Error sending data to the REST API');
           } else {
             getToast('Your file has been imported successfully!', 'success');
