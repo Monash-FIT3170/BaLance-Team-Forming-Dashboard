@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarController, BarElement } from 'chart.js';
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { MockAuth } from '../mockAuth/mockAuth';
+import { MockAuth } from '../helpers/mockAuth';
 import  Ploter  from '../components/Plot';
 import { useAuth0 } from '@auth0/auth0-react';
 import PageHeader from "../components/shared/PageHeader";

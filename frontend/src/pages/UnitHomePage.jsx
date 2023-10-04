@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react';
 import UnitCard from '../components/unitHomePage/UnitCard';
 import '../App.css';
-import CreateUnitModal from "../components/unitHomePage/CreateUnitModal";
+import CreateUnitModal from '../components/unitHomePage/CreateUnitModal';
 import PageHeader from "../components/shared/PageHeader";
 import AddButton from "../components/shared/AddButton";
 
