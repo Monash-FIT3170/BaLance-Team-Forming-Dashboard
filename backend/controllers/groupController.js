@@ -261,23 +261,23 @@ const moveStudent = async (req, res) => {
     console.log("THE GROUP WE WANT TO MOVE INTO")
     console.log(newGroupData)
 
-    // await promiseBasedQuery(
-    //     "UPDATE group_allocation " +
-    //     "   SET lab_group_id=? " +
-    //     "   WHERE group_alloc_id=?;",
-    //     [newGroupData["lab_group_id"], currentGroupData["group_alloc_id"]]
-    // );
-    //
-    // // change the student's lab if it is a new one we are moving to
-    // if(newGroupData["unit_off_lab_id"] !== currentGroupData["unit_off_lab_id"]) {
-    //     await promiseBasedQuery(
-    //         "UPDATE student_lab_allocation " +
-    //         "SET unit_off_lab_id=? " +
-    //         "WHERE stud_unique_id=? " +
-    //         "AND unit_off_lab_id=?;",
-    //         [newGroupData["unit_off_lab_id"], currentGroupData["stud_unique_id"], currentGroupData["unit_off_lab_id"]]
-    //     );
-    // }
+    await promiseBasedQuery(
+        "UPDATE group_allocation " +
+        "   SET lab_group_id=? " +
+        "   WHERE group_alloc_id=?;",
+        [newGroupData["lab_group_id"], currentGroupData["group_alloc_id"]]
+    );
+    
+    // change the student's lab if it is a new one we are moving to
+    if(newGroupData["unit_off_lab_id"] !== currentGroupData["unit_off_lab_id"]) {
+        await promiseBasedQuery(
+            "UPDATE student_lab_allocation " +
+            "SET unit_off_lab_id=? " +
+            "WHERE stud_unique_id=? " +
+            "AND unit_off_lab_id=?;",
+            [newGroupData["unit_off_lab_id"], currentGroupData["stud_unique_id"], currentGroupData["unit_off_lab_id"]]
+        );
+    }
 
     res.status(200).send({wip: "test"});
 }
