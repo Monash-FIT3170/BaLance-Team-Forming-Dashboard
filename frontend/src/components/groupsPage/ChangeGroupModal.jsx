@@ -78,6 +78,7 @@ export default function ChangeGroupModal({studentData, numberOfGroups}) {
         window.location.reload();
     };
 
+
     return (
         <>
             <Button variant="ghost" onClick={onOpen}>

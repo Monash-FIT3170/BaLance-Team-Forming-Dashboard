@@ -102,6 +102,7 @@ function Students() {
             <Center>
                 <StudentsPreviewTable
                     students={students}
+                    numberOfGroups={numberOfGroups}
                     page={'students'}
                     rowHeights={'20px'}
                 />
