@@ -71,7 +71,6 @@ function Groups() {
         <Container className="groups" maxW="80vw">
             {groups.map((group) => {
                 const cardKey = `${group.lab_number}_${group.group_number}`;
-                console.log(typeof (filteredClass), typeof (group.lab_number))
                 if (filteredClass == "All" | filteredClass == group.lab_number) {
                     return (<GroupCard groupData={group} numberOfGroups={groups.length} key={cardKey} />);
                 }

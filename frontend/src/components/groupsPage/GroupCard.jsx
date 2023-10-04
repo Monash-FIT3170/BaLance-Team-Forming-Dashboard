@@ -46,6 +46,7 @@ const GroupCard = ({groupData, numberOfGroups}) => {
                         students={students}
                         page={'groups'}
                         rowHeights={'50px'}
+                        numberOfGroups={numberOfGroups}
                     />
                 </Box>
             </VStack>

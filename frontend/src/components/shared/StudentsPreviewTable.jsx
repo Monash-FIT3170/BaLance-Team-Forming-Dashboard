@@ -1,12 +1,13 @@
-import {Box, Center, Table, Tbody, Td, Th, Thead, Tr, useDisclosure, useToast} from "@chakra-ui/react";
+import { Box, Center, Table, Tbody, Td, Th, Thead, Tr, useDisclosure, useToast } from "@chakra-ui/react";
 import React from "react";
-import {DeleteIcon, EditIcon} from "@chakra-ui/icons";
-import {useParams} from "react-router";
-import {MockAuth} from "../../helpers/mockAuth";
-import {useAuth0} from "@auth0/auth0-react";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { useParams } from "react-router";
+import { MockAuth } from "../../helpers/mockAuth";
+import { useAuth0 } from "@auth0/auth0-react";
 import getToastSettings from "./ToastSettings";
+import ChangeGroupModal from "../groupsPage/ChangeGroupModal";
 
-const StudentsPreviewTable = ({students, numberOfGroups, page, rowHeights}) => {
+const StudentsPreviewTable = ({ students, numberOfGroups, page, rowHeights }) => {
     let authService = {
         "DEV": MockAuth,
         "TEST": useAuth0
@@ -64,7 +65,9 @@ const StudentsPreviewTable = ({students, numberOfGroups, page, rowHeights}) => {
         }, 1500)
     }
 
-    return(
+    console.log(numberOfGroups)
+
+    return (
         (students.length === 0) ? (
             <Box bg='#E6EBF0' w='60vw' p={4} alignContent="center">
                 <Center>
@@ -88,8 +91,13 @@ const StudentsPreviewTable = ({students, numberOfGroups, page, rowHeights}) => {
                             <Td>{student.email_address}</Td>
                             <Td>{student.wam_val}</Td>
                             <Td>
-                                <EditIcon
-                                    style={{ cursor: 'pointer' }}
+                                <ChangeGroupModal
+                                    studentData={{
+                                        student_id: student.student_id,
+                                        preferred_name: student.preferred_name,
+                                        group_number: student.group_number
+                                    }}
+                                    numberOfGroups={numberOfGroups}
                                 />
                             </Td>
                             <Td>
