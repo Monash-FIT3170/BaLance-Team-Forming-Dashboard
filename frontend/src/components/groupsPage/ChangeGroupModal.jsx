@@ -36,10 +36,9 @@ export default function ChangeGroupModal({studentData, numberOfGroups}) {
     const {
         student_id,
         preferred_name,
-        group_number
     } = studentData;
 
-    const [group, setGroup] = useState(group_number);
+    const [group, setGroup] = useState();
 
     let authService = {
         "DEV": MockAuth,
@@ -93,12 +92,11 @@ export default function ChangeGroupModal({studentData, numberOfGroups}) {
 
                     <ModalBody>
                         <Text margin="0px 0px 2vh 0px">
-                            {`Change ${preferred_name}'s group from Group ${group} to: `}
+                            {`Change ${preferred_name}'s group to: `}
                         </Text>
                         <Select
                             bg="white"
                             onChange={(event) => setGroup(event.target.value)}
-                            placeholder={`Group ${group}`}
                         >
                             {groupOptions?.map((option) => (
                             <option key={option.value} value={option.value}>
