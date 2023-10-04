@@ -118,7 +118,7 @@ const UploadCSV = ({
             const csvHeaders = csvLines[0].split(',');
 
             if (JSON.stringify(csvHeaders) !== JSON.stringify(Object.keys(headerMap))) {
-                getToast("The inputted .csv file does not match the required headers for your selected data type.", "error")
+                getToast("The inputted .csv file does not match the required headers for your selected data type. Check the ? for more information.", "error")
                 setIsFileChosen(false)
                 return;
             }
