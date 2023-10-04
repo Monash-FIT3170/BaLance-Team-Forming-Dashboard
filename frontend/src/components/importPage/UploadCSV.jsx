@@ -119,6 +119,7 @@ const UploadCSV = ({
       const csvData = csvLines.slice(1);
 
       // obtain the index of headers we care about
+      console.log(headerMap);
       const headerMapKeys = Object.keys(headerMap);
       const headerIndexes = [];
       csvHeaders.forEach((csvHeader, index) => {
@@ -168,7 +169,7 @@ const UploadCSV = ({
     }
 
     const desc = `Upload a CSV file containing ${csvHeaderType} data with the following required headers: ${requiredHeaders}`;
-    return <text>{desc}</text>;
+    return <p>{desc}</p>;
   };
 
   return isFileChosen === true ? (
