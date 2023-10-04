@@ -73,7 +73,7 @@ function Students() {
             />
             <HStack justifyContent={"center"}>
                 <NavButton
-                    buttonText="Import student data"
+                    buttonText="Import data"
                     buttonUrl={`/uploadData/${unitCode}/${year}/${period}`}
                     buttonIcon={<AddIcon />}
                 />

@@ -58,7 +58,7 @@ const ImportPage = () => {
         <VStack>
             <PageHeader
                 fontSize={"2xl"}
-                pageDesc={`Import student data: ${unitCode} ${period} ${year}`}
+                pageDesc={`Import data: ${unitCode} ${period} ${year}`}
             />
             <Center>
                 <NavButton
