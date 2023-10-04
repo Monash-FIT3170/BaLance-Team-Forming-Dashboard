@@ -26,9 +26,9 @@ const ImportPage = () => {
     const [isClearModalOpen, setIsClearModalOpen] = useState(false);
     const [currProfile, setCurrProfile] = useState(null);
     const [profileToDelete, setProfileToDelete] = useState(null);
-    const [dataType, setDataType] = useState(null)
+    const [dataType, setDataType] = useState('students')
     const [profiles, setProfiles] = useState([]);
-    const [headerMap, setHeaderMap] = useState(null)
+    const [headerMap, setHeaderMap] = useState(csvHeaderMapping[dataType])
 
     const {
         isOpen: isDeleteProfileOpen,
@@ -54,11 +54,13 @@ const ImportPage = () => {
         period
     } = useParams();
 
+    console.log(dataType)
+
     return (
         <VStack>
             <PageHeader
                 fontSize={"2xl"}
-                pageDesc={`Import student data: ${unitCode} ${period} ${year}`}
+                pageDesc={`Import data: ${unitCode} ${period} ${year}`}
             />
             <Center>
                 <NavButton
@@ -85,11 +87,10 @@ const ImportPage = () => {
                 <Flex width="33%" flexDirection="column" justifyContent="flex-end">
                     <DropdownDynamic
                         dropDownDesc={'Select the type of data to upload'}
-                        placeholder={'select data type'}
                         options={['students', 'belbin', 'effort']}
                         width="100%"
                         onChange={(event) => {
-                            // console.log(dataType, event.target.value)
+                            console.log(dataType, event.target.value)
                             const selection = event.target.value;
                             setDataType(selection)
                             setHeaderMap(csvHeaderMapping[selection])
