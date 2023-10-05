@@ -47,7 +47,6 @@ function CreateGroups() {
 
     const [strategy, setStrategy] = useState("random");
     const [groupSize, setGroupSize] = useState(2);
-    const [variance, setVariance] = useState(1);
     const cancelRef = React.useRef();
     const navigate = useNavigate();
     const {
@@ -58,7 +57,6 @@ function CreateGroups() {
     const { unitCode, year, period } = useParams();
     const groupDetails = {
         "groupSize": groupSize,
-        "variance": variance
     }
 
     const navigateToOfferingDashboardGroups = () => {
@@ -94,7 +92,6 @@ function CreateGroups() {
                   }),
                 body: JSON.stringify({
                     groupSize: groupSize,
-                    variance: variance,
                     strategy: strategy,
                 })
             })
@@ -173,27 +170,8 @@ function CreateGroups() {
                             </VStack>
                         </HStack>
 
-                        <Divider marginY="1vh" />
 
-                        <HStack w="100%">
-                            <Box fontSize="19" w="40vw">
-                                <Text fontWeight="semibold">Step 3: Select a variance value (recommended 1)</Text>
-                                <Text>Choose how big or small you would like the variance in group size to be.</Text>
-                                <Text>We recommend this value to be 1.</Text>
-                            </Box>
-                            <Spacer />
-                            <VStack>
-                                <FormLabel>Variance</FormLabel>
-                                <NumberInput w="12vw" min="1" defaultValue="1" onChange={(valueString) => setVariance(parseInt(valueString))}>
-                                    <NumberInputField />
-                                    <NumberInputStepper>
-                                        <NumberIncrementStepper />
-                                        <NumberDecrementStepper />
-                                    </NumberInputStepper>
-                                </NumberInput>
-                                <FormHelperText>Minimum variance is 1</FormHelperText>
-                            </VStack>
-                        </HStack>
+                        
                     </FormControl>
                     <Divider marginY="1vh" />
                 </form>
