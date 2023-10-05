@@ -78,7 +78,7 @@ const CsvPreviewTable = ({
                         </Td>
                         <Td>
                             <DeleteIcon
-                                style={{ cursor: 'pointer', color: 'red' }}
+                                style={{ cursor: 'pointer'}}
                                 onClick={() => {handleDeleteProfile(profile.studentId)}}
                             />
                         </Td>
