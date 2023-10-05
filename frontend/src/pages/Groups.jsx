@@ -88,17 +88,19 @@ function Groups() {
 
     const handleExportToCSV = () => {
         /* creating the csv */
-        const csvRows = [["Lab Number", "Group Number", "Student ID(s)"]];
+        const csvRows = [["Group", "Current role", "Full name", "Username"]];
         let newRow = [];
         for (const group of groups) {
-            newRow.push(group.lab_number);
-            newRow.push(group.group_number);
             for (const student of group.students) {
-                newRow.push(student.student_id);
+                newRow.push(`Lab${group.lab_number}Group${group.group_number}`);
+                newRow.push("Student");
+                newRow.push(`${student.preferred_name} ${student.last_name}`);
+                newRow.push(student.email_address.split('@', 1)[0]);
+                csvRows.push(newRow);
+                newRow = [];
             }
-            csvRows.push(newRow);
-            newRow = [];
         }
+        console.log(csvRows)
         let csvContent = "data:text/csv;charset=utf-8,"
             + csvRows.map(e => e.join(",")).join("\n");
 

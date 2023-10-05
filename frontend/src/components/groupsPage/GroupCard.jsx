@@ -37,7 +37,7 @@ const GroupCard = ({groupData, numberOfGroups}) => {
                     <NavButton
                         buttonText="View group analytics"
                         buttonIcon={<ViewIcon/>}
-                        buttonUrl={`/groupAnalytics/${unitCode}/${year}/${period}/${lab_number}/${group_number}`}
+                        buttonUrl={`/groupAnalytics/${unitCode}/${year}/${period}/${group_number}`}
                     />
                 </HStack>
                 <Spacer/>

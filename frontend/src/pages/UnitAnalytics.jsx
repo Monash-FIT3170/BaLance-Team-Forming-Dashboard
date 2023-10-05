@@ -17,7 +17,7 @@ import { Doughnut, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarController, BarElement } from 'chart.js';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../helpers/mockAuth';
-import  Ploter  from '../components/Plot';
+import  Plotter  from '../components/Plotter';
 import { useAuth0 } from '@auth0/auth0-react';
 import PageHeader from "../components/shared/PageHeader";
 
@@ -81,10 +81,10 @@ const UnitAnalytics = () => {
                 </Center>
             ) : (
                 analytics.map((item, index) => (
-                    <Ploter 
+                    <Plotter 
                     item = {item}
                     index = {index}
-                    ></Ploter>
+                    ></Plotter>
                 ))
             )}
         </div>

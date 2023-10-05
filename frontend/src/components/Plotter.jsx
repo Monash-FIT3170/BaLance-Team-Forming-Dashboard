@@ -10,7 +10,7 @@ import {
 import { Doughnut, Bar } from 'react-chartjs-2';
 
 
-const Ploter = ({item, index}) =>{
+const Plotter = ({item, index}) =>{
 
     const generatePastelColors = (count) => {
         const colors = [];
@@ -99,4 +99,4 @@ const Ploter = ({item, index}) =>{
 
   }
 
-  export default Ploter;
+  export default Plotter;

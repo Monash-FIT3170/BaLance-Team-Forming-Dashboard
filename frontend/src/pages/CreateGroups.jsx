@@ -29,6 +29,7 @@ import {
     FormControl,
     FormLabel,
     FormHelperText,
+    useToast,
 } from '@chakra-ui/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowBackIcon } from '@chakra-ui/icons';
@@ -36,18 +37,18 @@ import { MockAuth } from '../helpers/mockAuth';
 import PageHeader from "../components/shared/PageHeader";
 import DropdownDynamic from "../components/shared/DropdownDynamic";
 import NavButton from "../components/shared/NavButton";
+import getToastSettings from '../components/shared/ToastSettings';
 
 function CreateGroups() {
     let authService = {
         "DEV": MockAuth,
         "TEST": useAuth0
-      }
-    
-      const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
+    }
+
+    const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
     const [strategy, setStrategy] = useState("random");
     const [groupSize, setGroupSize] = useState(2);
-    const [variance, setVariance] = useState(1);
     const cancelRef = React.useRef();
     const navigate = useNavigate();
     const {
@@ -55,10 +56,14 @@ function CreateGroups() {
         onOpen,
         onClose
     } = useDisclosure();
+    const toast = useToast();
+    const getToast = (title, status) => {
+        toast.closeAll();
+        toast(getToastSettings(title, status))
+    }
     const { unitCode, year, period } = useParams();
     const groupDetails = {
         "groupSize": groupSize,
-        "variance": variance
     }
 
     const navigateToOfferingDashboardGroups = () => {
@@ -72,7 +77,7 @@ function CreateGroups() {
     const navigateUploadScript = () => {
         navigate(`/uploadGroupScript/${unitCode}/${year}/${period}`);
     };
-    
+
     const handleSubmitGroupOptions = async (event) => {
         event.preventDefault();
 
@@ -82,8 +87,14 @@ function CreateGroups() {
             navigateUploadScript();
             navigate(
                 `/uploadGroupScript/${unitCode}/${year}/${period}`,
-                {state: { groupDetails }});
-        } else {
+                { state: { groupDetails } });
+        } 
+        else if (strategy === "belbin" && groupSize === 2) {
+            getToast("Failed to create groups. The minimum ideal group size for the belbin grouping strategy is 3.", "error");
+            return;
+        }
+        
+        else {
             /* Call to shuffle groups */
             fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
                 method: 'POST',
@@ -91,15 +102,15 @@ function CreateGroups() {
                     'Authorization': `Bearer ${token}`,
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
-                  }),
+                }),
                 body: JSON.stringify({
                     groupSize: groupSize,
-                    variance: variance,
                     strategy: strategy,
                 })
             })
                 .then((res) => {
-                    if(res.status === 200){
+                    if (res.status === 200) {
+                        getToast("Groups created successfully", "success");
                         navigateToOfferingDashboardGroups();
                     } else {
                         res.json().then(json => console.log(json))
@@ -162,44 +173,28 @@ function CreateGroups() {
                             <Spacer />
                             <VStack>
                                 <FormLabel>Group Size</FormLabel>
-                                <NumberInput w="12vw" min="2" defaultValue="2" onChange={(valueString) => setGroupSize(parseInt(valueString))}>
+
+                                <NumberInput w="12vw" min={strategy === "belbin" ? "3" : "2"} defaultValue={strategy === "belbin" ? "3" : "2"} onChange={(valueString) => setGroupSize(parseInt(valueString))}>
                                     <NumberInputField />
                                     <NumberInputStepper>
                                         <NumberIncrementStepper />
                                         <NumberDecrementStepper />
                                     </NumberInputStepper>
                                 </NumberInput>
-                                <FormHelperText>Minimum group size is 2</FormHelperText>
+
+
+                                <FormHelperText>Minimum group size is {strategy === "belbin" ? "3" : "2"}</FormHelperText>
                             </VStack>
                         </HStack>
 
-                        <Divider marginY="1vh" />
 
-                        <HStack w="100%">
-                            <Box fontSize="19" w="40vw">
-                                <Text fontWeight="semibold">Step 3: Select a variance value (recommended 1)</Text>
-                                <Text>Choose how big or small you would like the variance in group size to be.</Text>
-                                <Text>We recommend this value to be 1.</Text>
-                            </Box>
-                            <Spacer />
-                            <VStack>
-                                <FormLabel>Variance</FormLabel>
-                                <NumberInput w="12vw" min="1" defaultValue="1" onChange={(valueString) => setVariance(parseInt(valueString))}>
-                                    <NumberInputField />
-                                    <NumberInputStepper>
-                                        <NumberIncrementStepper />
-                                        <NumberDecrementStepper />
-                                    </NumberInputStepper>
-                                </NumberInput>
-                                <FormHelperText>Minimum variance is 1</FormHelperText>
-                            </VStack>
-                        </HStack>
+
                     </FormControl>
                     <Divider marginY="1vh" />
                 </form>
 
 
-                <Button type="submit" form="create-groups" colorScheme="blue" >{strategy == "custom" ? "Upload Custom Script": "Assign group"}</Button>
+                <Button type="submit" form="create-groups" colorScheme="blue" >{strategy === "custom" ? "Upload Custom Script" : "Assign group"}</Button>
             </VStack>
 
         </>
