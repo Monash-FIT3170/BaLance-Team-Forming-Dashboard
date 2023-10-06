@@ -85,8 +85,6 @@ const getLabNumber = async(req, res) => {
         '   and team.group_number = ?;',
         [unitCode, year, period, groupNumber]
     )
-    let labNumber = lab_number[0].lab_number;
-    console.log(labNumber);
     res.status(200).send(lab_number);
 }
 

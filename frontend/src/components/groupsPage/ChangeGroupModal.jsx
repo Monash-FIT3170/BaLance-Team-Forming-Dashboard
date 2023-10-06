@@ -17,9 +17,11 @@ import {
     Spacer,
     Text,
     useDisclosure,
+    useToast,
 } from '@chakra-ui/react';
 import { MockAuth } from '../../helpers/mockAuth';
 import ConfirmChangeGroupModal from './ConfirmChangeGroupModal';
+import getToastSettings from '../shared/ToastSettings';
 
 export default function ChangeGroupModal({ studentData, numberOfGroups }) {
     const {
@@ -48,6 +50,12 @@ export default function ChangeGroupModal({ studentData, numberOfGroups }) {
 
     const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
+    const toast = useToast();
+    const getToast = (title, status) => {
+        toast.closeAll();
+        toast(getToastSettings(title, status))
+    }
+
     // an array of viable groups the student can be changed to
     const groupOptions = [];
     for (let i = 1; i <= numberOfGroups; i++) {
@@ -72,14 +80,24 @@ export default function ChangeGroupModal({ studentData, numberOfGroups }) {
                 'Accept': 'application/json',
                 'Content-type': 'application/json; charset=UTF-8'
             }),
-        }
-        );
-        window.location.reload();
+        })
+            .catch(() => {
+                // error toast 
+                getToast(`The changing of ${preferred_name}'s group was not successful, please try again.`, 'error');
+            })
+            .finally(() => {
+                // successful toast
+                getToast(`You have successfully changed ${preferred_name}'s group.`, 'success');
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500)
+            });
     };
 
     return (
         <>
-            <Button variant="ghost" onClick={onOpen}>
+            <Button variant="ghost" isDisabled={numberOfGroups===0} onClick={onOpen} >
                 <EditIcon />
             </Button>
 
@@ -91,7 +109,7 @@ export default function ChangeGroupModal({ studentData, numberOfGroups }) {
 
                     <ModalBody>
                         <Text margin="0px 0px 2vh 0px">
-                            {`Change ${preferred_name}'s group from ${group} to: `}
+                            {`Change ${preferred_name}'s group from ${studentData.group_number} to: `}
                         </Text>
                         <Select
                             bg="white"
