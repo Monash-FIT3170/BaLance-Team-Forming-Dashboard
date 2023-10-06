@@ -19,6 +19,7 @@ import {
     useDisclosure,
 } from '@chakra-ui/react';
 import { MockAuth } from '../../helpers/mockAuth';
+import ConfirmChangeGroupModal from './ConfirmChangeGroupModal';
 
 export default function ChangeGroupModal({ studentData, numberOfGroups }) {
     const {
@@ -38,7 +39,7 @@ export default function ChangeGroupModal({ studentData, numberOfGroups }) {
         preferred_name,
     } = studentData;
 
-    const [group, setGroup] = useState(1);
+    const [group, setGroup] = useState(studentData.group_number);
 
     let authService = {
         "DEV": MockAuth,
@@ -50,18 +51,17 @@ export default function ChangeGroupModal({ studentData, numberOfGroups }) {
     // an array of viable groups the student can be changed to
     const groupOptions = [];
     for (let i = 1; i <= numberOfGroups; i++) {
-        groupOptions.push({
-            label: `Group ${i}`,
-            value: i
-        })
-
+        if (i !== group) {
+            groupOptions.push({
+                label: `Group ${i}`,
+                value: i
+            })
+        }
     }
 
     // handles modal confirmation for changing a students group
-
     const handleStudentGroupChange = async () => {
         onClose();
-        console.log(group)
         let token = await getAccessTokenSilently()
         await fetch(
             `http://localhost:8080/api/groups/${unitCode}/${year}/${period}/move/${student_id}/`, {
@@ -77,7 +77,6 @@ export default function ChangeGroupModal({ studentData, numberOfGroups }) {
         window.location.reload();
     };
 
-
     return (
         <>
             <Button variant="ghost" onClick={onOpen}>
@@ -92,10 +91,11 @@ export default function ChangeGroupModal({ studentData, numberOfGroups }) {
 
                     <ModalBody>
                         <Text margin="0px 0px 2vh 0px">
-                            {`Change ${preferred_name}'s group to: `}
+                            {`Change ${preferred_name}'s group from ${group} to: `}
                         </Text>
                         <Select
                             bg="white"
+                            placeholder={`Group ${studentData.group_number}`}
                             onChange={(event) => setGroup(event.target.value)}
                         >
                             {groupOptions?.map((option) => (
@@ -112,14 +112,11 @@ export default function ChangeGroupModal({ studentData, numberOfGroups }) {
                             <Button margin="0px 5px" variant="ghost" onClick={onClose}>
                                 Cancel
                             </Button>
-                            <Button
-                                onClick={handleStudentGroupChange}
-                                margin="0px 5px"
-                                colorScheme="blue"
-                                mr={3}
-                            >
-                                Confirm
-                            </Button>
+                            <ConfirmChangeGroupModal
+                                handleStudentGroupChange={handleStudentGroupChange}
+                                oldGroupNumber={studentData.group_number}
+                                newGroupNumber={group}
+                            />
                             <Spacer />
                         </HStack>
                     </ModalFooter>

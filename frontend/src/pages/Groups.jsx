@@ -100,7 +100,6 @@ function Groups() {
                 newRow = [];
             }
         }
-        console.log(csvRows)
         let csvContent = "data:text/csv;charset=utf-8,"
             + csvRows.map(e => e.join(",")).join("\n");
 

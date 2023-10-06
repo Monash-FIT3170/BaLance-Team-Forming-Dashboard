@@ -72,6 +72,24 @@ const getAllGroups = async (req, res) => {
     res.status(200).send(responseData);
 }
 
+const getLabNumber = async(req, res) => {
+    const {unitCode, year, period, groupNumber} = req.params;
+    const lab_number = await promiseBasedQuery(
+        'select lab_number from unit_off_lab lab ' + 
+        'join lab_group team on lab.unit_off_lab_id = team.unit_off_lab_id ' + 
+        'join unit_offering unit on lab.unit_off_id = unit.unit_off_id ' + 
+        'where ' +
+        '   unit.unit_code = ?' +
+        '   and unit.unit_off_year = ?' +
+        '   and unit.unit_off_period = ?' +
+        '   and team.group_number = ?;',
+        [unitCode, year, period, groupNumber]
+    )
+    let labNumber = lab_number[0].lab_number;
+    console.log(labNumber);
+    res.status(200).send(lab_number);
+}
+
 // create all the groups (based on csv)
 const createUnitGroups = async (req, res) => {
     const {
@@ -288,6 +306,7 @@ const moveStudent = async (req, res) => {
 
 module.exports = {
     getAllGroups,
+    getLabNumber,
     createUnitGroups,
     shuffleUnitGroups,
     moveStudent

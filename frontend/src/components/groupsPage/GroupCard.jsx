@@ -44,6 +44,7 @@ const GroupCard = ({groupData, numberOfGroups}) => {
                 <Box marginBottom={'10px'}>
                     <StudentsPreviewTable
                         students={students}
+                        groupNumber={group_number}
                         page={'groups'}
                         rowHeights={'50px'}
                         numberOfGroups={numberOfGroups}

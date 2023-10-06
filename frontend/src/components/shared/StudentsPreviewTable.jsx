@@ -7,7 +7,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import getToastSettings from "./ToastSettings";
 import ChangeGroupModal from "../groupsPage/ChangeGroupModal";
 
-const StudentsPreviewTable = ({ students, numberOfGroups, page, rowHeights }) => {
+const StudentsPreviewTable = ({ students, groupNumber, numberOfGroups, page, rowHeights }) => {
     let authService = {
         "DEV": MockAuth,
         "TEST": useAuth0
@@ -65,8 +65,6 @@ const StudentsPreviewTable = ({ students, numberOfGroups, page, rowHeights }) =>
         }, 1500)
     }
 
-    console.log(numberOfGroups)
-
     return (
         (students.length === 0) ? (
             <Box bg='#E6EBF0' w='60vw' p={4} alignContent="center">
@@ -95,7 +93,7 @@ const StudentsPreviewTable = ({ students, numberOfGroups, page, rowHeights }) =>
                                     studentData={{
                                         student_id: student.student_id,
                                         preferred_name: student.preferred_name,
-                                        group_number: student.group_number
+                                        group_number: groupNumber
                                     }}
                                     numberOfGroups={numberOfGroups}
                                 />
