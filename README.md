@@ -103,11 +103,11 @@ Use Auth DEV most of the time, and switch to Auth TEST to confirm that the imple
 * Analytics for new strategies can be added by adding a new function in backend/helpers/groupAnalyticHelpers.js that
   retrieves distribution statistics in the right format and returns it as an object
 
-## Known issues
+## Known bugs
 
-* Frontend analytics view displays title and descriptor in analytics card for analytics
-that have no data in the backend rather than an empty state
-* App crashes when non-integer values are supplied for unit year on unit creation
+- [] [On moving students for a given csv file, student is duplicated in database causing eventual crash](https://github.com/Monash-FIT3170/baLance/issues/52)
+- [] [Units cannot currently be deleted in the main home page](https://github.com/Monash-FIT3170/baLance/issues/87)
+- [] [Unit cards in the home page do not display correctly on some displays](https://github.com/Monash-FIT3170/baLance/issues/88)
 
 
 ## Pull Requests
