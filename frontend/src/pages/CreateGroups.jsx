@@ -146,8 +146,8 @@ function CreateGroups() {
                                 <Text>Choose a strategy for how the groups will be determined and allocated.</Text>
                                 <Text>Note: for any strategy other than “random”, please ensure that each student in the offering has an entry for the relevant data points.</Text>
                                 <Text>Random - None required</Text>
-                                <Text>WAM based - WAM_VAL and DEDICATED_HOURS</Text>
-                                <Text>Belbin based - BELBIN_TYPE</Text>
+                                <Text>WAM based - hourCommitment, avgAssignmentMark</Text>
+                                <Text>Belbin based - belbinType</Text>
                             </Box>
                             <Spacer width="15vw" />
                             <VStack>
@@ -194,7 +194,7 @@ function CreateGroups() {
                 </form>
 
 
-                <Button type="submit" form="create-groups" colorScheme="blue" >{strategy === "custom" ? "Upload Custom Script" : "Assign group"}</Button>
+                <Button type="submit" form="create-groups" colorScheme="blue" >{strategy === "custom" ? "Upload Custom Script" : "Assign groups"}</Button>
             </VStack>
 
         </>
