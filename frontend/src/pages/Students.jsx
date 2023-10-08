@@ -83,7 +83,7 @@ function Students() {
                     buttonIcon={<EditIcon />}
                 />
                 <NavButton
-                    buttonText="View unit analytics"
+                    buttonText="View offering analytics"
                     buttonUrl={`/unitAnalytics/${unitCode}/${year}/${period}`}
                     buttonIcon={<ViewIcon/>}
                 />
