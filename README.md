@@ -93,7 +93,15 @@ The Auth TEST envrionment uses Auth0 authentication. Auth0 authentication when u
 
 Use Auth DEV most of the time, and switch to Auth TEST to confirm that the implementation works with the actual authentication.
 
-# Additional notes
+# Development guidelines
+
+## Extending group formation strategies
+
+* Group formation strategies can be extended in backend/helpers/groupFormationHelpers.js by declaring a new function
+  that contains the logic for the new strategy and adding it to the strategies object. Frontend strategy selection
+  dropdown must include a value with the same name as the key in the aforementioned strategies object
+* Analytics for new strategies can be added by adding a new function in backend/helpers/groupAnalyticHelpers.js that
+  retrieves distribution statistics in the right format and returns it as an object
 
 ## Known issues
 
@@ -101,23 +109,19 @@ Use Auth DEV most of the time, and switch to Auth TEST to confirm that the imple
 that have no data in the backend rather than an empty state
 * App crashes when non-integer values are supplied for unit year on unit creation
 
-## Miscellaneous
 
-* Group formation strategies can be extended in backend/helpers/groupFormationHelpers.js by declaring a new function 
-that contains the logic for the new strategy and adding it to the strategies object. Frontend strategy selection
-dropdown must include a value with the same name as the key in the aforementioned strategies object
-* Analytics for new strategies can be added by adding a new function in backend/helpers/groupAnalyticHelpers.js that
-retrieves distribution statistics in the right format and returns it as an object
-
-# Git
 ## Pull Requests
+
+...
 
 ## Branching Strategy
 
-# Versioning
+...
+
+## Versioning
 The versioning strategy used by this project is semantic versioning (MAJOR.MINOR.PATCH) and is split between the frontend and backend. Major values must match the backend and frontend versions to guarantee compatibility. Minor and patch values do not need to match between the frontend and backend versions for compatibility.
 
-## Backend
+### Backend
 The version is 1.0.0 as of 16/10/2023, the first initial release of the backend of the application.
 
 The Patch version must be incremented when a backward compatiable bug fix is introduced.
@@ -126,7 +130,7 @@ The Minor version must be incremented when a new backward compatible functionali
 
 The Major version must be incremented when a new non-backward compatible functionality is introduced.
 
-## Frontend
+### Frontend
 The version is 1.0.0 as of 16/10/2023, the first initial release of the frontend of the application.
 
 The Patch version must be incremented when a backward compatiable bug fix is introduced.
