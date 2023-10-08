@@ -36,9 +36,11 @@ formation strategies for teaching associates to select from.
 
 ## Dependencies
 
-[Install node v18.16.0 or later](https://nodejs.org/en/download/package-manager)
+The project uses the following versions of node and MYSQL respectively
 
-[Install MYSQL server v8.0.33 or later](https://dev.mysql.com/downloads/mysql/) 
+[Node v18.16.0 & npm v9.6.7](https://nodejs.org/en/download/package-manager)
+
+[MYSQL server v8.0.33](https://dev.mysql.com/downloads/mysql/) 
 
 
 ## Running the application
