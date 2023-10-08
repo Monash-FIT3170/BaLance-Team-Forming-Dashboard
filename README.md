@@ -15,12 +15,16 @@ formation strategies for teaching associates to select from.
     - [Dependencies](#dependencies)
     - [Running the application](#running-the-application)
     - [Walkthrough](#walkthrough)
-4. [Authentication](#authentication)
+3. [Authentication](#authentication)
 4. [Additional notes](#additional-notes)
     - [Known issues](#known-issues)
     - [Miscellaneous](#miscellaneous)
-5. [Contributors](#contributors)
-6. [License](#license)
+5. [Git](#git)
+    - [Pull Requests](#pull-requests)
+    - [Branching Strategy](#branch-strategy)
+6. [Versioning](#versioning)
+7. [Contributors](#contributors)
+8. [License](#license)
 
 # Features
 
@@ -102,6 +106,32 @@ that contains the logic for the new strategy and adding it to the strategies obj
 dropdown must include a value with the same name as the key in the aforementioned strategies object
 * Analytics for new strategies can be added by adding a new function in backend/helpers/groupAnalyticHelpers.js that
 retrieves distribution statistics in the right format and returns it as an object
+
+# Git
+## Pull Requests
+
+## Branching Strategy
+
+# Versioning
+The versioning strategy used by this project is semantic versioning (MAJOR.MINOR.PATCH) and is split between the frontend and backend. Major values must match the backend and frontend versions to guarantee compatibility. Minor and patch values do not need to match between the frontend and backend versions for compatibility.
+
+## Backend
+The version is 1.0.0 as of 16/10/2023, the first initial release of the backend of the application.
+
+The Patch version must be incremented when a backward compatiable bug fix is introduced.
+
+The Minor version must be incremented when a new backward compatible functionality is introduced, or a functionality is deprecated.
+
+The Major version must be incremented when a new non-backward compatible functionality is introduced.
+
+## Frontend
+The version is 1.0.0 as of 16/10/2023, the first initial release of the frontend of the application.
+
+The Patch version must be incremented when a backward compatiable bug fix is introduced.
+
+The Minor version must be incremented when a new backward compatible functionality is introduced, or a functionality is deprecated.
+
+The Major version must be incremented when a new non-backward compatible functionality is introduced.
 
 # Contributors
 
