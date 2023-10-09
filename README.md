@@ -16,13 +16,12 @@ formation strategies for teaching associates to select from.
     - [Running the application](#running-the-application)
     - [Walkthrough](#walkthrough)
 3. [Authentication](#authentication)
-4. [Additional notes](#additional-notes)
+4. [Development guidelines](#development-guidelines)
+    - [Extending group formation strategies](#extending-group-formation-strategies)
     - [Known issues](#known-issues)
-    - [Miscellaneous](#miscellaneous)
-5. [Git](#git)
     - [Pull Requests](#pull-requests)
     - [Branching Strategy](#branch-strategy)
-6. [Versioning](#versioning)
+    - [Versioning](#versioning)
 7. [Contributors](#contributors)
 8. [License](#license)
 
@@ -68,7 +67,9 @@ against
 
 5. Optionally export group information as a csv to upload to your learning management system
 
-![Basic runthrough](docs/videos/basic-runthrough.gif)
+[//]: # (TODO, new gif showcasing new application view rather than the old one)
+
+![Basic runthrough](docs/videos/basic-runthrough.gif) 
 
 ## Authentication
 
@@ -118,15 +119,12 @@ the keys for the objects that were added to in the backend as described above
 
 ![Frontend changes](/docs/images/extending_strats_frontend_dropdowns.png)
 
-
-
 ## Known bugs
 
-- [] [On moving students for a given csv file, student is duplicated in database causing eventual crash](https://github.com/Monash-FIT3170/baLance/issues/52)
-- [] [Units cannot currently be deleted in the main home page](https://github.com/Monash-FIT3170/baLance/issues/87)
-- [] [Group analytics page displaying data incorrectly](https://github.com/Monash-FIT3170/baLance/issues/89)
-- [] [Unit cards in the home page do not display correctly on some displays](https://github.com/Monash-FIT3170/baLance/issues/88)
-
+- [ ] [On moving students for a given csv file, student is duplicated in database causing eventual crash](https://github.com/Monash-FIT3170/baLance/issues/52)
+- [ ] [Units cannot currently be deleted in the main home page](https://github.com/Monash-FIT3170/baLance/issues/87)
+- [ ] [Group analytics page displaying data incorrectly](https://github.com/Monash-FIT3170/baLance/issues/89)
+- [ ] [Unit cards in the home page do not display correctly on some displays](https://github.com/Monash-FIT3170/baLance/issues/88)
 
 ## Pull Requests
 
