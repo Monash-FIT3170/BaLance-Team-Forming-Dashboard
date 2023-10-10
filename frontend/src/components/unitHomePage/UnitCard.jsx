@@ -1,7 +1,7 @@
 
 //imports
 import {
-    Card,
+    Box,
     Link,
     Button,
     Icon,
@@ -32,6 +32,8 @@ import { useAuth0 } from '@auth0/auth0-react';
 const UnitCard = (unit) => {
 
     //setting the colors of the card
+    const topBoxColor = useColorModeValue('#24265D', 'gray.700');
+
     let boxBg = useColorModeValue('gray.600');
     let mainText = useColorModeValue('gray.800', 'white');
     let secondaryText = useColorModeValue('gray.600', 'gray.600');
@@ -87,135 +89,36 @@ const UnitCard = (unit) => {
         })
     }
 
-  return (
-  <div style={{ display: 'flex', justifyContent: 'center' }}>
-  <Card style={{
-                border: '1px solid #ccc',
-                alignItems: 'center',
-                width: '360px',
-                height: '300px',
-                backgroundColor: '#F1EFEF',
-               }}
-               className='mx-auto'>
-    <VStack marginX="2vw" width="26vw">
-      <HStack width="100%" marginX="0">
-          <Text
-      my="auto"
-      fontWeight="800"
-      color={mainText}
-      textAlign="center"
-      fontSize="xl"
-      me="auto"
-      width="90%"
-    >
-      {/* the unit name card */}
-      <div
-        style={{
-          fontWeight: 'bold',
-          fontSize: '20px',
-          width: '100%',
-          //border: '1px solid #ccc', // Add a border to make it look like a card
-          padding: '0px', // Add padding for spacing
-          borderRadius: '8px', // Add rounded corners for a card-like appearance
-          backgroundColor: '#F1EFEF', // Change the background color as desired
-        }}
-      >
-        {`${unit_code} - ${unit_off_period}, ${unit_off_year}`}
-      </div>
-    </Text>
-
-        {/* the 3 dots button */}
-        <Button
-          maxW="10%"
-          align="right"
-          justify="right"
-          bg={iconBox}
-          onClick={onOpenDetails}
-        >
-          <Icon w="1.5em" h="1.5em" as={IoEllipsisHorizontalSharp} color={iconColor} />
-        </Button>
-      </HStack>
-
-            {/* the popup when the 3 dots button is clicked, shows the unit details */}
-            <Modal
-                closeOnOverlayClick={false}
-                isOpen={isOpenDetails}
-                onClose={onCloseDetails}
-                onClick={<Link to={this} onClick={isOpenDetails}></Link>}
-            >
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>{`${unit_code} - ${unit_off_period}, ${unit_off_year}`}</ModalHeader>
-                    <ModalCloseButton />
-
-                    <ModalBody>
-                        <VStack>
-                            <b>{unit_name}</b>
-                            <p>{`${enrolment_count} students enrolled`}</p>
-                        </VStack>
-                    </ModalBody>
-
-                    <ModalFooter>
-                        <HStack>
-                            <Spacer />
-                            <Text
-                                my="auto"
-                                fontWeight="800"
-                                color={mainText}
-                                textAlign="right"
-                                fontSize="xl"
-                                me="auto"
-                            >
-                                <Button colorScheme='red' onClick={handleDeleteUnit} >
-                                    <HStack>
-                                        <Text>Remove Offering</Text>
-                                        <Icon as={BsTrash}></Icon>
-                                    </HStack>
-                                </Button>
-                            </Text>
-                        </HStack>
-
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
-            <hr style={{ width: 360, margin: 'lrem auto', borderTop: '1px solid #ccc'}}/>
-
-            {/* the button with the image and the faculty, when clicked will also bring to the groups for this unit */}
-            <Button
-                onClick={navigateToUnitOffering}
-                style={{ display: 'inline-block', width: '100%', height: 'auto', marginBottom: "5vh" }}
-                bg={iconBox}
-            >
-                <Center>
-                    <VStack marginY="2vh" marginX="-3vw">
-                        <Text
-                            fontWeight="600"
-                            color={secondaryText}
-                            textAlign="center"
-                            fontSize="l"
-                            w="80%"
-                        >
-                            {unit_name}
-                        </Text>
-                        <Image
-                            src="https://img.freepik.com/free-vector/gradient-purple-color-gradient-background-abstract-modern_343694-2243.jpg?w=740&t=st=1682246391~exp=1682246991~hmac=24a5e0adc73d36b09e5b9fc4b2b05aabd12bab82078f67b6556cb3800ca6d1e4"
-                            style={{
-                                height: 'auto',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                width: '80%'
-                            }}
-                            borderRadius="20px"
-                        />
-                    </VStack>
-
-                </Center>
-
-
-            </Button>
-        </VStack>
-        </Card>
+    return (
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <Box
+            as="button"
+            onClick={navigateToUnitOffering}
+            style={{
+              width: '360px',
+              height: '160px',
+              backgroundColor: '#E6EBF0',
+            //   opacity: 0.35,
+              borderRadius: '5px',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+            className="mx-auto"
+          >
+            <Box
+              style={{
+                width: '100%',
+                height: '16px',
+                backgroundColor: topBoxColor,
+                borderTopLeftRadius: '5px',
+                borderTopRightRadius: '5px',
+              }}
+            ></Box>
+            <VStack flexGrow={1} justifyContent="center">
+              {/* content here */}
+            </VStack>
+          </Box>
         </div>
-    );
-};
+      );
+    };
 export default UnitCard;
