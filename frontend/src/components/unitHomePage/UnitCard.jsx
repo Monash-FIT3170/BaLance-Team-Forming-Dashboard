@@ -30,7 +30,7 @@ import { MockAuth } from '../../helpers/mockAuth';
 import { useAuth0 } from '@auth0/auth0-react';
 
 const UnitCard = (index, ...unit) => {
-  //setting the colors of the card
+  // Add more colours after testing
   const topBoxColors = [
     useColorModeValue('#24265D', 'gray.700'),
     useColorModeValue('#FF9900', 'gray.700'),
