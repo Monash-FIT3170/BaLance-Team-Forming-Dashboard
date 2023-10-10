@@ -87,7 +87,7 @@ const UnitCard = (unit) => {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <div style={{ display: 'flex' }}>
       <Box
         as="button"
         onClick={navigateToUnitOffering}
@@ -98,9 +98,7 @@ const UnitCard = (unit) => {
           borderRadius: '5px',
           display: 'flex',
           flexDirection: 'column',
-          position: 'relative',
         }}
-        className="mx-auto"
       >
         <Box
           style={{
@@ -111,13 +109,13 @@ const UnitCard = (unit) => {
             borderTopRightRadius: '5px',
           }}
         ></Box>
-        <VStack flexGrow={1} width="100%" >
+        <VStack flexGrow={1} width="100%">
           <HStack width="100%">
             <Icon
               as={FaUser}
               color="black"
               boxSize="20px" // Adjust as needed for icon size
-            //   alignSelf="flex-start"
+              //   alignSelf="flex-start"
               margin={2}
             />
             <Text>0</Text>
@@ -126,11 +124,30 @@ const UnitCard = (unit) => {
               color="black"
               boxSize="20px" // Adjust as needed for icon size
               style={{
-                marginLeft: "280px"
-               }}
+                marginLeft: '280px',
+              }}
             />
           </HStack>
-          {/* content here */}
+          <Text
+            alignSelf="flex-start"
+            style={{
+              marginLeft: '8px',
+              fontWeight: 'bold',
+              fontSize: 24,
+            }}
+          >
+            FIT3171 FY 2023
+          </Text>
+          <Text
+            alignSelf="flex-start"
+            style={{
+              marginLeft: '8px',
+              //   fontWeight: 'bold',
+              fontSize: 20,
+            }}
+          >
+            Software Engineering Practice
+          </Text>
         </VStack>
       </Box>
     </div>
