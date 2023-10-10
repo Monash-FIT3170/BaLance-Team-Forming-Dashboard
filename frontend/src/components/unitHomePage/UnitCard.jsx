@@ -29,9 +29,17 @@ import { useNavigate } from 'react-router-dom';
 import { MockAuth } from '../../helpers/mockAuth';
 import { useAuth0 } from '@auth0/auth0-react';
 
-const UnitCard = (unit) => {
+const UnitCard = (index, ...unit) => {
   //setting the colors of the card
-  const topBoxColor = useColorModeValue('#24265D', 'gray.700');
+  const topBoxColors = [
+    useColorModeValue('#24265D', 'gray.700'),
+    useColorModeValue('#FF9900', 'gray.700'),
+    useColorModeValue('#0089FF', 'gray.700'),
+    useColorModeValue('#CC00FF', 'gray.700'),
+    useColorModeValue('#FF0000', 'gray.700'), 
+  ];
+  // Change 0 to index & test 
+  const topBoxColor = topBoxColors[0 % topBoxColors.length];
 
   let boxBg = useColorModeValue('gray.600');
   let mainText = useColorModeValue('gray.800', 'white');
@@ -98,6 +106,8 @@ const UnitCard = (unit) => {
           borderRadius: '5px',
           display: 'flex',
           flexDirection: 'column',
+          marginLeft: '20px',
+          marginRight: '20px',
         }}
       >
         <Box
@@ -114,19 +124,21 @@ const UnitCard = (unit) => {
             <Icon
               as={FaUser}
               color="black"
-              boxSize="20px" // Adjust as needed for icon size
+              boxSize="20px" 
               //   alignSelf="flex-start"
               margin={2}
             />
             <Text>0</Text>
-            <Icon
-              as={FaTrash}
-              color="black"
-              boxSize="20px" // Adjust as needed for icon size
-              style={{
-                marginLeft: '280px',
-              }}
-            />
+            <Button onClick={handleDeleteUnit} p={0} bg="transparent">
+              <Icon
+                as={FaTrash}
+                color="black"
+                boxSize="20px"
+                style={{
+                  marginLeft: '270px',
+                }}
+              />
+            </Button>
           </HStack>
           <Text
             alignSelf="flex-start"
@@ -136,17 +148,17 @@ const UnitCard = (unit) => {
               fontSize: 24,
             }}
           >
-            FIT3171 FY 2023
+            {`${unit_code} ${unit_off_period} ${unit_off_year}`}
           </Text>
           <Text
             alignSelf="flex-start"
             style={{
               marginLeft: '8px',
-              //   fontWeight: 'bold',
               fontSize: 20,
+              display: 'flex',
             }}
           >
-            Software Engineering Practice
+            {`${unit_name}`}
           </Text>
         </VStack>
       </Box>
