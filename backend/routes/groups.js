@@ -46,7 +46,7 @@ router.post('/shuffle/:unitCode/:year/:period', shuffleUnitGroups);
 router.post('/:unitCode/:year/:period/uploadScript', uploadCustomScript );
 
 // move a student between two groups
-router.patch('/:unitCode/:year/:period/move/:studentId/', moveStudent);
+router.patch('/:unitCode/:year/:period/move/:studentId/:hasAGroup', moveStudent);
 
 // export this router for external use
 module.exports = router;

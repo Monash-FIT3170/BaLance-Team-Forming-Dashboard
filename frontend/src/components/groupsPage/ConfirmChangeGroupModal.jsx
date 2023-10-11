@@ -14,7 +14,8 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useParams } from 'react-router-dom';
 
 
-export default function ConfirmChangeGroupModal({ handleStudentGroupChange, oldGroupNumber, newGroupNumber }) {
+export default function ConfirmChangeGroupModal({ handleStudentGroupChange, oldGroupNumber, newGroupNumber, oldLabNumber}) {
+    console.log(oldLabNumber)
     const { isOpen, onOpen, onClose } = useDisclosure()
     let authService = {
         "DEV": MockAuth,
@@ -28,24 +29,23 @@ export default function ConfirmChangeGroupModal({ handleStudentGroupChange, oldG
     } = useParams();
 
     // checks whether the old group and the new group are in the same lab
-    let oldLabNumber = -1;
     let newLabNumber = -1;
     // fetch old lab number
-    getAccessTokenSilently().then((token) => {
-        fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}/labNumber/${oldGroupNumber}`,
-            {
-                method: 'get',
-                headers: new Headers({
-                    'Authorization': `Bearer ${token}`
-                })
-            })
-            .then((res) =>
-                res.json().then(function (res) {
-                    oldLabNumber = res[0].lab_number;
-                })
-            )
-            .catch((err) => console.error(err));
-    });
+    // getAccessTokenSilently().then((token) => {
+    //     fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}/labNumber/${oldGroupNumber}`,
+    //         {
+    //             method: 'get',
+    //             headers: new Headers({
+    //                 'Authorization': `Bearer ${token}`
+    //             })
+    //         })
+    //         .then((res) =>
+    //             res.json().then(function (res) {
+    //                 oldLabNumber = res[0].lab_number;
+    //             })
+    //         )
+    //         .catch((err) => console.error(err));
+    // });
     // fetch new lab number
     getAccessTokenSilently().then((token) => {
         fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}/labNumber/${newGroupNumber}`,

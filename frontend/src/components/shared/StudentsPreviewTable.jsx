@@ -29,7 +29,8 @@ const StudentsPreviewTable = ({ students, groupNumber, numberOfGroups, page, row
         return {
             student_id: student.student_id,
             preferred_name: student.preferred_name,
-            group_number: student.group_number
+            group_number: student.group_number,
+            lab_number: student.lab_number
         }
         
     }
