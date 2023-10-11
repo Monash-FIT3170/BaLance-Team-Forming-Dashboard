@@ -26,15 +26,10 @@ const StudentsPreviewTable = ({ students, groupNumber, numberOfGroups, page, row
 
     const getStudentData = (student) => {
 
-        // if (groupNumber === undefined) {
-        //     console.log(student);
-        //     groupNumber = student.groupNumber;
-        // }
-
         return {
             student_id: student.student_id,
             preferred_name: student.preferred_name,
-            group_number: groupNumber
+            group_number: student.group_number
         }
         
     }

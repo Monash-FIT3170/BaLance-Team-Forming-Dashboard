@@ -39,9 +39,10 @@ export default function ChangeGroupModal({ studentData, numberOfGroups }) {
     const {
         student_id,
         preferred_name,
+        group_number
     } = studentData;
 
-    const [group, setGroup] = useState(studentData.group_number ? studentData.group_number : 1);
+    const [group, setGroup] = useState(group_number);
 
     let authService = {
         "DEV": MockAuth,
@@ -95,16 +96,6 @@ export default function ChangeGroupModal({ studentData, numberOfGroups }) {
             });
     };
 
-    let oldGroupText, placeholderGroup;
-    if  (studentData.group_number) {
-        oldGroupText = `Change ${preferred_name}'s group from ${studentData.group_number} to: `;
-        placeholderGroup = `Group ${group}`;
-    }
-    else {
-        oldGroupText = `Change ${preferred_name}'s group to: `;
-        placeholderGroup = `Group ${group}`;
-    }
-
     return (
         <>
             <Button variant="ghost" isDisabled={numberOfGroups===0} onClick={onOpen} >
@@ -119,11 +110,11 @@ export default function ChangeGroupModal({ studentData, numberOfGroups }) {
 
                     <ModalBody>
                         <Text margin="0px 0px 2vh 0px">
-                            {oldGroupText}
+                            {`Change ${preferred_name}'s group from Group ${studentData.group_number} to: `}
                         </Text>
                         <Select
                             bg="white"
-                            placeholder={placeholderGroup}
+                            placeholder={`Group ${group}`}
                             onChange={(event) => setGroup(event.target.value)}
                         >
                             {groupOptions?.map((option) => (

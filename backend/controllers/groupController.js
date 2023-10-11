@@ -24,19 +24,24 @@ const getAllGroups = async (req, res) => {
 
     /* GET ALL GROUPS */
     const studentData = await promiseBasedQuery(
-        'SELECT stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val, l_group.group_number, lab.lab_number ' +
-        'FROM student stud ' +
-        'INNER JOIN group_allocation g_alloc ON stud.stud_unique_id=g_alloc.stud_unique_id ' +
-        'INNER JOIN lab_group l_group ON g_alloc.lab_group_id=l_group.lab_group_id ' +
-        'INNER JOIN unit_off_lab lab ON lab.unit_off_lab_id=l_group.unit_off_lab_id ' +
-        'INNER JOIN unit_offering unit ON unit.unit_off_id=lab.unit_off_id ' +
-        'WHERE' +
-        '   unit.unit_code=? ' +
-        '   AND unit.unit_off_year=? ' +
-        '   AND unit.unit_off_period=?' +
-        'ORDER BY l_group.group_number;',
-        [unitCode, year, period]
-    );
+        "SELECT stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val, group_number, lab_number "+
+        "FROM student stud "+
+        "inner join unit_enrolment ue on ue.stud_unique_id=stud.stud_unique_id " +
+        "inner join unit_offering unit on ue.unit_off_id=unit.unit_off_id " +
+        "left join (select stud.student_id as student_id, group_number, lab_number "+
+					"from student stud "+
+					"inner join group_allocation ga on stud.stud_unique_id = ga.stud_unique_id "+
+					"inner join lab_group lg on ga.lab_group_id = lg.lab_group_id "+
+					"inner join unit_off_lab uol on uol.unit_off_lab_id = lg.unit_off_lab_id "+
+					"inner join unit_offering uo on uo.unit_off_id = uol.unit_off_id "+
+					"WHERE uo.unit_code=? AND uo.unit_off_year=? AND uo.unit_off_period=?) " +
+		"grp on stud.student_id = grp.student_id "+
+        "WHERE unit.unit_code=? "+
+        "AND unit.unit_off_year=? "+
+        "AND unit.unit_off_period=? "+
+        "ORDER BY group_number;",
+        [unitCode, year, period, unitCode, year, period]
+    )
 
     const responseData = [];
     let group = {students: []}
@@ -52,7 +57,8 @@ const getAllGroups = async (req, res) => {
             preferred_name,
             last_name,
             email_address,
-            wam_val
+            wam_val,
+            group_number
         } = studentData[i];
 
         group.students.push({
@@ -60,7 +66,8 @@ const getAllGroups = async (req, res) => {
             preferred_name: preferred_name,
             last_name: last_name,
             email_address: email_address,
-            wam_val: wam_val
+            wam_val: wam_val,
+            group_number: group_number
         })
 
         // if the next student is in a new group or this is the last student, push this group

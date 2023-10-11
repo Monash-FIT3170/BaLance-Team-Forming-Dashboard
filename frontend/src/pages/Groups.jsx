@@ -119,6 +119,7 @@ function Groups() {
         }
     };
 
+    console.log(groups);
 
 
     return (
