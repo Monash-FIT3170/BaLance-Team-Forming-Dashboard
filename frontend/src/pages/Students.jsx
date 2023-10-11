@@ -33,6 +33,20 @@ function Students() {
         period
     } = useParams();
 
+    // const addGroupToStudents = (groupsData) => {
+    //     console.log(groupsData);
+    //     let student;
+    //     for (const group of groupsData) {
+    //         for (const groupStudent of group.students) {
+    //             // find the student from the group's object within the students state 
+    //             student = students.find(s => { return s.student_id === groupStudent.student_id});
+    //             // add their group number
+    //             student.group_number = group.group_number;
+    //         }
+    //     }
+    //     setStudents(students);
+    // }
+
     useEffect(() => {
         getAccessTokenSilently().then((token) => {
             // fetch students from the backend
@@ -59,7 +73,11 @@ function Students() {
                 })
                 .then((res) => res.json())
                 .then((res) => {
-                    setNumberOfGroups(res.length);
+                    if (res.length > 0) {
+                        setNumberOfGroups(res.length);                        
+                        //addGroupToStudents(res);
+                    }
+                    
                 })
                 .catch((err) => console.error(err));
         })

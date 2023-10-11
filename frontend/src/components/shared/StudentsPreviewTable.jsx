@@ -24,6 +24,21 @@ const StudentsPreviewTable = ({ students, groupNumber, numberOfGroups, page, row
         toast(getToastSettings(title, status))
     }
 
+    const getStudentData = (student) => {
+
+        // if (groupNumber === undefined) {
+        //     console.log(student);
+        //     groupNumber = student.groupNumber;
+        // }
+
+        return {
+            student_id: student.student_id,
+            preferred_name: student.preferred_name,
+            group_number: groupNumber
+        }
+        
+    }
+
     const {
         unitCode,
         year,
@@ -90,11 +105,7 @@ const StudentsPreviewTable = ({ students, groupNumber, numberOfGroups, page, row
                             <Td>{student.wam_val}</Td>
                             <Td>
                                 <ChangeGroupModal
-                                    studentData={{
-                                        student_id: student.student_id,
-                                        preferred_name: student.preferred_name,
-                                        group_number: groupNumber
-                                    }}
+                                    studentData={getStudentData(student)}
                                     numberOfGroups={numberOfGroups}
                                 />
                             </Td>

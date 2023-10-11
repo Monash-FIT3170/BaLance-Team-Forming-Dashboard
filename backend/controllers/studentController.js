@@ -27,14 +27,23 @@ const getAllStudents = async (req, res) => {
     } = req.params
 
     const studentsData = await promiseBasedQuery(
-        "SELECT stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val " +
-        "FROM student stud " +
+        "SELECT stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val, group_number, lab_number "+
+        "FROM student stud "+
         "inner join unit_enrolment ue on ue.stud_unique_id=stud.stud_unique_id " +
         "inner join unit_offering unit on ue.unit_off_id=unit.unit_off_id " +
-        "WHERE unit.unit_code=? " +
-        "AND unit.unit_off_year=? " +
-        "AND unit.unit_off_period=?",
-        [unitCode, year, period]
+        "left join (select stud.student_id as student_id, group_number, lab_number "+
+					"from student stud "+
+					"inner join group_allocation ga on stud.stud_unique_id = ga.stud_unique_id "+
+					"inner join lab_group lg on ga.lab_group_id = lg.lab_group_id "+
+					"inner join unit_off_lab uol on uol.unit_off_lab_id = lg.unit_off_lab_id "+
+					"inner join unit_offering uo on uo.unit_off_id = uol.unit_off_id "+
+					"WHERE uo.unit_code=? AND uo.unit_off_year=? AND uo.unit_off_period=?) " +
+		"grp on stud.student_id = grp.student_id "+
+        "WHERE unit.unit_code=? "+
+        "AND unit.unit_off_year=? "+
+        "AND unit.unit_off_period=? "+
+        "ORDER BY group_number;",
+        [unitCode, year, period, unitCode, year, period]
     )
 
     res.status(200).json(studentsData);
