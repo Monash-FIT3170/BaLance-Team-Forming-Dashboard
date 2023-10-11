@@ -6,7 +6,6 @@ import UploadCSV from '../components/importPage/UploadCSV';
 import CsvPreviewTable from "../components/importPage/CsvPreviewTable";
 import NavButton from "../components/shared/NavButton";
 import PageHeader from "../components/shared/PageHeader";
-import AddButton from "../components/shared/AddButton";
 import DropdownDynamic from "../components/shared/DropdownDynamic";
 import AddStudentModal from "../components/importPage/AddStudentModal";
 import EditStudentModal from "../components/importPage/EditStudentModal";
@@ -37,12 +36,6 @@ const ImportPage = () => {
     } = useDisclosure();
 
     const {
-        isOpen: isAddProfileOpen,
-        onOpen: onAddProfileOpen,
-        onClose: onAddProfileClose,
-    } = useDisclosure();
-
-    const {
         isOpen: isEditProfileOpen,
         onOpen: onEditProfileOpen,
         onClose: onEditProfileClose,
@@ -54,7 +47,7 @@ const ImportPage = () => {
         period
     } = useParams();
 
-    console.log(dataType)
+    console.log(profiles)
 
     return (
         <VStack>
@@ -99,11 +92,12 @@ const ImportPage = () => {
                 </Flex>
             </Flex>
 
-            <AddButton
-                onClick={onAddProfileOpen}
-                buttonText={"Add an entry"}
-                width="80%"
-            />
+            <AddStudentModal 
+                unitCode={unitCode} 
+                unitYear={year}
+                unitPeriod={period}
+                />
+
             <CsvPreviewTable
                 headerMap={headerMap}
                 profiles={profiles}

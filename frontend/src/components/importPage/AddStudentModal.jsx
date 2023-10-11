@@ -1,123 +1,196 @@
 import {
-    Box,
     Button,
-    Divider,
+    FormControl,
+    HStack,
     Modal,
     ModalBody,
     ModalContent,
     ModalFooter,
     ModalHeader,
-    ModalOverlay
+    ModalOverlay,
+    Spacer,
+    Text,
+    VStack,
+    useDisclosure,
+    useToast
 } from "@chakra-ui/react";
-import FormField from "./FormField";
-import React from "react";
+import React, { useState } from "react";
+import { AddIcon } from "@chakra-ui/icons";
+import TextField from "../shared/TextField";
+import DropdownDynamic from "../shared/DropdownDynamic";
+import NumberField from "../shared/NumberField";
+import getToastSettings from "../shared/ToastSettings";
+import {MockAuth} from "../../helpers/mockAuth";
+import {useAuth0} from "@auth0/auth0-react";
 
-const AddStudentModal = ({
-    isAddProfileOpen,
-    onAddProfileClose,
-    currProfile,
-    setCurrProfile,
-    setProfiles,
-    profiles
-}) => {
 
-    const fields = [
-        {
-            label: "Student ID",
-            placeholder: "Enter student ID",
-            value: currProfile && currProfile.studentId !== undefined ? currProfile.studentId : "",
-            onChange: (e) => setCurrProfile({ ...currProfile, studentId: e.target.value })
-        },
-        {
-            label: "First Name",
-            placeholder: "Enter student first name",
-            value: currProfile && currProfile.studentFirstName !== undefined ? currProfile.studentFirstName : "",
-            onChange: (e) => setCurrProfile({ ...currProfile, studentFirstName: e.target.value })
-        },
-        {
-            label: "Last Name",
-            placeholder: "Enter student last name",
-            value: currProfile && currProfile.studentLastName !== undefined ? currProfile.studentLastName : "",
-            onChange: (e) => setCurrProfile({ ...currProfile, studentLastName: e.target.value })
-        },
-        {
-            label: "Email",
-            placeholder: "Enter student email address",
-            value: currProfile && currProfile.studentEmailAddress !== undefined ? currProfile.studentEmailAddress : "",
-            onChange: (e) => setCurrProfile({ ...currProfile, studentEmailAddress: e.target.value })
-        },
-        {
-            label: "WAM",
-            placeholder: "Enter student WAM",
-            value: currProfile && currProfile.wamAverage !== undefined ? currProfile.wamAverage : "",
-            onChange: (e) => setCurrProfile({ ...currProfile, wamAverage: e.target.value })
-        },
-        {
-            label: "Lab ID",
-            placeholder: "Enter the ID of the lab student is in",
-            value: currProfile && currProfile.labId !== undefined ? currProfile.labId : "",
-            onChange: (e) => setCurrProfile({ ...currProfile, labId: e.target.value })
-        },
-        {
-            label: "Gender",
-            placeholder: "Enter student gender",
-            value: currProfile && currProfile.gender !== undefined ? currProfile.gender : "",
-            onChange: (e) => setCurrProfile({ ...currProfile, gender: e.target.value }),
-            fieldOptions: [
-                { label: 'M', value: 'M' },
-                { label: 'F', value: 'F' },
-            ]
-        }
-    ];
+const AddStudentModal = ({unitCode, unitYear, unitPeriod}) => {
 
-    const handleSubmit = (e) => {
+    const { isOpen, onOpen, onClose } = useDisclosure()
+
+    const toast = useToast();
+    const getToast = (title, status) => {
+        toast.closeAll();
+        toast(getToastSettings(title, status))
+    }
+
+    let authService = {
+        "DEV": MockAuth,
+        "TEST": useAuth0
+    }
+    const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
+
+    const [studentID, setStudentID] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [wam, setWam] = useState(50);
+    const [labID, setLabID] = useState('');
+    const [gender, setGender] = useState('None Selected');
+
+    const validateWam = (wam) => {
+        return wam >= 0 && wam <= 100;
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (currProfile.enrolmentStatus === "") {
-            currProfile.enrolmentStatus = 'ACTIVE'
+        if (!studentID || !firstName || !lastName || !email || !wam || !labID || !gender) {
+            // all fields must be filled error toast
+            getToast("Please ensure that all fields are filled out before resubmitting.", "error")
         }
-        if (currProfile.belbinType === "") {
-            currProfile.belbinType = 'ACTION';
+        else if (!validateWam(wam)) {
+            // wam error toast
+            getToast("The WAM value must be an integer between 0 and 100.", "error")
         }
-        if (currProfile.averageMark !== "" && currProfile.hours !== "") {
-            currProfile['marksPerHour'] = currProfile.averageMark / currProfile.hours
+        else {
+            console.log("Adding profile: ", studentID, firstName, lastName, email, wam, labID, gender);
+            getAccessTokenSilently().then((token) => {
+                
+                fetch(`http://localhost:8080/api/students/${unitCode}/${unitYear}/${unitPeriod}`, {
+                    method: 'POST',
+                    headers: new Headers({
+                        Authorization: `Bearer ${token}`,
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                    }),
+                    body: JSON.stringify([{
+                        studentId:studentID, 
+                        labCode:labID,
+                        lastName:lastName,
+                        preferredName:firstName,
+                        email:email,
+                        gender:gender,
+                        wam:wam
+                    }]),
+                })
+                    .then((response) => {
+                        if (!response.ok) {
+                            getToast('There was an error uploading your student!', 'error');
+                            throw new Error('Error sending data to the REST API');
+                        } else {
+                            getToast('Your student has been uploaded successfully!', 'success');
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error sending data to the REST API:', error);
+                        // Handle the error from the API if needed
+                    });
+            });
+            onClose();
         }
-        setProfiles([...profiles, currProfile]);
-        setCurrProfile(null);
-        onAddProfileClose();
     };
 
     return (
-        <></>
-        // <Modal isOpen={isAddProfileOpen} onClose={onAddProfileClose}>
-        //     <ModalOverlay />
-        //     <ModalContent>
-        //         <ModalHeader>
-        //             Add Profile
-        //         </ModalHeader>
-        //
-        //         <ModalBody>
-        //             <Divider my={4} />
-        //             <Box as="form" onSubmit={handleSubmit} onCancel={onAddProfileClose}>
-        //                 {fields.map((field) => {
-        //                     console.log(field)
-        //                     console.log("aaaaaahh")
-        //                     return <FormField
-        //                         key={field.label}
-        //                         label={field.label}
-        //                         placeholder={field.placeholder}
-        //                         value={field.value}
-        //                         onChange={field.onChange}
-        //                     />
-        //                 })}
-        //             </Box>
-        //         </ModalBody>
-        //
-        //         <ModalFooter>
-        //             <Button type="submit" colorScheme="blue" mr={3} onClick={handleSubmit} text="Save"/>
-        //             <Button onClick={onAddProfileClose} text="Close"/>
-        //         </ModalFooter>
-        //     </ModalContent>
-        // </Modal>
+        <>
+            <Button
+                width='80%'
+                onClick={onOpen}
+                colorScheme="gray"
+                margin-left="20">
+                <HStack>
+                    <AddIcon />
+                    <Spacer />
+                    <Text>Manually add an entry</Text>
+                </HStack>
+            </Button>
+
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>
+                        Add a Student Profile
+                    </ModalHeader>
+
+                    <ModalBody>
+                        <form id="create-student" onSubmit={handleSubmit}>
+                            <br />
+                            <FormControl required>
+                                <TextField
+                                    my={10}
+                                    label="Student ID"
+                                    value={studentID}
+                                    onChange={(event) => { setStudentID(event.target.value) }}
+                                />
+                                <TextField
+                                    label="First Name"
+                                    value={firstName}
+                                    onChange={(event) => { setFirstName(event.target.value) }}
+                                />
+                                <TextField
+                                    label="Last Name"
+                                    value={lastName}
+                                    onChange={(event) => { setLastName(event.target.value) }}
+                                />
+                                <TextField
+                                    label="Email Address"
+                                    value={email}
+                                    onChange={(event) => { setEmail(event.target.value) }}
+                                />
+                                <TextField
+                                    label="Lab ID"
+                                    value={labID}
+                                    onChange={(event) => { setLabID(event.target.value) }}
+                                />
+                                <VStack>
+                                    <HStack>
+                                        <Text>
+                                            WAM Value:
+                                        </Text>
+                                        <NumberField
+                                            defaultValue={wam}
+                                            minValue={0}
+                                            label="Weighted Average Mark"
+                                            value={wam}
+                                            onChange={(event) => { setWam(event) }}
+                                        />
+                                    </HStack>
+
+                                    <HStack>
+                                        <Text>
+                                            Select a Gender:
+                                        </Text>
+                                        <DropdownDynamic
+                                            placeholder={gender}
+                                            label="Gender"
+                                            options={['M', 'F']}
+                                            onChange={(event) => { setGender(event.target.value) }}
+                                        />
+                                    </HStack>
+
+                                </VStack>
+
+                            </FormControl>
+                        </form>
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button onClick={onClose} text="Close">Cancel</Button>
+                        <Button type="submit" colorScheme="blue" ml={3} onClick={handleSubmit}>Submit</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+        </>
+
     );
 };
 
