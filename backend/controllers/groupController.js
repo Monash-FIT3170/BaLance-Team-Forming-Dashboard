@@ -248,7 +248,7 @@ const moveStudent = async (req, res) => {
         "FROM lab_group g " +
         "   INNER JOIN unit_off_lab l ON l.unit_off_lab_id = g.unit_off_lab_id " +
         "   INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " +
-        "INNER JOIN group_allocation ga ON g.lab_group_id = ga.lab_group_id " +
+        "LEFT JOIN group_allocation ga ON g.lab_group_id = ga.lab_group_id " +
         "WHERE g.group_number=? " +
         "   AND u.unit_code=? " +
         "   AND u.unit_off_year=? " +
