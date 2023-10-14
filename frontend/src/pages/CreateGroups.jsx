@@ -194,7 +194,7 @@ function CreateGroups() {
                 </form>
 
 
-                <Button type="submit" form="create-groups" colorScheme="blue" >{strategy === "custom" ? "Upload Custom Script" : "Assign groups"}</Button>
+                <Button type="submit" form="create-groups" colorScheme="blue" >{strategy === "custom" ? "Upload Custom Script" : "Assign group"}</Button>
             </VStack>
 
         </>
