@@ -65,7 +65,7 @@ const CreateUnitModal = ({
         });
 
         setSubmitted(true);
-        getToast('Unit created successfully', 'success');
+        getToast('Offering created successfully', 'success');
     }
 
     const renderForm = () => {
@@ -106,7 +106,7 @@ const CreateUnitModal = ({
         <Modal closeOnOverlayClick={false} isOpen={isModalOpen} onClose={onModalClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>New Unit</ModalHeader>
+                <ModalHeader>New Offering</ModalHeader>
                 <ModalCloseButton />
                 <hr/>
 
@@ -121,7 +121,7 @@ const CreateUnitModal = ({
                         cancelButtonText="Cancel"
                         confirmButtonColor="blue"
                         confirmButtonOnClick={submitUnit}
-                        confirmButtonText="Create unit"
+                        confirmButtonText="Create Offering"
                     />
                     :
                     <ModalFooterButtonPair

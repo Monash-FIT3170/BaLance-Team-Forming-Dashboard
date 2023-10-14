@@ -66,7 +66,7 @@ const UnitAnalytics = () => {
     };
 
     const navigateToOfferingDashboard = () => {
-        navigate(`/students/${unitCode}/${year}/${period}`);
+        navigate(`/groups/${unitCode}/${year}/${period}`);
     };
 
     return (
