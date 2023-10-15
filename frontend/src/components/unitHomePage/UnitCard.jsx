@@ -120,7 +120,7 @@ const UnitCard = (unit) => {
                         boxSize="20px"
                         margin={2}
                     />
-                    {/*<Text>{enrolmentCount}</Text>*/}
+                    <Text></Text>
                     <Button onClick={handleDeleteUnit} p={0} bg="transparent">
                         <Icon
                             as={FaTrash}
