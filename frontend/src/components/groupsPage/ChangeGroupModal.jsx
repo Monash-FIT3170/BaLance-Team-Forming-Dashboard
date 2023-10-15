@@ -1,4 +1,4 @@
-import { EditIcon } from '@chakra-ui/icons';
+import { EditIcon, WarningIcon } from '@chakra-ui/icons';
 import { useState } from 'react';
 import { useParams } from 'react-router';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -17,8 +17,12 @@ import {
     Spacer,
     Text,
     useDisclosure,
+    useToast,
 } from '@chakra-ui/react';
 import { MockAuth } from '../../helpers/mockAuth';
+import ConfirmChangeGroupModal from './ConfirmChangeGroupModal';
+import getToastSettings from '../shared/ToastSettings';
+import { NoGroupInfo } from './NoGroupWarning';
 
 export default function ChangeGroupModal({ studentData, numberOfGroups }) {
     const {
@@ -26,6 +30,7 @@ export default function ChangeGroupModal({ studentData, numberOfGroups }) {
         year,
         period
     } = useParams();
+    console.log(studentData)
 
     const {
         isOpen,
@@ -36,9 +41,13 @@ export default function ChangeGroupModal({ studentData, numberOfGroups }) {
     const {
         student_id,
         preferred_name,
+        group_number,
+        lab_number
     } = studentData;
 
-    const [group, setGroup] = useState(1);
+    const hasAGroup = group_number !== null;
+    
+    const [group, setGroup] = useState(hasAGroup ? group_number : 1);
 
     let authService = {
         "DEV": MockAuth,
@@ -47,24 +56,29 @@ export default function ChangeGroupModal({ studentData, numberOfGroups }) {
 
     const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
+    const toast = useToast();
+    const getToast = (title, status) => {
+        toast.closeAll();
+        toast(getToastSettings(title, status))
+    }
+
     // an array of viable groups the student can be changed to
     const groupOptions = [];
     for (let i = 1; i <= numberOfGroups; i++) {
-        groupOptions.push({
-            label: `Group ${i}`,
-            value: i
-        })
-
+        if (i !== group) {
+            groupOptions.push({
+                label: `Group ${i}`,
+                value: i
+            })
+        }
     }
 
     // handles modal confirmation for changing a students group
-
     const handleStudentGroupChange = async () => {
         onClose();
-        console.log(group)
         let token = await getAccessTokenSilently()
         await fetch(
-            `http://localhost:8080/api/groups/${unitCode}/${year}/${period}/move/${student_id}/`, {
+            `http://localhost:8080/api/groups/${unitCode}/${year}/${period}/move/${student_id}/${hasAGroup}`, {
             method: 'PATCH',
             body: JSON.stringify({ newGroup: group }),
             headers: new Headers({
@@ -72,17 +86,32 @@ export default function ChangeGroupModal({ studentData, numberOfGroups }) {
                 'Accept': 'application/json',
                 'Content-type': 'application/json; charset=UTF-8'
             }),
-        }
-        );
-        window.location.reload();
+        })
+            .catch(() => {
+                // error toast 
+                getToast(`The changing of ${preferred_name}'s group was not successful, please try again.`, 'error');
+            })
+            .finally(() => {
+                // successful toast
+                getToast(`You have successfully changed ${preferred_name}'s group.`, 'success');
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500)
+            });
     };
 
+    const noGroupInfoPopover = hasAGroup || numberOfGroups === 0 ? <></> : <NoGroupInfo />
+    const modalText = hasAGroup ? `Change ${preferred_name}'s group from Group ${studentData.group_number} to: ` : `Change ${preferred_name}'s group to: `;
 
     return (
         <>
-            <Button variant="ghost" onClick={onOpen}>
+            <Button variant="ghost" isDisabled={numberOfGroups===0} onClick={onOpen} >
                 <EditIcon />
-            </Button>
+            </Button>    
+            {noGroupInfoPopover}            
+            
+
 
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
@@ -92,10 +121,11 @@ export default function ChangeGroupModal({ studentData, numberOfGroups }) {
 
                     <ModalBody>
                         <Text margin="0px 0px 2vh 0px">
-                            {`Change ${preferred_name}'s group to: `}
+                            {modalText}
                         </Text>
                         <Select
                             bg="white"
+                            placeholder={`Group ${group}`}
                             onChange={(event) => setGroup(event.target.value)}
                         >
                             {groupOptions?.map((option) => (
@@ -112,14 +142,12 @@ export default function ChangeGroupModal({ studentData, numberOfGroups }) {
                             <Button margin="0px 5px" variant="ghost" onClick={onClose}>
                                 Cancel
                             </Button>
-                            <Button
-                                onClick={handleStudentGroupChange}
-                                margin="0px 5px"
-                                colorScheme="blue"
-                                mr={3}
-                            >
-                                Confirm
-                            </Button>
+                            <ConfirmChangeGroupModal
+                                handleStudentGroupChange={handleStudentGroupChange}
+                                oldGroupNumber={studentData.group_number}
+                                oldLabNumber={studentData.lab_number}
+                                newGroupNumber={group}
+                            />
                             <Spacer />
                         </HStack>
                     </ModalFooter>
