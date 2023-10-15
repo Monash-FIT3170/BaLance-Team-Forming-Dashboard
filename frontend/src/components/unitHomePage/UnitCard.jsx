@@ -120,8 +120,7 @@ const UnitCard = (unit) => {
                         boxSize="20px"
                         margin={2}
                     />
-                    <Text></Text>
-                    <Button onClick={handleDeleteUnit} p={0} bg="transparent">
+                    <Text>{unit.enrolment_count}</Text>
                         <Icon
                             as={FaTrash}
                             color="black"
@@ -129,8 +128,8 @@ const UnitCard = (unit) => {
                             style={{
                             marginLeft: '270px',
                             }}
+                            onClick={handleDeleteUnit}
                         />
-                    </Button>
                 </HStack>
                 <Text
                     fontSize='2xl'
