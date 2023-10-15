@@ -59,9 +59,9 @@ function UnitPage() {
         className="units"
         style={{
           display: 'flex',
-          justifyContent: 'center', // Center horizontally
-          alignItems: 'center', // Center vertically
-          height: '100%', // Ensure the card takes up the full height of the grid cell
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
         }}
       >
         {units &&

@@ -22,7 +22,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { FaTrash } from 'react-icons/fa';
-import { FaUser } from 'react-icons/fa'; // Import the person icon
+import { FaUser } from 'react-icons/fa';
 import getToastSettings from '../shared/ToastSettings';
 import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
@@ -98,7 +98,7 @@ const UnitCard = (index, ...unit) => {
     <div style={{ display: 'flex' }}>
       <Box
         as="button"
-        onClick={navigateToUnitOffering}
+        // onClick={navigateToUnitOffering}
         style={{
           width: '360px',
           height: '160px',
@@ -113,7 +113,7 @@ const UnitCard = (index, ...unit) => {
         <Box
           style={{
             width: '100%',
-            height: '16px',
+            height: '20px',
             backgroundColor: topBoxColor,
             borderTopLeftRadius: '5px',
             borderTopRightRadius: '5px',
@@ -121,13 +121,9 @@ const UnitCard = (index, ...unit) => {
         ></Box>
         <VStack flexGrow={1} width="100%">
           <HStack width="100%">
-            <Icon
-              as={FaUser}
-              color="black"
-              boxSize="20px" 
-              //   alignSelf="flex-start"
-              margin={2}
-            />
+              <Button onClick={navigateToUnitOffering} p={0} bg="transparent">
+                <Icon as={FaUser} color="black" boxSize="20px" margin={2} />
+              </Button>
             <Text>0</Text>
             <Button onClick={handleDeleteUnit} p={0} bg="transparent">
               <Icon
@@ -148,7 +144,7 @@ const UnitCard = (index, ...unit) => {
               fontSize: 24,
             }}
           >
-            {`${unit_code} ${unit_off_period} ${unit_off_year}`}
+              {`${unit_code} ${unit_off_period} ${unit_off_year}`}
           </Text>
           <Text
             alignSelf="flex-start"
