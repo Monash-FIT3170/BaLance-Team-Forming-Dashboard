@@ -19,7 +19,7 @@ const GroupCard = ({groupData, numberOfGroups}) => {
     } = useParams();
 
     return (
-        <Box
+        group_number && lab_number ? (<Box
             border="1px"
             marginTop="20px"
             marginBottom="20px"
@@ -44,13 +44,15 @@ const GroupCard = ({groupData, numberOfGroups}) => {
                 <Box marginBottom={'10px'}>
                     <StudentsPreviewTable
                         students={students}
+                        groupNumber={group_number}
                         page={'groups'}
                         rowHeights={'50px'}
                         numberOfGroups={numberOfGroups}
                     />
                 </Box>
             </VStack>
-        </Box>
+        </Box>)
+        : <></>
     );
 };
 

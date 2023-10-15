@@ -46,6 +46,7 @@ function Students() {
                 .then((res) => res.json())
                 .then((res) => {
                     setStudents(res);
+                    console.log(students)
                 })
                 .catch((err) => console.error(err));
 
@@ -59,7 +60,10 @@ function Students() {
                 })
                 .then((res) => res.json())
                 .then((res) => {
-                    setNumberOfGroups(res.length);
+                    if (res.length > 0) {
+                        setNumberOfGroups(res.length);                        
+                    }
+                    
                 })
                 .catch((err) => console.error(err));
         })
@@ -83,7 +87,7 @@ function Students() {
                     buttonIcon={<EditIcon />}
                 />
                 <NavButton
-                    buttonText="View unit analytics"
+                    buttonText="View offering analytics"
                     buttonUrl={`/unitAnalytics/${unitCode}/${year}/${period}`}
                     buttonIcon={<ViewIcon/>}
                 />
