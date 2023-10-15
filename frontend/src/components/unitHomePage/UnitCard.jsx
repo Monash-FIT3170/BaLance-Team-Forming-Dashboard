@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { MockAuth } from '../../helpers/mockAuth';
 import { useAuth0 } from '@auth0/auth0-react';
 import PageHeader from "../shared/PageHeader";
+import React from "react";
 
 const UnitCard = (unit) => {
 
@@ -97,12 +98,14 @@ const UnitCard = (unit) => {
 
     return (
         <Box
-        as="button"
-        onClick={navigateToUnitOffering}
-        width='360px'
-        height='160px'
-        backgroundColor='#E6EBF0'
-        borderRadius='5px'
+            as="button"
+            onClick={navigateToUnitOffering}
+            width='360px'
+            height='150px'
+            backgroundColor='#E6EBF0'
+            borderRadius='5px'
+            pb={'1em'}
+            position="relative"
         >
             <Box
                 width='100%'
@@ -131,13 +134,18 @@ const UnitCard = (unit) => {
                         />
                     </Button>
                 </HStack>
-                <PageHeader
-                    pageDesc={`${unit_code} ${unit_off_year} ${unit_off_period}`}
+                <Text
                     fontSize='2xl'
-                />
+                    fontWeight="bold"
+                    align={'left'}
+                >
+                    {`${unit_code} ${unit_off_year} ${unit_off_period}`}
+                </Text>
                 <Text
                     align={'left'}
-                >{unit_name}</Text>
+                >
+                    {unit_name}
+                </Text>
             </VStack>
         </Box>
     );
