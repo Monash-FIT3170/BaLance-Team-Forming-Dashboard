@@ -94,8 +94,6 @@ const UnitCard = (unit) => {
         });
     };
 
-    console.log(unit_code)
-
     return (
         <Box
             as="button"

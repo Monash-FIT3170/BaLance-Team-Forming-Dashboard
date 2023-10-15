@@ -73,16 +73,17 @@ function UnitPage() {
                 </VStack>
             </Flex>
 
-            <Grid templateColumns="repeat(3, 1fr)" gap={4} className="units">
+
+            <Grid templateColumns="repeat(4, 1fr)" gap={4} className="units" ml={'5em'} mr={'5em'}>
                 {units && units.map((unit) => (
-                        <UnitCard
-                            {...unit}
-                            key={`${unit.unit_code}/${unit.unit_off_year}/${unit.unit_off_period}`}
-                            className="unit"
-                        />
-                    )
-                )}
+                    <UnitCard
+                        {...unit}
+                        key={`${unit.unit_code}/${unit.unit_off_year}/${unit.unit_off_period}`}
+                        className="unit"
+                    />
+                ))}
             </Grid>
+
 
             <CreateUnitModal
                 isModalOpen={isAddOpen}
