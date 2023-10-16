@@ -46,9 +46,9 @@ function UnitPage() {
                     setUnits(data);
                 })
                 .catch((err) => {
-                    console.error('Error fetching units:', err)
-                }
-            )
+                        console.error('Error fetching units:', err)
+                    }
+                )
         })
     }, []);
 
@@ -73,7 +73,8 @@ function UnitPage() {
                 </VStack>
             </Flex>
 
-            <Grid templateColumns="repeat(3, 1fr)" gap={4} className="units">
+
+            <Grid templateColumns="repeat(4, 1fr)" gap={4} className="units" ml={'5em'} mr={'5em'}>
                 {units && units.map((unit) => (
                     <UnitCard
                         {...unit}
@@ -82,6 +83,7 @@ function UnitPage() {
                     />
                 ))}
             </Grid>
+
 
             <CreateUnitModal
                 isModalOpen={isAddOpen}

@@ -1,62 +1,28 @@
-
 //imports
 import {
-    Card,
-    Link,
+    Box,
     Button,
     Icon,
-    Image,
     Text,
-    Modal,
-    ModalBody,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalCloseButton,
     useColorModeValue,
     useDisclosure,
     VStack,
     HStack,
-    Spacer,
-    Center,
-    useToast,
+    useToast, Spacer,
 } from '@chakra-ui/react';
-import { BsTrash } from 'react-icons/bs';
-import getToastSettings from '../shared/ToastSettings'
-import { IoEllipsisHorizontalSharp } from 'react-icons/io5';
+import { FaTrash } from 'react-icons/fa';
+import { FaUser } from 'react-icons/fa';
+import getToastSettings from '../shared/ToastSettings';
 import { useNavigate } from 'react-router-dom';
 import { MockAuth } from '../../helpers/mockAuth';
 import { useAuth0 } from '@auth0/auth0-react';
+import PageHeader from "../shared/PageHeader";
+import React from "react";
 
 const UnitCard = (unit) => {
 
-    //setting the colors of the card
-    let boxBg = useColorModeValue('gray.600');
-    let mainText = useColorModeValue('gray.800', 'white');
-    let secondaryText = useColorModeValue('gray.600', 'gray.600');
-    let iconBox = useColorModeValue('#F1EFEF');
-    let iconColor = useColorModeValue('brand.200', 'white');
-    let authService = {
-        "DEV": MockAuth,
-        "TEST": useAuth0
-    }
+    console.log(unit)
 
-    const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
-
-    const toast = useToast();
-    const getToast = (title, status) => {
-        toast.closeAll();
-        toast(getToastSettings(title, status))
-    }
-
-    const {
-        isOpen: isOpenDetails,
-        onOpen: onOpenDetails,
-        onClose: onCloseDetails,
-    } = useDisclosure();
-
-    //getting the unit details from the unit object
     const {
         unit_code,
         unit_name,
@@ -65,157 +31,121 @@ const UnitCard = (unit) => {
         enrolment_count
     } = unit
 
+
+    // Add more colours after testing
+    const topBoxColors = [
+        useColorModeValue('#24265D', 'gray.700'),
+        useColorModeValue('#FF9900', 'gray.700'),
+        useColorModeValue('#0089FF', 'gray.700'),
+        useColorModeValue('#CC00FF', 'gray.700'),
+        useColorModeValue('#FF0000', 'gray.700'),
+    ];
+
+    // Change 0 to index & test
+    const topBoxColor = topBoxColors[0 % topBoxColors.length];
+
+    let boxBg = useColorModeValue('gray.600');
+    let mainText = useColorModeValue('gray.800', 'white');
+    let secondaryText = useColorModeValue('gray.600', 'gray.600');
+    let iconBox = useColorModeValue('#F1EFEF');
+    let iconColor = useColorModeValue('brand.200', 'white');
+
+    let authService = {
+        DEV: MockAuth,
+        TEST: useAuth0,
+    };
+
+    const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
+
+    const toast = useToast();
+    const getToast = (title, status) => {
+        toast.closeAll();
+        toast(getToastSettings(title, status));
+    };
+
+    const {
+        isOpen: isOpenDetails,
+        onOpen: onOpenDetails,
+        onClose: onCloseDetails,
+    } = useDisclosure();
+
     const navigate = useNavigate();
 
     //navigate to the groups for the current unit if it is clicked
-    const navigateToUnitOffering = () => navigate(`/students/${unit_code}/${unit_off_year}/${unit_off_period}`);
+    const navigateToUnitOffering = () =>
+        navigate(`/students/${unit_code}/${unit_off_year}/${unit_off_period}`);
 
     // handle delete unit and posting it to the backend
     const handleDeleteUnit = (event) => {
         getAccessTokenSilently().then((token) => {
-            fetch(`http://localhost:8080/api/units/${unit_code}/${unit_off_year}/${unit_off_period}`, {
-                method: 'DELETE',
-                headers: new Headers({
-                    'Authorization': `Bearer ${token}`
-                })
-            });
+            fetch(
+                `http://localhost:8080/api/units/${unit_code}/${unit_off_year}/${unit_off_period}`, {
+                    method: 'DELETE',
+                    headers: new Headers({
+                        Authorization: `Bearer ${token}`
+                    })
+                }
+            );
             getToast('Unit deleted successfully', 'success');
             setTimeout(() => {
                 onCloseDetails();
                 window.location.reload();
             }, 1500);
-        })
-    }
+        });
+    };
 
-  return (
-  <div style={{ display: 'flex', justifyContent: 'center' }}>
-  <Card style={{
-                border: '1px solid #ccc',
-                alignItems: 'center',
-                width: '360px',
-                height: '300px',
-                backgroundColor: '#F1EFEF',
-               }}
-               className='mx-auto'>
-    <VStack marginX="2vw" width="26vw">
-      <HStack width="100%" marginX="0">
-          <Text
-      my="auto"
-      fontWeight="800"
-      color={mainText}
-      textAlign="center"
-      fontSize="xl"
-      me="auto"
-      width="90%"
-    >
-      {/* the unit name card */}
-      <div
-        style={{
-          fontWeight: 'bold',
-          fontSize: '20px',
-          width: '100%',
-          //border: '1px solid #ccc', // Add a border to make it look like a card
-          padding: '0px', // Add padding for spacing
-          borderRadius: '8px', // Add rounded corners for a card-like appearance
-          backgroundColor: '#F1EFEF', // Change the background color as desired
-        }}
-      >
-        {`${unit_code} - ${unit_off_period}, ${unit_off_year}`}
-      </div>
-    </Text>
-
-        {/* the 3 dots button */}
-        <Button
-          maxW="10%"
-          align="right"
-          justify="right"
-          bg={iconBox}
-          onClick={onOpenDetails}
+    return (
+        <Box
+            as="button"
+            onClick={navigateToUnitOffering}
+            width='360px'
+            height='150px'
+            backgroundColor='#E6EBF0'
+            borderRadius='5px'
+            pb={'1em'}
+            position="relative"
         >
-          <Icon w="1.5em" h="1.5em" as={IoEllipsisHorizontalSharp} color={iconColor} />
-        </Button>
-      </HStack>
-
-            {/* the popup when the 3 dots button is clicked, shows the unit details */}
-            <Modal
-                closeOnOverlayClick={false}
-                isOpen={isOpenDetails}
-                onClose={onCloseDetails}
-                onClick={<Link to={this} onClick={isOpenDetails}></Link>}
-            >
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>{`${unit_code} - ${unit_off_period}, ${unit_off_year}`}</ModalHeader>
-                    <ModalCloseButton />
-
-                    <ModalBody>
-                        <VStack>
-                            <b>{unit_name}</b>
-                            <p>{`${enrolment_count} students enrolled`}</p>
-                        </VStack>
-                    </ModalBody>
-
-                    <ModalFooter>
-                        <HStack>
-                            <Spacer />
-                            <Text
-                                my="auto"
-                                fontWeight="800"
-                                color={mainText}
-                                textAlign="right"
-                                fontSize="xl"
-                                me="auto"
-                            >
-                                <Button colorScheme='red' onClick={handleDeleteUnit} >
-                                    <HStack>
-                                        <Text>Remove Offering</Text>
-                                        <Icon as={BsTrash}></Icon>
-                                    </HStack>
-                                </Button>
-                            </Text>
-                        </HStack>
-
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
-            <hr style={{ width: 360, margin: 'lrem auto', borderTop: '1px solid #ccc'}}/>
-
-            {/* the button with the image and the faculty, when clicked will also bring to the groups for this unit */}
-            <Button
-                onClick={navigateToUnitOffering}
-                style={{ display: 'inline-block', width: '100%', height: 'auto', marginBottom: "5vh" }}
-                bg={iconBox}
-            >
-                <Center>
-                    <VStack marginY="2vh" marginX="-3vw">
-                        <Text
-                            fontWeight="600"
-                            color={secondaryText}
-                            textAlign="center"
-                            fontSize="l"
-                            w="80%"
-                        >
-                            {unit_name}
-                        </Text>
-                        <Image
-                            src="https://img.freepik.com/free-vector/gradient-purple-color-gradient-background-abstract-modern_343694-2243.jpg?w=740&t=st=1682246391~exp=1682246991~hmac=24a5e0adc73d36b09e5b9fc4b2b05aabd12bab82078f67b6556cb3800ca6d1e4"
+            <Box
+                width='100%'
+                height='1em'
+                backgroundColor={topBoxColor}
+                borderTopLeftRadius='5px'
+                borderTopRightRadius='5px'
+            />
+            <VStack flexGrow={1} width="100%">
+                <HStack width="100%">
+                    <Icon
+                        as={FaUser}
+                        color="black"
+                        boxSize="20px"
+                        margin={2}
+                    />
+                    <Text>{unit.enrolment_count}</Text>
+                        <Icon
+                            as={FaTrash}
+                            color="black"
+                            boxSize="20px"
                             style={{
-                                height: 'auto',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                width: '80%'
+                            marginLeft: '270px',
                             }}
-                            borderRadius="20px"
+                            onClick={handleDeleteUnit}
                         />
-                    </VStack>
-
-                </Center>
-
-
-            </Button>
-        </VStack>
-        </Card>
-        </div>
+                </HStack>
+                <Text
+                    fontSize='2xl'
+                    fontWeight="bold"
+                    align={'left'}
+                >
+                    {`${unit_code} ${unit_off_year} ${unit_off_period}`}
+                </Text>
+                <Text
+                    align={'left'}
+                >
+                    {unit_name}
+                </Text>
+            </VStack>
+        </Box>
     );
 };
+
 export default UnitCard;
