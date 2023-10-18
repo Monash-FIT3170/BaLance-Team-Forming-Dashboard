@@ -95,7 +95,7 @@ function Students() {
             <br/><br/>
             <HStack margin="0px 20vw 5vh 20vw" justifyContent={'center'}>
                 <ToggleButtonGroup
-                    leftButtonIsDisabled={false}
+                    leftButtonIsDisabled={numberOfGroups < 1}
                     leftButtonUrl={`/groups/${unitCode}/${year}/${period}`}
                     leftButtonText="Groups"
                     rightButtonIsDisabled={true}
