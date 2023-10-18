@@ -46,7 +46,7 @@ function CreateGroups() {
     }
 
     const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
-
+    const [students, setStudents] = useState([]);
     const [strategy, setStrategy] = useState("random");
     const [groupSize, setGroupSize] = useState(2);
     const cancelRef = React.useRef();
@@ -78,6 +78,26 @@ function CreateGroups() {
         navigate(`/uploadGroupScript/${unitCode}/${year}/${period}`);
     };
 
+    useEffect(() => {
+        getAccessTokenSilently().then((token) => {
+            // fetch students from the backend
+            fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}`,
+                {
+                    method: 'get',
+                    headers: new Headers({
+                        'Authorization': `Bearer ${token}`
+                    })
+                })
+                .then((res) => res.json())
+                .then((res) => {
+                    setStudents(res);
+                    console.log(students)
+                })
+                .catch((err) => console.error(err));
+
+        })
+    }, []);
+
     const handleSubmitGroupOptions = async (event) => {
         event.preventDefault();
 
@@ -92,11 +112,17 @@ function CreateGroups() {
         else if (strategy === "belbin" && groupSize === 2) {
             getToast("Failed to create groups. The minimum ideal group size for the belbin grouping strategy is 3.", "error");
             return;
+        } else if (groupSize === 0) { 
+            getToast("Failed to create groups. You cannot have a group size of 0.", "error");
+            return;
         }
-        
+        else if (groupSize > students.length) {
+            getToast(`Failed to create groups. The maximum ideal group size is ${students.length}`, "error");
+            return;
+        }
         else {
             /* Call to shuffle groups */
-            fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
+            await fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
                 method: 'POST',
                 headers: new Headers({
                     'Authorization': `Bearer ${token}`,
@@ -116,7 +142,8 @@ function CreateGroups() {
                         res.json().then(json => console.log(json))
                     }
                 })
-                .catch((error) => { console.error('Error:', error); })
+                .catch((error) => { console.error('Error:', error); });
+                        // fetch groups from the backend
         }
     }
 
