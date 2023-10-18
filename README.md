@@ -75,7 +75,15 @@ against
 
 Authentication is done using Auth0. An Auth0 account is required to use this authentication. Follow the guide here: https://www.youtube.com/watch?v=GGGjnBkN8xk to setup the Auth0 account and applications.
 
-A summary of what is needed in Auth0 is a Single Page Application and a Machine to Machine API. Make sure when creating the Single Page Application, "Allowed Callback URLs", "Allowed Logout URLs" and "Allowed Web Origins" all have the address "http://localhost:3000/" in them.
+When creating the application, the following needs to be filled out.
+
+Single Page Application:
+- Allowed Callback URLs = http://localhost:3000/
+- Allowed Logout URLs = http://localhost:3000/
+- Allowed Web Origins = http://localhost:3000/
+
+Machine to Machine:
+- Do not alter the default settings.
 
 For the frontend you need to note down the following details:
  - domain
@@ -84,15 +92,22 @@ For the frontend you need to note down the following details:
 For the backend you need to note down the following details:
  - issuerBaseURL (same as domain)
 
-Place these details in the .env file for both backend and frontend.
+Place these details in the .env files for both backend and frontend.
 
-Authentication has both a TEST and DEV environment set in both the frontend/.env (REACT_APP_AUTH) and backend/.env (AUTH) files.
+Backend:
+ - AUTH_DOMAIN={issuerBaseURL}
+
+Frontend:
+ - REACT_APP_AUTH_DOMAIN={domain}
+ - REACT_APP_AUTH_CLIENT_ID={clientId}
+
+Authentication has both a TEST and DEV environment set in both the frontend/.env (as REACT_APP_AUTH) and backend/.env (as AUTH).
 
 The Auth DEV environment uses a mock authentication service. This is for when developing and testing new API calls.
 
-The Auth TEST environment uses Auth0 authentication. Auth0 authentication when using the free tier has a rate limit, which is reached very quickly if navigating the app quickly.
+The Auth TEST environment uses Auth0 authentication. (Note: Auth0 authentication when using the free tier has a rate limit, which is reached very quickly if navigating the app quickly.)
 
-Use Auth DEV most of the time, and switch to Auth TEST to confirm that the implementation works with the actual authentication.
+Use Auth DEV for development, and switch to Auth TEST to confirm that the implementation works with the Auth0 Authentication.
 
 # Development guidelines
 
