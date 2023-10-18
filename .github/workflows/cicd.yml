@@ -10,34 +10,51 @@ on:
 
 jobs:
   build:
+    name: Build and Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
           node-version: 16
-      
-      - name: Change directory to frontend
+
+      - name: Change Directory to Frontend
         run: cd frontend
-      - run: npm ci
-      - run: npm test
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Frontend Tests
+        run: npm test
 
   publish-gpr:
-    name: Deploying to GitHub Package Registry #to be changed to AWS in future
-    if: github.ref == 'refs/heads/main' 
-    #only do on main branch not PRs
-    needs: build
+    name: Deploy to GitHub Package Registry # To be changed to AWS in the future
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    needs: build
     permissions:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
           node-version: 16
           registry-url: https://npm.pkg.github.com/
-      - run: npm ci
-      - run: npm publish
+
+      - name: Change Directory to Frontend
+        run: cd frontend
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Publish to Registry
+        run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
