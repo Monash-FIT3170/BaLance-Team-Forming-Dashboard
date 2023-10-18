@@ -22,6 +22,7 @@ formation strategies for teaching associates to select from.
     - [Pull Requests](#pull-requests)
     - [Branching Strategy](#branch-strategy)
     - [Versioning](#versioning)
+    - [Deploying the Application](#deploying-the-application)
 7. [Contributors](#contributors)
 8. [License](#license)
 
@@ -138,6 +139,10 @@ the keys for the objects that were added to in the backend as described above
 The versioning strategy used by this project is semantic versioning (MAJOR.MINOR.PATCH) and is split between the frontend and backend. 
 Major values must match the backend and frontend versions to guarantee compatibility. Minor and patch values do not need to match 
 between the frontend and backend versions for compatibility.
+
+## Deploying the Application
+Currently we do not have a production version of the application. The team planned to publish to AWS and host from there.
+There is a cicd pipeline currently in place using github acitons. This runs tests on any pull request to main and then deploys once the request has been approaved. We have just set this up using Github pages as an example but if the project is continued an alternative like AWS should be set up and used.
 
 ### Backend
 The version is 1.0.0 as of 16/10/2023, the first initial release of the backend of the application.
