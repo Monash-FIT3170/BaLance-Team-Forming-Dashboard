@@ -68,6 +68,8 @@ const CreateUnitModal = ({
         getToast('Offering created successfully', 'success');
     }
 
+
+
     const renderForm = () => {
         return (
             <form id="create-unit" onSubmit={submitUnit}>
@@ -85,10 +87,10 @@ const CreateUnitModal = ({
                     />
                     <FormLabel>Unit offering</FormLabel>
                     <Flex direction="row" spacing={4} justifyContent="space-between">
-                        <NumberField
-                            defaultValue={unitYear}
-                            minValue={new Date().getFullYear()}
+                          <DropdownDynamic 
+                            placeholder={new Date().getFullYear()}
                             onChange={(event) => setUnitYear(event)}
+                            options={[new Date().getFullYear()+1, new Date().getFullYear()+2, new Date().getFullYear()+3]}
                         />
                         <DropdownDynamic
                             placeholder={'select semester'}
