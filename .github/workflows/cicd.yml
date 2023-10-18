@@ -1,9 +1,12 @@
-name: Balance App GitHub CICD
+name: CICD
 
 on:
   push:
     branches:
-      - feature/website-deployment123
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -20,6 +23,9 @@ jobs:
       - run: npm test
 
   publish-gpr:
+    name: Deploying to GitHub Package Registry #to be changed to AWS in future
+    if: github.ref == 'refs/heads/main' 
+    #only do on main branch not PRs
     needs: build
     runs-on: ubuntu-latest
     permissions:
