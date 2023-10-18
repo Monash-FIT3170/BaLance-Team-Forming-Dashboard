@@ -128,11 +128,20 @@ the keys for the objects that were added to in the backend as described above
 
 ## Pull Requests
 
-...
 
 ## Branching Strategy
 
-...
+The task branching strategy is used for this project. The branch to be used for deployment is the main branch. All branches origins must be from the main branch.
+
+When a new feature is being worked on, the branch must begin with "feat/" followed by the feature to be implemented. The branch can be further sub-divided into smaller branches if required, using the same convention.
+
+When a bug is being worked on, the branch must begin with "fix/" followed by the bug to be fixed.
+
+When working on documentation, the branch must begin with "docs/" followed by the documents to be worked on.
+
+When working on refactoring, the branch must begin with "refactor/" followed by what is being refactored.
+
+All commits must follow the Convential Commit format as specified by Convential Commit Organisation website. (https://www.conventionalcommits.org/en/v1.0.0/)
 
 ## Versioning
 The versioning strategy used by this project is semantic versioning (MAJOR.MINOR.PATCH) and is split between the frontend and backend. 
