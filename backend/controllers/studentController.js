@@ -72,24 +72,30 @@ const addAllStudents = async (req, res) => {
 
     console.log(requestBody)
 
-    /* INSERT STUDENTS INTO DATABASE */
-    // get the attributes we need and their values in prep for SQL queries
-    //   e.g. {id: 5, name: 'jim'} becomes [5, 'jim'] to comply with mysql2 API
-    const studentInsertData = requestBody.map(
-        ({ labCode, ...rest }) => {return Object.values(rest);}
-    );
-    await insertStudents(studentInsertData)
+    try {
+        /* INSERT STUDENTS INTO DATABASE */
+        // get the attributes we need and their values in prep for SQL queries
+        //   e.g. {id: 5, name: 'jim'} becomes [5, 'jim'] to comply with mysql2 API
+        const studentInsertData = requestBody.map(
+            ({ labCode, ...rest }) => { return Object.values(rest); }
+        );
+        await insertStudents(studentInsertData)
 
-    /* CREATE UNIT ENROLMENT BETWEEN STUDENTS AND UNIT */
-    const studentEmails = requestBody.map((student) => student.email);
-    const studentKeys = await selectStudentsKeys(studentEmails);
-    const unitOffId = await selectUnitOffKey(unitCode, year, period);
-    await insertStudentEnrolment(studentKeys, unitOffId);
+        /* CREATE UNIT ENROLMENT BETWEEN STUDENTS AND UNIT */
+        const studentEmails = requestBody.map((student) => student.email);
+        const studentKeys = await selectStudentsKeys(studentEmails);
+        const unitOffId = await selectUnitOffKey(unitCode, year, period);
+        await insertStudentEnrolment(studentKeys, unitOffId);
 
-    /* CREATE THE LABS ASSOCIATED WITH THE UNIT ENROLMENT AND ALLOCATE THE STUDENTS */
-    await insertUnitOffLabs(requestBody, unitOffId); // ensure lab no.s don't repeat in units
-    await insertStudentLabAllocations(requestBody, unitOffId);
+        /* CREATE THE LABS ASSOCIATED WITH THE UNIT ENROLMENT AND ALLOCATE THE STUDENTS */
+        await insertUnitOffLabs(requestBody, unitOffId); // ensure lab no.s don't repeat in units
+        await insertStudentLabAllocations(requestBody, unitOffId);
 
+    }
+    catch (e) { 
+        console.log('error occured ' + e);
+        res.status(400).send('Bad request, input data likely has errors');
+    }
     res.status(200).send();
 }
 
