@@ -128,6 +128,30 @@ the keys for the objects that were added to in the backend as described above
 
 ## Pull Requests
 
+### Creating Pull Requests
+
+When creating a pull request, leave a comment listing out all:
+- changes
+- additions
+- subtractions
+- added features 
+- bug fixes
+
+Assign at least 3 reviewers to the PR and assign people who worked on the branch as the assignees.
+
+Assign the relevant label to the PR.
+
+Before creating a pull request, ensure the application passes all CI/CD tests. Any failures in the pipeline will result in the pull request being rejected.
+
+Once the PR is approved, commence merging to main, ensuring that all pipeline tests pass.
+
+### Approving Pull Requests
+
+When approving a pull request, review the code and provide comments where necessary. If changes have to be made, let the requester know, and ensure those changes are made before approving the merge.
+
+Ensure that the merge passes all pipeline tests.
+
+A minimum of one person must approve the PR in order to merge to main.
 
 ## Branching Strategy
 
