@@ -188,7 +188,7 @@ Major values must match the backend and frontend versions to guarantee compatibi
 between the frontend and backend versions for compatibility.
 
 ### Backend
-The version is 1.0.0 as of 16/10/2023, the first initial release of the backend of the application.
+The version is 1.0.0 as of 20/10/2023, the first initial release of the backend application.
 
 The Patch version must be incremented when a backward compatible bug fix is introduced.
 
@@ -197,7 +197,7 @@ The Minor version must be incremented when a new backward compatible functionali
 The Major version must be incremented when a new non-backward compatible functionality is introduced.
 
 ### Frontend
-The version is 1.0.0 as of 16/10/2023, the first initial release of the frontend of the application.
+The version is 1.0.0 as of 20/10/2023, the first initial release of the frontend application.
 
 The Patch version must be incremented when a backward compatiable bug fix is introduced.
 
