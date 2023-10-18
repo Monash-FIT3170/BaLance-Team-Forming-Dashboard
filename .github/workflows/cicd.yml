@@ -24,9 +24,6 @@ jobs:
       - name: Change Directory to Frontend
         run: cd frontend
 
-      - name: Install Dependencies
-        run: npm ci
-
       - name: Run Frontend Tests
         run: npm test
 
