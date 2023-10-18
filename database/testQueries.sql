@@ -9,16 +9,25 @@ SELECT * FROM personality_test_attempt;
 SELECT * FROM belbin_result;
 
 SELECT *
-FROM personality_test_attempt t 
-   INNER JOIN student s ON s.stud_unique_id=t.stud_unique_id
-   INNER JOIN unit_enrolment e ON e.unit_off_id=t.unit_off_id
-WHERE
-	e.unit_off_id=100000000;
-    
-     
-SET @stud_ids:= (
-	'54321867', '12345678', '12345677', '12398267', '39187204', '40887212', '32459103', '45310009',
-	'12569024', '34251045', '33333333', '10982943', '56783124', '40981234', '10986402', '45670987',
-    '10908070', '54210982', '19749075', '30982934', '38976210', '37609812');
-    
-    
+FROM student
+WHERE stud_unique_id=100000000;
+
+SELECT ga.group_alloc_id, g.lab_group_id, l.unit_off_lab_id, ga.stud_unique_id
+FROM lab_group g
+   INNER JOIN unit_off_lab l ON l.unit_off_lab_id = g.unit_off_lab_id
+   INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id
+   INNER JOIN group_allocation ga ON g.lab_group_id = ga.lab_group_id
+WHERE g.group_number=1
+   AND u.unit_code='TEST2'
+   AND u.unit_off_year=2023
+   AND u.unit_off_period='S2';   
+   
+   SELECT ga.group_alloc_id, g.lab_group_id, l.unit_off_lab_id, ga.stud_unique_id
+FROM lab_group g
+   INNER JOIN unit_off_lab l ON l.unit_off_lab_id = g.unit_off_lab_id
+   INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id
+   INNER JOIN group_allocation ga ON g.lab_group_id = ga.lab_group_id
+WHERE g.group_number=5
+   AND u.unit_code='TEST2'
+   AND u.unit_off_year=2023
+   AND u.unit_off_period='S2';  
