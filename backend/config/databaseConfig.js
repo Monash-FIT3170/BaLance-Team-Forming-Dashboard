@@ -10,12 +10,11 @@
 const mysql = require('mysql2');
 require('dotenv').config();
 
-const connection = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB,
-    connectionLimit: 10
+const connection = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "A19003607",
+    database: "student_group_db"
 });
 
 module.exports = connection;
