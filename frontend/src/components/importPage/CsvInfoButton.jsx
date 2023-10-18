@@ -14,7 +14,7 @@ import { QuestionOutlineIcon } from '@chakra-ui/icons';
 
 export const CsvInfoButton = ({infoHeader, infoText}) => {
     return (
-        <Popover placement='top-start'>
+        <Popover placement='top-start' trigger='hover'>
             <PopoverTrigger>
                 <IconButton
                     isRound={true}
@@ -24,7 +24,7 @@ export const CsvInfoButton = ({infoHeader, infoText}) => {
                     icon={<QuestionOutlineIcon />}
                 />
             </PopoverTrigger>
-            <PopoverContent>
+            <PopoverContent width="30vw">
                 <PopoverArrow />
                 <PopoverCloseButton />
                 <PopoverHeader>{infoHeader}</PopoverHeader>

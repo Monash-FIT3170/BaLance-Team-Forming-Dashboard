@@ -113,148 +113,169 @@ const deleteUnit = async function (req, res) {
         period
     } = req.params;
 
-    await promiseBasedQuery( // delete group allocations
-        "DELETE FROM group_allocation " +
-        "WHERE group_alloc_id IN ( " +
-        "    SELECT subquery.group_alloc_id " +
-        "    FROM ( " +
-        "        SELECT ga.group_alloc_id " +
-        "        FROM lab_group g " +
-        "            INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id " +
-        "            INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " +
-        "            INNER JOIN group_allocation ga ON ga.lab_group_id = g.lab_group_id " +
-        "        WHERE u.unit_code=? " +
-        "            AND u.unit_off_year=? " +
-        "            AND u.unit_off_period=? " +
-        "    ) AS subquery " +
-        ");",
-        [unitCode, year, period]
-    )
+    try {
+        const connection = await db_connection.promise().getConnection();
 
-    await promiseBasedQuery( // delete lab groups
-        "DELETE FROM lab_group " +
-        "WHERE lab_group_id IN ( " +
-        "    SELECT subquery.lab_group_id " +
-        "    FROM ( " +
-        "        SELECT g.lab_group_id " +
-        "        FROM lab_group g " +
-        "            INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id " +
-        "            INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " +
-        "        WHERE u.unit_code=? " +
-        "            AND u.unit_off_year=? " +
-        "            AND u.unit_off_period=? " +
-        "    ) AS subquery " +
-        ");",
-        [unitCode, year, period]
-    )
+        try{
 
-    await promiseBasedQuery( // delete student lab allocations
-        "DELETE FROM student_lab_allocation " +
-        "WHERE stud_lab_alloc_id IN ( " +
-        "    SELECT subquery.stud_lab_alloc_id " +
-        "    FROM ( " +
-        "        SELECT la.stud_lab_alloc_id " +
-        "        FROM student_lab_allocation la " +
-        "            INNER JOIN unit_off_lab l ON la.unit_off_lab_id = l.unit_off_lab_id " +
-        "            INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " +
-        "        WHERE u.unit_code=? " +
-        "            AND u.unit_off_year=? " +
-        "            AND u.unit_off_period=? " +
-        "    ) AS subquery " +
-        ");",
-        [unitCode, year, period]
-    )
+            await connection.beginTransaction()
 
-    await promiseBasedQuery( // delete unit offering labs
-        "DELETE FROM unit_off_lab " +
-        "WHERE unit_off_lab_id IN ( " +
-        "   SELECT subquery.unit_off_lab_id " +
-        "   FROM ( " +
-        "       SELECT l.unit_off_lab_id " +
-        "       FROM unit_off_lab l " +
-        "           INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " +
-        "       WHERE u.unit_code=? " +
-        "           AND u.unit_off_year=? " +
-        "           AND u.unit_off_period=? " +
-        "   ) AS subquery " +
-        ");",
-        [unitCode, year, period]
-    )
+            await connection.execute( // delete group allocations
+                "DELETE FROM group_allocation " +
+                "WHERE group_alloc_id IN ( " +
+                "    SELECT subquery.group_alloc_id " +
+                "    FROM ( " +
+                "        SELECT ga.group_alloc_id " +
+                "        FROM lab_group g " +
+                "            INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id " +
+                "            INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " +
+                "            INNER JOIN group_allocation ga ON ga.lab_group_id = g.lab_group_id " +
+                "        WHERE u.unit_code=? " +
+                "            AND u.unit_off_year=? " +
+                "            AND u.unit_off_period=? " +
+                "    ) AS subquery " +
+                ");",
+                [unitCode, year, period]
+            );
 
-    await promiseBasedQuery( // delete unit offering enrolments
-        "DELETE FROM unit_enrolment " +
-        "WHERE enrolment_id IN ( " +
-        "  SELECT subquery.enrolment_id " +
-        "  FROM ( " +
-        "    SELECT ue.enrolment_id " +
-        "    FROM unit_enrolment ue " +
-        "    INNER JOIN unit_offering u ON ue.unit_off_id = u.unit_off_id " +
-        "    WHERE " +
-        "      u.unit_code=? " +
-        "      AND u.unit_off_year=? " +
-        "      AND u.unit_off_period=? " +
-        "  ) AS subquery " +
-        ");",
-        [unitCode, year, period]
-    )
+            await connection.execute( // delete lab groups
+                "DELETE FROM lab_group " +
+                "WHERE lab_group_id IN ( " +
+                "    SELECT subquery.lab_group_id " +
+                "    FROM ( " +
+                "        SELECT g.lab_group_id " +
+                "        FROM lab_group g " +
+                "            INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id " +
+                "            INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " +
+                "        WHERE u.unit_code=? " +
+                "            AND u.unit_off_year=? " +
+                "            AND u.unit_off_period=? " +
+                "    ) AS subquery " +
+                ");",
+                [unitCode, year, period]
+            );
 
-    await promiseBasedQuery( // delete relevant belbin results
-        "DELETE FROM belbin_result " +
-        "WHERE belbin_result_id IN ( " +
-        "   SELECT subquery.belbin_result_id " +
-        "   FROM ( " +
-        "       SELECT b.belbin_result_id " +
-        "       FROM belbin_result b " +
-        "           INNER JOIN personality_test_attempt pt ON pt.test_attempt_id = b.personality_test_attempt " +
-        "           INNER JOIN unit_offering u ON u.unit_off_id = pt.unit_off_id " +
-        "       WHERE u.unit_code=? " +
-        "           AND u.unit_off_year=? " +
-        "           AND u.unit_off_period=? " +
-        "   ) AS subquery " +
-        ");",
-        [unitCode, year, period]
-    )
+            await connection.execute( // delete student lab allocations
+                "DELETE FROM student_lab_allocation " +
+                "WHERE stud_lab_alloc_id IN ( " +
+                "    SELECT subquery.stud_lab_alloc_id " +
+                "    FROM ( " +
+                "        SELECT la.stud_lab_alloc_id " +
+                "        FROM student_lab_allocation la " +
+                "            INNER JOIN unit_off_lab l ON la.unit_off_lab_id = l.unit_off_lab_id " +
+                "            INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " +
+                "        WHERE u.unit_code=? " +
+                "            AND u.unit_off_year=? " +
+                "            AND u.unit_off_period=? " +
+                "    ) AS subquery " +
+                ");",
+                [unitCode, year, period]
+            );
 
-    await promiseBasedQuery( // delete relevant effort results
-        "DELETE FROM effort_result " +
-        "WHERE effort_result_id IN ( " +
-        "   SELECT subquery.effort_result_id " +
-        "   FROM ( " +
-        "       SELECT e.effort_result_id " +
-        "       FROM effort_result e " +
-        "           INNER JOIN personality_test_attempt pt ON pt.test_attempt_id = e.personality_test_attempt " +
-        "           INNER JOIN unit_offering u ON u.unit_off_id = pt.unit_off_id " +
-        "       WHERE u.unit_code=? " +
-        "           AND u.unit_off_year=? " +
-        "           AND u.unit_off_period=? " +
-        "   ) AS subquery " +
-        ");",
-        [unitCode, year, period]
-    )
+            await connection.execute( // delete unit offering labs
+                "DELETE FROM unit_off_lab " +
+                "WHERE unit_off_lab_id IN ( " +
+                "   SELECT subquery.unit_off_lab_id " +
+                "   FROM ( " +
+                "       SELECT l.unit_off_lab_id " +
+                "       FROM unit_off_lab l " +
+                "           INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " +
+                "       WHERE u.unit_code=? " +
+                "           AND u.unit_off_year=? " +
+                "           AND u.unit_off_period=? " +
+                "   ) AS subquery " +
+                ");",
+                [unitCode, year, period]
+            );
 
-    await promiseBasedQuery( // delete relevant personality test attempts
-        "DELETE FROM personality_test_attempt " +
-        "WHERE test_attempt_id IN ( " +
-        "   SELECT subquery.test_attempt_id " +
-        "   FROM ( " +
-        "       SELECT pt.test_attempt_id " +
-        "       FROM personality_test_attempt pt " +
-        "           INNER JOIN unit_offering u ON u.unit_off_id = pt.unit_off_id " +
-        "       WHERE u.unit_code=? " +
-        "           AND u.unit_off_year=? " +
-        "           AND u.unit_off_period=? " +
-        "   ) AS subquery " +
-        ");",
-        [unitCode, year, period]
-    )
+            await connection.execute( // delete unit offering enrolments
+                "DELETE FROM unit_enrolment " +
+                "WHERE enrolment_id IN ( " +
+                "  SELECT subquery.enrolment_id " +
+                "  FROM ( " +
+                "    SELECT ue.enrolment_id " +
+                "    FROM unit_enrolment ue " +
+                "    INNER JOIN unit_offering u ON ue.unit_off_id = u.unit_off_id " +
+                "    WHERE " +
+                "      u.unit_code=? " +
+                "      AND u.unit_off_year=? " +
+                "      AND u.unit_off_period=? " +
+                "  ) AS subquery " +
+                ");",
+                [unitCode, year, period]
+            );
 
-    await promiseBasedQuery( // finally delete the offering
-        "DELETE FROM unit_offering u " +
-        "WHERE u.unit_code=? " +
-        "   AND u.unit_off_year=? " +
-        "   AND u.unit_off_period=?;",
-        [unitCode, year, period]
-    )
+            await connection.execute( // delete relevant belbin results
+                "DELETE FROM belbin_result " +
+                "WHERE belbin_result_id IN ( " +
+                "   SELECT subquery.belbin_result_id " +
+                "   FROM ( " +
+                "       SELECT b.belbin_result_id " +
+                "       FROM belbin_result b " +
+                "           INNER JOIN personality_test_attempt pt ON pt.test_attempt_id = b.personality_test_attempt " +
+                "           INNER JOIN unit_offering u ON u.unit_off_id = pt.unit_off_id " +
+                "       WHERE u.unit_code=? " +
+                "           AND u.unit_off_year=? " +
+                "           AND u.unit_off_period=? " +
+                "   ) AS subquery " +
+                ");",
+                [unitCode, year, period]
+            );
+
+            await connection.execute( // delete relevant effort results
+                "DELETE FROM effort_result " +
+                "WHERE effort_result_id IN ( " +
+                "   SELECT subquery.effort_result_id " +
+                "   FROM ( " +
+                "       SELECT e.effort_result_id " +
+                "       FROM effort_result e " +
+                "           INNER JOIN personality_test_attempt pt ON pt.test_attempt_id = e.personality_test_attempt " +
+                "           INNER JOIN unit_offering u ON u.unit_off_id = pt.unit_off_id " +
+                "       WHERE u.unit_code=? " +
+                "           AND u.unit_off_year=? " +
+                "           AND u.unit_off_period=? " +
+                "   ) AS subquery " +
+                ");",
+                [unitCode, year, period]
+            );
+
+            await connection.execute( // delete relevant personality test attempts
+                "DELETE FROM personality_test_attempt " +
+                "WHERE test_attempt_id IN ( " +
+                "   SELECT subquery.test_attempt_id " +
+                "   FROM ( " +
+                "       SELECT pt.test_attempt_id " +
+                "       FROM personality_test_attempt pt " +
+                "           INNER JOIN unit_offering u ON u.unit_off_id = pt.unit_off_id " +
+                "       WHERE u.unit_code=? " +
+                "           AND u.unit_off_year=? " +
+                "           AND u.unit_off_period=? " +
+                "   ) AS subquery " +
+                ");",
+                [unitCode, year, period]
+            );
+
+            await connection.execute( // finally delete the offering
+                "DELETE FROM unit_offering u " +
+                "WHERE u.unit_code=? " +
+                "   AND u.unit_off_year=? " +
+                "   AND u.unit_off_period=?;",
+                [unitCode, year, period]
+            );
+
+            await connection.commit();
+            await connection.release();
+        }
+
+        catch(error) {
+            console.log(error);
+            await connection.rollback();
+            await connection.release();
+        }
+    }
+    catch(error) {
+        console.log(error);
+    }
 
     res.status(200).send();
 }

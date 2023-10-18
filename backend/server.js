@@ -32,7 +32,7 @@ app.use((req, res, next) => {
 if (process.env.AUTH == "TEST"){
     const verifyJwt = auth({
         audience: 'balance-api-endpoint',
-        issuerBaseURL: 'https://balance.au.auth0.com/',
+        issuerBaseURL: process.env.AUTH_DOMAIN,
         tokenSigningAlg: 'RS256'
       });
 

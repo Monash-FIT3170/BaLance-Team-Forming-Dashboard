@@ -18,9 +18,9 @@ import {
     Text,
     useDisclosure,
 } from '@chakra-ui/react';
-import { MockAuth } from '../mockAuth/mockAuth';
+import { MockAuth } from '../../helpers/mockAuth';
 
-export default function ChangeStudentGroupModal({studentData, numberOfGroups}) {
+export default function ChangeGroupModal({ studentData, numberOfGroups }) {
     const {
         unitCode,
         year,
@@ -36,47 +36,47 @@ export default function ChangeStudentGroupModal({studentData, numberOfGroups}) {
     const {
         student_id,
         preferred_name,
-        group_number
     } = studentData;
 
-    const [group, setGroup] = useState(group_number);
+    const [group, setGroup] = useState(1);
 
     let authService = {
         "DEV": MockAuth,
         "TEST": useAuth0
-      }
-    
-      const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
+    }
+
+    const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
     // an array of viable groups the student can be changed to
     const groupOptions = [];
-    for(let i=1; i<=numberOfGroups; i++) {
-        if(i !== group) {
-            groupOptions.push({
-                label: `Group ${i}`,
-                value: i
-            })
-        }
+    for (let i = 1; i <= numberOfGroups; i++) {
+        groupOptions.push({
+            label: `Group ${i}`,
+            value: i
+        })
+
     }
 
     // handles modal confirmation for changing a students group
 
     const handleStudentGroupChange = async () => {
         onClose();
+        console.log(group)
         let token = await getAccessTokenSilently()
         await fetch(
             `http://localhost:8080/api/groups/${unitCode}/${year}/${period}/move/${student_id}/`, {
-                method: 'PATCH',
-                body: JSON.stringify({newGroup: group}),
-                headers: new Headers({
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/json',
-                    'Content-type': 'application/json; charset=UTF-8'
-                  }),
-            }
+            method: 'PATCH',
+            body: JSON.stringify({ newGroup: group }),
+            headers: new Headers({
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json',
+                'Content-type': 'application/json; charset=UTF-8'
+            }),
+        }
         );
         window.location.reload();
     };
+
 
     return (
         <>
@@ -92,17 +92,16 @@ export default function ChangeStudentGroupModal({studentData, numberOfGroups}) {
 
                     <ModalBody>
                         <Text margin="0px 0px 2vh 0px">
-                            {`Change ${preferred_name}'s group from Group ${group} to: `}
+                            {`Change ${preferred_name}'s group to: `}
                         </Text>
                         <Select
                             bg="white"
                             onChange={(event) => setGroup(event.target.value)}
-                            placeholder={`Group ${group}`}
                         >
                             {groupOptions?.map((option) => (
-                            <option key={option.value} value={option.value}>
-                                {option.label}
-                            </option>
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
                             ))}
                         </Select>
                     </ModalBody>
@@ -110,17 +109,17 @@ export default function ChangeStudentGroupModal({studentData, numberOfGroups}) {
                     <ModalFooter>
                         <HStack>
                             <Spacer />
-                                <Button margin="0px 5px" variant="ghost" onClick={onClose}>
-                                    Cancel
-                                </Button>
-                                <Button
-                                    onClick={handleStudentGroupChange}
-                                    margin="0px 5px"
-                                    colorScheme="blue"
-                                    mr={3}
-                                >
-                                    Confirm
-                                </Button>
+                            <Button margin="0px 5px" variant="ghost" onClick={onClose}>
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={handleStudentGroupChange}
+                                margin="0px 5px"
+                                colorScheme="blue"
+                                mr={3}
+                            >
+                                Confirm
+                            </Button>
                             <Spacer />
                         </HStack>
                     </ModalFooter>

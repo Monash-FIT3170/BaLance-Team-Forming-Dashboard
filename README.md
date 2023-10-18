@@ -15,12 +15,15 @@ formation strategies for teaching associates to select from.
     - [Dependencies](#dependencies)
     - [Running the application](#running-the-application)
     - [Walkthrough](#walkthrough)
-4. [Authentication](#authentication)
-4. [Additional notes](#additional-notes)
+3. [Authentication](#authentication)
+4. [Development guidelines](#development-guidelines)
+    - [Extending group formation strategies](#extending-group-formation-strategies)
     - [Known issues](#known-issues)
-    - [Miscellaneous](#miscellaneous)
-5. [Contributors](#contributors)
-6. [License](#license)
+    - [Pull Requests](#pull-requests)
+    - [Branching Strategy](#branch-strategy)
+    - [Versioning](#versioning)
+7. [Contributors](#contributors)
+8. [License](#license)
 
 # Features
 
@@ -32,9 +35,11 @@ formation strategies for teaching associates to select from.
 
 ## Dependencies
 
-[Install node v18.16.0 or later](https://nodejs.org/en/download/package-manager)
+The project uses the following versions of node and MYSQL respectively
 
-[Install MYSQL server v8.0.33 or later](https://dev.mysql.com/downloads/mysql/) 
+[Node v18.16.0 & npm v9.6.7](https://nodejs.org/en/download/package-manager)
+
+[MYSQL server v8.0.33](https://dev.mysql.com/downloads/mysql/) 
 
 
 ## Running the application
@@ -62,7 +67,9 @@ against
 
 5. Optionally export group information as a csv to upload to your learning management system
 
-![Basic runthrough](docs/videos/basic-runthrough.gif)
+[//]: # (TODO, new gif showcasing new application view rather than the old one)
+
+![Basic runthrough](docs/videos/basic-runthrough.gif) 
 
 ## Authentication
 
@@ -79,29 +86,76 @@ For the backend you need to note down the following details:
 
 Place these details in the .env file for both backend and frontend.
 
-Authentication has both a TEST and DEV envrionment set in both the frontend/.env (REACT_APP_AUTH) and backend/.env (AUTH) files.
+Authentication has both a TEST and DEV environment set in both the frontend/.env (REACT_APP_AUTH) and backend/.env (AUTH) files.
 
-The Auth DEV envrionment uses a mock authentication service. This is for when developing and testing new API calls.
+The Auth DEV environment uses a mock authentication service. This is for when developing and testing new API calls.
 
-The Auth TEST envrionment uses Auth0 authentication. Auth0 authentication when using the free tier has a rate limit, which is reached very quickly if navigating the app quickly.
+The Auth TEST environment uses Auth0 authentication. Auth0 authentication when using the free tier has a rate limit, which is reached very quickly if navigating the app quickly.
 
 Use Auth DEV most of the time, and switch to Auth TEST to confirm that the implementation works with the actual authentication.
 
-# Additional notes
+# Development guidelines
 
-## Known issues
+## Extending group formation strategies
 
-* Frontend analytics view displays title and descriptor in analytics card for analytics
-that have no data in the backend rather than an empty state
-* App crashes when non-integer values are supplied for unit year on unit creation
+In order to extend the available array of group formation strategies, the following additions must be made across the app:
 
-## Miscellaneous
+Implement a group formation strategy under backend/helpers/groupFormationHelpers.js and append it to the groupFormationStrategies object
 
-* Group formation strategies can be extended in backend/helpers/groupFormationHelpers.js by declaring a new function 
-that contains the logic for the new strategy and adding it to the strategies object. Frontend strategy selection
-dropdown must include a value with the same name as the key in the aforementioned strategies object
-* Analytics for new strategies can be added by adding a new function in backend/helpers/groupAnalyticHelpers.js that
-retrieves distribution statistics in the right format and returns it as an object
+![Group formation strategies](/docs/images/extending_strats_forming_groups.png)
+
+Implement functions for fetching unit and group analytics using data for the new strategy and append them to the 
+getUnitAnalyticStrategies and getGroupAnalyticStrategies functions respectively.
+
+![Group analytic strategies](/docs/images/extending_strats_analytics.png)
+
+- **!NOTE:** that the keys for the strategy you are adding must match across the 3 aforementioned objects as shown in the images above
+- **!NOTE:** that the following structure must be adhered to when creating the API response for analytics
+
+![Example analytics data](/docs/images/sample_analytics_data.png)
+
+Add options to the dropdowns across ImportPage.jsx and CreateGroups.jsx in frontend/src/pages, ensuring the option values match 
+the keys for the objects that were added to in the backend as described above
+
+![Frontend changes](/docs/images/extending_strats_frontend_dropdowns.png)
+
+## Known bugs
+
+- [ ] [On moving students for a given csv file, student is duplicated in database causing eventual crash](https://github.com/Monash-FIT3170/baLance/issues/52)
+- [ ] [Units cannot currently be deleted in the main home page](https://github.com/Monash-FIT3170/baLance/issues/87)
+- [ ] [Group analytics page displaying data incorrectly](https://github.com/Monash-FIT3170/baLance/issues/89)
+- [ ] [Unit cards in the home page do not display correctly on some displays](https://github.com/Monash-FIT3170/baLance/issues/88)
+
+## Pull Requests
+
+...
+
+## Branching Strategy
+
+...
+
+## Versioning
+The versioning strategy used by this project is semantic versioning (MAJOR.MINOR.PATCH) and is split between the frontend and backend. 
+Major values must match the backend and frontend versions to guarantee compatibility. Minor and patch values do not need to match 
+between the frontend and backend versions for compatibility.
+
+### Backend
+The version is 1.0.0 as of 16/10/2023, the first initial release of the backend of the application.
+
+The Patch version must be incremented when a backward compatible bug fix is introduced.
+
+The Minor version must be incremented when a new backward compatible functionality is introduced, or a functionality is deprecated.
+
+The Major version must be incremented when a new non-backward compatible functionality is introduced.
+
+### Frontend
+The version is 1.0.0 as of 16/10/2023, the first initial release of the frontend of the application.
+
+The Patch version must be incremented when a backward compatiable bug fix is introduced.
+
+The Minor version must be incremented when a new backward compatible functionality is introduced, or a functionality is deprecated.
+
+The Major version must be incremented when a new non-backward compatible functionality is introduced.
 
 # Contributors
 

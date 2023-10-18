@@ -10,8 +10,8 @@ root.render(
   <React.StrictMode>
     {(process.env.REACT_APP_AUTH === "TEST") &&
     <Auth0Provider
-    domain='balance.au.auth0.com'
-    clientId='pFIT5GPr6OsLiLsyBWGD5GNOBgEY6NbO'
+    domain={process.env.REACT_APP_AUTH_DOMAIN}
+    clientId={process.env.REACT_APP_AUTH_CLIENT_ID}
     authorizationParams={{
       redirect_uri: window.location.origin,
       audience: 'balance-api-endpoint',
