@@ -21,11 +21,9 @@ jobs:
         with:
           node-version: 16
 
-      - name: Change Directory to Frontend
-        run: cd frontend
 
       - name: Run Frontend Tests
-        run: npm test
+        run: npm --prefix frontend test
 
   publish-gpr:
     name: Deploy to GitHub Package Registry # To be changed to AWS in the future
