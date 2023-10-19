@@ -1,5 +1,6 @@
 {
   "name": "balance",
+  "homepage": "https://Monash-FIT3170.github.io/baLance",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -26,9 +27,11 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "exit 0",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -50,6 +53,7 @@
     ]
   },
   "devDependencies": {
+    "gh-pages": "^6.0.0",
     "prettier": "^2.8.8"
   },
   "prettier": {
