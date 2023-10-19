@@ -18,11 +18,11 @@ formation strategies for teaching associates to select from.
 3. [Authentication](#authentication)
 4. [Development guidelines](#development-guidelines)
     - [Extending group formation strategies](#extending-group-formation-strategies)
-    - [Known issues](#known-issues)
+    - [Known bugs](#known-bugs)
     - [Pull Requests](#pull-requests)
-    - [Branching Strategy](#branch-strategy)
+    - [Branching Strategy](#branching-strategy)
     - [Versioning](#versioning)
-    - [Deploying the Application](#deploying-the-application)
+5. [Deploying the Application](#deploying-the-application)
 7. [Contributors](#contributors)
 8. [License](#license)
 
@@ -188,10 +188,6 @@ The versioning strategy used by this project is semantic versioning (MAJOR.MINOR
 Major values must match the backend and frontend versions to guarantee compatibility. Minor and patch values do not need to match 
 between the frontend and backend versions for compatibility.
 
-## Deploying the Application
-Currently we do not have a production version of the application. The team planned to publish to AWS and host from there.
-There is a cicd pipeline currently in place using github acitons. This runs tests on any pull request to main and then deploys once the request has been approaved. We have just set this up using Github pages as an example but if the project is continued an alternative like AWS should be set up and used.
-
 ### Backend
 The version is 1.0.0 as of 20/10/2023, the first initial release of the backend application.
 
@@ -209,6 +205,11 @@ The Patch version must be incremented when a backward compatiable bug fix is int
 The Minor version must be incremented when a new backward compatible functionality is introduced, or a functionality is deprecated.
 
 The Major version must be incremented when a new non-backward compatible functionality is introduced.
+
+# Deploying the Application
+
+Currently we do not have a production version of the application. The team planned to publish to AWS and host from there.
+There is a cicd pipeline currently in place using github acitons. This runs tests on any pull request to main and then deploys once the request has been approaved. We have just set this up using Github pages as an example but if the project is continued an alternative like AWS should be set up and used.
 
 # Contributors
 
