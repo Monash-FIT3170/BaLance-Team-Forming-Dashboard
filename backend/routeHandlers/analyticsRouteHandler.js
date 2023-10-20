@@ -7,7 +7,7 @@
 const {
     getUnitAnalyticsStrategies,
     getGroupAnalyticsStrategies
-} = require("../helpers/analyticsControllerHelpers")
+} = require("../helpers/analyticsRouteHandlerHelpers")
 
 const getUnitAnalytics = async (req,res) => {
     const {

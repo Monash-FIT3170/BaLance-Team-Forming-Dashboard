@@ -16,7 +16,7 @@ const {
     insertStudentEnrolment,
     insertUnitOffLabs,
     insertStudentLabAllocations
-} = require("../helpers/studentControllerHelpers");
+} = require("../helpers/studentRouteHandlerHelpers");
 
 // gets all students for a unit
 const getAllStudents = async (req, res) => {
