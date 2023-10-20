@@ -7,11 +7,12 @@
 const { promiseBasedQuery, selectUnitOffKey } = require("./commonHelpers");
 
 const shuffle = (array) => {
-    /**
-     *     Fisher-Yates shuffle algorithm from
-     *     https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-     */
-    let currentIndex = array.length, randomIndex;
+  /**
+   *     Fisher-Yates shuffle algorithm from
+   *     https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+   */
+  let currentIndex = array.length,
+    randomIndex;
 
   // While there remain elements to shuffle.
   while (currentIndex != 0) {
@@ -20,24 +21,21 @@ const shuffle = (array) => {
     currentIndex--;
 
     // And swap it with the current element.
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex],
-      array[currentIndex],
-    ];
+    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
   }
 
-    return array;
-}
+  return array;
+};
 
 const createGroupsRandom = async (unitCode, year, period, groupSize, variance) => {
-    /**
-     * Given a unit offering, group size and acceptable group variance from a group size,
-     * forms groups within the units labs randomly
-     *
-     */
+  /**
+   * Given a unit offering, group size and acceptable group variance from a group size,
+   * forms groups within the units labs randomly
+   *
+   */
 
-    /* GET ALL OF THE STUDENTS ASSOCIATED WITH THIS UNIT SORTED BY LAB */
-    const unitOffId = await selectUnitOffKey(unitCode, year, period);
+  /* GET ALL OF THE STUDENTS ASSOCIATED WITH THIS UNIT SORTED BY LAB */
+  const unitOffId = await selectUnitOffKey(unitCode, year, period);
 
   const students = await promiseBasedQuery(
     "SELECT stud.stud_unique_id, alloc.unit_off_lab_id " +
@@ -62,12 +60,14 @@ const createGroupsRandom = async (unitCode, year, period, groupSize, variance) =
     labStudents[student.unit_off_lab_id].push(student.stud_unique_id);
   });
 
-    /* RANDOMISE THE, STUDENTS WITHIN EACH LAB NUMBER */
-    /* THEN SPLIT THE RANDOMISED LIST INTO GROUPS OF n AS SPECIFIED IN REQ */
-    for(let lab in labStudents) { labStudents[lab] = shuffle(labStudents[lab]); }
-    for(let lab in labStudents) {
-        labStudents[lab] = splitGroupsRandom(unitOffId, lab, labStudents[lab], groupSize, variance);
-    }
+  /* RANDOMISE THE, STUDENTS WITHIN EACH LAB NUMBER */
+  /* THEN SPLIT THE RANDOMISED LIST INTO GROUPS OF n AS SPECIFIED IN REQ */
+  for (let lab in labStudents) {
+    labStudents[lab] = shuffle(labStudents[lab]);
+  }
+  for (let lab in labStudents) {
+    labStudents[lab] = splitGroupsRandom(unitOffId, lab, labStudents[lab], groupSize, variance);
+  }
 
   /* INSERT THE NEW GROUPS INTO THE DATABASE */
   // determine the number of groups to be inserted to database -> inserted as [unit_off_lab_id, group_number]
@@ -80,10 +80,7 @@ const createGroupsRandom = async (unitCode, year, period, groupSize, variance) =
     });
   }
 
-  await promiseBasedQuery(
-    "INSERT IGNORE INTO lab_group (unit_off_lab_id, group_number) VALUES ?;",
-    [groupInsertData]
-  );
+  await promiseBasedQuery("INSERT IGNORE INTO lab_group (unit_off_lab_id, group_number) VALUES ?;", [groupInsertData]);
 
   /* INSERT THE ALLOCATIONS TO GROUPS INTO THE DATABASE */
   // get all groups in this unit as [ >> group_id <<, lab_id]
@@ -110,10 +107,9 @@ const createGroupsRandom = async (unitCode, year, period, groupSize, variance) =
   }
 
   // student allocations are created as [~~group_alloc_id~~, stud_unique_id, lab_group_id]
-  await promiseBasedQuery(
-    "INSERT IGNORE INTO group_allocation (stud_unique_id, lab_group_id) VALUES ?;",
-    [groupAllocInsertData]
-  );
+  await promiseBasedQuery("INSERT IGNORE INTO group_allocation (stud_unique_id, lab_group_id) VALUES ?;", [
+    groupAllocInsertData,
+  ]);
 };
 
 const createGroupsEffort = async (unitCode, year, period, groupSize, variance) => {
@@ -159,17 +155,13 @@ const createGroupsEffort = async (unitCode, year, period, groupSize, variance) =
   let groups = {};
   for (let lab in labStudents) {
     // each student is given a ranking value by (4*assignmentAvg/70 - hours/12) and sorted within their labs this way
-    groups[lab] = []
+    groups[lab] = [];
     labStudents[lab].sort((studentA, studentB) => {
-      studentACompVal =
-        (4 * studentA.assignment_avg) / 70 - studentA.time_commitment_hrs / 12;
-      studentBCompVal =
-        (4 * studentB.assignment_avg) / 70 - studentB.time_commitment_hrs / 12;
+      studentACompVal = (4 * studentA.assignment_avg) / 70 - studentA.time_commitment_hrs / 12;
+      studentBCompVal = (4 * studentB.assignment_avg) / 70 - studentB.time_commitment_hrs / 12;
       return studentBCompVal - studentACompVal;
     });
-    const numberOfGroups = Math.floor(
-      labStudents[lab].length / groupSize
-    );
+    const numberOfGroups = Math.floor(labStudents[lab].length / groupSize);
 
     for (let i = 0; i < numberOfGroups; i++) {
       groups[lab].push([]);
@@ -207,13 +199,10 @@ const createGroupsEffort = async (unitCode, year, period, groupSize, variance) =
   }
 
   if (groupInsertData.length === 0) {
-    throw new Error('You have not inserted effort results for all students')
+    throw new Error("You have not inserted effort results for all students");
   }
 
-  await promiseBasedQuery(
-    "INSERT IGNORE INTO lab_group (unit_off_lab_id, group_number) VALUES ?;",
-    [groupInsertData]
-  );
+  await promiseBasedQuery("INSERT IGNORE INTO lab_group (unit_off_lab_id, group_number) VALUES ?;", [groupInsertData]);
 
   /* INSERT THE ALLOCATIONS TO GROUPS INTO THE DATABASE */
   // get all groups in this unit as [ >> group_id <<, lab_id]
@@ -233,17 +222,16 @@ const createGroupsEffort = async (unitCode, year, period, groupSize, variance) =
   for (let i = 0; i < numGroups; i++) {
     const group = groupData.pop();
     let groupStudents = groups[group.unit_off_lab_id].pop();
-    for (let i=0; i<groupStudents.length; i++) {
-        let student = groupStudents[i];
-        groupAllocInsertData.push([student.id, group.lab_group_id]);
+    for (let i = 0; i < groupStudents.length; i++) {
+      let student = groupStudents[i];
+      groupAllocInsertData.push([student.id, group.lab_group_id]);
     }
   }
 
   // student allocations are created as [~~group_alloc_id~~, stud_unique_id, lab_group_id]
-  await promiseBasedQuery(
-    "INSERT IGNORE INTO group_allocation (stud_unique_id, lab_group_id) VALUES ?;",
-    [groupAllocInsertData]
-  );
+  await promiseBasedQuery("INSERT IGNORE INTO group_allocation (stud_unique_id, lab_group_id) VALUES ?;", [
+    groupAllocInsertData,
+  ]);
 };
 
 const belbinSplit = (labStudents, groupSize, totalCount) => {
@@ -339,10 +327,7 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
     if (!labStudents[student.unit_off_lab_id]) {
       labStudents[student.unit_off_lab_id] = [];
     }
-    labStudents[student.unit_off_lab_id].push([
-      student.stud_unique_id,
-      student.belbin_type,
-    ]);
+    labStudents[student.unit_off_lab_id].push([student.stud_unique_id, student.belbin_type]);
   });
 
   //storage for group allocation within labs
@@ -391,12 +376,9 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
   }
 
   if (groupInsertData.length === 0) {
-    throw new Error('You have not inserted belbin results for all students')
+    throw new Error("You have not inserted belbin results for all students");
   }
-  await promiseBasedQuery(
-    "INSERT IGNORE INTO lab_group (unit_off_lab_id, group_number) VALUES ?;",
-    [groupInsertData]
-  );
+  await promiseBasedQuery("INSERT IGNORE INTO lab_group (unit_off_lab_id, group_number) VALUES ?;", [groupInsertData]);
 
   /* INSERT THE ALLOCATIONS TO GROUPS INTO THE DATABASE */
   // get all groups in this unit as [ >> group_id <<, lab_id]
@@ -423,10 +405,9 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
   }
 
   // student allocations are created as [~~group_alloc_id~~, stud_unique_id, lab_group_id]
-  await promiseBasedQuery(
-    "INSERT IGNORE INTO group_allocation (stud_unique_id, lab_group_id) VALUES ?;",
-    [groupAllocInsertData]
-  );
+  await promiseBasedQuery("INSERT IGNORE INTO group_allocation (stud_unique_id, lab_group_id) VALUES ?;", [
+    groupAllocInsertData,
+  ]);
 };
 
 const groupFormationStrategies = {
@@ -482,13 +463,7 @@ const splitGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) 
     }
     // split the groups as evenly as possible
     else {
-      return splitGroupsRandom(
-        unitOffId,
-        labId,
-        studentsList,
-        groupSize - 1,
-        variance
-      );
+      return splitGroupsRandom(unitOffId, labId, studentsList, groupSize - 1, variance);
     }
   }
 
