@@ -29,12 +29,11 @@ async function storeGroupsInDatabase(unitCode, year, period, parsedOutput) {
   var labStudents = {};
   labStudents = await transformParsedOutput(parsedOutput);
 
-  //console.log('LAB STUDENTS: ', labStudents);
+
 
   const groupInsertData = [];
   let numGroups = 0;
   for (let labId in labStudents) {
-    //console.log('LAB ID:', labId);
 
     /* INSERT THE NEW GROUPS INTO THE DATABASE */
     // determine the number of groups to be inserted to database -> inserted as [unit_off_lab_id, group_number]
@@ -62,13 +61,12 @@ async function storeGroupsInDatabase(unitCode, year, period, parsedOutput) {
       [unitCode, year, period]
     );
 
-    // console.log("GROUP DATA: ", groupData);
     // for each group, pop a group from the lab key in object and form the allocation
     for (let i = 0; i < numGroups; i++) {
       const group = groupData.pop();
-      // console.log("GROUP: ", group);
+
       const groupStudents = labStudents[group.unit_off_lab_id].pop();
-      // console.log("GROUP STUDENTS: ", groupStudents);
+
       if (groupStudents === undefined) {
         break;
       } else {
@@ -136,7 +134,6 @@ async function transformParsedOutput(parsedOutput) {
     for (const group of labData) {
       const studentIdsInGroup = await Promise.all(
         group.map(async (student) => {
-          //console.log('STUDENT ID: ', parseInt(student[0].student_id));
           const result = await getStudentUniqueId(parseInt(student[0].student_id));
           return result[0].stud_unique_id;
         })
@@ -146,27 +143,21 @@ async function transformParsedOutput(parsedOutput) {
 
     labStudents[labId] = groups;
   }
-  // console.log("RETURN: ", labStudents);
   return labStudents;
 }
 
 async function uploadCustomScript(req, res) {
   const { unitCode, year, period } = req.params;
   const studentsInUnit = await getUnitStudentData(unitCode, year, period);
-  //console.log('STUDENTS IN unit:', studentsInUnit);
 
   const unit_off_id = await getUnitOffId(unitCode);
   const unit_off_lab_ids = await getLabsInUnit(unit_off_id[0].unit_off_id);
-  //console.log('UNIT OFF LAB IDS: ', unit_off_lab_ids);
   const labGroups = {};
 
   for (const unit_off_lab_id of unit_off_lab_ids) {
     // Get students assigned to current lab
     const unit_off_lab_id_data = unit_off_lab_id.unit_off_lab_id;
     const labStudents = await getStudedntsInLab(unit_off_lab_id_data);
-    //console.log('LAB STUDENTS: ', labStudents);
-    //console.log('UNIT OFF LAB ID: ', unit_off_lab_id.unit_off_lab_id);
-    //const labStudents = studentInUnit.filter((student) => student.stud_unique_id === labAllocation.stud_unique_id);
 
     if (!labGroups[unit_off_lab_id_data]) {
       labGroups[unit_off_lab_id_data] = [];
@@ -176,7 +167,6 @@ async function uploadCustomScript(req, res) {
   }
 
   const groupSize = req.body.groupSize || 5; // assuming a default group size of 5 if not provided
-  //console.log('LAB GROUPS:', labGroups);
 
   try {
     const { scriptContent } = req.body;
@@ -200,17 +190,14 @@ async function uploadCustomScript(req, res) {
         labStudentsData.push(labStudentData);
       }
 
-      //console.log('LAB STUDENTS DATA: ', labStudentsData);
       // Modify the pythonArgs to include only the labStudents for the current lab
       const labPythonArgs = [unitCode, year, period, JSON.stringify(labStudentsData)];
 
-      //console.log(labPythonArgsJSON);
       const pythonProcess = spawn("python", ["-c", scriptContent, ...labPythonArgs]);
 
       let output = "";
       await new Promise((resolve, reject) => {
         pythonProcess.stdout.on("data", (data) => {
-          //console.log('DATA: ', data);
           output += data.toString();
         });
         pythonProcess.stderr.on("error", (data) => {
@@ -225,7 +212,6 @@ async function uploadCustomScript(req, res) {
       parsedOutput[labId] = JSON.parse(output);
     }
 
-    // console.log("PARSED OUTPUT: ", parsedOutput);
     await storeGroupsInDatabase(unitCode, year, period, parsedOutput);
     res.json({ message: "Groups generated and stored successfully." });
   } catch (error) {
