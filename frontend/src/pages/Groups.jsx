@@ -62,7 +62,7 @@ function Groups() {
     }, []);
 
     let groupsDisplay = groups.length === 0 ?
-        <Box bg='#E6EBF0' w='60vw' p={4} alignContent="center">
+        <Box bg='#E6EBF0' w='60vw' p={4} alignContent="left">
             <Center>
                 No groups have been created for this offering. Click "Create/Reconfigure Groups" to create groups for the offering.
             </Center>

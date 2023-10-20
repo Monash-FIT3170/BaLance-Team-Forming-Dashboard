@@ -69,7 +69,6 @@ const addAllStudents = async (req, res) => {
   } = req.params;
   const requestBody = req.body;
 
-  console.log(requestBody);
 
   try {
     /* INSERT STUDENTS INTO DATABASE */
@@ -413,7 +412,6 @@ const addStudentEffort = async (personalityTestAttemptKeys, students) => {
     ]);
   });
 
-  console.log(resultInsertData);
 
   try {
     await promiseBasedQuery(

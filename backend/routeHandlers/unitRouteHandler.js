@@ -17,7 +17,7 @@ const getAllUnits = async (req, res) => {
     if (err) {
       console.error(err.stack);
     } else {
-      console.log(results);
+      // console.log(results);
       res.status(200).json(results);
     }
   });
@@ -37,7 +37,7 @@ const getUnit = async (req, res) => {
     [unitCode, Number(year), period]
   );
 
-  console.log(unitData);
+  // console.log(unitData);
   res.status(200).json(unitData);
 };
 
@@ -51,7 +51,7 @@ const getEnrolmentCount = async (req, res) => {
     [unitCode, Number(offYear), offPeriod]
   );
 
-  console.log(enrolmentCount);
+  // console.log(enrolmentCount);
   res.status(200).json(unitData);
 };
 
@@ -69,7 +69,7 @@ const addUnit = async (req, res) => {
       [unitCode, unitName, Number(year), period, 0]
     );
 
-    console.log(`Successfully added new unit ${JSON.stringify(newUnit)}`);
+    // console.log(`Successfully added new unit ${JSON.stringify(newUnit)}`);
     res.status(200).json(newUnit);
   } catch (error) {
     console.log(error.code);
@@ -91,7 +91,7 @@ const addUnit = async (req, res) => {
 
 // delete a unit and associated relations
 const deleteUnit = async function (req, res) {
-  console.log("delete unit");
+  // console.log("delete unit");
   const {
     // get the URL params
     unitCode,
@@ -300,14 +300,12 @@ updateUnit = async function (req, res) {
   query_string += `WHERE unit_code=? AND unit_off_year=? AND unit_off_period=?;`;
   query_params = [...query_params, ...Object.values(urlParamValues)];
 
-  console.log(query_string);
-  console.log(query_params);
+
 
   db_connection.query(query_string, query_params, (err, results, fields) => {
     if (err) {
       console.log(err.stack);
     } else {
-      console.log(results);
       res.status(200).json(results);
     }
   });
@@ -356,7 +354,6 @@ const uploadCustomScript = async (req, res) => {
 
     await new Promise((resolve, reject) => {
       pythonProcess.on("close", async (code) => {
-        console.log(`Python script successfully executed with code: ${code}`);
         if (code === 0) {
           resolve();
         } else {
@@ -368,7 +365,6 @@ const uploadCustomScript = async (req, res) => {
         output += data.toString();
         try {
           const parsedOutput = JSON.parse(output);
-          console.log(parsedOutput);
 
           res.json(parsedOutput);
         } catch (error) {
@@ -377,7 +373,6 @@ const uploadCustomScript = async (req, res) => {
       });
 
       pythonProcess.stderr.on("error", (data) => {
-        console.error(data.toString());
         res.status(500).json({ error: "An error occurred while processing the request." });
       });
     });

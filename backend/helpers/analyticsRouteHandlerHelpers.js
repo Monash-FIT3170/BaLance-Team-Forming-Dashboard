@@ -297,7 +297,6 @@ const getGroupAnalyticsEffort = async (unitCode, year, period, groupNumber) => {
     [unitCode, year, period, groupNumber]
   );
 
-  console.log(gradeResults);
 
   const hourResults = await promiseBasedQuery(
     "SELECT CASE\n" +
@@ -320,8 +319,6 @@ const getGroupAnalyticsEffort = async (unitCode, year, period, groupNumber) => {
     [unitCode, year, period, groupNumber]
   );
 
-  console.log(unitCode, year, period, groupNumber);
-  console.log(hourResults);
 
   const effortResults = await promiseBasedQuery(
     "SELECT e.marks_per_hour AS effort, count(e.time_commitment_hrs) AS 'count' " +
