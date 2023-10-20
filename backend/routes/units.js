@@ -1,6 +1,5 @@
 /**
- * A module containing route handlers for unit related
- * API calls
+ * A module containing route handlers for unit related API calls
  *
  */
 
