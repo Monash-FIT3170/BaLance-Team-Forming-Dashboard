@@ -1,5 +1,5 @@
 /**
- * A module containing controller functions for routes related to
+ * A module containing route handler functions for routes related to
  * group analytics data within a unit.
  *
  */
