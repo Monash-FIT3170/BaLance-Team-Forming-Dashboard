@@ -14,7 +14,7 @@ const { // import controller functions for route handlers
     deleteStudentGroupAlloc,
     updateStudent,
     addPersonalityData
-} = require('../controllers/studentController');
+} = require('../routeHandlers/studentRouteHandler');
 
 // get all students from a unit
 router.get('/:unitCode/:year/:period', getAllStudents);

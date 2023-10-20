@@ -12,11 +12,11 @@ const { // import controller functions for route handlers
     createUnitGroups,
     shuffleUnitGroups,
     moveStudent
-} = require('../controllers/groupController');
+} = require('../routeHandlers/groupRouteHandler');
 
 const {
     uploadCustomScript,
-} = require('../controllers/scriptController');
+} = require('../routeHandlers/scriptRouteHandler');
 
 const multer = require('multer');
 

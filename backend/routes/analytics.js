@@ -8,7 +8,7 @@ const express = require('express');
 const { // import controller functions for route handlers
     getUnitAnalytics,
     getGroupAnalytics
-} = require('../controllers/analyticsController');
+} = require('../routeHandlers/analyticsRouteHandler');
 
 const router = express.Router();
 

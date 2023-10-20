@@ -1,6 +1,6 @@
 /**
  * A module containing helper functions specifically used to implement
- * groupController.js controller functions related to group formation
+ * groupRouteHandler.js route handler functions related to group formation
  *
  * */
 

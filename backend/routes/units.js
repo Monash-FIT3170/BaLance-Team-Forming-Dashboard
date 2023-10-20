@@ -13,7 +13,7 @@ const { // import controller functions for route handlers
     deleteUnit,
     updateUnit,
     uploadCustomScript
-} = require('../controllers/unitController');
+} = require('../routeHandlers/unitRouteHandler');
 
 const { upload } = require('../middleware/uploadMiddleware');
 
