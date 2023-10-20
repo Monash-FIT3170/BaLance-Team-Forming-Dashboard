@@ -23,7 +23,6 @@ const getUnitAnalytics = async (req, res) => {
 const getGroupAnalytics = async (req, res) => {
   const { unitCode, year, period, groupNumber } = req.params;
 
-  console.log(unitCode, year, period, groupNumber);
   const groupAnalyticData = [];
 
   // loop through the strategies and append their results to the data array

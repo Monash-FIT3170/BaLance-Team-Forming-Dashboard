@@ -62,13 +62,13 @@ async function storeGroupsInDatabase(unitCode, year, period, parsedOutput) {
       [unitCode, year, period]
     );
 
-    console.log("GROUP DATA: ", groupData);
+    // console.log("GROUP DATA: ", groupData);
     // for each group, pop a group from the lab key in object and form the allocation
     for (let i = 0; i < numGroups; i++) {
       const group = groupData.pop();
-      console.log("GROUP: ", group);
+      // console.log("GROUP: ", group);
       const groupStudents = labStudents[group.unit_off_lab_id].pop();
-      console.log("GROUP STUDENTS: ", groupStudents);
+      // console.log("GROUP STUDENTS: ", groupStudents);
       if (groupStudents === undefined) {
         break;
       } else {
@@ -146,7 +146,7 @@ async function transformParsedOutput(parsedOutput) {
 
     labStudents[labId] = groups;
   }
-  console.log("RETURN: ", labStudents);
+  // console.log("RETURN: ", labStudents);
   return labStudents;
 }
 
@@ -225,7 +225,7 @@ async function uploadCustomScript(req, res) {
       parsedOutput[labId] = JSON.parse(output);
     }
 
-    console.log("PARSED OUTPUT: ", parsedOutput);
+    // console.log("PARSED OUTPUT: ", parsedOutput);
     await storeGroupsInDatabase(unitCode, year, period, parsedOutput);
     res.json({ message: "Groups generated and stored successfully." });
   } catch (error) {

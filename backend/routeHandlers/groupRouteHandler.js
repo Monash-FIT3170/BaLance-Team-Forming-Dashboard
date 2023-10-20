@@ -110,7 +110,7 @@ const createUnitGroups = async (req, res) => {
     strategy = "random";
   }
 
-  console.log(strategy);
+  // console.log(strategy);
 
   /* CHECK IF THE USER IS ALLOWED TO FORM GROUPS WITH THE SELECTED STRATEGY */
   if (strategy !== "random") {
@@ -263,24 +263,24 @@ const moveStudent = async (req, res) => {
   // console.log(`old lab group is ${currentGroupData["group_alloc_id"]} and new one is ${newGroupData["lab_group_id"]}`)
   // fixme, confirm that the student in the group we are updating, is
 
-  console.log("THE GROUP THE STUDENT IS IN");
-  console.log(currentGroupData);
-  console.log("THE GROUP WE WANT TO MOVE INTO");
-  console.log(newGroupData);
+  // console.log("THE GROUP THE STUDENT IS IN");
+  // console.log(currentGroupData);
+  // console.log("THE GROUP WE WANT TO MOVE INTO");
+  // console.log(newGroupData);
 
-  console.log(hasAGroup === "true");
+  // console.log(hasAGroup === "true");
   if (hasAGroup === "true") {
     await promiseBasedQuery("UPDATE group_allocation " + "   SET lab_group_id=? " + "   WHERE group_alloc_id=?;", [
       newGroupData["lab_group_id"],
       currentGroupData["g_alloc"],
     ]);
-    console.log("has a group");
+    // console.log("has a group");
   } else {
     await promiseBasedQuery("insert into group_allocation " + "(stud_unique_id, lab_group_id) " + "values ( ?, ? );", [
       currentGroupData["stud_unique_id"],
       newGroupData["lab_group_id"],
     ]);
-    console.log("does not have a group");
+    // console.log("does not have a group");
   }
 
   // change the student's lab if it is a new one we are moving to
