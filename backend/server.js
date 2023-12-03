@@ -4,7 +4,6 @@ const groupRoutes = require('./routes/groups');
 const studentRoutes = require('./routes/students');
 const analyticsRoutes = require('./routes/analytics')
 const cors = require('cors');
-//const { expressjwt: jwt } = require('express-jwt');
 const db_connection = require("./config/databaseConfig");
 const { auth0Middleware } = require('./middleware/auth0Middleware');
 const { mockAuthMiddleware } = require('./middleware/mockAuthMiddleware');
