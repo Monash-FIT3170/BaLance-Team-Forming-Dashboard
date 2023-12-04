@@ -20,6 +20,7 @@ import { MockAuth } from '../helpers/mockAuth';
 import  Plotter  from '../components/Plotter';
 import { useAuth0 } from '@auth0/auth0-react';
 import PageHeader from "../components/shared/PageHeader";
+import NavButton from "../components/shared/NavButton";
 
 ChartJS.register(ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarController, BarElement);
 
@@ -67,14 +68,13 @@ const UnitAnalytics = () => {
             />
 
             <Center>
-                <Button onClick={navigateToOfferingDashboard}>
-                    <HStack>
-                        <ArrowBackIcon />
-                        <Spacer />
-                        <Text>Return to offering dashboard</Text>
-                    </HStack>
-                </Button>
+                <NavButton
+                    buttonIcon={<ArrowBackIcon />}
+                    buttonText="Return to offering dashboard"
+                    buttonUrl={`/students/${unitCode}/${year}/${period}`}
+                />
             </Center>
+
             {analytics.length === 0 ? (
                 <Center>
                     <Heading>No analytics data available.</Heading>
@@ -82,8 +82,8 @@ const UnitAnalytics = () => {
             ) : (
                 analytics.map((item, index) => (
                     <Plotter 
-                    item = {item}
-                    index = {index}
+                        item = {item}
+                        index = {index}
                     ></Plotter>
                 ))
             )}
