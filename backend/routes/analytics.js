@@ -6,7 +6,6 @@
 
 const express = require("express");
 const {
-  // import controller functions for route handlers
   getUnitAnalytics,
   getGroupAnalytics,
 } = require("../routeHandlers/analyticsRouteHandler");

@@ -16,7 +16,7 @@ const getUnitAnalyticsBelbin = async (unitCode, year, period) => {
 
   const belbinAnalyticData = {
     "personality title": "Belbin personality types",
-    "description:":
+    "description":
       "Based on the work of Meredith Belbin, the Belbin roles broadly " +
       "categorise people into one of 3 types: action-oriented, people-" +
       "oriented and thinking-oriented. People-oriented are generally l" +
@@ -46,12 +46,15 @@ const getUnitAnalyticsBelbin = async (unitCode, year, period) => {
     [unitCode, year, period]
   );
 
-  belbinResults.forEach((result) => {
-    belbinDoughnutChartData["x"].push(result["belbin_type"]);
-    belbinDoughnutChartData["y"].push(result["count"]);
-  });
+  if (belbinResults.length > 0) {
+    belbinResults.forEach((result) => {
+      belbinDoughnutChartData["x"].push(result["belbin_type"]);
+      belbinDoughnutChartData["y"].push(result["count"]);
+    });
 
-  belbinAnalyticData["data"].push(belbinDoughnutChartData);
+    belbinAnalyticData["data"].push(belbinDoughnutChartData);
+  }
+
   return belbinAnalyticData;
 };
 
@@ -64,7 +67,7 @@ const getUnitAnalyticsEffort = async (unitCode, year, period) => {
 
   const effortAnalyticsData = {
     "personality title": "Estimated effort",
-    "description:":
+    "description":
       "Estimated effort is an indicator of how well a student performs" +
       " and what they are willing to put into the current unit offerin" +
       "g. It is an aggregation of their own estimate of average assign" +
@@ -147,24 +150,27 @@ const getUnitAnalyticsEffort = async (unitCode, year, period) => {
     [unitCode, year, period]
   );
 
-  gradeResults.forEach((result) => {
-    marksDoughnutChartData["x"].push(result["letter_grade"]);
-    marksDoughnutChartData["y"].push(result["count"]);
-  });
+  if (gradeResults.length > 0 && hourResults.length > 0 && effortResults.length > 0) {
+    gradeResults.forEach((result) => {
+      marksDoughnutChartData["x"].push(result["letter_grade"]);
+      marksDoughnutChartData["y"].push(result["count"]);
+    });
 
-  hourResults.forEach((result) => {
-    hoursDoughnutChartData["x"].push(result["hours"]);
-    hoursDoughnutChartData["y"].push(result["count"]);
-  });
+    hourResults.forEach((result) => {
+      hoursDoughnutChartData["x"].push(result["hours"]);
+      hoursDoughnutChartData["y"].push(result["count"]);
+    });
 
-  effortResults.forEach((result) => {
-    effortBarChartData["x"].push(result["effort"]);
-    effortBarChartData["y"].push(result["count"]);
-  });
+    effortResults.forEach((result) => {
+      effortBarChartData["x"].push(result["effort"]);
+      effortBarChartData["y"].push(result["count"]);
+    });
 
-  effortAnalyticsData["data"].push(marksDoughnutChartData);
-  effortAnalyticsData["data"].push(hoursDoughnutChartData);
-  effortAnalyticsData["data"].push(effortBarChartData);
+    effortAnalyticsData["data"].push(marksDoughnutChartData);
+    effortAnalyticsData["data"].push(hoursDoughnutChartData);
+    effortAnalyticsData["data"].push(effortBarChartData);
+  }
+
   return effortAnalyticsData;
 };
 
@@ -187,7 +193,7 @@ const getGroupAnalyticsBelbin = async (unitCode, year, period, groupNumber) => {
 
   const belbinAnalyticData = {
     "personality title": "Belbin personality types",
-    "description:":
+    "description":
       "Based on the work of Meredith Belbin, the Belbin roles broadly " +
       "categorise people into one of 3 types: action-oriented, people-" +
       "oriented and thinking-oriented. People-oriented are generally l" +
@@ -221,12 +227,15 @@ const getGroupAnalyticsBelbin = async (unitCode, year, period, groupNumber) => {
     [unitCode, year, period]
   );
 
-  belbinResults.forEach((result) => {
-    belbinDoughnutChartData["x"].push(result["belbin_type"]);
-    belbinDoughnutChartData["y"].push(result["count"]);
-  });
+  if (belbinResults.length > 0) {
+    belbinResults.forEach((result) => {
+      belbinDoughnutChartData["x"].push(result["belbin_type"]);
+      belbinDoughnutChartData["y"].push(result["count"]);
+    });
 
-  belbinAnalyticData["data"].push(belbinDoughnutChartData);
+    belbinAnalyticData["data"].push(belbinDoughnutChartData);
+  }
+
   return belbinAnalyticData;
 };
 
@@ -239,7 +248,7 @@ const getGroupAnalyticsEffort = async (unitCode, year, period, groupNumber) => {
 
   const effortAnalyticsData = {
     "personality title": "Estimated effort",
-    "description:":
+    "description":
       "Estimated effort is an indicator of how well a student performs" +
       " and what they are willing to put into the current unit offerin" +
       "g. It is an aggregation of their own estimate of average assign" +
@@ -336,24 +345,27 @@ const getGroupAnalyticsEffort = async (unitCode, year, period, groupNumber) => {
     [unitCode, year, period, groupNumber]
   );
 
-  gradeResults.forEach((result) => {
-    marksDoughnutChartData["x"].push(result["letter_grade"]);
-    marksDoughnutChartData["y"].push(result["count"]);
-  });
+  if (gradeResults.length > 0 && hourResults.length > 0 && effortResults.length > 0) {
+    gradeResults.forEach((result) => {
+      marksDoughnutChartData["x"].push(result["letter_grade"]);
+      marksDoughnutChartData["y"].push(result["count"]);
+    });
 
-  hourResults.forEach((result) => {
-    hoursDoughnutChartData["x"].push(result["hours"]);
-    hoursDoughnutChartData["y"].push(result["count"]);
-  });
+    hourResults.forEach((result) => {
+      hoursDoughnutChartData["x"].push(result["hours"]);
+      hoursDoughnutChartData["y"].push(result["count"]);
+    });
 
-  effortResults.forEach((result) => {
-    effortBarChartData["x"].push(result["effort"]);
-    effortBarChartData["y"].push(result["count"]);
-  });
+    effortResults.forEach((result) => {
+      effortBarChartData["x"].push(result["effort"]);
+      effortBarChartData["y"].push(result["count"]);
+    });
 
-  effortAnalyticsData["data"].push(marksDoughnutChartData);
-  effortAnalyticsData["data"].push(hoursDoughnutChartData);
-  effortAnalyticsData["data"].push(effortBarChartData);
+    effortAnalyticsData["data"].push(marksDoughnutChartData);
+    effortAnalyticsData["data"].push(hoursDoughnutChartData);
+    effortAnalyticsData["data"].push(effortBarChartData);
+  }
+
   return effortAnalyticsData;
 };
 

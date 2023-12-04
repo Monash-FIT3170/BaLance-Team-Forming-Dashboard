@@ -1,85 +1,42 @@
-import {Box, Card, CardBody, CardHeader, Center, Heading, Text} from "@chakra-ui/react";
-import {Bar, Doughnut} from "react-chartjs-2";
+import {Box, Card, CardBody, CardHeader, Center, Heading, Text, Link} from "@chakra-ui/react";
 import React from "react";
+import AnalyticsGraphPlotter from "./AnalyticsGraphPlotter";
 
-const AnalyticsCard = ({personalityTypeData, index}) => {
-
-    const generatePastelColors = (count) => {
-        const colors = [];
-        const baseHue = 200; // Start with a bluish hue
-        const hueIncrement = 360 / count;
-
-        for (let i = 0; i < count; i++) {
-            const hue = (baseHue + i * hueIncrement) % 360;
-            colors.push(`hsla(${hue}, 100%, 70%, 0.9)`);
+const AnalyticsCard = ({personalityTypeData}) => {
+    const generateGraphs = () => {
+        if (personalityTypeData['data'].length === 0) {
+            return (
+                <Center>
+                    <Box bg='#E6EBF0' w='300px' p={4} alignContent="left">
+                        <Center>
+                            No data for {personalityTypeData['personality title']} has been uploaded.
+                        </Center>
+                    </Box>
+                </Center>
+            )
         }
 
-        return colors;
-    };
+        return personalityTypeData['data'].map((data) =>
+            <AnalyticsGraphPlotter
+                data={data}
+            />
+        )
+    }
 
     return (
-        <Center key={index}>
+        <Center>
             <Box width="100%" maxWidth="800px" margin="20px">
                 <Card padding="20px" border="1px">
                     <CardHeader>
                         <Heading style={{ marginTop: '-20px' }}>
                             {personalityTypeData['personality title']}
                         </Heading>
-                        <Text>{Object.values(personalityTypeData)[1]}</Text>
+                        <br/>
+                        <Text>{personalityTypeData['description']}</Text>
                     </CardHeader>
+
                     <CardBody>
-                        {personalityTypeData.data.map((chartData, dataIndex) => (
-                            <div key={dataIndex}>
-                                <h3
-                                    style={{
-                                        marginTop: dataIndex === 0 ? '0' : '15px',
-                                        marginBottom: '15px',
-                                    }}
-                                >
-                                    {chartData.title}
-                                </h3>
-                                {chartData.type === 'doughnut' && (
-                                    <Doughnut
-                                        data={{
-                                            labels: chartData.x || [],
-                                            datasets: [
-                                                {
-                                                    data: chartData.y || [],
-                                                    backgroundColor: generatePastelColors(
-                                                        chartData.x.length
-                                                    ),
-                                                },
-                                            ],
-                                        }}
-                                        options={{
-                                            responsive: true,
-                                            aspectRatio: 3.0,
-                                        }}
-                                    />
-                                )}
-                                {chartData.type === 'bar' && (
-                                    <Bar
-                                        data={{
-                                            labels: chartData.x.map(String),
-                                            datasets: [
-                                                {
-                                                    label: chartData['y label'],
-                                                    data: chartData.y,
-                                                    backgroundColor: generatePastelColors(
-                                                        chartData.x.length
-                                                    )[0], // Use the first color for bars
-                                                },
-                                            ],
-                                        }}
-                                        options={{
-                                            responsive: true,
-                                            aspectRatio: 1.5,
-                                        }}
-                                    />
-                                )}
-                                <br />
-                            </div>
-                        ))}
+                        {generateGraphs()}
                     </CardBody>
                 </Card>
             </Box>

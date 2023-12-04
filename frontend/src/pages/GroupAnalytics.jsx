@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import {
-    Center,
-
-} from '@chakra-ui/react';
+import { Center } from '@chakra-ui/react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarController, BarElement } from 'chart.js';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../helpers/mockAuth';
@@ -24,7 +21,6 @@ const UnitAnalytics = () => {
     const { unitCode, year, period, groupNumber } = useParams();
     const [analytics, setAnalytics] = useState([]);
 
-
     useEffect(() => {
         getAccessTokenSilently().then((token) => {
             fetch(`http://localhost:8080/api/analytics/${unitCode}/${year}/${period}/${groupNumber}`, {
@@ -42,7 +38,6 @@ const UnitAnalytics = () => {
             });
     })}, []);
 
-
     return (
         <div>
             <PageHeader
@@ -58,10 +53,9 @@ const UnitAnalytics = () => {
                 />
             </Center>
 
-            {analytics.map((data, index) => (
+            {analytics.map((data) => (
                 <AnalyticsCard
                     personalityTypeData={data}
-                    index={index}
                 />
             ))}
         </div>
