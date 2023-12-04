@@ -212,19 +212,19 @@ const getGroupAnalyticsBelbin = async (unitCode, year, period, groupNumber) => {
   };
 
   const belbinResults = await promiseBasedQuery(
-    "SELECT b.belbin_type, count(b.belbin_type) AS 'count'\n" +
-      "        FROM unit_offering u\n" +
-      "        INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id\n" +
-      "        INNER JOIN belbin_result b ON b.personality_test_attempt = pa.test_attempt_id\n" +
-      "        INNER JOIN student s ON s.stud_unique_id = pa.stud_unique_id\n" +
-      "        INNER JOIN group_allocation ga ON ga.stud_unique_id = s.stud_unique_id\n" +
-      "        INNER JOIN lab_group g ON g.lab_group_id = ga.lab_group_id\n" +
-      "           WHERE u.unit_code='f'\n" +
-      "           AND u.unit_off_year=2\n" +
-      "           AND u.unit_off_period='S2'\n" +
-      "           AND g.group_number=1\n" +
+    "SELECT b.belbin_type, count(b.belbin_type) AS 'count' " +
+      "        FROM unit_offering u " +
+      "        INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
+      "        INNER JOIN belbin_result b ON b.personality_test_attempt = pa.test_attempt_id " +
+      "        INNER JOIN student s ON s.stud_unique_id = pa.stud_unique_id " +
+      "        INNER JOIN group_allocation ga ON ga.stud_unique_id = s.stud_unique_id " +
+      "        INNER JOIN lab_group g ON g.lab_group_id = ga.lab_group_id " +
+      "           WHERE u.unit_code=? " +
+      "           AND u.unit_off_year=? " +
+      "           AND u.unit_off_period=? " +
+      "           AND g.group_number=? " +
       "        GROUP BY b.belbin_type;",
-    [unitCode, year, period]
+    [unitCode, year, period, groupNumber]
   );
 
   if (belbinResults.length > 0) {
