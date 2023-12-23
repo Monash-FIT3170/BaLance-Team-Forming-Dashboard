@@ -4,7 +4,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { MockAuth } from './helpers/mockAuth';
 import UploadGroupScript from './pages/UploadGroupScript';
 import CreateGroups from './pages/CreateGroups';
-import UnitHomePage from './pages/UnitHomePage';
+import HomePage from './pages/HomePage';
 import NavBar from './components/shared/NavBar';
 import Groups from './pages/Groups';
 import Students from './pages/Students';
@@ -42,7 +42,7 @@ function App() {
         <div className="App">
         {isAuthenticated && (
           <Routes>
-            <Route path="/" element={<UnitHomePage />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/groups/:unitCode/:year/:period" element={<Groups />} />
             <Route path="/students/:unitCode/:year/:period" element={<Students />} />
             <Route path="/uploadGroupScript/:unitCode/:year/:period" element={<UploadGroupScript />} />

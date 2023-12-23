@@ -4,7 +4,9 @@ import { MockAuth } from '../helpers/mockAuth';
 import {
     useDisclosure,
     Spacer,
-    Grid, Flex, VStack
+    Grid,
+    Flex,
+    AbsoluteCenter, Center, HStack, Box
 } from '@chakra-ui/react';
 import UnitCard from '../components/unitHomePage/UnitCard';
 import '../App.css';
@@ -54,25 +56,22 @@ function UnitPage() {
 
     return (
         <div>
-            <Flex margin="40px">
-                <Spacer/>
-                <Spacer/>
-                <PageHeader
-                    fontSize="4xl"
-                    pageDesc="Home"
-                />
-                <Spacer/>
-                <VStack>
-                    <Spacer/>
+            <Box w='100%' mt='50px' mb='50px'>
+                <AbsoluteCenter>
+                    <PageHeader
+                        fontSize="4xl"
+                        pageDesc="Home"
+                    />
+                </AbsoluteCenter>
+
+                <Box ml='auto' mr='4em' w='200px'>
                     <AddButton
                         buttonText="Add offering"
                         onClick={onAddOpen}
-                        width="20vw"
+                        width="200px"
                     />
-                    <Spacer/>
-                </VStack>
-            </Flex>
-
+                </Box>
+            </Box>
 
             <Grid templateColumns="repeat(4, 1fr)" gap={4} className="units" ml={'5em'} mr={'5em'}>
                 {units && units.map((unit) => (
@@ -83,7 +82,6 @@ function UnitPage() {
                     />
                 ))}
             </Grid>
-
 
             <CreateUnitModal
                 isModalOpen={isAddOpen}
