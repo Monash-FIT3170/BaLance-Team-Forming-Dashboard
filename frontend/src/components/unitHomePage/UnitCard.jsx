@@ -22,7 +22,7 @@ const UnitCard = (unit) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     return (
-        <LinkBox w='300px' h='150px' borderWidth='1px' borderRadius='5px' backgroundColor='#E6EBF0'>
+        <LinkBox w='300px' h='150px' borderRadius='5px' backgroundColor='#E6EBF0'>
             <Box
                 width='100%'
                 height='1em'
