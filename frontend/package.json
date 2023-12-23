@@ -1,6 +1,5 @@
 {
   "name": "balance",
-  "homepage": "https://Monash-FIT3170.github.io/baLance",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

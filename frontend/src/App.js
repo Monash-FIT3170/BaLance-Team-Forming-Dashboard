@@ -21,7 +21,6 @@ const theme = extendTheme({
   },
 });
 
-
 function App() {
 
   let authService = {
@@ -37,7 +36,9 @@ function App() {
         <NavBar
           authenticated={isAuthenticated}
         />
+
         <Box pt="12vh" />
+
         <div className="App">
         {isAuthenticated && (
           <Routes>
@@ -62,6 +63,7 @@ function App() {
           </Container>
         )}
         </div>
+
       </BrowserRouter>
     </ChakraProvider>
   );

@@ -16,7 +16,6 @@ import getToastSettings from "../shared/ToastSettings";
 import {MockAuth} from "../../helpers/mockAuth";
 import {useAuth0} from "@auth0/auth0-react";
 import DropdownDynamic from "../shared/DropdownDynamic";
-import NumberField from "../shared/NumberField";
 import ModalFooterButtonPair from "../shared/ModalFooterButtonPair";
 import TextField from "../shared/TextField";
 import {useNavigate} from "react-router-dom";
