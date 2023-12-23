@@ -46,7 +46,6 @@ function Students() {
                 .then((res) => res.json())
                 .then((res) => {
                     setStudents(res);
-                    console.log(students)
                 })
                 .catch((err) => console.error(err));
 

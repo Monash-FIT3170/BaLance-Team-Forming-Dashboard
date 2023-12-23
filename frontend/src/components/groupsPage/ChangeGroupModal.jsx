@@ -30,7 +30,6 @@ export default function ChangeGroupModal({ studentData, numberOfGroups }) {
         year,
         period
     } = useParams();
-    console.log(studentData)
 
     const {
         isOpen,
