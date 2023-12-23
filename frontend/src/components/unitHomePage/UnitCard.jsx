@@ -8,6 +8,7 @@ import {
     useDisclosure
 } from '@chakra-ui/react';
 import { FaTrash, FaUser } from 'react-icons/fa';
+
 import DeleteModal from "./DeleteModal";
 
 const UnitCard = (unit) => {

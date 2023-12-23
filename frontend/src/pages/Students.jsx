@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useParams } from 'react-router';
 import { HStack, Center, useDisclosure } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { AddIcon, EditIcon, ViewIcon } from '@chakra-ui/icons';
+
 import { MockAuth } from '../helpers/mockAuth';
 import NavButton from "../components/shared/NavButton";
 import ToggleButtonGroup from "../components/shared/ToggleButtonGroup";

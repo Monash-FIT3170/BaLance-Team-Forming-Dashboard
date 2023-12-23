@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { MockAuth } from '../helpers/mockAuth';
 import {
     useDisclosure,
-    Spacer,
     Grid,
-    Flex,
-    AbsoluteCenter, Center, HStack, Box
+    AbsoluteCenter,
+    Box
 } from '@chakra-ui/react';
+
+import { MockAuth } from '../helpers/mockAuth';
 import UnitCard from '../components/unitHomePage/UnitCard';
-import '../App.css';
 import CreateUnitModal from '../components/unitHomePage/CreateUnitModal';
 import PageHeader from "../components/shared/PageHeader";
 import AddButton from "../components/shared/AddButton";
+
 
 function UnitPage() {
     const [units, setUnits] = useState([]);

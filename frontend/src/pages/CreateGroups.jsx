@@ -1,25 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import { useAuth0 } from '@auth0/auth0-react';
-
+import { useNavigate } from 'react-router-dom';
+import { ArrowBackIcon } from '@chakra-ui/icons';
 import {
-    Table,
-    Thead,
     Select,
-    Tr,
-    Th,
-    Tbody,
     Button,
-    ButtonGroup,
     HStack,
     Spacer,
-    Heading,
     Center,
     useDisclosure,
     Text,
     VStack,
     Box,
-    Container,
     Divider,
     NumberInput,
     NumberInputField,
@@ -31,8 +24,7 @@ import {
     FormHelperText,
     useToast,
 } from '@chakra-ui/react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ArrowBackIcon } from '@chakra-ui/icons';
+
 import { MockAuth } from '../helpers/mockAuth';
 import PageHeader from "../components/shared/PageHeader";
 import DropdownDynamic from "../components/shared/DropdownDynamic";

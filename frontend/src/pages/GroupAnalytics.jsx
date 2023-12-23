@@ -1,10 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { Center } from '@chakra-ui/react';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarController, BarElement } from 'chart.js';
-import { ArrowBackIcon } from '@chakra-ui/icons';
-import { MockAuth } from '../helpers/mockAuth';
 import { useAuth0 } from '@auth0/auth0-react';
+import { ArrowBackIcon } from '@chakra-ui/icons';
+import {
+    Chart as ChartJS,
+    ArcElement,
+    Tooltip,
+    Legend,
+    LinearScale,
+    CategoryScale,
+    BarController,
+    BarElement
+} from 'chart.js';
+
+import { MockAuth } from '../helpers/mockAuth';
 import PageHeader from "../components/shared/PageHeader";
 import NavButton from "../components/shared/NavButton";
 import AnalyticsCard from "../components/analyticsPage/AnalyticsCard";

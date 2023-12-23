@@ -1,5 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router';
+import { ArrowBackIcon } from "@chakra-ui/icons";
+import {
+    Flex,
+    useDisclosure,
+    Spacer,
+    VStack,
+    Center,
+} from '@chakra-ui/react';
+
+import csvHeaderMapping from "../helpers/csvHeaderMapping";
 import DeleteProfileModal from '../components/importPage/DeleteProfileModal';
 import ConfirmClearSelection from '../components/importPage/ConfirmClearSelection';
 import UploadCSV from '../components/importPage/UploadCSV';
@@ -9,15 +19,6 @@ import PageHeader from "../components/shared/PageHeader";
 import DropdownDynamic from "../components/shared/DropdownDynamic";
 import AddStudentModal from "../components/importPage/AddStudentModal";
 import EditStudentModal from "../components/importPage/EditStudentModal";
-import {ArrowBackIcon} from "@chakra-ui/icons";
-import csvHeaderMapping from "../helpers/csvHeaderMapping";
-import {
-    Flex,
-    useDisclosure,
-    Spacer,
-    VStack,
-    Center,
-} from '@chakra-ui/react';
 
 const ImportPage = () => {
     const [isFileChosen, setIsFileChosen] = useState(false);
@@ -46,8 +47,6 @@ const ImportPage = () => {
         year,
         period
     } = useParams();
-
-    console.log(profiles)
 
     return (
         <VStack>

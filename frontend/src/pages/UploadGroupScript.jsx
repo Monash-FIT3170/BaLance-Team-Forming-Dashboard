@@ -1,4 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { ArrowForwardIcon, ArrowBackIcon } from '@chakra-ui/icons';
+import { useParams } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { MockAuth } from '../helpers/mockAuth';
+import { useAuth0 } from '@auth0/auth0-react';
 import {
 	Box,
 	Text,
@@ -19,12 +24,7 @@ import {
 	VStack,
 	NumberInputStepper
 } from '@chakra-ui/react';
-import { ArrowForwardIcon, ArrowBackIcon } from '@chakra-ui/icons';
-import { useParams } from 'react-router-dom';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { MockAuth } from '../helpers/mockAuth';
-import { useAuth0 } from '@auth0/auth0-react';
-import PyInfoButton from '../components/uploadScriptPage/PyInfoButton';
+
 import UploadPy from '../components/uploadScriptPage/UploadPy';
 
 function UploadGroupScript() {
