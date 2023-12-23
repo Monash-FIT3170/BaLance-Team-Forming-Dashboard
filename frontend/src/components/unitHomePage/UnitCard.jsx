@@ -51,14 +51,16 @@ const UnitCard = (unit) => {
                 </Box>
             </HStack>
 
-            <LinkOverlay href={`/students/${unit_code}/${unit_off_year}/${unit_off_period}`}>
-                <Text fontSize='2xl' fontWeight='bold' align='center'>
-                    {`${unit_code} ${unit_off_year} ${unit_off_period}`}
+            <Box width='90%' height='100%' ml='auto' mr='auto' mt='0.25em'>
+                <LinkOverlay href={`/students/${unit_code}/${unit_off_year}/${unit_off_period}`}>
+                    <Text fontSize='2xl' fontWeight='bold'  align='center' noOfLines={1}>
+                        {`${unit_code} ${unit_off_year} ${unit_off_period}`}
+                    </Text>
+                </LinkOverlay>
+                <Text noOfLines={1}>
+                    {unit_name}
                 </Text>
-            </LinkOverlay>
-            <Text>
-                {unit_name}
-            </Text>
+            </Box>
 
             <DeleteModal
                 modalHeader='Delete unit'
