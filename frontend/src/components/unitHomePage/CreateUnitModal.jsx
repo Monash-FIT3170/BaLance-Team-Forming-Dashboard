@@ -9,7 +9,7 @@ import {
     ModalHeader,
     ModalOverlay,
     Text,
-    useToast
+    useToast, VStack
 } from "@chakra-ui/react";
 import {useState} from "react";
 import getToastSettings from "../shared/ToastSettings";
@@ -72,8 +72,8 @@ const CreateUnitModal = ({
     const renderForm = () => {
         return (
             <form id="create-unit" onSubmit={submitUnit}>
-                <br></br>
-                <FormControl required>
+                <br/>
+                <FormControl isRequired>
                     <TextField
                         label="Unit code"
                         value={unitCode}
@@ -84,18 +84,24 @@ const CreateUnitModal = ({
                         value={unitName}
                         onChange={(event) => {setUnitName(event.target.value)}}
                     />
-                    <FormLabel>Unit offering</FormLabel>
+
                     <Flex direction="row" spacing={4} justifyContent="space-between">
-                          <DropdownDynamic 
-                            placeholder={new Date().getFullYear()}
-                            onChange={(event) => setUnitYear(event)}
-                            options={[new Date().getFullYear()+1, new Date().getFullYear()+2, new Date().getFullYear()+3]}
-                        />
-                        <DropdownDynamic
-                            placeholder={'select semester'}
-                            onChange={(event) => {setUnitPeriod(event.target.value)}}
-                            options={['S1', 'S2', 'FY', 'Summer', 'Winter']}
-                        />
+                        <VStack>
+                            <FormLabel>Offering year</FormLabel>
+                            <DropdownDynamic
+                                placeholder={new Date().getFullYear()}
+                                onChange={(event) => setUnitYear(event)}
+                                options={[new Date().getFullYear()+1, new Date().getFullYear()+2, new Date().getFullYear()+3]}
+                            />
+                        </VStack>
+                        <VStack>
+                            <FormLabel>Offering period</FormLabel>
+                            <DropdownDynamic
+                                placeholder={'select semester'}
+                                onChange={(event) => {setUnitPeriod(event.target.value)}}
+                                options={['S1', 'S2', 'FY', 'Summer', 'Winter']}
+                            />
+                        </VStack>
                     </Flex>
                 </FormControl>
             </form>

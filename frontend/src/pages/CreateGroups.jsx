@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
@@ -41,7 +41,7 @@ function CreateGroups() {
     const [students, setStudents] = useState([]);
     const [strategy, setStrategy] = useState("random");
     const [groupSize, setGroupSize] = useState(2);
-    const cancelRef = React.useRef();
+    const cancelRef = useRef();
     const navigate = useNavigate();
     const {
         isOpen,
