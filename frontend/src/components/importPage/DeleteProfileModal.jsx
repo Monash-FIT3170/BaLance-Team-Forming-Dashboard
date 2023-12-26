@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
     Modal,
     ModalOverlay,
@@ -6,8 +5,7 @@ import {
     ModalHeader,
     ModalBody,
     ModalFooter,
-    Button,
-    Spacer
+    Button
 } from '@chakra-ui/react';
 
 const DeleteProfileModal = ({

@@ -1,3 +1,4 @@
+import { FaTrash, FaUser } from 'react-icons/fa';
 import {
     Icon,
     Text,
@@ -5,9 +6,9 @@ import {
     LinkBox,
     LinkOverlay,
     Box,
-    useDisclosure
+    useDisclosure,
+    Center
 } from '@chakra-ui/react';
-import { FaTrash, FaUser } from 'react-icons/fa';
 
 import DeleteModal from "./DeleteModal";
 
@@ -58,9 +59,12 @@ const UnitCard = (unit) => {
                         {`${unit_code} ${unit_off_year} ${unit_off_period}`}
                     </Text>
                 </LinkOverlay>
-                <Text noOfLines={1}>
-                    {unit_name}
-                </Text>
+                <Center>
+                    <Text noOfLines={1}>
+                        {unit_name}
+                    </Text>
+                </Center>
+
             </Box>
 
             <DeleteModal

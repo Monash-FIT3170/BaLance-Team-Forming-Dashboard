@@ -1,6 +1,5 @@
-import {Heading, Text} from '@chakra-ui/react';
+import { Text } from '@chakra-ui/react';
 import { Doughnut, Bar } from 'react-chartjs-2';
-import React from "react";
 
 const AnalyticsGraphPlotter = ({data}) => {
 

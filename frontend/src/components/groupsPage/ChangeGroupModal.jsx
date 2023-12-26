@@ -1,8 +1,7 @@
-import { EditIcon, WarningIcon } from '@chakra-ui/icons';
+import { EditIcon } from '@chakra-ui/icons';
 import { useState } from 'react';
 import { useParams } from 'react-router';
 import { useAuth0 } from '@auth0/auth0-react';
-
 import {
     Button,
     HStack,
@@ -19,6 +18,7 @@ import {
     useDisclosure,
     useToast,
 } from '@chakra-ui/react';
+
 import { MockAuth } from '../../helpers/mockAuth';
 import ConfirmChangeGroupModal from './ConfirmChangeGroupModal';
 import getToastSettings from '../_shared/ToastSettings';

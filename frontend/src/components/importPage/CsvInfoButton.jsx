@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import {
     Popover,
     PopoverTrigger,
@@ -9,7 +9,6 @@ import {
     PopoverBody,
     IconButton,
 } from '@chakra-ui/react';
-import { QuestionOutlineIcon } from '@chakra-ui/icons';
 
 
 export const CsvInfoButton = ({infoHeader, infoText}) => {

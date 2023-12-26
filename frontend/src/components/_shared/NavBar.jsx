@@ -1,8 +1,15 @@
-import { Image, Container, Button, Box, Grid, GridItem, Stack, HStack } from '@chakra-ui/react';
-import logo from '../../assets/logo_separated.png';
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
+import {
+  Image,
+  Container,
+  Button,
+  Box,
+  HStack
+} from '@chakra-ui/react';
+
 import { MockAuth } from '../../helpers/mockAuth';
+import logo from '../../assets/logo_separated.png';
 
 export default function NavBar({ authenticated }) {
   const navigate = useNavigate();

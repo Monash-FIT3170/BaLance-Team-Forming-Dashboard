@@ -1,6 +1,10 @@
-import {Button, HStack, Spacer, Text} from "@chakra-ui/react";
-import React from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import {
+    Button,
+    HStack,
+    Spacer,
+    Text
+} from "@chakra-ui/react";
 
 const NavButton = ({ buttonIcon, buttonText, buttonUrl, onClick }) => {
     const navigate = useNavigate();

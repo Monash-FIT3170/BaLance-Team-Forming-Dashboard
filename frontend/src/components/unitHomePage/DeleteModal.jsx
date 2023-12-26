@@ -1,3 +1,4 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import {
     Modal,
     ModalOverlay,
@@ -7,9 +8,9 @@ import {
     ModalCloseButton,
     useToast
 } from '@chakra-ui/react'
+
+import { MockAuth } from "../../helpers/mockAuth";
 import ModalFooterButtonPair from "../_shared/ModalFooterButtonPair";
-import {MockAuth} from "../../helpers/mockAuth";
-import {useAuth0} from "@auth0/auth0-react";
 import getToastSettings from "../_shared/ToastSettings";
 
 

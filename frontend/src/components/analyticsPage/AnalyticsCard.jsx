@@ -1,5 +1,13 @@
-import {Box, Card, CardBody, CardHeader, Center, Heading, Text, Link} from "@chakra-ui/react";
-import React from "react";
+import {
+    Box,
+    Card,
+    CardBody,
+    CardHeader,
+    Center,
+    Heading,
+    Text
+} from "@chakra-ui/react";
+
 import AnalyticsGraphPlotter from "./AnalyticsGraphPlotter";
 
 const AnalyticsCard = ({personalityTypeData}) => {

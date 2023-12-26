@@ -1,6 +1,15 @@
-import {Box, Center, Table, Tbody, Td, Th, Thead, Tr, useDisclosure} from "@chakra-ui/react";
-import {DeleteIcon, EditIcon} from "@chakra-ui/icons";
-import React, {useState} from "react";
+import { useState } from "react";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import {
+    Box,
+    Center,
+    Table,
+    Tbody,
+    Td,
+    Thead,
+    Tr,
+    useDisclosure
+} from "@chakra-ui/react";
 
 const CsvPreviewTable = ({
     headerMap,

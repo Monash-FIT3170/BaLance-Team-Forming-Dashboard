@@ -1,9 +1,20 @@
-import { Box, Center, Table, Tbody, Td, Th, Thead, Tr, useDisclosure, useToast } from "@chakra-ui/react";
-import React from "react";
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { DeleteIcon } from "@chakra-ui/icons";
 import { useParams } from "react-router";
-import { MockAuth } from "../../helpers/mockAuth";
 import { useAuth0 } from "@auth0/auth0-react";
+import {
+    Box,
+    Center,
+    Table,
+    Tbody,
+    Td,
+    Th,
+    Thead,
+    Tr,
+    useDisclosure,
+    useToast
+} from "@chakra-ui/react";
+
+import { MockAuth } from "../../helpers/mockAuth";
 import getToastSettings from "./ToastSettings";
 import ChangeGroupModal from "../groupsPage/ChangeGroupModal";
 
