@@ -21,7 +21,7 @@ import {
 } from '@chakra-ui/react';
 import { MockAuth } from '../../helpers/mockAuth';
 import ConfirmChangeGroupModal from './ConfirmChangeGroupModal';
-import getToastSettings from '../shared/ToastSettings';
+import getToastSettings from '../_shared/ToastSettings';
 import { NoGroupInfo } from './NoGroupWarning';
 
 export default function ChangeGroupModal({ studentData, numberOfGroups }) {

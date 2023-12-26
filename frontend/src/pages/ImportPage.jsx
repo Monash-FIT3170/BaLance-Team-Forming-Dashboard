@@ -14,9 +14,9 @@ import DeleteProfileModal from '../components/importPage/DeleteProfileModal';
 import ConfirmClearSelection from '../components/importPage/ConfirmClearSelection';
 import UploadCSV from '../components/importPage/UploadCSV';
 import CsvPreviewTable from "../components/importPage/CsvPreviewTable";
-import NavButton from "../components/shared/NavButton";
-import PageHeader from "../components/shared/PageHeader";
-import DropdownDynamic from "../components/shared/DropdownDynamic";
+import NavButton from "../components/_shared/NavButton";
+import PageHeader from "../components/_shared/PageHeader";
+import DropdownDynamic from "../components/_shared/DropdownDynamic";
 import AddStudentModal from "../components/importPage/AddStudentModal";
 import EditStudentModal from "../components/importPage/EditStudentModal";
 

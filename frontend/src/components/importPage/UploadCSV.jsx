@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { FiUploadCloud } from 'react-icons/fi';
 import { CsvInfoButton } from './CsvInfoButton';
-import getToastSettings from '../shared/ToastSettings';
+import getToastSettings from '../_shared/ToastSettings';
 import { MockAuth } from '../../helpers/mockAuth';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useParams } from 'react-router';

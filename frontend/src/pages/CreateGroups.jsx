@@ -26,10 +26,10 @@ import {
 } from '@chakra-ui/react';
 
 import { MockAuth } from '../helpers/mockAuth';
-import PageHeader from "../components/shared/PageHeader";
-import DropdownDynamic from "../components/shared/DropdownDynamic";
-import NavButton from "../components/shared/NavButton";
-import getToastSettings from '../components/shared/ToastSettings';
+import PageHeader from "../components/_shared/PageHeader";
+import DropdownDynamic from "../components/_shared/DropdownDynamic";
+import NavButton from "../components/_shared/NavButton";
+import getToastSettings from '../components/_shared/ToastSettings';
 
 function CreateGroups() {
     let authService = {

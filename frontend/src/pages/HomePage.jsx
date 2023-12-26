@@ -10,8 +10,8 @@ import {
 import { MockAuth } from '../helpers/mockAuth';
 import UnitCard from '../components/unitHomePage/UnitCard';
 import CreateUnitModal from '../components/unitHomePage/CreateUnitModal';
-import PageHeader from "../components/shared/PageHeader";
-import AddButton from "../components/shared/AddButton";
+import PageHeader from "../components/_shared/PageHeader";
+import AddButton from "../components/_shared/AddButton";
 
 
 function UnitPage() {

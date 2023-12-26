@@ -16,8 +16,8 @@ import {
     BarElement
 } from 'chart.js';
 
-import PageHeader from "../components/shared/PageHeader";
-import NavButton from "../components/shared/NavButton";
+import PageHeader from "../components/_shared/PageHeader";
+import NavButton from "../components/_shared/NavButton";
 import AnalyticsCard from "../components/analyticsPage/AnalyticsCard";
 
 ChartJS.register(ArcElement, Tooltip, Legend, LinearScale, CategoryScale, BarController, BarElement);

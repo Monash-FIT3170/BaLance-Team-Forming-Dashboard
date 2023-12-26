@@ -17,9 +17,9 @@ import {
 } from "@chakra-ui/react";
 
 import { MockAuth } from "../../helpers/mockAuth";
-import DropdownDynamic from "../shared/DropdownDynamic";
-import ModalFooterButtonPair from "../shared/ModalFooterButtonPair";
-import TextField from "../shared/TextField";
+import DropdownDynamic from "../_shared/DropdownDynamic";
+import ModalFooterButtonPair from "../_shared/ModalFooterButtonPair";
+import TextField from "../_shared/TextField";
 
 const CreateUnitModal = ({
     isModalOpen,

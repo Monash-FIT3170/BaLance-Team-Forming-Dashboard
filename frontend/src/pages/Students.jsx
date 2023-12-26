@@ -6,10 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import { AddIcon, EditIcon, ViewIcon } from '@chakra-ui/icons';
 
 import { MockAuth } from '../helpers/mockAuth';
-import NavButton from "../components/shared/NavButton";
-import ToggleButtonGroup from "../components/shared/ToggleButtonGroup";
-import PageHeader from "../components/shared/PageHeader";
-import StudentsPreviewTable from "../components/shared/StudentsPreviewTable";
+import NavButton from "../components/_shared/NavButton";
+import ToggleButtonGroup from "../components/_shared/ToggleButtonGroup";
+import PageHeader from "../components/_shared/PageHeader";
+import StudentsPreviewTable from "../components/_shared/StudentsPreviewTable";
 
 function Students() {
     let authService = {

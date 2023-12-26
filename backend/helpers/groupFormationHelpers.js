@@ -439,7 +439,7 @@ const splitGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) 
 
   // if we cannot form even groups from all students or the last group is not within variance limits
   if (numRemStud !== 0 && numRemStud < groupSize - variance) {
-    // can the students not in a full group be shared between full groups?
+    // can the students not in a full group be _shared between full groups?
     if (numRemStud / numFullGroups <= variance) {
       // consider variance > 1, enclose in a for(i=0 i<variance) or do i%variance todo
       // students not in a full group are distributed amongst the full groups until no more remain
