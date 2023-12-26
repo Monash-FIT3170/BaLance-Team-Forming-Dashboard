@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useNavigate } from "react-router-dom";
 import {
     Flex,
     FormControl,
@@ -9,16 +12,14 @@ import {
     ModalHeader,
     ModalOverlay,
     Text,
-    useToast, VStack
+    useToast,
+    VStack
 } from "@chakra-ui/react";
-import {useState} from "react";
-import getToastSettings from "../shared/ToastSettings";
-import {MockAuth} from "../../helpers/mockAuth";
-import {useAuth0} from "@auth0/auth0-react";
+
+import { MockAuth } from "../../helpers/mockAuth";
 import DropdownDynamic from "../shared/DropdownDynamic";
 import ModalFooterButtonPair from "../shared/ModalFooterButtonPair";
 import TextField from "../shared/TextField";
-import {useNavigate} from "react-router-dom";
 
 const CreateUnitModal = ({
     isModalOpen,
@@ -29,12 +30,7 @@ const CreateUnitModal = ({
     const [unitYear, setUnitYear] = useState(new Date().getFullYear());
     const [unitPeriod, setUnitPeriod] = useState('');
     const [submitted, setSubmitted] = useState(false);
-
     const toast = useToast();
-    const getToast = (title, status) => {
-        toast.closeAll();
-        toast(getToastSettings(title, status))
-    }
 
     const navigate = useNavigate()
 
@@ -44,30 +40,79 @@ const CreateUnitModal = ({
     }
     const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
 
-    const submitUnit = (event) => {
-        event.preventDefault();
-        getAccessTokenSilently().then((token) => {
-            fetch('http://localhost:8080/api/units/', {
-                method: 'POST',
-                headers: new Headers({
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }),
-                body: JSON.stringify({
-                    unitCode: unitCode,
-                    unitName: unitName,
-                    year: unitYear,
-                    period: unitPeriod
-                }),
-            })
-        });
+    const validateFields = () => {
+        const errors = []
 
-        setSubmitted(true);
-        getToast('Offering created successfully', 'success');
+        if (unitCode === '') {
+            errors.push('unit code must be provided')
+        } else if (unitCode.search(/^[A-Za-z0-9]{1,7}$/) === -1) {
+            errors.push('unit code must consist of letters and/or numbers only and cannot exceed 7 characters')
+        }
+
+        if (unitName === '') {
+            errors.push('unit name must be provided')
+        } else if (unitName.search(/^[A-Za-z0-9]{1,50}$/) === -1) {
+            errors.push('unit name must consist of letters and/or numbers only and cannot exceed 50 characters')
+        }
+
+        if (unitYear.toString() === '') {
+            errors.push('year must be provided')
+        }
+
+        if (unitPeriod === '') {
+            errors.push('period must be provided')
+        }
+
+        return errors
     }
 
+    const submitUnit = (event) => {
+        event.preventDefault();
+        const errors = validateFields()
 
+        if (errors.length > 0) {
+            errors.forEach((errorMsg) =>
+                toast({
+                    title: 'Input error',
+                    description: errorMsg,
+                    status: 'error',
+                    duration: 4000,
+                    isClosable: true,
+                })
+            )
+            return
+        }
+
+        getAccessTokenSilently()
+            .then((token) => {
+                fetch('http://localhost:8080/api/units/', {
+                    method: 'POST',
+                    headers: new Headers({
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }),
+                    body: JSON.stringify({
+                        unitCode: unitCode,
+                        unitName: unitName,
+                        year: unitYear,
+                        period: unitPeriod
+                    }),
+                })
+            })
+            .then()
+            .catch()
+
+        toast({
+            title: 'Unit created',
+            description: `Unit ${unitCode} has been successfully created`,
+            status: 'success',
+            duration: 4000,
+            isClosable: true,
+        })
+
+        setSubmitted(true);
+    }
 
     const renderForm = () => {
         return (
@@ -135,6 +180,9 @@ const CreateUnitModal = ({
                         cancelButtonColor="red"
                         cancelButtonOnClick={() => {
                             onModalClose()
+                            setUnitPeriod('')
+                            setUnitName('')
+                            setUnitCode('')
                             window.location.reload()
                         }}
                         cancelButtonText="Later"

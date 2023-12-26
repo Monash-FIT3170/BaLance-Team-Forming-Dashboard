@@ -13,7 +13,7 @@ USE student_group_db;
 -- TABLE CREATION
 CREATE TABLE IF NOT EXISTS unit_offering (
     unit_off_id INT AUTO_INCREMENT COMMENT 'unique identifier for a unit offering',
-    unit_code VARCHAR(50) COMMENT 'code used by an institute to refer to an offering',
+    unit_code VARCHAR(7) COMMENT 'code used by an institute to refer to an offering',
     unit_name VARCHAR(50),
     unit_off_year INTEGER COMMENT 'the year in which the offering is made',
     unit_off_period VARCHAR(20) COMMENT 'the term which the offering is held e.g. S2',
