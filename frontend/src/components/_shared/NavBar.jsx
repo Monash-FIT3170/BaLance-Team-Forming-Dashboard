@@ -4,7 +4,8 @@ import {
     Container,
     Button,
     Box,
-    HStack
+    HStack,
+    Link
 } from '@chakra-ui/react';
 
 import { MockAuth } from '../../helpers/mockAuth';
@@ -28,7 +29,7 @@ const NavBar = ({ authenticated }) => {
             w="100%"
             display="flex"
             p="5"
-            maxH="10em"
+            maxH="8em"
             minW="100vw"
             bgColor="balance.header_color"
             centerContent
@@ -37,16 +38,31 @@ const NavBar = ({ authenticated }) => {
         >
             <HStack w="100%">
                 <Box width='40%'/>
-                <button onClick={navigateToHomePage} width="10%">
-                    {' '}
-                    <Image height="8vh" src={logo} alt="BaLance: Team Forming Dashboard" />
-                </button>
+                <Link href='/'>
+                    <Image
+                        height="4em"
+                        src={logo}
+                        alt="BaLance: Team Forming Dashboard"
+                    />
+                </Link>
                 <Box width='30%'/>
 
                 {authenticated ? (
-                    <Button onClick={logout} height="8vh">Logout</Button>
+                    <Button
+                        onClick={logout}
+                        h="3em"
+                        w='6em'
+                    >
+                        Logout
+                    </Button>
                 ) : (
-                    <Button onClick={loginWithRedirect} height="8vh">Login</Button>
+                    <Button
+                        onClick={loginWithRedirect}
+                        h="3em"
+                        w='6em'
+                    >
+                        Login
+                    </Button>
                 )}
 
             </HStack>
