@@ -51,7 +51,7 @@ const CreateUnitModal = ({
 
         if (unitName === '') {
             errors.push('unit name must be provided')
-        } else if (unitName.search(/^[A-Za-z0-9]{1,50}$/) === -1) {
+        } else if (unitName.search(/^[A-Za-z0-9\s]{1,50}$/) === -1) {
             errors.push('unit name must consist of letters and/or numbers only and cannot exceed 50 characters')
         }
 
