@@ -4,7 +4,8 @@ import {
     Container,
     Button,
     Box,
-    HStack,
+    Flex,
+    Spacer,
     Link
 } from '@chakra-ui/react';
 
@@ -36,20 +37,20 @@ const NavBar = ({ authenticated }) => {
             overflow="hidden"
             zIndex={999}
         >
-            <HStack w="100%">
-                <Box width='40%'/>
+            <Flex w="100%">
+                <Box w="6em"/>
+                <Spacer/>
                 <Link href='/'>
                     <Image
                         height={{
-                            base:"2em",
+                            base:"3em",
                             md: "4em"
                         }}
                         src={logo}
                         alt="BaLance: Team Forming Dashboard"
                     />
                 </Link>
-                <Box width='30%'/>
-
+                <Spacer/>
                 {authenticated ? (
                     <Button
                         onClick={logout}
@@ -67,8 +68,7 @@ const NavBar = ({ authenticated }) => {
                         Login
                     </Button>
                 )}
-
-            </HStack>
+            </Flex>
         </Container>
     );
 }
