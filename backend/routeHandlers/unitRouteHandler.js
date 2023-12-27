@@ -58,15 +58,15 @@ const getEnrolmentCount = async (req, res) => {
 // add a new unit to a TAs dashboard
 const addUnit = async (req, res) => {
   // get the req body
-  const newUnit = ({ unitCode, unitName, year, period } = req.body);
+  const { unitCode, unitName, year, period, color } = req.body;
 
   try {
     // note: unique id has auto_increment enabled thus not provided
     const insertQueryResult = await promiseBasedQuery(
       "INSERT INTO unit_offering " +
-        "(unit_code, unit_name, unit_off_year, unit_off_period, enrolment_count) " +
-        "VALUES (?, ?, ?, ?, ?);",
-      [unitCode, unitName, Number(year), period, 0]
+        "(unit_code, unit_name, unit_off_year, unit_off_period, enrolment_count, unit_color) " +
+        "VALUES (?, ?, ?, ?, ?, ?);",
+      [unitCode, unitName, Number(year), period, 0, color]
     );
 
     // console.log(`Successfully added new unit ${JSON.stringify(newUnit)}`);

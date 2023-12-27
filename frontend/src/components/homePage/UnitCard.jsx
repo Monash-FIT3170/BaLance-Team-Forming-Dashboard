@@ -18,7 +18,8 @@ const UnitCard = (unit) => {
         unit_name,
         unit_off_year,
         unit_off_period,
-        enrolment_count
+        enrolment_count,
+        unit_color
     } = unit
 
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -28,7 +29,7 @@ const UnitCard = (unit) => {
             <Box
                 width='100%'
                 height='1em'
-                bg='red'
+                bg={unit_color}
                 borderRadius="5px 5px 0px 0px"
             />
 

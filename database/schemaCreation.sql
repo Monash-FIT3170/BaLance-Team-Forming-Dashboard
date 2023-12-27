@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS unit_offering (
     unit_off_period VARCHAR(20) COMMENT 'the term which the offering is held e.g. S2',
     staff_unique_id INT COMMENT 'unique identifier used by database for staff',
     enrolment_count INT,
+    unit_color VARCHAR(6) COMMENT 'used in the frontend for colouring unit cards',
     CONSTRAINT pk_unit_off PRIMARY KEY (unit_off_id),
     CONSTRAINT ck_unit_off UNIQUE (unit_code, unit_off_year, unit_off_period)
 );

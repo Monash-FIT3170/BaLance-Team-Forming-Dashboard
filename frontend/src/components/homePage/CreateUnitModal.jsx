@@ -39,6 +39,8 @@ const CreateUnitModal = ({
         "TEST": useAuth0
     }
     const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
+    const colors = ['red', 'orange', 'purple', 'green', 'blue', 'purple', 'black', 'yellow']
+    const randIdxGen = Math.floor(Math.random() * colors.length)
 
     const validateFields = () => {
         const errors = []
@@ -96,7 +98,8 @@ const CreateUnitModal = ({
                         unitCode: unitCode,
                         unitName: unitName,
                         year: unitYear,
-                        period: unitPeriod
+                        period: unitPeriod,
+                        color: colors[randIdxGen]
                     }),
                 })
             })
@@ -134,9 +137,13 @@ const CreateUnitModal = ({
                         <VStack>
                             <FormLabel>Offering year</FormLabel>
                             <DropdownDynamic
-                                placeholder={new Date().getFullYear()}
-                                onChange={(event) => setUnitYear(event)}
-                                options={[new Date().getFullYear()+1, new Date().getFullYear()+2, new Date().getFullYear()+3]}
+                                placeholder={(new Date().getFullYear()).toString()}
+                                onChange={(event) => setUnitYear(event.target.value)}
+                                options={[
+                                    (new Date().getFullYear()+1).toString(),
+                                    (new Date().getFullYear()+2).toString(),
+                                    (new Date().getFullYear()+3).toString()
+                                ]}
                             />
                         </VStack>
                         <VStack>
