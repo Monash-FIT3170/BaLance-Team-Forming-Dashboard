@@ -72,7 +72,10 @@ function UnitPage() {
                         <AddButton
                             buttonText="Add offering"
                             onClick={onAddOpen}
-                            width="200px"
+                            width={{
+                                sm: "150px",
+                                md: "200px"
+                            }}
                         />
                     </Box>
                 </Flex>

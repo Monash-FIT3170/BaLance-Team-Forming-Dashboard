@@ -40,7 +40,10 @@ const NavBar = ({ authenticated }) => {
                 <Box width='40%'/>
                 <Link href='/'>
                     <Image
-                        height="4em"
+                        height={{
+                            base:"2em",
+                            md: "4em"
+                        }}
                         src={logo}
                         alt="BaLance: Team Forming Dashboard"
                     />
