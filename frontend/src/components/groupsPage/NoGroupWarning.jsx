@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { WarningIcon } from '@chakra-ui/icons';
 import {
     Popover,
     PopoverTrigger,
@@ -9,8 +9,6 @@ import {
     IconButton,
     Icon,
 } from '@chakra-ui/react';
-import { WarningIcon } from '@chakra-ui/icons';
-
 
 export const NoGroupInfo = () => {
     return (

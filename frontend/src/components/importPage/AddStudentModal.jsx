@@ -1,3 +1,6 @@
+import { useAuth0 } from "@auth0/auth0-react";
+import { useState } from "react";
+import { AddIcon } from "@chakra-ui/icons";
 import {
     Button,
     FormControl,
@@ -14,14 +17,13 @@ import {
     useDisclosure,
     useToast
 } from "@chakra-ui/react";
-import React, { useState } from "react";
-import { AddIcon } from "@chakra-ui/icons";
-import TextField from "../shared/TextField";
-import DropdownDynamic from "../shared/DropdownDynamic";
-import NumberField from "../shared/NumberField";
-import getToastSettings from "../shared/ToastSettings";
-import {MockAuth} from "../../helpers/mockAuth";
-import {useAuth0} from "@auth0/auth0-react";
+
+import { MockAuth } from "../../helpers/mockAuth";
+import TextField from "../_shared/TextField";
+import DropdownDynamic from "../_shared/DropdownDynamic";
+import NumberField from "../_shared/NumberField";
+import getToastSettings from "../_shared/ToastSettings";
+
 
 
 const AddStudentModal = ({unitCode, unitYear, unitPeriod}) => {

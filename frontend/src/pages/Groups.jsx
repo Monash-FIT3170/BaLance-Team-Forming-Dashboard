@@ -1,13 +1,12 @@
-import GroupCard from '../components/groupsPage/GroupCard';
 import { useParams } from 'react-router';
 import { useAuth0 } from '@auth0/auth0-react';
-import React, { useState, useEffect } from 'react';
-import getToastSettings from '../components/shared/ToastSettings';
-import { AddIcon, EditIcon, ViewIcon, DownloadIcon } from '@chakra-ui/icons';
-import { MockAuth } from '../helpers/mockAuth';
-import NavButton from "../components/shared/NavButton";
-import ToggleButtonGroup from "../components/shared/ToggleButtonGroup";
-import PageHeader from "../components/shared/PageHeader";
+import { useState, useEffect } from 'react';
+import {
+    AddIcon,
+    EditIcon,
+    ViewIcon,
+    DownloadIcon
+} from '@chakra-ui/icons';
 import {
     HStack,
     Container,
@@ -19,6 +18,13 @@ import {
     Box,
     useToast, Spacer,
 } from '@chakra-ui/react';
+
+import GroupCard from '../components/groupsPage/GroupCard';
+import { MockAuth } from '../helpers/mockAuth';
+import NavButton from "../components/_shared/NavButton";
+import ToggleButtonGroup from "../components/_shared/ToggleButtonGroup";
+import PageHeader from "../components/_shared/PageHeader";
+import getToastSettings from '../components/_shared/ToastSettings';
 
 function Groups() {
     const [groups, setGroups] = useState([]);

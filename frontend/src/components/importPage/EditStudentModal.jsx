@@ -1,7 +1,14 @@
-import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay} from "@chakra-ui/react";
-import FormField from "./FormField";
-import React from "react";
+import {
+    Button,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay
+} from "@chakra-ui/react";
 
+import FormField from "./FormField";
 
 const EditStudentModal = ({
     isEditProfileOpen,

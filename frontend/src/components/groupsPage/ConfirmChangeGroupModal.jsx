@@ -1,3 +1,5 @@
+import { useAuth0 } from '@auth0/auth0-react';
+import { useParams } from 'react-router-dom';
 import {
     Modal,
     ModalOverlay,
@@ -9,10 +11,8 @@ import {
     useDisclosure,
     Button,
 } from '@chakra-ui/react'
-import { MockAuth } from '../../helpers/mockAuth';
-import { useAuth0 } from '@auth0/auth0-react';
-import { useParams } from 'react-router-dom';
 
+import { MockAuth } from '../../helpers/mockAuth';
 
 export default function ConfirmChangeGroupModal({ handleStudentGroupChange, oldGroupNumber, newGroupNumber, oldLabNumber}) {
     console.log(oldLabNumber)

@@ -1,11 +1,12 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Box, ChakraProvider, Container, Heading, extendTheme} from '@chakra-ui/react';
 import { useAuth0 } from '@auth0/auth0-react';
+
 import { MockAuth } from './helpers/mockAuth';
 import UploadGroupScript from './pages/UploadGroupScript';
 import CreateGroups from './pages/CreateGroups';
-import UnitHomePage from './pages/UnitHomePage';
-import NavBar from './components/shared/NavBar';
+import HomePage from './pages/HomePage';
+import NavBar from './components/_shared/NavBar';
 import Groups from './pages/Groups';
 import Students from './pages/Students';
 import UnitAnalytics from './pages/UnitAnalytics';
@@ -42,7 +43,7 @@ function App() {
         <div className="App">
         {isAuthenticated && (
           <Routes>
-            <Route path="/" element={<UnitHomePage />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/groups/:unitCode/:year/:period" element={<Groups />} />
             <Route path="/students/:unitCode/:year/:period" element={<Students />} />
             <Route path="/uploadGroupScript/:unitCode/:year/:period" element={<UploadGroupScript />} />

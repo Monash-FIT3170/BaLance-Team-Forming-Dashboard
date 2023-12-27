@@ -5,7 +5,6 @@ import {
     NumberInputField,
     NumberInputStepper
 } from "@chakra-ui/react";
-import React from "react";
 
 const NumberField = ({
     defaultValue,

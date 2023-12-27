@@ -1,3 +1,4 @@
+import { FaTrash, FaUser } from 'react-icons/fa';
 import {
     Icon,
     Text,
@@ -5,9 +6,10 @@ import {
     LinkBox,
     LinkOverlay,
     Box,
-    useDisclosure
+    useDisclosure,
+    Center
 } from '@chakra-ui/react';
-import { FaTrash, FaUser } from 'react-icons/fa';
+
 import DeleteModal from "./DeleteModal";
 
 const UnitCard = (unit) => {
@@ -16,17 +18,18 @@ const UnitCard = (unit) => {
         unit_name,
         unit_off_year,
         unit_off_period,
-        enrolment_count
+        enrolment_count,
+        unit_color
     } = unit
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     return (
-        <LinkBox w='300px' h='150px' borderWidth='1px' borderRadius='5px' backgroundColor='#E6EBF0'>
+        <LinkBox w='230px' h='130px' borderRadius='5px' backgroundColor='#E6EBF0'>
             <Box
                 width='100%'
                 height='1em'
-                bg='red'
+                bg={unit_color}
                 borderRadius="5px 5px 0px 0px"
             />
 
@@ -34,7 +37,7 @@ const UnitCard = (unit) => {
                 <Icon
                     as={FaUser}
                     color="black"
-                    boxSize="20px"
+                    boxSize="18px"
                     ml='12px'
                 />
                 <Text>
@@ -45,20 +48,25 @@ const UnitCard = (unit) => {
                     <Icon
                         as={FaTrash}
                         color="black"
-                        boxSize="20px"
+                        boxSize="18px"
                         mr='10px'
                     />
                 </Box>
             </HStack>
 
-            <LinkOverlay href={`/students/${unit_code}/${unit_off_year}/${unit_off_period}`}>
-                <Text fontSize='2xl' fontWeight='bold' align='center'>
-                    {`${unit_code} ${unit_off_year} ${unit_off_period}`}
-                </Text>
-            </LinkOverlay>
-            <Text>
-                {unit_name}
-            </Text>
+            <Box width='90%' height='100%' ml='auto' mr='auto' mt='0.25em'>
+                <LinkOverlay href={`/students/${unit_code}/${unit_off_year}/${unit_off_period}`}>
+                    <Text fontSize='lg' fontWeight='bold'  align='center' noOfLines={1}>
+                        {`${unit_code} ${unit_off_year} ${unit_off_period}`}
+                    </Text>
+                </LinkOverlay>
+                <Center>
+                    <Text noOfLines={1}>
+                        {unit_name}
+                    </Text>
+                </Center>
+
+            </Box>
 
             <DeleteModal
                 modalHeader='Delete unit'

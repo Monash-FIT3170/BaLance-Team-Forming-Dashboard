@@ -1,5 +1,8 @@
-import {Select, Text, VStack} from "@chakra-ui/react";
-import React from "react";
+import {
+    Select,
+    Text,
+    VStack
+} from "@chakra-ui/react";
 
 
 const DropdownDynamic = ({dropDownDesc, placeholder, required, options, width, onChange}) => {

@@ -1,25 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router';
 import { useAuth0 } from '@auth0/auth0-react';
-
+import { useNavigate } from 'react-router-dom';
+import { ArrowBackIcon } from '@chakra-ui/icons';
 import {
-    Table,
-    Thead,
     Select,
-    Tr,
-    Th,
-    Tbody,
     Button,
-    ButtonGroup,
     HStack,
     Spacer,
-    Heading,
     Center,
     useDisclosure,
     Text,
     VStack,
     Box,
-    Container,
     Divider,
     NumberInput,
     NumberInputField,
@@ -31,13 +24,12 @@ import {
     FormHelperText,
     useToast,
 } from '@chakra-ui/react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ArrowBackIcon } from '@chakra-ui/icons';
+
 import { MockAuth } from '../helpers/mockAuth';
-import PageHeader from "../components/shared/PageHeader";
-import DropdownDynamic from "../components/shared/DropdownDynamic";
-import NavButton from "../components/shared/NavButton";
-import getToastSettings from '../components/shared/ToastSettings';
+import PageHeader from "../components/_shared/PageHeader";
+import DropdownDynamic from "../components/_shared/DropdownDynamic";
+import NavButton from "../components/_shared/NavButton";
+import getToastSettings from '../components/_shared/ToastSettings';
 
 function CreateGroups() {
     let authService = {
@@ -49,7 +41,7 @@ function CreateGroups() {
     const [students, setStudents] = useState([]);
     const [strategy, setStrategy] = useState("random");
     const [groupSize, setGroupSize] = useState(2);
-    const cancelRef = React.useRef();
+    const cancelRef = useRef();
     const navigate = useNavigate();
     const {
         isOpen,
