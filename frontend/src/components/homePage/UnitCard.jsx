@@ -24,7 +24,7 @@ const UnitCard = (unit) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     return (
-        <LinkBox w='300px' h='150px' borderRadius='5px' backgroundColor='#E6EBF0'>
+        <LinkBox w='230px' h='130px' borderRadius='5px' backgroundColor='#E6EBF0'>
             <Box
                 width='100%'
                 height='1em'
@@ -36,7 +36,7 @@ const UnitCard = (unit) => {
                 <Icon
                     as={FaUser}
                     color="black"
-                    boxSize="20px"
+                    boxSize="18px"
                     ml='12px'
                 />
                 <Text>
@@ -47,7 +47,7 @@ const UnitCard = (unit) => {
                     <Icon
                         as={FaTrash}
                         color="black"
-                        boxSize="20px"
+                        boxSize="18px"
                         mr='10px'
                     />
                 </Box>
@@ -55,7 +55,7 @@ const UnitCard = (unit) => {
 
             <Box width='90%' height='100%' ml='auto' mr='auto' mt='0.25em'>
                 <LinkOverlay href={`/students/${unit_code}/${unit_off_year}/${unit_off_period}`}>
-                    <Text fontSize='2xl' fontWeight='bold'  align='center' noOfLines={1}>
+                    <Text fontSize='lg' fontWeight='bold'  align='center' noOfLines={1}>
                         {`${unit_code} ${unit_off_year} ${unit_off_period}`}
                     </Text>
                 </LinkOverlay>
