@@ -6,7 +6,8 @@ import {
     AbsoluteCenter,
     Box,
     Flex,
-    Spacer
+    Spacer,
+    Center
 } from '@chakra-ui/react';
 
 import { MockAuth } from '../helpers/mockAuth';
@@ -77,15 +78,26 @@ function UnitPage() {
                 </Flex>
             </Box>
 
-            <Grid templateColumns="repeat(4, 1fr)" gap={4} className="units" ml={'5em'} mr={'5em'}>
-                {units && units.map((unit) => (
-                    <UnitCard
-                        {...unit}
-                        key={`${unit.unit_code}/${unit.unit_off_year}/${unit.unit_off_period}`}
-                        className="unit"
-                    />
-                ))}
-            </Grid>
+            <Center>
+                <Grid
+                    templateColumns={{
+                        base: "repeat(1, 1fr)",
+                        md: "repeat(2, 1fr)",
+                        lg: "repeat(3, 1fr)"
+                    }}
+                    gap={4}
+                    className="units"
+                >
+                    {units && units.map((unit) => (
+                        <UnitCard
+                            {...unit}
+                            key={`${unit.unit_code}/${unit.unit_off_year}/${unit.unit_off_period}`}
+                            className="unit"
+                        />
+                    ))}
+                </Grid>
+            </Center>
+
 
             <CreateUnitModal
                 isModalOpen={isAddOpen}
