@@ -4,7 +4,9 @@ import {
     useDisclosure,
     Grid,
     AbsoluteCenter,
-    Box
+    Box,
+    Flex,
+    Spacer
 } from '@chakra-ui/react';
 
 import { MockAuth } from '../helpers/mockAuth';
@@ -56,21 +58,23 @@ function UnitPage() {
 
     return (
         <div>
-            <Box w='100%' mt='50px' mb='50px'>
-                <AbsoluteCenter>
+            <Box w='100%' mt='10px' mb='50px'>
+                <Flex>
+                    <Box w='200px' ml='4em'/>
+                    <Spacer/>
                     <PageHeader
                         fontSize="4xl"
                         pageDesc="Home"
                     />
-                </AbsoluteCenter>
-
-                <Box ml='auto' mr='4em' w='200px'>
-                    <AddButton
-                        buttonText="Add offering"
-                        onClick={onAddOpen}
-                        width="200px"
-                    />
-                </Box>
+                    <Spacer/>
+                    <Box mt='1.2em' mr='4em' w='200px'>
+                        <AddButton
+                            buttonText="Add offering"
+                            onClick={onAddOpen}
+                            width="200px"
+                        />
+                    </Box>
+                </Flex>
             </Box>
 
             <Grid templateColumns="repeat(4, 1fr)" gap={4} className="units" ml={'5em'} mr={'5em'}>
