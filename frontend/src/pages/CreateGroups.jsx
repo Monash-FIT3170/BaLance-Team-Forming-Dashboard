@@ -81,7 +81,7 @@ function CreateGroups() {
         })
     }, []);
 
-    const handleSubmitGroupOptions = async (event) => {
+    const assignGroups = async (event) => {
         event.preventDefault();
 
         const token = await getAccessTokenSilently();
@@ -181,8 +181,8 @@ function CreateGroups() {
 
                 <Button
                     type="submit"
-                    form="create-groups"
                     colorScheme="blue"
+                    onClick={assignGroups}
                 >
                     Assign groups
                 </Button>
