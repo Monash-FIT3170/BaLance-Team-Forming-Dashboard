@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 
 import { MockAuth } from "../../helpers/mockAuth";
-import DropdownDynamic from "../_shared/DropdownDynamic";
+import Dropdown from "../_shared/Dropdown";
 import ModalFooterButtonPair from "../_shared/ModalFooterButtonPair";
 import TextField from "../_shared/TextField";
 
@@ -136,7 +136,7 @@ const CreateUnitModal = ({
                     <Flex direction="row" spacing={4} justifyContent="space-between">
                         <VStack>
                             <FormLabel>Offering year</FormLabel>
-                            <DropdownDynamic
+                            <Dropdown
                                 placeholder={(new Date().getFullYear()).toString()}
                                 onChange={(event) => setUnitYear(event.target.value)}
                                 options={[
@@ -148,7 +148,7 @@ const CreateUnitModal = ({
                         </VStack>
                         <VStack>
                             <FormLabel>Offering period</FormLabel>
-                            <DropdownDynamic
+                            <Dropdown
                                 placeholder={'select semester'}
                                 onChange={(event) => {setUnitPeriod(event.target.value)}}
                                 options={['S1', 'S2', 'FY', 'Summer', 'Winter']}

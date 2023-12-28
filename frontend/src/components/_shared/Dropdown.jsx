@@ -5,7 +5,7 @@ import {
 } from "@chakra-ui/react";
 
 
-const DropdownDynamic = ({dropDownDesc, placeholder, required, options, width, onChange}) => {
+const Dropdown = ({dropDownDesc, placeholder, required, options, width, onChange}) => {
     /**
      * options: a list of strings, each will become a dropdown choice
      */
@@ -28,4 +28,4 @@ const DropdownDynamic = ({dropDownDesc, placeholder, required, options, width, o
     )
 }
 
-export default DropdownDynamic;
+export default Dropdown;

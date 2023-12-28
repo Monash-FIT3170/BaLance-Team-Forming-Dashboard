@@ -16,7 +16,7 @@ import UploadCSV from '../components/importPage/UploadCSV';
 import CsvPreviewTable from "../components/importPage/CsvPreviewTable";
 import NavButton from "../components/_shared/NavButton";
 import PageHeader from "../components/_shared/PageHeader";
-import DropdownDynamic from "../components/_shared/DropdownDynamic";
+import Dropdown from "../components/_shared/Dropdown";
 import AddStudentModal from "../components/importPage/AddStudentModal";
 import EditStudentModal from "../components/importPage/EditStudentModal";
 
@@ -77,7 +77,7 @@ const ImportPage = () => {
                 />
                 <Spacer/>
                 <Flex width="33%" flexDirection="column" justifyContent="flex-end">
-                    <DropdownDynamic
+                    <Dropdown
                         dropDownDesc={'Select the type of data to upload'}
                         options={['students', 'belbin', 'effort']}
                         width="100%"
