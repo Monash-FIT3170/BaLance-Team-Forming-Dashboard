@@ -57,7 +57,7 @@ app.use(async (req, res, next) => {
 app.use('/api/units/', unitRoutes);
 app.use('/api/groups/', groupRoutes);
 app.use('/api/students/', studentRoutes);
-app.use('/api/analytics/',analyticsRoutes)
+app.use('/api/analytics/', analyticsRoutes)
 
 // listen to port
 app.listen(process.env.PORT || 8080, () => {

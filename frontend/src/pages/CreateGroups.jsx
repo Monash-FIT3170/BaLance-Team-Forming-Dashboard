@@ -1,19 +1,12 @@
-import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowBackIcon } from '@chakra-ui/icons';
+import {useEffect, useState} from 'react';
 import {
-    Select,
     Button,
-    HStack,
-    Spacer,
-    Center,
-    useDisclosure,
-    Text,
     VStack,
     Box,
-    Divider,
     NumberInput,
     NumberInputField,
     NumberIncrementStepper,
@@ -22,111 +15,147 @@ import {
     FormControl,
     FormLabel,
     FormHelperText,
-    useToast,
+    useToast
 } from '@chakra-ui/react';
 
 import { MockAuth } from '../helpers/mockAuth';
 import PageHeader from "../components/_shared/PageHeader";
 import Dropdown from "../components/_shared/Dropdown";
 import NavButton from "../components/_shared/NavButton";
-import getToastSettings from '../components/_shared/ToastSettings';
 import ToggleButtonGroup from "../components/_shared/ToggleButtonGroup";
 
 function CreateGroups() {
-    let authService = {
-        "DEV": MockAuth,
-        "TEST": useAuth0
-    }
-
+    const authService = { "DEV": MockAuth, "TEST": useAuth0}
     const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
-    const [students, setStudents] = useState([]);
+    const { unitCode, year, period } = useParams();
     const [strategy, setStrategy] = useState("random");
     const [groupSize, setGroupSize] = useState(2);
+    const [viableStrats, setViableStrats] = useState({
+        "belbin": false,
+        "effort": false
+    })
     const navigate = useNavigate();
+    const toast = useToast()
 
-    const toast = useToast();
-    const getToast = (title, status) => {
-        toast.closeAll();
-        toast(getToastSettings(title, status))
-    }
-    const { unitCode, year, period } = useParams();
-    const groupDetails = {
-        "groupSize": groupSize,
-    }
+    const fetchGroupFormationParameters = async () => {
+        /**
+         * fetches key values that determine how a group can be formed
+         * and are used to validate user selections
+         *
+         */
 
-    const navigateToOfferingDashboardGroups = () => {
-        navigate(`/groups/${unitCode}/${year}/${period}`);
-    };
-
-    const navigateUploadScript = () => {
-        navigate();
-    };
-
-    useEffect(() => {
-        getAccessTokenSilently().then((token) => {
-            // fetch students from the backend
-            fetch(`http://localhost:8080/api/students/${unitCode}/${year}/${period}`,
-                {
-                    method: 'get',
+        try {
+            console.log("fetching strategies we can use")
+            const token = await getAccessTokenSilently();
+            const groupingStratsResponse = await fetch(
+                `http://localhost:8080/api/units/groupingStrategies/${unitCode}/${year}/${period}`, {
+                    method: 'GET',
                     headers: new Headers({
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
                     })
                 })
-                .then((res) => res.json())
-                .then((res) => {
-                    setStudents(res);
-                    console.log(students)
-                })
-                .catch((err) => console.error(err));
-        })
-    }, []);
+
+            const groupingStrats = await groupingStratsResponse.json()
+            console.log(groupingStrats)
+            setViableStrats(groupingStrats);
+
+        } catch (e) {
+            console.error(e);
+            toast({
+                description: 'Strategies other than random are currently not available',
+                status: "info",
+                duration: "5000",
+                isClosable: true
+            });
+        }
+    }
+
+    useEffect(() => {fetchGroupFormationParameters()}, [])
+
+    const validateFields = () => {
+        /**
+         * checks if the current values selected for group formation are valid
+         * and stores any errors as strings in an array to be returned
+         *
+         */
+
+        const errors = []
+        // does the selected field contain associated data
+        if (!viableStrats[strategy] && strategy !== "random") {
+            errors.push(`cannot form groups using ${strategy}: ${strategy} data has not been uploaded`);
+        }
+
+        // is an appropriate group size selected
+
+        return errors;
+    }
 
     const assignGroups = async (event) => {
         event.preventDefault();
-
-        const token = await getAccessTokenSilently();
-
-        if (strategy === "custom") {
-            navigateUploadScript();
-            navigate(
-                `/uploadGroupScript/${unitCode}/${year}/${period}`,
-                { state: { groupDetails } });
-        } 
-        else if (strategy === "belbin" && groupSize === 2) {
-            getToast("Failed to create groups. The minimum ideal group size for the belbin grouping strategy is 3.", "error");
-            return;
-        } else if (groupSize === 0) { 
-            getToast("Failed to create groups. You cannot have a group size of 0.", "error");
-            return;
-        }
-        else if (groupSize > students.length) {
-            getToast(`Failed to create groups. The maximum ideal group size is ${students.length}`, "error");
-            return;
-        }
-        else {
-            /* Call to shuffle groups */
-            await fetch(`http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
-                method: 'POST',
-                headers: new Headers({
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }),
-                body: JSON.stringify({
-                    groupSize: groupSize,
-                    strategy: strategy,
+        const errors = validateFields();
+        if (errors.length > 0) {
+            errors.forEach((errorMsg) => {
+                toast({
+                    title: 'Input error',
+                    description: errorMsg,
+                    status: 'error',
+                    duration: 4000,
+                    isClosable: true,
                 })
             })
-                .then((res) => {
-                    if (res.status === 200) {
-                        getToast("Groups created successfully", "success");
-                        navigateToOfferingDashboardGroups();
-                    } else {
-                        res.json().then(json => console.log(json))
-                    }
-                })
-                .catch((error) => { console.error('Error:', error); });
-                        // fetch groups from the backend
+            return
+        }
+
+        let result;
+
+        try {
+            const token = await getAccessTokenSilently();
+            result = await fetch(
+                `http://localhost:8080/api/groups/shuffle/${unitCode}/${year}/${period}`, {
+                    method: 'POST',
+                    headers: new Headers({
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }),
+                    body: JSON.stringify({
+                        groupSize: groupSize,
+                        strategy: strategy,
+                    })
+            })
+        } catch (e) {
+            console.error(e);
+            toast({
+                title: "Network error",
+                description: 'Could not connect to the server :(',
+                status: "error",
+                duration: "3000",
+                isClosable: true
+            });
+
+            return;
+        }
+
+        if (result.ok) {
+            toast({
+                title: "Groups created!",
+                description: `Successfully created groups using ${strategy} strategy`,
+                status: "success",
+                duration: "3000",
+                isClosable: true
+            })
+            navigate(`/groups/${unitCode}/${year}/${period}`);
+        } else {
+            // const error = await result.json() todo pull error msg from backend
+            toast({
+                title: "error",
+                description: 'We could not form groups',
+                status: "error",
+                duration: "3000",
+                isClosable: true
+            })
         }
     }
 
@@ -179,11 +208,7 @@ function CreateGroups() {
                     </VStack>
                 </FormControl>
 
-                <Button
-                    type="submit"
-                    colorScheme="blue"
-                    onClick={assignGroups}
-                >
+                <Button type="submit" colorScheme="blue" onClick={assignGroups}>
                     Assign groups
                 </Button>
             </VStack>
