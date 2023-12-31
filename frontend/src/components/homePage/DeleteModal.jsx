@@ -11,8 +11,6 @@ import {
 
 import { MockAuth } from "../../helpers/mockAuth";
 import ModalFooterButtonPair from "../_shared/ModalFooterButtonPair";
-import getToastSettings from "../_shared/ToastSettings";
-
 
 const DeleteModal = ({
     modalHeader,
@@ -22,37 +20,50 @@ const DeleteModal = ({
     onClose
 }) => {
 
-    let authService = {
-        DEV: MockAuth,
-        TEST: useAuth0,
-    };
-
+    let authService = { DEV: MockAuth, TEST: useAuth0 };
     const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
-
     const toast = useToast();
-    const getToast = (title, status) => {
-        toast.closeAll();
-        toast(getToastSettings(title, status));
-    };
 
     const handleDeletion = () => {
-        getAccessTokenSilently().then((token) => {
-            fetch(
-                apiEndpoint, {
-                    method: 'DELETE',
-                    headers: new Headers({
-                        Authorization: `Bearer ${token}`
+        getAccessTokenSilently()
+        .then((token) => {
+            fetch(apiEndpoint, { method: 'DELETE', headers: new Headers({Authorization: `Bearer ${token}`}) })
+            .then((res) => {
+
+                if (res.ok) {
+                    toast({
+                        title: 'Deletion successful',
+                        description: 'Item has successfully been deleted',
+                        status: 'success',
+                        duration: 4000,
+                        isClosable: true,
+                    })
+
+                    setTimeout(() => {
+                        onClose();
+                        window.location.reload();
+                    }, 1500);
+                } else { // todo handle non ok responses
+                    onClose();
+                    toast({
+                        title: 'Error',
+                        description: 'Failed to delete',
+                        status: 'error',
+                        duration: 4000,
+                        isClosable: true,
                     })
                 }
-            );
-
-            // todo error handling
-
-            getToast('Unit deleted successfully', 'success');
-            setTimeout(() => {
-                onClose();
-                window.location.reload();
-            }, 1500);
+            })
+            .catch((e) => {
+                console.log(e)
+                toast({
+                    title: 'Network error',
+                    description: 'Could not connect to the server',
+                    status: 'error',
+                    duration: 4000,
+                    isClosable: true,
+                })
+            });
         });
     };
 

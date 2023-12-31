@@ -12,7 +12,7 @@ const {
   getLabNumber,
   createUnitGroups,
   shuffleUnitGroups,
-  moveStudent,
+  moveStudent
 } = require("../routeHandlers/groupRouteHandler");
 
 const { uploadCustomScript } = require("../routeHandlers/scriptRouteHandler");

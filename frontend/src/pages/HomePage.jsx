@@ -40,13 +40,13 @@ function UnitPage() {
 
     useEffect(() => {
         getAccessTokenSilently().then((token) => {
-            fetch('http://localhost:8080/api/units/',
-                {
+            fetch('http://localhost:8080/api/units/', {
                     method: 'get',
                     headers: new Headers({
                         'Authorization': `Bearer ${token}`
                     })
-                }).then((res) => res.json())
+                })
+                .then((res) => res.json())
                 .then((data) => {
                     setUnits(data);
                 })

@@ -12,7 +12,6 @@ function UploadPy({ pyFile, handleUpload }) {
             bg={pyFile ? '#00ADB5' : 'white'}
             borderRadius="md"
             width="100%"
-            margin="0 3vw 5vw 3vw"
             fontWeight="bold"
             display="flex"
             flexDirection="column"
@@ -23,12 +22,11 @@ function UploadPy({ pyFile, handleUpload }) {
             transition="color 0.3s ease"
             _hover={{ bg: '#E2E8F0', cursor: 'pointer' }}
             cursor="pointer"
-            mt= {5}
         >
             <HStack>
                 <FiUploadCloud />
                 <Text>
-                    {pyFile ? `File: ${pyFile.name}` : 'Submit a .py file below to upload a custom script'}
+                    {pyFile ? `File: ${pyFile.name}` : 'Submit a .py file'}
                 </Text>
             </HStack>
             <Input

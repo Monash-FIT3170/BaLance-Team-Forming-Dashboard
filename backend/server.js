@@ -23,27 +23,16 @@ const app = express();
 app.use(express.json());
 app.use(cors(corsOptions));
 app.use((req, res, next) => {
+    console.log(req)
     console.log(req.path, req.method);
     next();
 });
 
-if (process.env.AUTH == "TEST"){
-    
-    auth0Middleware(app);
-
-}
-
-if (process.env.AUTH == "DEV" || process.env.AUTH == null){
-    
-    mockAuthMiddleware(app);
-
-}
+if (process.env.AUTH == "TEST"){ auth0Middleware(app); }
+if (process.env.AUTH == "DEV" || process.env.AUTH == null){ mockAuthMiddleware(app); }
 
 app.use(async (req, res, next) => {
-    results = await db_connection.promise().query(
-        `SELECT * FROM staff WHERE email_address='${req.user.email}';`
-    );
-
+    results = await db_connection.promise().query(`SELECT * FROM staff WHERE email_address='${req.user.email}';`);
     if (results[0].length == 0){
         await db_connection.promise().query(
             `INSERT INTO staff (staff_code, preferred_name, last_name, email_address)
@@ -53,13 +42,11 @@ app.use(async (req, res, next) => {
     next();
 })
 
-// route middleware
 app.use('/api/units/', unitRoutes);
 app.use('/api/groups/', groupRoutes);
 app.use('/api/students/', studentRoutes);
-app.use('/api/analytics/',analyticsRoutes)
+app.use('/api/analytics/', analyticsRoutes)
 
-// listen to port
 app.listen(process.env.PORT || 8080, () => {
     console.log(`listening to port ${process.env.PORT || 8080}`);
 });

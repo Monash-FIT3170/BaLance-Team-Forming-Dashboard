@@ -7,7 +7,7 @@
 const express = require("express");
 const {
   getUnitAnalytics,
-  getGroupAnalytics,
+  getGroupAnalytics
 } = require("../routeHandlers/analyticsRouteHandler");
 
 const router = express.Router();

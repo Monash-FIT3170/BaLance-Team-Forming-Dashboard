@@ -1,6 +1,7 @@
 import { DeleteIcon } from "@chakra-ui/icons";
 import { useParams } from "react-router";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useState } from "react";
 import {
     Box,
     Center,
@@ -15,8 +16,8 @@ import {
 } from "@chakra-ui/react";
 
 import { MockAuth } from "../../helpers/mockAuth";
-import getToastSettings from "./ToastSettings";
 import ChangeGroupModal from "../groupsPage/ChangeGroupModal";
+import DeleteModal from "../homePage/DeleteModal";
 
 const StudentsPreviewTable = ({ students, groupNumber, numberOfGroups, page, rowHeights }) => {
     let authService = {
@@ -24,26 +25,18 @@ const StudentsPreviewTable = ({ students, groupNumber, numberOfGroups, page, row
         "TEST": useAuth0
     }
 
-    const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
-    const {
-        onClose: onCloseDetails,
-    } = useDisclosure();
-
-    const toast = useToast();
-    const getToast = (title, status) => {
-        toast.closeAll();
-        toast(getToastSettings(title, status))
-    }
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const [deleteEndpoint, setDeleteEndpoint] = useState()
+    const [deleteModalHeader, setDeleteModalHeader] = useState()
+    const [deleteModalText, setDeleteModalText] = useState()
 
     const getStudentData = (student) => {
-
         return {
             student_id: student.student_id,
             preferred_name: student.preferred_name,
             group_number: student.group_number,
             lab_number: student.lab_number
         }
-        
     }
 
     const {
@@ -52,49 +45,22 @@ const StudentsPreviewTable = ({ students, groupNumber, numberOfGroups, page, row
         period,
     } = useParams();
 
-    const deleteStudent = (student) => {
-        const {
-            student_id,
-            preferred_name,
-            last_name
-        } = student
-
-        let apiEndpoint;
-        let toastMsg;
-
+    const handleDeletionClick = (student) => {
         if (page === 'students') {
-            apiEndpoint = `api/students/enrolment/${unitCode}/${year}/${period}/${student_id}`
-            toastMsg = `Successfully removed ${preferred_name} ${last_name} from the offering`
-        } else if (page === 'groups') {
-            apiEndpoint = `api/students/groupAlloc/${unitCode}/${year}/${period}/${student_id}`
-            toastMsg = `Successfully removed ${preferred_name} ${last_name} from the group`
+            setDeleteEndpoint(`http://localhost:8080/api/students/enrolment/${unitCode}/${year}/${period}/${student.student_id}`);
+            setDeleteModalHeader(`Delete student from unit?`);
+            setDeleteModalText(`Are you sure you want to remove ${student.preferred_name} from ${unitCode}`);
+        } else {
+            setDeleteEndpoint(`http://localhost:8080/api/students/groupAlloc/${unitCode}/${year}/${period}/${student.student_id}`)
+            setDeleteModalHeader(`Delete student from group?`);
+            setDeleteModalText(`Are you sure you want to remove ${student.preferred_name} from this group?`);
         }
 
-        getAccessTokenSilently().then((token) => {
-            fetch(`http://localhost:8080/${apiEndpoint}`, {
-                method: 'DELETE',
-                headers: new Headers({
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }),
-            });
-        });
-
-        getToast(toastMsg, 'success'); // fixme incorporate into .then chain in fetch
-        setTimeout(() => {
-            window.location.reload();
-        }, 1500)
+        onOpen();
     }
 
-    return (
-        (students.length === 0) ? (
-            <Box bg='#E6EBF0' w='60vw' p={4} alignContent="center">
-                <Center>
-                    No students have yet been added to the offering. Click "Add Students" to add students to the offering.
-                </Center>
-            </Box>
-        ) : (
+    const renderTable = () => {
+        return (
             <Table variant="striped" width="60vw" size="sm" marginBottom="3vh">
                 <Thead>
                     <Tr>
@@ -121,7 +87,7 @@ const StudentsPreviewTable = ({ students, groupNumber, numberOfGroups, page, row
                                     style={{ cursor: 'pointer' }}
                                     onClick={(event) => {
                                         event.preventDefault()
-                                        deleteStudent(student)
+                                        handleDeletionClick(student)
                                     }}
                                 />
                             </Td>
@@ -129,6 +95,27 @@ const StudentsPreviewTable = ({ students, groupNumber, numberOfGroups, page, row
                     ))}
                 </Tbody>
             </Table>
+        )
+    }
+
+    return (
+        (students.length === 0) ? (
+            <Box bg='#E6EBF0' w='60vw' p={4} alignContent="center">
+                <Center>
+                    No students have yet been added to the offering. Click "Add Students" to add students to the offering.
+                </Center>
+            </Box>
+        ) : (
+            <div>
+                {renderTable()}
+                <DeleteModal
+                    modalHeader={deleteModalHeader}
+                    modalText={deleteModalText}
+                    apiEndpoint={deleteEndpoint}
+                    isOpen={isOpen}
+                    onClose={onClose}
+                />
+            </div>
         )
     )
 }

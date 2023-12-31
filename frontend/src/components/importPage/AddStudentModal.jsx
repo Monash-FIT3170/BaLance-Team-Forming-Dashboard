@@ -20,7 +20,7 @@ import {
 
 import { MockAuth } from "../../helpers/mockAuth";
 import TextField from "../_shared/TextField";
-import DropdownDynamic from "../_shared/DropdownDynamic";
+import Dropdown from "../_shared/Dropdown";
 import NumberField from "../_shared/NumberField";
 import getToastSettings from "../_shared/ToastSettings";
 
@@ -171,7 +171,7 @@ const AddStudentModal = ({unitCode, unitYear, unitPeriod}) => {
                                         <Text>
                                             Select a Gender:
                                         </Text>
-                                        <DropdownDynamic
+                                        <Dropdown
                                             placeholder={gender}
                                             label="Gender"
                                             options={['M', 'F']}

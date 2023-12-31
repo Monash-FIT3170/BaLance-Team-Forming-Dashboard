@@ -6,13 +6,13 @@
 const express = require("express");
 const router = express.Router();
 const {
-  // import controller functions for route handlers
   getAllUnits,
   getUnit,
   addUnit,
   deleteUnit,
   updateUnit,
   uploadCustomScript,
+  verifyAvailableGroupFormationStrats
 } = require("../routeHandlers/unitRouteHandler");
 
 const { upload } = require("../middleware/uploadMiddleware");
@@ -22,6 +22,9 @@ router.get("/", getAllUnits);
 
 // get a specific unit for a user
 router.get("/:unitCode/:year/:period", getUnit);
+
+// verifiy available analytics
+router.get("/groupingStrategies/:unitCode/:year/:period/", verifyAvailableGroupFormationStrats);
 
 // fixme does not fit here
 router.post("/:unitCode/:year/:period/uploadScript", upload.single("pythonFile"), uploadCustomScript);

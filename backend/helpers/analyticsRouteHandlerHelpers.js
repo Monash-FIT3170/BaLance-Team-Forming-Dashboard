@@ -1,7 +1,7 @@
 /**
- * A module containing helper functions specifically used to implement
- * groupRouteHandler.js route handler functions related to viewing group
- * analytics data
+ * A module containing functions specifically used to implement
+ * route handlers in groupRouteHandler.js that are related to
+ * viewing group analytics data
  *
  * */
 
