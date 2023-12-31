@@ -58,8 +58,9 @@ function CreateGroups() {
                 })
 
             const groupingStrats = await groupingStratsResponse.json()
-            console.log(groupingStrats)
             setViableStrats(groupingStrats);
+
+            // TODO run info toast that tells user what they can use??
 
         } catch (e) {
             console.error(e);
