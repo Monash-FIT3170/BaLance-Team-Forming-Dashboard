@@ -1,18 +1,36 @@
 import {useState} from 'react';
 import {
     FormControl,
+    FormLabel,
     ModalBody,
-    ModalHeader,
-    useToast
+    ModalHeader
 } from "@chakra-ui/react";
 
-import {TextField} from "../../_shared";
+import {Dropdown, TextField} from "../../_shared";
 
 const AddBelbinModalBody = ({setValidateFields, setSuccessMsg, setNewProfile}) => {
     const [studentID, setStudentID] = useState('');
     const [belbinType, setBelbinType] = useState('');
 
-    const toast = useToast();
+    setSuccessMsg("Added belbin result to the list of profiles for submission")
+
+    setValidateFields(() => {
+        const errors = [];
+
+        if (studentID === '') {
+            errors.push('student ID must be provided')
+        } else if (studentID.search(/^[0-9]{8}$/) === -1) {
+            errors.push('student ID must be an 8 digit number')
+        }
+
+        if (belbinType === '') {
+            errors.push('belbin type must be provided')
+        } else if (belbinType !== 'people' || belbinType !== 'action' || belbinType !== 'thinking') {
+            errors.push('please select a belbin type')
+        }
+
+        return errors;
+    })
 
     return (
         <>
@@ -24,9 +42,12 @@ const AddBelbinModalBody = ({setValidateFields, setSuccessMsg, setNewProfile}) =
                         value={studentID}
                         onChange={(event) => { setStudentID(event.target.value) }}
                     />
-                    <TextField
-                        label="Belbin personality type"
-                        value={belbinType}
+                    <FormLabel>Belbin personality type</FormLabel>
+                    <Dropdown
+                        placeholder={'select personality type'}
+                        required={true}
+                        options={['action', 'people', 'thinking']}
+                        width='100%'
                         onChange={(event) => { setBelbinType(event.target.value) }}
                     />
                 </FormControl>
