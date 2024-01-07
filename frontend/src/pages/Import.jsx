@@ -1,26 +1,33 @@
 import { useState } from 'react';
 import { useParams } from 'react-router';
-import { ArrowBackIcon } from "@chakra-ui/icons";
+import { AddIcon, ArrowBackIcon } from "@chakra-ui/icons";
 import {
     Flex,
-    useDisclosure,
     Spacer,
     VStack,
     Center,
+    HStack,
+    Text,
+    Button,
+    useDisclosure
 } from '@chakra-ui/react';
 
 import csvHeaderMapping from "../helpers/csvHeaderMapping";
-import DeleteProfileModal from '../components/importPage/DeleteProfileModal';
-import ConfirmClearSelection from '../components/importPage/ConfirmClearSelection';
-import UploadCSV from '../components/importPage/UploadCSV';
-import CsvPreviewTable from "../components/importPage/CsvPreviewTable";
-import NavButton from "../components/_shared/NavButton";
-import PageHeader from "../components/_shared/PageHeader";
-import Dropdown from "../components/_shared/Dropdown";
-import AddStudentModal from "../components/importPage/AddStudentModal";
-import EditStudentModal from "../components/importPage/EditStudentModal";
+import {
+    Dropdown,
+    NavButton,
+    PageHeader
+} from "../components/_shared";
+import {
+    DeleteProfileModal,
+    ConfirmClearSelection,
+    UploadCSV,
+    CsvPreviewTable,
+    AddProfileModal,
+    EditStudentModal
+} from "../components/importPage"
 
-const ImportPage = () => {
+const Import = () => {
     const [isFileChosen, setIsFileChosen] = useState(false);
     const [csvFile, setCsvFile] = useState(null);
     const [isClearModalOpen, setIsClearModalOpen] = useState(false);
@@ -40,6 +47,12 @@ const ImportPage = () => {
         isOpen: isEditProfileOpen,
         onOpen: onEditProfileOpen,
         onClose: onEditProfileClose,
+    } = useDisclosure();
+
+    const {
+        isOpen: isAddProfileOpen,
+        onOpen: onAddProfileOpen,
+        onClose: onAddProfileClose,
     } = useDisclosure();
 
     const {
@@ -82,7 +95,6 @@ const ImportPage = () => {
                         options={['students', 'belbin', 'effort']}
                         width="100%"
                         onChange={(event) => {
-                            console.log(dataType, event.target.value)
                             const selection = event.target.value;
                             setDataType(selection)
                             setHeaderMap(csvHeaderMapping[selection])
@@ -91,11 +103,17 @@ const ImportPage = () => {
                 </Flex>
             </Flex>
 
-            <AddStudentModal 
-                unitCode={unitCode} 
-                unitYear={year}
-                unitPeriod={period}
-                />
+            <Button
+                width='80%'
+                onClick={onAddProfileOpen}
+                colorScheme="gray"
+                margin-left="20">
+                <HStack>
+                    <AddIcon />
+                    <Spacer />
+                    <Text>Manually add an entry</Text>
+                </HStack>
+            </Button>
 
             <CsvPreviewTable
                 headerMap={headerMap}
@@ -112,6 +130,15 @@ const ImportPage = () => {
                 setIsFileChosen={setIsFileChosen}
                 setProfiles={setProfiles}
             />
+
+            {/* MODALS FOR MANUALLY ADDING ENTRIES */}
+            <AddProfileModal
+                dataType={dataType}
+                setProfiles={setProfiles}
+                isOpen={isAddProfileOpen}
+                onClose={onAddProfileClose}
+            />
+
             <DeleteProfileModal
                 isModalOpen={isDeleteProfileOpen}
                 onDeleteProfileClose={onDeleteProfileClose}
@@ -120,17 +147,17 @@ const ImportPage = () => {
                 profiles={profiles}
                 setProfiles={setProfiles}
             />
-            <EditStudentModal
-                isEditProfileOpen={isEditProfileOpen}
-                onEditProfileClose={onEditProfileOpen}
-                currProfile={currProfile}
-                setCurrProfile={setCurrProfile}
-                profiles={profiles}
-                setProfiles={setProfiles}
-            />
+            {/*<EditStudentModal*/}
+            {/*    isEditProfileOpen={isEditProfileOpen}*/}
+            {/*    onEditProfileClose={onEditProfileOpen}*/}
+            {/*    currProfile={currProfile}*/}
+            {/*    setCurrProfile={setCurrProfile}*/}
+            {/*    profiles={profiles}*/}
+            {/*    setProfiles={setProfiles}*/}
+            {/*/>*/}
             <br/>
         </VStack>
     );
 }
 
-export default ImportPage;
+export default Import;

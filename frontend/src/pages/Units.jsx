@@ -3,7 +3,6 @@ import { useAuth0 } from '@auth0/auth0-react';
 import {
     useDisclosure,
     Grid,
-    AbsoluteCenter,
     Box,
     Flex,
     Spacer,
@@ -17,7 +16,7 @@ import PageHeader from "../components/_shared/PageHeader";
 import AddButton from "../components/_shared/AddButton";
 
 
-function UnitPage() {
+function Units() {
     const [units, setUnits] = useState([]);
     let authService = {
         "DEV": MockAuth,
@@ -111,4 +110,4 @@ function UnitPage() {
     );
 }
 
-export default UnitPage;
+export default Units;

@@ -13,8 +13,8 @@ import {
     useToast,
 } from '@chakra-ui/react';
 
-import { CsvInfoButton } from './CsvInfoButton';
 import { MockAuth } from '../../helpers/mockAuth';
+import CsvInfoButton from './CsvInfoButton';
 import getToastSettings from '../_shared/ToastSettings';
 
 const UploadCSV = ({

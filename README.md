@@ -130,7 +130,7 @@ getUnitAnalyticStrategies and getGroupAnalyticStrategies functions respectively.
 
 ![Example analytics data](/docs/images/sample_analytics_data.png)
 
-Add options to the dropdowns across ImportPage.jsx and CreateGroups.jsx in frontend/src/pages, ensuring the option values match 
+Add options to the dropdowns across Import.jsx and CreateGroups.jsx in frontend/src/pages, ensuring the option values match 
 the keys for the objects that were added to in the backend as described above
 
 ![Frontend changes](/docs/images/extending_strats_frontend_dropdowns.png)

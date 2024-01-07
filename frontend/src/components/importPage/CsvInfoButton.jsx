@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 
 
-export const CsvInfoButton = ({infoHeader, infoText}) => {
+const CsvInfoButton = ({infoHeader, infoText}) => {
     return (
         <Popover placement='top-start' trigger='hover'>
             <PopoverTrigger>
@@ -32,3 +32,5 @@ export const CsvInfoButton = ({infoHeader, infoText}) => {
         </Popover>
     )
 }
+
+export default CsvInfoButton;
