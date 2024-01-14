@@ -39,8 +39,8 @@ const AddEffortModalBody = ({setValidateFields, setSuccessMsg, setNewProfile}) =
 
     useEffect(() => {
         setSuccessMsg(successMsg);
-        setValidateFields(validateFields);
-    }, []);
+        setValidateFields(() => validateFields);
+    }, [setValidateFields]);
 
     return (
         <>

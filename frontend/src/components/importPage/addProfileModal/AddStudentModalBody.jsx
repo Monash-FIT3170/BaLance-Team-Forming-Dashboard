@@ -68,9 +68,9 @@ const AddStudentModalBody = ({setValidateFields, setSuccessMsg, setNewProfile}) 
     }
 
     useEffect(() => {
-        setSuccessMsg();
-        setValidateFields();
-    }, [])
+        setSuccessMsg(successMsg);
+        setValidateFields(() => validateFields);
+    }, [setValidateFields])
 
     return (
         <>

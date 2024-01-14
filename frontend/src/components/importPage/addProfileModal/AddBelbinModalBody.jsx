@@ -33,7 +33,7 @@ const AddBelbinModalBody = ({setValidateFields, setSuccessMsg, setNewProfile}) =
 
     useEffect(() => {
         setSuccessMsg(successMsg);
-        setValidateFields(validateFields);
+        setValidateFields(() => validateFields);
     }, []);
 
     return (
