@@ -134,7 +134,8 @@ const Import = () => {
             {/* MODALS FOR MANUALLY ADDING ENTRIES */}
             <AddProfileModal
                 dataType={dataType}
-                setProfiles={setProfiles}
+                setProfilesList={setProfiles}
+                profilesList={profiles}
                 isOpen={isAddProfileOpen}
                 onClose={onAddProfileClose}
             />

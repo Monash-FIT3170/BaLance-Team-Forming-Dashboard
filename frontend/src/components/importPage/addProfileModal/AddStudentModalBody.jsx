@@ -1,15 +1,20 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {
     FormControl,
     FormLabel,
+    Modal,
     ModalBody,
-    ModalHeader
+    ModalContent,
+    ModalCloseButton,
+    ModalHeader,
+    ModalOverlay,
+    useToast
 } from "@chakra-ui/react";
 
-import { Dropdown, TextField } from "../../_shared";
+import {Dropdown, TextField} from "../../_shared";
+import ModalFooterButtonPair from "../../_shared/ModalFooterButtonPair";
 
-
-const AddStudentModalBody = ({setValidateFields, setSuccessMsg, setNewProfile}) => {
+const AddStudentModalBody = ({isOpen, onClose, profilesList, setProfilesList}) => {
     const [studentID, setStudentID] = useState('');
     const [prefName, setPrefName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -17,6 +22,7 @@ const AddStudentModalBody = ({setValidateFields, setSuccessMsg, setNewProfile}) 
     const [wam, setWam] = useState('');
     const [lab, setLab] = useState('');
     const [gender, setGender] = useState('');
+    const toast = useToast();
 
     const successMsg = "Added student to the list of profiles for submission";
     const validateFields = () => {
@@ -60,64 +66,108 @@ const AddStudentModalBody = ({setValidateFields, setSuccessMsg, setNewProfile}) 
 
         if (gender === '') {
             errors.push('gender must be provided')
-        } else if (gender !== 'F' || gender !== 'M') {
+        } else if (gender !== 'F' && gender !== 'M') {
             errors.push('please select a gender')
         }
 
         return errors;
     }
 
-    useEffect(() => {
-        setSuccessMsg(successMsg);
-        setValidateFields(() => validateFields);
-    }, [setValidateFields])
+    const handleSubmit = () => {
+        const errors = validateFields()
+
+        if (errors.length > 0) {
+            errors.forEach((errorMsg) =>
+                toast({
+                    title: 'Input error',
+                    description: errorMsg,
+                    status: 'error',
+                    duration: 4000,
+                    isClosable: true,
+                })
+            )
+            return
+        }
+
+        const newProfile = {
+            studentID: studentID,
+            prefName: prefName,
+            lastName: lastName,
+            email: email,
+            wam: wam,
+            lab: lab,
+            gender: gender
+        }
+
+        setProfilesList([...profilesList, newProfile]);
+
+        toast({
+            title: 'Profile added',
+            description: successMsg,
+            status: 'success',
+            duration: 4000,
+            isClosable: true,
+        })
+    }
 
     return (
-        <>
-            <ModalHeader>Add a new student</ModalHeader>
-            <ModalBody>
-                <FormControl isRequired>
-                    <TextField
-                        label="Student ID"
-                        value={studentID}
-                        onChange={(event) => { setStudentID(event.target.value) }}
-                    />
-                    <TextField
-                        label="Preferred name"
-                        value={prefName}
-                        onChange={(event) => { setPrefName(event.target.value) }}
-                    />
-                    <TextField
-                        label="Last name"
-                        value={lastName}
-                        onChange={(event) => { setLastName(event.target.value) }}
-                    />
-                    <TextField
-                        label="Student email address"
-                        value={email}
-                        onChange={(event) => { setEmail(event.target.value) }}
-                    />
-                    <TextField
-                        label="Student WAM"
-                        value={wam}
-                        onChange={(event) => { setWam(event.target.value) }}
-                    />
-                    <TextField
-                        label="Student lab number"
-                        value={lab}
-                        onChange={(event) => { setLab(event.target.value) }}
-                    />
-                    <FormLabel>Gender</FormLabel>
-                    <Dropdown
-                        placeholder={'select gender'}
-                        required={true}
-                        options={['M', 'F']}
-                        width='100%'
-                        onChange={(event) => { setGender(event.target.value) }}
-                    />
-                </FormControl>
-            </ModalBody>
-        </>
+        <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay/>
+            <ModalContent>
+                <ModalCloseButton/>
+                <ModalHeader>Add a new student</ModalHeader>
+                <ModalBody>
+                    <FormControl isRequired>
+                        <TextField
+                            label="Student ID"
+                            value={studentID}
+                            onChange={(event) => { setStudentID(event.target.value) }}
+                        />
+                        <TextField
+                            label="Preferred name"
+                            value={prefName}
+                            onChange={(event) => { setPrefName(event.target.value) }}
+                        />
+                        <TextField
+                            label="Last name"
+                            value={lastName}
+                            onChange={(event) => { setLastName(event.target.value) }}
+                        />
+                        <TextField
+                            label="Student email address"
+                            value={email}
+                            onChange={(event) => { setEmail(event.target.value) }}
+                        />
+                        <TextField
+                            label="Student WAM"
+                            value={wam}
+                            onChange={(event) => { setWam(event.target.value) }}
+                        />
+                        <TextField
+                            label="Student lab number"
+                            value={lab}
+                            onChange={(event) => { setLab(event.target.value) }}
+                        />
+                        <FormLabel>Gender</FormLabel>
+                        <Dropdown
+                            placeholder={'select gender'}
+                            required={true}
+                            options={['M', 'F']}
+                            width='100%'
+                            onChange={(event) => { setGender(event.target.value) }}
+                        />
+                    </FormControl>
+                </ModalBody>
+                <ModalFooterButtonPair
+                    cancelButtonText={'Cancel'}
+                    cancelButtonColor={'red'}
+                    cancelButtonOnClick={onClose}
+                    confirmButtonText={'Submit'}
+                    confirmButtonColor={'blue'}
+                    confirmButtonOnClick={handleSubmit}
+                />
+            </ModalContent>
+        </Modal>
     );
 };
 
