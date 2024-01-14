@@ -23,8 +23,19 @@ const AddStudentModalBody = ({isOpen, onClose, profilesList, setProfilesList}) =
     const [lab, setLab] = useState('');
     const [gender, setGender] = useState('');
     const toast = useToast();
-
     const successMsg = "Added student to the list of profiles for submission";
+
+    const closeModal = () => {
+        setStudentID('')
+        setLastName('')
+        setPrefName('')
+        setEmail('')
+        setGender('')
+        setLab('')
+        setWam('')
+        onClose()
+    }
+
     const validateFields = () => {
         const errors = [];
 
@@ -108,10 +119,12 @@ const AddStudentModalBody = ({isOpen, onClose, profilesList, setProfilesList}) =
             duration: 4000,
             isClosable: true,
         })
+
+        closeModal();
     }
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={closeModal}>
             <ModalOverlay/>
             <ModalContent>
                 <ModalCloseButton/>
@@ -161,7 +174,7 @@ const AddStudentModalBody = ({isOpen, onClose, profilesList, setProfilesList}) =
                 <ModalFooterButtonPair
                     cancelButtonText={'Cancel'}
                     cancelButtonColor={'red'}
-                    cancelButtonOnClick={onClose}
+                    cancelButtonOnClick={closeModal}
                     confirmButtonText={'Submit'}
                     confirmButtonColor={'blue'}
                     confirmButtonOnClick={handleSubmit}

@@ -18,8 +18,14 @@ const AddBelbinModalBody = ({isOpen, onClose, profilesList, setProfilesList}) =>
     const [studentID, setStudentID] = useState('');
     const [belbinType, setBelbinType] = useState('');
     const toast = useToast();
-
     const successMsg = "Added belbin result to the list of profiles for submission";
+
+    const closeModal = () => {
+        setStudentID('')
+        setBelbinType('')
+        onClose()
+    }
+
     const validateFields = () => {
         const errors = [];
 
@@ -71,7 +77,7 @@ const AddBelbinModalBody = ({isOpen, onClose, profilesList, setProfilesList}) =>
     }
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={closeModal}>
             <ModalOverlay/>
             <ModalContent>
                 <ModalCloseButton/>
@@ -96,7 +102,7 @@ const AddBelbinModalBody = ({isOpen, onClose, profilesList, setProfilesList}) =>
                 <ModalFooterButtonPair
                     cancelButtonText={'Cancel'}
                     cancelButtonColor={'red'}
-                    cancelButtonOnClick={onClose}
+                    cancelButtonOnClick={closeModal}
                     confirmButtonText={'Submit'}
                     confirmButtonColor={'blue'}
                     confirmButtonOnClick={handleSubmit}

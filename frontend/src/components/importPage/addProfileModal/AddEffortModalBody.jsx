@@ -18,8 +18,15 @@ const AddEffortModalBody = ({isOpen, onClose, profilesList, setProfilesList}) =>
     const [hourCommitment, setHourCommitment] = useState('');
     const [avgAssignmentMark, setAvgAssignmentMark] = useState('');
     const toast = useToast();
-
     const successMsg = "Added effort result to the list of profiles for submission";
+
+    const closeModal = () => {
+        setStudentID('')
+        setAvgAssignmentMark('')
+        setHourCommitment('')
+        onClose()
+    }
+
     const validateFields = () => { // todo ensure student id does not exist
         const errors = [];
 
@@ -76,10 +83,11 @@ const AddEffortModalBody = ({isOpen, onClose, profilesList, setProfilesList}) =>
             isClosable: true,
         })
 
+        closeModal();
     }
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={closeModal}>
             <ModalOverlay/>
             <ModalContent>
                 <ModalCloseButton/>
@@ -106,7 +114,7 @@ const AddEffortModalBody = ({isOpen, onClose, profilesList, setProfilesList}) =>
                 <ModalFooterButtonPair
                     cancelButtonText={'Cancel'}
                     cancelButtonColor={'red'}
-                    cancelButtonOnClick={onClose}
+                    cancelButtonOnClick={closeModal}
                     confirmButtonText={'Submit'}
                     confirmButtonColor={'blue'}
                     confirmButtonOnClick={handleSubmit}
