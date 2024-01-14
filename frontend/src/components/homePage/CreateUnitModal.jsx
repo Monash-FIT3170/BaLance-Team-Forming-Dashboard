@@ -31,16 +31,26 @@ const CreateUnitModal = ({
     const [unitPeriod, setUnitPeriod] = useState('');
     const [submitted, setSubmitted] = useState(false);
     const toast = useToast();
-
     const navigate = useNavigate()
 
     let authService = {
         "DEV": MockAuth,
         "TEST": useAuth0
     }
+
     const { getAccessTokenSilently } = authService[process.env.REACT_APP_AUTH]();
     const colors = ['red', 'orange', 'purple', 'green', 'blue', 'purple', 'black', 'yellow']
     const randIdxGen = Math.floor(Math.random() * colors.length)
+
+    const closeModal = () => {
+        onModalClose()
+        setUnitCode('');
+        setUnitName('');
+        setUnitYear(new Date().getFullYear());
+        setUnitPeriod('');
+        setSubmitted(false)
+        onModalClose()
+    }
 
     const validateFields = () => {
         const errors = []
@@ -162,7 +172,7 @@ const CreateUnitModal = ({
 
 
     return (
-        <Modal closeOnOverlayClick={false} isOpen={isModalOpen} onClose={onModalClose}>
+        <Modal closeOnOverlayClick={false} isOpen={isModalOpen} onClose={closeModal}>
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader>New Offering</ModalHeader>
@@ -176,7 +186,7 @@ const CreateUnitModal = ({
                 {!submitted ?
                     <ModalFooterButtonPair
                         cancelButtonColor="red"
-                        cancelButtonOnClick={onModalClose}
+                        cancelButtonOnClick={closeModal()}
                         cancelButtonText="Cancel"
                         confirmButtonColor="blue"
                         confirmButtonOnClick={submitUnit}
@@ -186,10 +196,7 @@ const CreateUnitModal = ({
                     <ModalFooterButtonPair
                         cancelButtonColor="red"
                         cancelButtonOnClick={() => {
-                            onModalClose()
-                            setUnitPeriod('')
-                            setUnitName('')
-                            setUnitCode('')
+                            closeModal()
                             window.location.reload()
                         }}
                         cancelButtonText="Later"
