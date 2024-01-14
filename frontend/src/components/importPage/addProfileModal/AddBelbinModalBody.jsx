@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {
     FormControl,
     FormLabel,
@@ -12,9 +12,8 @@ const AddBelbinModalBody = ({setValidateFields, setSuccessMsg, setNewProfile}) =
     const [studentID, setStudentID] = useState('');
     const [belbinType, setBelbinType] = useState('');
 
-    setSuccessMsg("Added belbin result to the list of profiles for submission")
-
-    setValidateFields(() => {
+    const successMsg = "Added belbin result to the list of profiles for submission";
+    const validateFields = () => {
         const errors = [];
 
         if (studentID === '') {
@@ -30,7 +29,12 @@ const AddBelbinModalBody = ({setValidateFields, setSuccessMsg, setNewProfile}) =
         }
 
         return errors;
-    })
+    }
+
+    useEffect(() => {
+        setSuccessMsg(successMsg);
+        setValidateFields(validateFields);
+    }, []);
 
     return (
         <>

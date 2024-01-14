@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import {
     FormControl,
     FormLabel,
@@ -18,9 +18,8 @@ const AddStudentModalBody = ({setValidateFields, setSuccessMsg, setNewProfile}) 
     const [lab, setLab] = useState('');
     const [gender, setGender] = useState('');
 
-    setSuccessMsg("Added student to the list of profiles for submission")
-
-    setValidateFields(() => {
+    const successMsg = "Added student to the list of profiles for submission";
+    const validateFields = () => {
         const errors = [];
 
         if (studentID === '') {
@@ -66,7 +65,12 @@ const AddStudentModalBody = ({setValidateFields, setSuccessMsg, setNewProfile}) 
         }
 
         return errors;
-    })
+    }
+
+    useEffect(() => {
+        setSuccessMsg();
+        setValidateFields();
+    }, [])
 
     return (
         <>

@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {
     FormControl,
     ModalBody,
@@ -12,9 +12,8 @@ const AddEffortModalBody = ({setValidateFields, setSuccessMsg, setNewProfile}) =
     const [hourCommitment, setHourCommitment] = useState('');
     const [avgAssignmentMark, setAvgAssignmentMark] = useState('');
 
-    setSuccessMsg("Added effort result to the list of profiles for submission")
-
-    setValidateFields(() => {
+    const successMsg = "Added effort result to the list of profiles for submission";
+    const validateFields = () => {
         const errors = [];
 
         if (studentID === '') {
@@ -36,7 +35,12 @@ const AddEffortModalBody = ({setValidateFields, setSuccessMsg, setNewProfile}) =
         }
 
         return errors;
-    })
+    }
+
+    useEffect(() => {
+        setSuccessMsg(successMsg);
+        setValidateFields(validateFields);
+    }, []);
 
     return (
         <>
