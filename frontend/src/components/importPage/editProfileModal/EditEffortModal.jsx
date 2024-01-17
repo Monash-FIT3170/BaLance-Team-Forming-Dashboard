@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useLayoutEffect, useState} from "react";
 import {
     FormControl,
     Modal,
@@ -18,12 +18,25 @@ const AddEffortModalBody = ({isOpen, onClose, currProfile, profilesList, setProf
     const [hourCommitment, setHourCommitment] = useState('');
     const [avgAssignmentMark, setAvgAssignmentMark] = useState('');
     const toast = useToast();
-    const successMsg = "Added effort result to the list of profiles for submission";
+    const successMsg = "Updated effort result";
+
+    useLayoutEffect(() => {
+        if (currProfile) {
+            setStudentID(currProfile.studentId)
+            setHourCommitment(currProfile.hourCommitment)
+            setAvgAssignmentMark(currProfile.avgAssignmentMark)
+        }
+    }, [])
+
+    useLayoutEffect(() => {
+        if (currProfile) {
+            setStudentID(currProfile.studentId)
+            setHourCommitment(currProfile.hourCommitment)
+            setAvgAssignmentMark(currProfile.avgAssignmentMark)
+        }
+    }, [currProfile])
 
     const closeModal = () => {
-        setStudentID('')
-        setAvgAssignmentMark('')
-        setHourCommitment('')
         onClose()
     }
 
@@ -67,13 +80,15 @@ const AddEffortModalBody = ({isOpen, onClose, currProfile, profilesList, setProf
             return
         }
 
+        const newProfilesList = profilesList.filter(profile => profile !== currProfile)
+
         const newProfile = {
             studentID: studentID,
             hourCommitment: hourCommitment,
             avgAssignmentMark: avgAssignmentMark
         }
 
-        setProfilesList([...profilesList, newProfile]);
+        setProfilesList([...newProfilesList, newProfile]);
 
         toast({
             title: 'Profile added',
@@ -91,7 +106,7 @@ const AddEffortModalBody = ({isOpen, onClose, currProfile, profilesList, setProf
             <ModalOverlay/>
             <ModalContent>
                 <ModalCloseButton/>
-                <ModalHeader>Add an Effort personality result</ModalHeader>
+                <ModalHeader>Edit Effort personality result</ModalHeader>
                 <ModalBody>
                     <FormControl isRequired>
                         <TextField

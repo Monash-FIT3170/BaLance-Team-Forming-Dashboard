@@ -20,8 +20,8 @@ const EditBelbinModalBody = ({isOpen, onClose, currProfile, profilesList, setPro
     const toast = useToast();
     const successMsg = "Updated belbin result";
 
+    // these 2 effects are needed to ensure the clicked rows data is rendered
     useLayoutEffect(() => {
-        console.log(currProfile)
         if (currProfile) {
             setStudentID(currProfile.studentId)
             setBelbinType(currProfile.belbinType)
@@ -29,7 +29,6 @@ const EditBelbinModalBody = ({isOpen, onClose, currProfile, profilesList, setPro
     }, [])
 
     useLayoutEffect(() => {
-        console.log(currProfile)
         if (currProfile) {
             setStudentID(currProfile.studentId)
             setBelbinType(currProfile.belbinType)
