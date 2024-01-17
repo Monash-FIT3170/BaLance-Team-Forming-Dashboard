@@ -9,12 +9,12 @@ import {
 } from '@chakra-ui/react';
 
 const DeleteProfileModal = ({
-    isModalOpen,
+    isOpen,
     profileToDelete,
     setProfileToDelete,
     profiles,
     setProfiles,
-    onDeleteProfileClose
+    onClose
 }) => {
 
     const handleConfirmDelete = () => {
@@ -24,17 +24,17 @@ const DeleteProfileModal = ({
             );
             setProfiles(newProfiles);
             setProfileToDelete(null);
-            onDeleteProfileClose();
+            onClose();
         }
     };
 
     const handleCancelDelete = () => {
         setProfileToDelete(null);
-        onDeleteProfileClose();
+        onClose();
     };
 
     return (
-        <Modal isOpen={isModalOpen} onClose={handleCancelDelete}>
+        <Modal isOpen={isOpen} onClose={handleCancelDelete}>
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader>Delete Profile</ModalHeader>

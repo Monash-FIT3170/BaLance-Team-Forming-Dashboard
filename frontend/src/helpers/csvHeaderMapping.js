@@ -7,7 +7,7 @@
  * To extend support for more types of csv files, simply add the header
  * mappings as a const object and then add that object as a key-value
  * pair in headerMaps. The key will need to be added to the dropdown
- * options in ImportPage.jsx
+ * options in Import.jsx
  *
  * Note, there are some dependencies with the order the keys are
  * defined and how they are processed in the front and backend FIXME

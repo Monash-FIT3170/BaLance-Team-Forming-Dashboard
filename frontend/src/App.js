@@ -5,13 +5,13 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { MockAuth } from './helpers/mockAuth';
 import UploadGroupScript from './pages/UploadGroupScript';
 import CreateGroups from './pages/CreateGroups';
-import HomePage from './pages/HomePage';
+import HomePage from './pages/Units';
 import NavBar from './components/_shared/NavBar';
 import Groups from './pages/Groups';
 import Students from './pages/Students';
 import UnitAnalytics from './pages/UnitAnalytics';
 import GroupAnalytics from './pages/GroupAnalytics';
-import ImportPage from './pages/ImportPage';
+import Import from './pages/Import';
 
 const theme = extendTheme({
   colors: {
@@ -48,7 +48,7 @@ function App() {
             <Route path="/students/:unitCode/:year/:period" element={<Students />} />
             <Route path="/uploadGroupScript/:unitCode/:year/:period" element={<UploadGroupScript />} />
             <Route path="/createGroups/:unitCode/:year/:period" element={<CreateGroups/>} />
-            <Route path="/uploadData/:unitCode/:year/:period" element={<ImportPage />} />
+            <Route path="/uploadData/:unitCode/:year/:period" element={<Import />} />
             <Route path="/unitAnalytics/:unitCode/:year/:period" element={<UnitAnalytics />} />
             <Route path="/groupAnalytics/:unitCode/:year/:period/:groupNumber" element={<GroupAnalytics />} />
           </Routes>
