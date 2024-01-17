@@ -75,7 +75,6 @@ const CsvPreviewTable = ({
                             <EditIcon
                                 style={{ cursor: 'pointer' }}
                                 onClick={() => {
-                                    console.log(profile)
                                     setCurrProfile(profile);
                                     onEditProfileOpen();
                                 }}

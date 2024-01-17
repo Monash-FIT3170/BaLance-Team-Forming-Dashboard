@@ -149,11 +149,12 @@ const Import = () => {
                 setProfiles={setProfiles}
             />
             <EditProfileModal
+                dataType={dataType}
+                currProfile={currProfile}
+                setProfilesList={setProfiles}
+                profilesList={profiles}
                 isOpen={isEditProfileOpen}
                 onClose={onEditProfileClose}
-                currProfile={currProfile}
-                profiles={profiles}
-                setProfiles={setProfiles}
             />
             <br/>
         </VStack>

@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useLayoutEffect, useState} from 'react';
 import {
     FormControl,
     FormLabel,
@@ -15,15 +15,28 @@ import {Dropdown, TextField} from "../../_shared";
 import ModalFooterButtonPair from "../../_shared/ModalFooterButtonPair";
 
 const EditBelbinModalBody = ({isOpen, onClose, currProfile, profilesList, setProfilesList}) => {
-    const [studentID, setStudentID] = useState(currProfile.studentID);
-    const [belbinType, setBelbinType] = useState(currProfile.belbinType);
+    const [studentID, setStudentID] = useState('');
+    const [belbinType, setBelbinType] = useState('');
     const toast = useToast();
     const successMsg = "Updated belbin result";
 
+    useLayoutEffect(() => {
+        console.log(currProfile)
+        if (currProfile) {
+            setStudentID(currProfile.studentId)
+            setBelbinType(currProfile.belbinType)
+        }
+    }, [])
+
+    useLayoutEffect(() => {
+        console.log(currProfile)
+        if (currProfile) {
+            setStudentID(currProfile.studentId)
+            setBelbinType(currProfile.belbinType)
+        }
+    }, [currProfile])
+
     const closeModal = () => {
-        // todo consider this
-        setStudentID('')
-        setBelbinType('')
         onClose()
     }
 
@@ -61,7 +74,6 @@ const EditBelbinModalBody = ({isOpen, onClose, currProfile, profilesList, setPro
             return
         }
 
-        // todo find the old profile and delete it
         const newProfilesList = profilesList.filter(profile => profile !== currProfile)
 
         const newProfile = {
@@ -69,7 +81,7 @@ const EditBelbinModalBody = ({isOpen, onClose, currProfile, profilesList, setPro
             belbinType: belbinType
         }
 
-        setProfilesList([...profilesList, newProfile]);
+        setProfilesList([...newProfilesList, newProfile]);
 
         toast({
             title: 'Profile updated',
@@ -78,6 +90,8 @@ const EditBelbinModalBody = ({isOpen, onClose, currProfile, profilesList, setPro
             duration: 4000,
             isClosable: true,
         })
+
+        closeModal()
     }
 
     return (
@@ -85,7 +99,7 @@ const EditBelbinModalBody = ({isOpen, onClose, currProfile, profilesList, setPro
             <ModalOverlay/>
             <ModalContent>
                 <ModalCloseButton/>
-                <ModalHeader>Edite Belbin personality result</ModalHeader>
+                <ModalHeader>Edit Belbin personality result</ModalHeader>
                 <ModalBody>
                     <FormControl isRequired>
                         <TextField
@@ -95,7 +109,7 @@ const EditBelbinModalBody = ({isOpen, onClose, currProfile, profilesList, setPro
                         />
                         <FormLabel>Belbin personality type</FormLabel>
                         <Dropdown
-                            placeholder={'select personality type'}
+                            defaultValue={belbinType}
                             required={true}
                             options={['action', 'people', 'thinking']}
                             width='100%'
