@@ -12,23 +12,23 @@ const EditProfileModal = ({dataType, currProfile, profilesList, setProfilesList,
          */
 
         switch (dataType) {
-            // case "students":
-            //     return <EditStudentModal
-            //         isOpen={isOpen}
-            //         onClose={onClose}
-            //         currProfile={currProfile}
-            //         profilesList={profilesList}
-            //         setProfilesList={setProfilesList}
-            //     />
-            //
-            // case "effort":
-            //     return <EditEffortModal
-            //         isOpen={isOpen}
-            //         onClose={onClose}
-            //         currProfile={currProfile}
-            //         profilesList={profilesList}
-            //         setProfilesList={setProfilesList}
-            //     />
+            case "students":
+                return <EditStudentModal
+                    isOpen={isOpen}
+                    onClose={onClose}
+                    currProfile={currProfile}
+                    profilesList={profilesList}
+                    setProfilesList={setProfilesList}
+                />
+
+            case "effort":
+                return <EditEffortModal
+                    isOpen={isOpen}
+                    onClose={onClose}
+                    currProfile={currProfile}
+                    profilesList={profilesList}
+                    setProfilesList={setProfilesList}
+                />
 
             case "belbin":
                 return <EditBelbinModal
