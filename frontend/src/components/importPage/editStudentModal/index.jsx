@@ -1,3 +1,3 @@
-import EditStudentModal from "./EditStudentModal";
+import EditProfileModal from "./EditProfileModal";
 
-export default EditStudentModal;
+export default EditProfileModal;

@@ -43,7 +43,6 @@ const CreateUnitModal = ({
     const randIdxGen = Math.floor(Math.random() * colors.length)
 
     const closeModal = () => {
-        onModalClose()
         setUnitCode('');
         setUnitName('');
         setUnitYear(new Date().getFullYear());
@@ -170,7 +169,6 @@ const CreateUnitModal = ({
         )
     }
 
-
     return (
         <Modal closeOnOverlayClick={false} isOpen={isModalOpen} onClose={closeModal}>
             <ModalOverlay />
@@ -186,7 +184,7 @@ const CreateUnitModal = ({
                 {!submitted ?
                     <ModalFooterButtonPair
                         cancelButtonColor="red"
-                        cancelButtonOnClick={closeModal()}
+                        cancelButtonOnClick={closeModal}
                         cancelButtonText="Cancel"
                         confirmButtonColor="blue"
                         confirmButtonOnClick={submitUnit}
