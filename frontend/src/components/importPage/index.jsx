@@ -1,5 +1,5 @@
 import AddProfileModal from "./addProfileModal";
-import EditStudentModal from "./editStudentModal";
+import EditProfileModal from "./editProfileModal";
 import ConfirmClearSelection from "./ConfirmClearSelection";
 import CsvInfoButton from "./CsvInfoButton";
 import CsvPreviewTable from "./CsvPreviewTable";
@@ -9,7 +9,7 @@ import UploadCSV from "./UploadCSV";
 
 export {
     AddProfileModal,
-    EditStudentModal,
+    EditProfileModal,
     ConfirmClearSelection,
     CsvInfoButton,
     CsvPreviewTable,

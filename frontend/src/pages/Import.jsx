@@ -24,7 +24,7 @@ import {
     UploadCSV,
     CsvPreviewTable,
     AddProfileModal,
-    EditStudentModal
+    EditProfileModal
 } from "../components/importPage"
 
 const Import = () => {
@@ -120,6 +120,7 @@ const Import = () => {
                 profiles={profiles}
                 setProfileToDelete={setProfileToDelete}
                 onDeleteProfileOpen={onDeleteProfileOpen}
+                onEditProfileOpen={onEditProfileOpen}
                 setCurrProfile={setCurrProfile}
             />
 
@@ -139,7 +140,6 @@ const Import = () => {
                 isOpen={isAddProfileOpen}
                 onClose={onAddProfileClose}
             />
-
             <DeleteProfileModal
                 isModalOpen={isDeleteProfileOpen}
                 onDeleteProfileClose={onDeleteProfileClose}
@@ -148,14 +148,13 @@ const Import = () => {
                 profiles={profiles}
                 setProfiles={setProfiles}
             />
-            {/*<EditStudentModal*/}
-            {/*    isEditProfileOpen={isEditProfileOpen}*/}
-            {/*    onEditProfileClose={onEditProfileOpen}*/}
-            {/*    currProfile={currProfile}*/}
-            {/*    setCurrProfile={setCurrProfile}*/}
-            {/*    profiles={profiles}*/}
-            {/*    setProfiles={setProfiles}*/}
-            {/*/>*/}
+            <EditProfileModal
+                isOpen={isEditProfileOpen}
+                onClose={onEditProfileClose}
+                currProfile={currProfile}
+                profiles={profiles}
+                setProfiles={setProfiles}
+            />
             <br/>
         </VStack>
     );

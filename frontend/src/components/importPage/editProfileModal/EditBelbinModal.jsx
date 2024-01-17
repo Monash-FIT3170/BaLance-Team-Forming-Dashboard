@@ -1,6 +1,7 @@
-import {useState} from "react";
+import {useState} from 'react';
 import {
     FormControl,
+    FormLabel,
     Modal,
     ModalBody,
     ModalContent,
@@ -10,42 +11,35 @@ import {
     useToast
 } from "@chakra-ui/react";
 
-import {TextField} from "../../_shared";
+import {Dropdown, TextField} from "../../_shared";
 import ModalFooterButtonPair from "../../_shared/ModalFooterButtonPair";
 
-const AddEffortModalBody = ({isOpen, onClose, profilesList, setProfilesList}) => {
-    const [studentID, setStudentID] = useState('');
-    const [hourCommitment, setHourCommitment] = useState('');
-    const [avgAssignmentMark, setAvgAssignmentMark] = useState('');
+const EditBelbinModalBody = ({isOpen, onClose, currProfile, profilesList, setProfilesList}) => {
+    const [studentID, setStudentID] = useState(currProfile.studentID);
+    const [belbinType, setBelbinType] = useState(currProfile.belbinType);
     const toast = useToast();
-    const successMsg = "Added effort result to the list of profiles for submission";
+    const successMsg = "Updated belbin result";
 
     const closeModal = () => {
+        // todo consider this
         setStudentID('')
-        setAvgAssignmentMark('')
-        setHourCommitment('')
+        setBelbinType('')
         onClose()
     }
 
-    const validateFields = () => { // todo ensure student id does not exist
+    const validateFields = () => {
         const errors = [];
 
-        if (studentID === '') {
+        if (studentID.length === 0) {
             errors.push('student ID must be provided')
         } else if (studentID.search(/^[0-9]{8}$/) === -1) {
             errors.push('student ID must be an 8 digit number')
         }
 
-        if (hourCommitment === '') {
-            errors.push('weekly hour commitment must be provided')
-        } else if (hourCommitment.search(/^[0-9]{1,3}$/) === -1 || hourCommitment.toString() > 168) {
-            errors.push('weekly hour commitment must be a number between 0 and 168')
-        }
-
-        if (avgAssignmentMark === '') {
-            errors.push('average assignment marks must be provided')
-        } else if (avgAssignmentMark.search(/^[0-9]{1,3}$/) === -1 || avgAssignmentMark.toString() > 100) {
-            errors.push('average assignment marks must be a number between 0 and 100')
+        if (belbinType === '') {
+            errors.push('belbin type must be provided')
+        } else if (belbinType !== 'people' && belbinType !== 'action' && belbinType !== 'thinking') {
+            errors.push('please select a belbin type')
         }
 
         return errors;
@@ -67,23 +61,23 @@ const AddEffortModalBody = ({isOpen, onClose, profilesList, setProfilesList}) =>
             return
         }
 
+        // todo find the old profile and delete it
+        const newProfilesList = profilesList.filter(profile => profile !== currProfile)
+
         const newProfile = {
             studentID: studentID,
-            hourCommitment: hourCommitment,
-            avgAssignmentMark: avgAssignmentMark
+            belbinType: belbinType
         }
 
         setProfilesList([...profilesList, newProfile]);
 
         toast({
-            title: 'Profile added',
+            title: 'Profile updated',
             description: successMsg,
             status: 'success',
             duration: 4000,
             isClosable: true,
         })
-
-        closeModal();
     }
 
     return (
@@ -91,23 +85,21 @@ const AddEffortModalBody = ({isOpen, onClose, profilesList, setProfilesList}) =>
             <ModalOverlay/>
             <ModalContent>
                 <ModalCloseButton/>
-                <ModalHeader>Add an Effort personality result</ModalHeader>
+                <ModalHeader>Edite Belbin personality result</ModalHeader>
                 <ModalBody>
                     <FormControl isRequired>
                         <TextField
                             label="Student ID"
                             value={studentID}
-                            onChange={(event) => { setStudentID(event.target.value) }}
+                            onChange={(event) => {setStudentID(event.target.value)}}
                         />
-                        <TextField
-                            label="Weekly hour commitment"
-                            value={hourCommitment}
-                            onChange={(event) => { setHourCommitment(event.target.value) }}
-                        />
-                        <TextField
-                            label="Average assignment mark"
-                            value={avgAssignmentMark}
-                            onChange={(event) => { setAvgAssignmentMark(event.target.value) }}
+                        <FormLabel>Belbin personality type</FormLabel>
+                        <Dropdown
+                            placeholder={'select personality type'}
+                            required={true}
+                            options={['action', 'people', 'thinking']}
+                            width='100%'
+                            onChange={(event) => { setBelbinType(event.target.value) }}
                         />
                     </FormControl>
                 </ModalBody>
@@ -124,4 +116,4 @@ const AddEffortModalBody = ({isOpen, onClose, profilesList, setProfilesList}) =>
     );
 };
 
-export default AddEffortModalBody;
+export default EditBelbinModalBody;

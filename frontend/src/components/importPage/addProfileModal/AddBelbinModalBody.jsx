@@ -74,6 +74,8 @@ const AddBelbinModalBody = ({isOpen, onClose, profilesList, setProfilesList}) =>
             duration: 4000,
             isClosable: true,
         })
+
+        closeModal()
     }
 
     return (

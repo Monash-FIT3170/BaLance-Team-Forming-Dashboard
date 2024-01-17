@@ -16,14 +16,9 @@ const CsvPreviewTable = ({
     profiles,
     setProfileToDelete,
     onDeleteProfileOpen,
+    onEditProfileOpen,
     setCurrProfile
 }) => {
-
-    const {
-        isOpen: isEditProfileOpen,
-        onOpen: onEditProfileOpen,
-        onClose: onEditProfileClose,
-    } = useDisclosure();
 
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
 
@@ -80,6 +75,7 @@ const CsvPreviewTable = ({
                             <EditIcon
                                 style={{ cursor: 'pointer' }}
                                 onClick={() => {
+                                    console.log(profile)
                                     setCurrProfile(profile);
                                     onEditProfileOpen();
                                 }}

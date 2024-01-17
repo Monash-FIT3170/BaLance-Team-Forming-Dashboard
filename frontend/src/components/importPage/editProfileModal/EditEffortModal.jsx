@@ -1,7 +1,6 @@
-import {useState} from 'react';
+import {useState} from "react";
 import {
     FormControl,
-    FormLabel,
     Modal,
     ModalBody,
     ModalContent,
@@ -11,34 +10,42 @@ import {
     useToast
 } from "@chakra-ui/react";
 
-import {Dropdown, TextField} from "../../_shared";
+import {TextField} from "../../_shared";
 import ModalFooterButtonPair from "../../_shared/ModalFooterButtonPair";
 
-const AddBelbinModalBody = ({isOpen, onClose, profilesList, setProfilesList}) => {
+const AddEffortModalBody = ({isOpen, onClose, currProfile, profilesList, setProfilesList}) => {
     const [studentID, setStudentID] = useState('');
-    const [belbinType, setBelbinType] = useState('');
+    const [hourCommitment, setHourCommitment] = useState('');
+    const [avgAssignmentMark, setAvgAssignmentMark] = useState('');
     const toast = useToast();
-    const successMsg = "Added belbin result to the list of profiles for submission";
+    const successMsg = "Added effort result to the list of profiles for submission";
 
     const closeModal = () => {
         setStudentID('')
-        setBelbinType('')
+        setAvgAssignmentMark('')
+        setHourCommitment('')
         onClose()
     }
 
-    const validateFields = () => {
+    const validateFields = () => { // todo ensure student id does not exist
         const errors = [];
 
-        if (studentID.length === 0) {
+        if (studentID === '') {
             errors.push('student ID must be provided')
         } else if (studentID.search(/^[0-9]{8}$/) === -1) {
             errors.push('student ID must be an 8 digit number')
         }
 
-        if (belbinType === '') {
-            errors.push('belbin type must be provided')
-        } else if (belbinType !== 'people' && belbinType !== 'action' && belbinType !== 'thinking') {
-            errors.push('please select a belbin type')
+        if (hourCommitment === '') {
+            errors.push('weekly hour commitment must be provided')
+        } else if (hourCommitment.search(/^[0-9]{1,3}$/) === -1 || hourCommitment.toString() > 168) {
+            errors.push('weekly hour commitment must be a number between 0 and 168')
+        }
+
+        if (avgAssignmentMark === '') {
+            errors.push('average assignment marks must be provided')
+        } else if (avgAssignmentMark.search(/^[0-9]{1,3}$/) === -1 || avgAssignmentMark.toString() > 100) {
+            errors.push('average assignment marks must be a number between 0 and 100')
         }
 
         return errors;
@@ -62,7 +69,8 @@ const AddBelbinModalBody = ({isOpen, onClose, profilesList, setProfilesList}) =>
 
         const newProfile = {
             studentID: studentID,
-            belbinType: belbinType
+            hourCommitment: hourCommitment,
+            avgAssignmentMark: avgAssignmentMark
         }
 
         setProfilesList([...profilesList, newProfile]);
@@ -74,6 +82,8 @@ const AddBelbinModalBody = ({isOpen, onClose, profilesList, setProfilesList}) =>
             duration: 4000,
             isClosable: true,
         })
+
+        closeModal();
     }
 
     return (
@@ -81,21 +91,23 @@ const AddBelbinModalBody = ({isOpen, onClose, profilesList, setProfilesList}) =>
             <ModalOverlay/>
             <ModalContent>
                 <ModalCloseButton/>
-                <ModalHeader>Add a Belbin personality result</ModalHeader>
+                <ModalHeader>Add an Effort personality result</ModalHeader>
                 <ModalBody>
                     <FormControl isRequired>
                         <TextField
                             label="Student ID"
                             value={studentID}
-                            onChange={(event) => {setStudentID(event.target.value)}}
+                            onChange={(event) => { setStudentID(event.target.value) }}
                         />
-                        <FormLabel>Belbin personality type</FormLabel>
-                        <Dropdown
-                            placeholder={'select personality type'}
-                            required={true}
-                            options={['action', 'people', 'thinking']}
-                            width='100%'
-                            onChange={(event) => { setBelbinType(event.target.value) }}
+                        <TextField
+                            label="Weekly hour commitment"
+                            value={hourCommitment}
+                            onChange={(event) => { setHourCommitment(event.target.value) }}
+                        />
+                        <TextField
+                            label="Average assignment mark"
+                            value={avgAssignmentMark}
+                            onChange={(event) => { setAvgAssignmentMark(event.target.value) }}
                         />
                     </FormControl>
                 </ModalBody>
@@ -112,4 +124,4 @@ const AddBelbinModalBody = ({isOpen, onClose, profilesList, setProfilesList}) =>
     );
 };
 
-export default AddBelbinModalBody;
+export default AddEffortModalBody;
