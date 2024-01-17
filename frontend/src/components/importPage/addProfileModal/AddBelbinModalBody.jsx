@@ -61,7 +61,7 @@ const AddBelbinModalBody = ({isOpen, onClose, profilesList, setProfilesList}) =>
         }
 
         const newProfile = {
-            studentID: studentID,
+            studentId: studentID,
             belbinType: belbinType
         }
 

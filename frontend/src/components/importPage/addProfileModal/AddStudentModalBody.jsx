@@ -101,7 +101,7 @@ const AddStudentModalBody = ({isOpen, onClose, profilesList, setProfilesList}) =
         }
 
         const newProfile = {
-            studentID: studentID,
+            studentId: studentID,
             prefName: prefName,
             lastName: lastName,
             email: email,

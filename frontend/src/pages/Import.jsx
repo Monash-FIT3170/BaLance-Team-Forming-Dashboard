@@ -141,8 +141,8 @@ const Import = () => {
                 onClose={onAddProfileClose}
             />
             <DeleteProfileModal
-                isModalOpen={isDeleteProfileOpen}
-                onDeleteProfileClose={onDeleteProfileClose}
+                isOpen={isDeleteProfileOpen}
+                onClose={onDeleteProfileClose}
                 profileToDelete={profileToDelete}
                 setProfileToDelete={setProfileToDelete}
                 profiles={profiles}

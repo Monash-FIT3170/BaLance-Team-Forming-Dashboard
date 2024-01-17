@@ -68,7 +68,7 @@ const AddEffortModalBody = ({isOpen, onClose, profilesList, setProfilesList}) =>
         }
 
         const newProfile = {
-            studentID: studentID,
+            studentId: studentID,
             hourCommitment: hourCommitment,
             avgAssignmentMark: avgAssignmentMark
         }
