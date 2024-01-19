@@ -1,13 +1,12 @@
 /**
- * A module containing route handlers for analytics related
- * API calls
+ * A module containing routes for analytics related API calls
  *
  */
 
 const express = require("express");
 const {
-  getUnitAnalytics,
-  getGroupAnalytics
+    getUnitAnalytics,
+    getGroupAnalytics
 } = require("../routeHandlers/analyticsRouteHandler");
 
 const router = express.Router();

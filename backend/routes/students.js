@@ -7,14 +7,14 @@
 const express = require("express");
 const router = express.Router();
 const {
-  // import controller functions for route handlers
-  getAllStudents,
-  getStudent,
-  addAllStudents,
-  deleteStudentEnrolment,
-  deleteStudentGroupAlloc,
-  updateStudent,
-  addPersonalityData,
+    // import controller functions for route handlers
+    getAllStudents,
+    getStudent,
+    addAllStudents,
+    deleteStudentEnrolment,
+    deleteStudentGroupAlloc,
+    updateStudent,
+    addPersonalityData,
 } = require("../routeHandlers/studentRouteHandler");
 
 // get all students from a unit

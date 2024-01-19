@@ -1,18 +1,16 @@
 /**
- * A module containing route handlers for group related
- * API calls
+ * A module containing route handlers for group related API calls
  *
  */
 
 const express = require("express");
 const router = express.Router();
 const {
-  // import controller functions for route handlers
-  getAllGroups,
-  getLabNumber,
-  createUnitGroups,
-  shuffleUnitGroups,
-  moveStudent
+    getAllGroups,
+    getLabNumber,
+    createUnitGroups,
+    shuffleUnitGroups,
+    moveStudent
 } = require("../routeHandlers/groupRouteHandler");
 
 const { uploadCustomScript } = require("../routeHandlers/scriptRouteHandler");

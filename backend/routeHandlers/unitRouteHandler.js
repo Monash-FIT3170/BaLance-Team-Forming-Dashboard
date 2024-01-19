@@ -271,46 +271,6 @@ const deleteUnit = async function (req, res) {
   res.status(200).send();
 };
 
-// FIXME
-updateUnit = async function (req, res) {
-  const urlParamValues = ({
-    // URL params
-    unitCode,
-    year,
-    period,
-  } = req.params);
-  const newValues = req.body;
-
-  // contains the right format for referencing table attributes
-  const table_attributes = {
-    unitCode: "unit_code",
-    unitName: "unit_name",
-    year: "unit_off_year",
-    period: "unit_off_period",
-  };
-
-  // building the query string from scratch
-  let query_string = "UPDATE unit_offering SET ";
-  let query_params = [];
-  for (const key in newValues) {
-    // add where clauses only for columns specified in req.body
-    query_string += `${table_attributes[key]}=?, `;
-    query_params.push(newValues[key]);
-  }
-  query_string += `WHERE unit_code=? AND unit_off_year=? AND unit_off_period=?;`;
-  query_params = [...query_params, ...Object.values(urlParamValues)];
-
-
-
-  db_connection.query(query_string, query_params, (err, results, fields) => {
-    if (err) {
-      console.log(err.stack);
-    } else {
-      res.status(200).json(results);
-    }
-  });
-};
-
 const uploadCustomScript = async (req, res) => {
   // ... (other code)
   const groupSize = req.body.groupSize;
