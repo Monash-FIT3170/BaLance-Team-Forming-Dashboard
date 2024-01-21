@@ -31,12 +31,6 @@ function Units() {
         onClose: onAddClose
     } = useDisclosure();
 
-    const {
-        isOpen: isNavOpen,
-        onOpen: onNavOpen,
-        onClose: onNavClose,
-    } = useDisclosure();
-
     useEffect(() => {
         getAccessTokenSilently().then((token) => {
             fetch('http://localhost:8080/api/units/', {

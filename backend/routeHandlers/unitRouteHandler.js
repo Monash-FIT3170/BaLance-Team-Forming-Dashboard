@@ -4,10 +4,6 @@
  *
  * */
 
-const { spawn } = require("child_process");
-const fs = require("fs");
-const { promisify } = require("util");
-const unlinkAsync = promisify(fs.unlink);
 const db_connection = require("../config/databaseConfig");
 const { promiseBasedQuery } = require("../helpers/commonHelpers");
 
@@ -38,20 +34,6 @@ const getUnit = async (req, res) => {
   );
 
   // console.log(unitData);
-  res.status(200).json(unitData);
-};
-
-const getEnrolmentCount = async (req, res) => {
-  const { unitCode, offYear, offPeriod } = req.params;
-
-  const [enrolmentCount] = promiseBasedQuery(
-    "select count(enrolment_id)" +
-      "from unit_enrolment " +
-      "where unit_off_id like (select unit_off_id from unit_offering where upper(unit_code) like ? and unit_off_year like ? and unit_off_period like ?);",
-    [unitCode, Number(offYear), offPeriod]
-  );
-
-  // console.log(enrolmentCount);
   res.status(200).json(unitData);
 };
 
@@ -271,88 +253,6 @@ const deleteUnit = async function (req, res) {
   res.status(200).send();
 };
 
-const uploadCustomScript = async (req, res) => {
-  // ... (other code)
-  const groupSize = req.body.groupSize;
-  const variance = req.body.variance;
-
-  // Access the uploaded file using req.file
-  const uploadedFile = req.file;
-
-  if (!uploadedFile) {
-    return res.status(400).send("file not received.");
-  }
-  // Read the uploaded file as a string
-  try {
-    const filePath = uploadedFile.path;
-    const fileContent = fs.readFileSync(filePath, "utf-8");
-    const pythonFileString = fileContent.toString();
-    const students = [
-      { id: 30722055, name: "idk", wam: 1, personality: "DESSC" },
-      { id: 233122, name: "lele", wam: 2, personality: "DSADE" },
-    ];
-
-    // const students = await promiseBasedQuery(
-    //     'SELECT stud.stud_unique_id, alloc.unit_off_lab_id ' +
-    //     'FROM student stud ' +
-    //     'INNER JOIN student_lab_allocation alloc ON stud.stud_unique_id=alloc.stud_unique_id ' +
-    //     'INNER JOIN unit_off_lab lab ON lab.unit_off_lab_id=alloc.unit_off_lab_id ' +
-    //     'INNER JOIN unit_offering unit ON unit.unit_off_id=lab.unit_off_id ' +
-    //     'WHERE ' +
-    //     '   unit.unit_code=? ' +
-    //     '   AND unit.unit_off_year=? ' +
-    //     '   AND unit.unit_off_period=? ' +
-    //     'ORDER BY unit_off_lab_id;',
-    //     [unitCode, year, period]
-    // );
-
-    //spawn python process with arg
-    const pythonArgs = [groupSize, variance, JSON.stringify(students)];
-    const pythonProcess = spawn("python3", ["-c", pythonFileString, ...pythonArgs]);
-    // Execute the Python process
-    let output = "";
-
-    await new Promise((resolve, reject) => {
-      pythonProcess.on("close", async (code) => {
-        if (code === 0) {
-          resolve();
-        } else {
-          reject(new Error(`Failed to run python script: ${code}`));
-        }
-      });
-
-      pythonProcess.stdout.on("data", async (data) => {
-        output += data.toString();
-        try {
-          const parsedOutput = JSON.parse(output);
-
-          res.json(parsedOutput);
-        } catch (error) {
-          res.status(500).json({ error: "Failed to parse Python output." });
-        }
-      });
-
-      pythonProcess.stderr.on("error", (data) => {
-        res.status(500).json({ error: "An error occurred while processing the request." });
-      });
-    });
-
-    // ... (other code)
-  } catch (error) {
-    console.error("An unexpected error has occurred:", error);
-    res.status(500).json({ error: "An error occurred while processing the request." });
-  } finally {
-    // unlink the file after finish processing / error occur
-    //
-    // if (save) {
-    //associate req.user.id (sesson auth) / req.jwt (token auth) -> uploadedFile.filename
-    // } else {
-    //await unlinkAsync(req.file.path);
-    // }
-    await unlinkAsync(req.file.path);
-  }
-};
-
 const verifyAvailableGroupFormationStrats = async (req, res) => {
   /**
    * Checks to see which group formation strategy can be used by the user
@@ -384,8 +284,5 @@ module.exports = {
   getUnit,
   addUnit,
   deleteUnit,
-  updateUnit,
-  uploadCustomScript,
-  getEnrolmentCount,
   verifyAvailableGroupFormationStrats
 };
