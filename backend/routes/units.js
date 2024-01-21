@@ -1,5 +1,5 @@
 /**
- * A module containing route handlers for unit related API calls
+ * This module specifies routes for unit related API calls
  *
  */
 
@@ -10,28 +10,22 @@ const {
     getUnit,
     addUnit,
     deleteUnit,
-    uploadCustomScript,
     verifyAvailableGroupFormationStrats
 } = require("../routeHandlers/unitRouteHandler");
 
-const { upload } = require("../middleware/uploadMiddleware");
-
-// get all units for a user
+// gets all units for a user
 router.get("/", getAllUnits);
 
-// get a specific unit for a user
+// gets a specific unit for a user
 router.get("/:unitCode/:year/:period", getUnit);
 
-// verify available analytics
+// verifies which grouping strategies a unit currently supports
 router.get("/groupingStrategies/:unitCode/:year/:period/", verifyAvailableGroupFormationStrats);
 
-// does not fit here fixme
-router.post("/:unitCode/:year/:period/uploadScript", upload.single("pythonFile"), uploadCustomScript);
-
-// add a new unit for the user
+// adds a new unit for the user
 router.post("/", addUnit);
 
-// delete a specific unit for a user
+// deletes a specific unit for a user
 router.delete("/:unitCode/:year/:period", deleteUnit);
 
 module.exports = router;

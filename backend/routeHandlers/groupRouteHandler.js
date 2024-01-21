@@ -17,28 +17,28 @@ const getAllGroups = async (req, res) => {
     /* GET ALL GROUPS */
     const studentData = await promiseBasedQuery(
         "SELECT stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val, group_number, lab_number " +
-            "FROM student stud    " +
-            "inner join unit_enrolment ue on ue.stud_unique_id=stud.stud_unique_id    " +
-            "inner join unit_offering unit on ue.unit_off_id=unit.unit_off_id    " +
-            "left join (select s1.student_id as student_id, lab_number, group_number from    " +
-            "(select s.student_id as student_id, lab_number    " +
-            "from student s    " +
-            "inner join unit_enrolment ue on ue.stud_unique_id = s.stud_unique_id " +
-            "inner join unit_offering uo on uo.unit_off_id = ue.unit_off_id " +
-            "inner join student_lab_allocation sla on sla.stud_unique_id = s.stud_unique_id    " +
-            "inner join unit_off_lab uol on uol.unit_off_lab_id = sla.unit_off_lab_id " +
-            "WHERE uo.unit_code=? AND uo.unit_off_year=? AND uo.unit_off_period=?) s1 left join    " +
-            "(select stud.student_id as student_id, group_number " +
-            "from student stud " +
-            "inner join group_allocation ga on stud.stud_unique_id = ga.stud_unique_id " +
-            "inner join lab_group lg on ga.lab_group_id = lg.lab_group_id " +
-            "inner join unit_off_lab uol on uol.unit_off_lab_id = lg.unit_off_lab_id " +
-            "inner join unit_offering uo on uo.unit_off_id = uol.unit_off_id " +
-            "WHERE uo.unit_code=? AND uo.unit_off_year=? AND uo.unit_off_period=?) s2 on s1.student_id = s2.student_id)    " +
-            "grp on stud.student_id = grp.student_id " +
-            "WHERE unit.unit_code=? " +
-            "AND unit.unit_off_year=? " +
-            "AND unit.unit_off_period=? order by group_number; ",
+        "FROM student stud " +
+        "   INNER JOIN unit_enrolment ue ON ue.stud_unique_id=stud.stud_unique_id " +
+        "   INNER JOIN unit_offering unit ON ue.unit_off_id=unit.unit_off_id " +
+        "LEFT JOIN (SELECT s1.student_id as student_id, lab_number, group_number from " +
+        "(SELECT s.student_id as student_id, lab_number " +
+        "FROM student s    " +
+        "INNER JOIN unit_enrolment ue ON ue.stud_unique_id = s.stud_unique_id " +
+        "INNER JOIN unit_offering uo ON uo.unit_off_id = ue.unit_off_id " +
+        "INNER JOIN student_lab_allocation sla ON sla.stud_unique_id = s.stud_unique_id    " +
+        "INNER JOIN unit_off_lab uol ON uol.unit_off_lab_id = sla.unit_off_lab_id " +
+        "WHERE uo.unit_code=? AND uo.unit_off_year=? AND uo.unit_off_period=?) s1 left JOIN    " +
+        "(SELECT stud.student_id as student_id, group_number " +
+        "FROM student stud " +
+        "INNER JOIN group_allocation ga ON stud.stud_unique_id = ga.stud_unique_id " +
+        "INNER JOIN lab_group lg ON ga.lab_group_id = lg.lab_group_id " +
+        "INNER JOIN unit_off_lab uol ON uol.unit_off_lab_id = lg.unit_off_lab_id " +
+        "INNER JOIN unit_offering uo ON uo.unit_off_id = uol.unit_off_id " +
+        "WHERE uo.unit_code=? AND uo.unit_off_year=? AND uo.unit_off_period=?) s2 ON s1.student_id = s2.student_id)    " +
+        "grp ON stud.student_id = grp.student_id " +
+        "WHERE unit.unit_code=? " +
+        "AND unit.unit_off_year=? " +
+        "AND unit.unit_off_period=? order by group_number; ",
         [unitCode, year, period, unitCode, year, period, unitCode, year, period]
     );
 
@@ -82,9 +82,9 @@ const getAllGroups = async (req, res) => {
 const getLabNumber = async (req, res) => {
     const { unitCode, year, period, groupNumber } = req.params;
     const lab_number = await promiseBasedQuery(
-        "select lab_number from unit_off_lab lab " +
-            "join lab_group team on lab.unit_off_lab_id = team.unit_off_lab_id " +
-            "join unit_offering unit on lab.unit_off_id = unit.unit_off_id " +
+        "SELECT lab_number from unit_off_lab lab " +
+            "JOIN lab_group team ON lab.unit_off_lab_id = team.unit_off_lab_id " +
+            "JOIN unit_offering unit ON lab.unit_off_id = unit.unit_off_id " +
             "where " +
             "     unit.unit_code = ?" +
             "     and unit.unit_off_year = ?" +
@@ -95,7 +95,7 @@ const getLabNumber = async (req, res) => {
     res.status(200).send(lab_number);
 };
 
-// create all the groups (based on csv)
+// create all the groups (based ON csv)
 const createUnitGroups = async (req, res) => {
     const { unitCode, year, period } = req.params;
     let { groupSize, variance, strategy } = req.body;
@@ -113,7 +113,7 @@ const createUnitGroups = async (req, res) => {
 
     /* CHECK IF THE USER IS ALLOWED TO FORM GROUPS WITH THE SELECTED STRATEGY */
     if (strategy !== "random") {
-        // check the database to make sure EVERY student has an associated test result for the selected strategy
+        // check the database to make sure EVERY student has an associated test result for the SELECTed strategy
         const [{ missingValues }] = await promiseBasedQuery(
             "SELECT (count(*) > 0) AS `missingValues` " +
                 "FROM student s " +
@@ -236,14 +236,14 @@ const moveStudent = async (req, res) => {
 
     const [currentGroupData] = await promiseBasedQuery(
         "SELECT g_alloc, group_id, s.stud_unique_id, uol.unit_off_lab_id " +
-            "FROM (select s.stud_unique_id as student_id, ga.group_alloc_id as g_alloc, lg.lab_group_id as group_id " +
-            "from student s " +
-            "inner join group_allocation ga on s.stud_unique_id = ga.stud_unique_id " +
-            "inner join lab_group lg on lg.lab_group_id = ga.lab_group_id " +
+            "FROM (SELECT s.stud_unique_id as student_id, ga.group_alloc_id as g_alloc, lg.lab_group_id as group_id " +
+            "FROM student s " +
+            "INNER JOIN group_allocation ga ON s.stud_unique_id = ga.stud_unique_id " +
+            "INNER JOIN lab_group lg ON lg.lab_group_id = ga.lab_group_id " +
             "WHERE s.student_id=?) grp " +
-            "right join student s on grp.student_id = s.stud_unique_id " +
-            "inner join student_lab_allocation sla on sla.stud_unique_id = s.stud_unique_id " +
-            "inner join unit_off_lab uol on uol.unit_off_lab_id = sla.unit_off_lab_id " +
+            "RIGHT JOIN student s ON grp.student_id = s.stud_unique_id " +
+            "INNER JOIN student_lab_allocation sla ON sla.stud_unique_id = s.stud_unique_id " +
+            "INNER JOIN unit_off_lab uol ON uol.unit_off_lab_id = sla.unit_off_lab_id " +
             "INNER JOIN unit_enrolment ue ON s.stud_unique_id = ue.stud_unique_id " +
             "INNER JOIN unit_offering u ON u.unit_off_id = ue.unit_off_id " +
             "WHERE s.student_id=? " +

@@ -15,19 +15,6 @@ const {
 
 const { uploadCustomScript } = require("../routeHandlers/scriptRouteHandler");
 
-const multer = require("multer");
-
-const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    cb(null, "./tmp/my-uploads");
-  },
-  filename(req, file, cb) {
-    cb(null, `${file.fieldname}-${Date.now()}`);
-  },
-});
-
-const upload = multer({ storage });
-
 // get all groups for a specific unit
 router.get("/:unitCode/:year/:period", getAllGroups);
 
