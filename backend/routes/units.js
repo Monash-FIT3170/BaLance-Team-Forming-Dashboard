@@ -7,7 +7,6 @@ const express = require("express");
 const router = express.Router();
 const {
     getAllUnits,
-    getUnit,
     addUnit,
     deleteUnit,
     verifyAvailableGroupFormationStrats
@@ -15,9 +14,6 @@ const {
 
 // gets all units for a user
 router.get("/", getAllUnits);
-
-// gets a specific unit for a user
-router.get("/:unitCode/:year/:period", getUnit);
 
 // verifies which grouping strategies a unit currently supports
 router.get("/groupingStrategies/:unitCode/:year/:period/", verifyAvailableGroupFormationStrats);

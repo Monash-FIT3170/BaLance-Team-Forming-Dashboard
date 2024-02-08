@@ -17,7 +17,7 @@ For example, if we are importing things for a React component we are making
 ```javascript
 /* External imports first */
 import { useState } from 'react'; // importing 1 item in one line
-import { AddIcon, ArrowBackIcon } from "@chakra-ui/icons"; // importing 2 items can be done in one line
+import { AddIcon, ArrowBackIcon } from "@chakra-ui/icons"; // importing 2 or 3 items can be done in one line
 import { // importing 4 or more items should be done with 1 item per line as shown
     Flex,
     Spacer,
@@ -51,6 +51,11 @@ Readable code is the main thing that matters. BUT DO:
 
 ### useNav vs Link
 
+[Refer to this discussion](reddit.com/r/reactjs/comments/vq2hb6/which_is_better_to_use_link_or_usenavigate)
+
 * use navigate when a redirect is needed as part of another action e.g. after form submission, we want to redirect
 * use link when you want something to link to a page without other actions e.g. any linking button or hyperlink
-* [source](reddit.com/r/reactjs/comments/vq2hb6/which_is_better_to_use_link_or_usenavigate)
+
+## Backend guidelines
+
+[//]: # (TODO)

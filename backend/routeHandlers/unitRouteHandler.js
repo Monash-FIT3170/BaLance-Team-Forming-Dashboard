@@ -9,33 +9,14 @@ const { promiseBasedQuery } = require("../helpers/commonHelpers");
 
 // gets all units for a user
 const getAllUnits = async (req, res) => {
-  db_connection.query("SELECT * FROM unit_offering;", (err, results, fields) => {
-    if (err) {
-      console.error(err.stack);
-    } else {
-      // console.log(results);
-      res.status(200).json(results);
+    try {
+        const units = await promiseBasedQuery("SELECT * FROM unit_offering;");
+        res.status(200).json(units);
+    } catch (e) {
+        console.log(e);
     }
-  });
 };
 
-// get a single unit for a user
-const getUnit = async (req, res) => {
-  const {
-    // get the URL params for DB querying
-    unitCode,
-    year,
-    period,
-  } = req.params;
-
-  const [unitData] = promiseBasedQuery(
-    "SELECT * " + "FROM unit_offering " + "WHERE unit_code=? AND unit_off_year=? AND unit_off_period=?;",
-    [unitCode, Number(year), period]
-  );
-
-  // console.log(unitData);
-  res.status(200).json(unitData);
-};
 
 // add a new unit to a TAs dashboard
 const addUnit = async (req, res) => {
@@ -280,9 +261,8 @@ const verifyAvailableGroupFormationStrats = async (req, res) => {
 }
 
 module.exports = {
-  getAllUnits,
-  getUnit,
-  addUnit,
-  deleteUnit,
-  verifyAvailableGroupFormationStrats
+    getAllUnits,
+    addUnit,
+    deleteUnit,
+    verifyAvailableGroupFormationStrats
 };
