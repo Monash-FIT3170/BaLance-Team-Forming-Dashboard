@@ -1,6 +1,6 @@
 /**
  * This module should only contain functions that handle routes related
- * to unit analytics
+ * to fetching unit analytics data
  *
  * */
 
@@ -9,9 +9,14 @@ const {
     getGroupAnalyticsStrategies
 } = require("../helpers/analyticsRouteHandlerHelpers");
 
-const { promiseBasedQuery } = require("../helpers/commonHelpers")
-
 const getUnitAnalytics = async (req, res) => {
+    /**
+     * Loops through a store of functions that fetch related unit level data for a specific
+     * group formation strategy. E.g. {belbin: func1(), effort: func2()} and then appends the
+     * result to an array before sending it to the frontend.
+     *
+     */
+
     const { unitCode, year, period } = req.params;
     const unitAnalyticData = [];
 
@@ -25,6 +30,13 @@ const getUnitAnalytics = async (req, res) => {
 };
 
 const getGroupAnalytics = async (req, res) => {
+    /**
+     * Loops through a store of functions that fetch related group level data for a specific
+     * group formation strategy. E.g. {belbin: func1(), effort: func2()} and then appends the
+     * result to an array before sending it to the frontend.
+     *
+     */
+
     const { unitCode, year, period, groupNumber } = req.params;
     const groupAnalyticData = [];
 
