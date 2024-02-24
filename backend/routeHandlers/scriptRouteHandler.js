@@ -1,3 +1,9 @@
+/**
+ * This module should only contain functions that handle routes related
+ * to the custom script feature
+ *
+ * */
+
 const { spawn } = require("child_process");
 
 const { promiseBasedQuery, selectUnitOffKey } = require("../helpers/commonHelpers");

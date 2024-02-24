@@ -1,8 +1,8 @@
 /**
- * A module containing controller functions for routes related to
- * group data within a unit.
+ * This module should only contain functions that handle routes related
+ * to groups and group data
  *
- */
+ * */
 
 const db_connection = require("../config/databaseConfig");
 

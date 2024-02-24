@@ -1,8 +1,9 @@
 /**
- * A module containing controller functions for routes related
- * to student data.
+ * This module should only contain functions that handle routes related
+ * to students and student data
  *
  * */
+
 const db_connection = require("../config/databaseConfig");
 
 const { promiseBasedQuery, selectUnitOffKey } = require("../helpers/commonHelpers");

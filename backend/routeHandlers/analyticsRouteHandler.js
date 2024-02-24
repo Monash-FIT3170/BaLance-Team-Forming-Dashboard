@@ -1,8 +1,8 @@
 /**
- * A module containing controller functions for routes related to
- * group analytics data within a unit.
+ * This module should only contain functions that handle routes related
+ * to unit analytics
  *
- */
+ * */
 
 const {
     getUnitAnalyticsStrategies,
