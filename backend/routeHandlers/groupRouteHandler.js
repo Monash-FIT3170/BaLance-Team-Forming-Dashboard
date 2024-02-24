@@ -5,9 +5,7 @@
  * */
 
 const db_connection = require("../config/databaseConfig");
-
 const { promiseBasedQuery } = require("../helpers/commonHelpers");
-
 const { groupFormationStrategies } = require("../helpers/groupFormationHelpers");
 
 // get all groups from a unit
