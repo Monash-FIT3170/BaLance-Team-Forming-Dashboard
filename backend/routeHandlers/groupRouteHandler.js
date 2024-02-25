@@ -81,19 +81,19 @@ const getLabNumber = async (req, res) => {
     const { unitCode, year, period, groupNumber } = req.params;
     const lab_number = await promiseBasedQuery(
         "SELECT lab_number from unit_off_lab lab " +
-            "JOIN lab_group team ON lab.unit_off_lab_id = team.unit_off_lab_id " +
-            "JOIN unit_offering unit ON lab.unit_off_id = unit.unit_off_id " +
-            "where " +
-            "     unit.unit_code = ?" +
-            "     and unit.unit_off_year = ?" +
-            "     and unit.unit_off_period = ?" +
-            "     and team.group_number = ?;",
+        "JOIN lab_group team ON lab.unit_off_lab_id = team.unit_off_lab_id " +
+        "JOIN unit_offering unit ON lab.unit_off_id = unit.unit_off_id " +
+        "where " +
+        "     unit.unit_code = ?" +
+        "     and unit.unit_off_year = ?" +
+        "     and unit.unit_off_period = ?" +
+        "     and team.group_number = ?;",
         [unitCode, year, period, groupNumber]
     );
     res.status(200).send(lab_number);
 };
 
-// create all the groups (based ON csv)
+// create all the groups (based on csv)
 const createUnitGroups = async (req, res) => {
     const { unitCode, year, period } = req.params;
     let { groupSize, variance, strategy } = req.body;
@@ -108,31 +108,30 @@ const createUnitGroups = async (req, res) => {
         strategy = "random";
     }
 
-
     /* CHECK IF THE USER IS ALLOWED TO FORM GROUPS WITH THE SELECTED STRATEGY */
     if (strategy !== "random") {
         // check the database to make sure EVERY student has an associated test result for the SELECTed strategy
         const [{ missingValues }] = await promiseBasedQuery(
             "SELECT (count(*) > 0) AS `missingValues` " +
                 "FROM student s " +
-                "        INNER JOIN unit_enrolment e ON e.stud_unique_id=s.stud_unique_id " +
-                "        INNER JOIN unit_offering u ON u.unit_off_id=e.unit_off_id " +
+                "    INNER JOIN unit_enrolment e ON e.stud_unique_id=s.stud_unique_id " +
+                "    INNER JOIN unit_offering u ON u.unit_off_id=e.unit_off_id " +
                 "WHERE " +
-                "        u.unit_code=? " +
-                "        AND u.unit_off_year=? " +
-                "        AND u.unit_off_period=? " +
-                "        AND s.stud_unique_id NOT IN ( " +
-                "                SELECT s.stud_unique_id " +
-                "                FROM student s " +
-                "                        INNER JOIN unit_enrolment e ON e.stud_unique_id=s.stud_unique_id " +
-                "                        INNER JOIN unit_offering u ON u.unit_off_id=e.unit_off_id " +
-                "                        INNER JOIN personality_test_attempt t ON t.stud_unique_id=s.stud_unique_id " +
-                "                WHERE " +
-                "                        u.unit_code=? " +
-                "                        AND u.unit_off_year=? " +
-                "                        AND u.unit_off_period=? " +
-                "                        AND t.test_type=? " +
-                "        );",
+                "    u.unit_code=? " +
+                "    AND u.unit_off_year=? " +
+                "    AND u.unit_off_period=? " +
+                "    AND s.stud_unique_id NOT IN ( " +
+                "        SELECT s.stud_unique_id " +
+                "        FROM student s " +
+                "            INNER JOIN unit_enrolment e ON e.stud_unique_id=s.stud_unique_id " +
+                "            INNER JOIN unit_offering u ON u.unit_off_id=e.unit_off_id " +
+                "            INNER JOIN personality_test_attempt t ON t.stud_unique_id=s.stud_unique_id " +
+                "        WHERE " +
+                "            u.unit_code=? " +
+                "            AND u.unit_off_year=? " +
+                "            AND u.unit_off_period=? " +
+                "            AND t.test_type=? " +
+                "    );",
             [unitCode, year, period, unitCode, year, period, strategy]
         );
 
@@ -153,38 +152,38 @@ const createUnitGroups = async (req, res) => {
             /* DELETE ALL PREVIOUS GROUP ALLOCATIONS */
             await connection.execute(
                 "DELETE FROM group_allocation " +
-                    "WHERE group_alloc_id IN (" +
-                    "    SELECT subquery.group_alloc_id " +
-                    "    FROM (" +
-                    "        SELECT ga.group_alloc_id " +
-                    "        FROM lab_group g " +
-                    "        INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id " +
-                    "        INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " +
-                    "        INNER JOIN group_allocation ga ON ga.lab_group_id = g.lab_group_id " +
-                    "        WHERE u.unit_code = ? " +
-                    "            AND u.unit_off_year = ? " +
-                    "            AND u.unit_off_period = ? " +
-                    "    ) AS subquery" +
-                    ");",
+                "WHERE group_alloc_id IN (" +
+                "    SELECT subquery.group_alloc_id " +
+                "    FROM (" +
+                "        SELECT ga.group_alloc_id " +
+                "        FROM lab_group g " +
+                "            INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id " +
+                "            INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " +
+                "            INNER JOIN group_allocation ga ON ga.lab_group_id = g.lab_group_id " +
+                "        WHERE u.unit_code = ? " +
+                "            AND u.unit_off_year = ? " +
+                "            AND u.unit_off_period = ? " +
+                "    ) AS subquery" +
+                ");",
                 [unitCode, year, period]
             );
 
             /* DELETE ALL PREVIOUS GROUPS THEMSELVES */
             await connection.execute(
                 "DELETE FROM lab_group " +
-                    "WHERE lab_group_id IN ( " +
-                    "    SELECT subquery.lab_group_id " +
-                    "    FROM ( " +
-                    "        SELECT g.lab_group_id " +
-                    "        FROM lab_group g " +
-                    "        INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id " +
-                    "        INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " +
-                    "        WHERE " +
-                    "            u.unit_code = ? " +
-                    "            AND u.unit_off_year = ? " +
-                    "            AND u.unit_off_period = ? " +
-                    "    ) AS subquery" +
-                    ");",
+                "WHERE lab_group_id IN ( " +
+                "    SELECT subquery.lab_group_id " +
+                "    FROM ( " +
+                "        SELECT g.lab_group_id " +
+                "        FROM lab_group g " +
+                "        INNER JOIN unit_off_lab l ON g.unit_off_lab_id = l.unit_off_lab_id " +
+                "        INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " +
+                "        WHERE " +
+                "            u.unit_code = ? " +
+                "            AND u.unit_off_year = ? " +
+                "            AND u.unit_off_period = ? " +
+                "    ) AS subquery" +
+                ");",
                 [unitCode, year, period]
             );
 
@@ -221,33 +220,33 @@ const moveStudent = async (req, res) => {
     // get the id of the new group we are changing to as well as the id of the lab it is in
     const [newGroupData] = await promiseBasedQuery(
         "SELECT g.lab_group_id, l.unit_off_lab_id " +
-            "FROM lab_group g " +
-            "     INNER JOIN unit_off_lab l ON l.unit_off_lab_id = g.unit_off_lab_id " +
-            "     INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " +
-            "LEFT JOIN group_allocation ga ON g.lab_group_id = ga.lab_group_id " +
-            "WHERE g.group_number=? " +
-            "     AND u.unit_code=? " +
-            "     AND u.unit_off_year=? " +
-            "     AND u.unit_off_period=?;",
+        "FROM lab_group g " +
+        "     INNER JOIN unit_off_lab l ON l.unit_off_lab_id = g.unit_off_lab_id " +
+        "     INNER JOIN unit_offering u ON u.unit_off_id = l.unit_off_id " +
+        "LEFT JOIN group_allocation ga ON g.lab_group_id = ga.lab_group_id " +
+        "WHERE g.group_number=? " +
+        "     AND u.unit_code=? " +
+        "     AND u.unit_off_year=? " +
+        "     AND u.unit_off_period=?;",
         [newGroup, unitCode, year, period]
     );
 
     const [currentGroupData] = await promiseBasedQuery(
         "SELECT g_alloc, group_id, s.stud_unique_id, uol.unit_off_lab_id " +
-            "FROM (SELECT s.stud_unique_id as student_id, ga.group_alloc_id as g_alloc, lg.lab_group_id as group_id " +
-            "FROM student s " +
-            "INNER JOIN group_allocation ga ON s.stud_unique_id = ga.stud_unique_id " +
-            "INNER JOIN lab_group lg ON lg.lab_group_id = ga.lab_group_id " +
-            "WHERE s.student_id=?) grp " +
-            "RIGHT JOIN student s ON grp.student_id = s.stud_unique_id " +
-            "INNER JOIN student_lab_allocation sla ON sla.stud_unique_id = s.stud_unique_id " +
-            "INNER JOIN unit_off_lab uol ON uol.unit_off_lab_id = sla.unit_off_lab_id " +
-            "INNER JOIN unit_enrolment ue ON s.stud_unique_id = ue.stud_unique_id " +
-            "INNER JOIN unit_offering u ON u.unit_off_id = ue.unit_off_id " +
-            "WHERE s.student_id=? " +
-            "AND u.unit_code=? " +
-            "AND u.unit_off_year=? " +
-            "AND u.unit_off_period=?;",
+        "FROM (SELECT s.stud_unique_id as student_id, ga.group_alloc_id as g_alloc, lg.lab_group_id as group_id " +
+        "FROM student s " +
+        "INNER JOIN group_allocation ga ON s.stud_unique_id = ga.stud_unique_id " +
+        "INNER JOIN lab_group lg ON lg.lab_group_id = ga.lab_group_id " +
+        "WHERE s.student_id=?) grp " +
+        "RIGHT JOIN student s ON grp.student_id = s.stud_unique_id " +
+        "INNER JOIN student_lab_allocation sla ON sla.stud_unique_id = s.stud_unique_id " +
+        "INNER JOIN unit_off_lab uol ON uol.unit_off_lab_id = sla.unit_off_lab_id " +
+        "INNER JOIN unit_enrolment ue ON s.stud_unique_id = ue.stud_unique_id " +
+        "INNER JOIN unit_offering u ON u.unit_off_id = ue.unit_off_id " +
+        "WHERE s.student_id=? " +
+        "AND u.unit_code=? " +
+        "AND u.unit_off_year=? " +
+        "AND u.unit_off_period=?;",
         [studentId, studentId, unitCode, year, period]
     );
 
@@ -259,7 +258,6 @@ const moveStudent = async (req, res) => {
     // console.log(`old lab id is ${currentGroupData["unit_off_lab_id"]} and new one is ${newGroupData["unit_off_lab_id"]}`)
     // console.log(`old lab group is ${currentGroupData["group_alloc_id"]} and new one is ${newGroupData["lab_group_id"]}`)
     // fixme, confirm that the student in the group we are updating, is
-
 
     if (hasAGroup === "true") {
         await promiseBasedQuery("UPDATE group_allocation " + "     SET lab_group_id=? " + "     WHERE group_alloc_id=?;", [
@@ -286,7 +284,6 @@ const moveStudent = async (req, res) => {
 
     res.status(200).send({ wip: "test" });
 };
-
 
 module.exports = {
     getAllGroups,
