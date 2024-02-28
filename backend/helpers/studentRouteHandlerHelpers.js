@@ -1,9 +1,3 @@
-/**
- * A module containing helper functions specifically used to implement
- * studentRouteHandler.js controller functions
- *
- * */
-
 const { promiseBasedQuery } = require("./commonHelpers");
 
 const insertStudents = async (studentInsertData) => {

@@ -1,9 +1,3 @@
-/**
- * A module containing helper functions specifically used to implement
- * groupRouteHandler.js route handler functions related to group formation
- *
- * */
-
 const { promiseBasedQuery, selectUnitOffKey } = require("./commonHelpers");
 
 const shuffle = (array) => {
