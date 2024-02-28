@@ -34,8 +34,8 @@ app.use(async (req, res, next) => {
     results = await db_connection.promise().query(`SELECT * FROM staff WHERE email_address='${req.user.email}';`);
     if (results[0].length === 0){
         await db_connection.promise().query(
-            `INSERT INTO staff (staff_code, preferred_name, last_name, email_address)
-            VALUES ('${req.user.nickname}', '${req.user.nickname}', '${req.user.nickname}', '${req.user.email}');`
+            `INSERT INTO staff (preferred_name, last_name, email_address)
+            VALUES ('${req.user.nickname}', '${req.user.nickname}', '${req.user.email}');`
         )
     }
     next();

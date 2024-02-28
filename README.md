@@ -61,6 +61,42 @@ against
 
 ![Basic runthrough](docs/videos/basic-runthrough.gif)
 
+## CSV data format
+
+The following examples outline the expected structure and content of csv files. Note extra columns may be present 
+but will be ignored and only what is shown will be used by the application.
+
+### Student data
+
+|studentId|labCode|lastName|preferredName|email|wam|gender|
+|--|--|--|--|--|--|-|
+|12345678|01_DualMode|Jim|White|jwhi0001@student.monash.edu|93|M|
+|28462818|02_OnCampus|Jemma|Black|jbla0001@student.monash.edu|93|F|
+
+* studentId must be an 8-digit number
+* labCode must be prefixed by the number and '_' minimally
+* gender must be a single char
+
+### Belbin data
+
+Belbin type must be one of people, thinking or action
+
+|studentId|belbinType|
+|--|--|
+|12345678|people  |
+|28462818|thinking|
+
+
+### Effort data
+
+hourCommitment is the estimated number of hours that a student expects to commit in a week
+
+|studentId|hourCommitment|avgAssignmentMark|
+|--|--|--|
+|12345678|13|73|
+|28462818|18|84|
+
+
 # Development guidelines
 
 Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup under docs/ for further details on how to add group formation strategies

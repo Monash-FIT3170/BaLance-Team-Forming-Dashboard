@@ -1,3 +1,24 @@
+## Environment variables
+
+Both the frontend and backend require .env files within them containing the following contents:
+
+In /backend/
+```.dotenv
+PORT=8080
+DB_HOST="localhost"
+DB_USER="root"
+DB_PASSWORD="your password here"
+DB="student_group_db"
+AUTH="DEV"
+``` 
+
+In /frontend/
+```.dotenv
+REACT_APP_AUTH="DEV"
+REACT_APP_AUTH_DOMAIN=""
+REACT_APP_AUTH_CLIENT_ID=""
+```
+
 ## Extending group formation strategies
 
 In order to extend the available array of group formation strategies, the following additions must be made across the app:
