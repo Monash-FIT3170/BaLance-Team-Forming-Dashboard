@@ -12,13 +12,11 @@ formation strategies for teaching associates to select from.
 
 1. [Features](#features)
 2. [Basic Usage](#basic-usage)
-    - [Dependencies](#dependencies)
     - [Running the application](#running-the-application)
     - [Walkthrough](#walkthrough)
-3. [Authentication](#authentication)
-4. [Development guidelines](#development-guidelines)
-5. [Contributors](#contributors)
-6. [License](#license)
+3. [Development guidelines](#development-guidelines)
+4. [Contributors](#contributors)
+5. [License](#license)
 
 # Features
 
@@ -27,6 +25,8 @@ formation strategies for teaching associates to select from.
 * Export group allocation data in CSV format for use with your learning management system
 
 # Basic Usage
+
+## Running the application
 
 Install and setup
 
@@ -58,8 +58,6 @@ against
 4. Select your group formation strategy and form groups
 
 5. Optionally export group information as a csv to upload to your learning management system
-
-[//]: # (TODO, new gif showcasing new application view rather than the old one)
 
 ![Basic runthrough](docs/videos/basic-runthrough.gif)
 
