@@ -17,14 +17,8 @@ formation strategies for teaching associates to select from.
     - [Walkthrough](#walkthrough)
 3. [Authentication](#authentication)
 4. [Development guidelines](#development-guidelines)
-    - [Extending group formation strategies](#extending-group-formation-strategies)
-    - [Known bugs](#known-bugs)
-    - [Pull Requests](#pull-requests)
-    - [Branching Strategy](#branching-strategy)
-    - [Versioning](#versioning)
-5. [Deploying the Application](#deploying-the-application)
-7. [Contributors](#contributors)
-8. [License](#license)
+5. [Contributors](#contributors)
+6. [License](#license)
 
 # Features
 
@@ -33,16 +27,6 @@ formation strategies for teaching associates to select from.
 * Export group allocation data in CSV format for use with your learning management system
 
 # Basic Usage
-
-## Running the application
-
-### Dependencies
-
-The project uses the following versions of node and MYSQL respectively
-
-[Node v18.16.0 & npm v9.6.7](https://nodejs.org/en/download/package-manager)
-
-[MYSQL server v8.0.33](https://dev.mysql.com/downloads/mysql/)
 
 Install and setup
 
