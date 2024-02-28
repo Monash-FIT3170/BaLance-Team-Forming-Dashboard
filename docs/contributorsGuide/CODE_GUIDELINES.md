@@ -58,4 +58,4 @@ Readable code is the main thing that matters. BUT DO:
 
 ## Backend guidelines
 
-[//]: # (TODO)
+With regard to import structure & code structure, refer to the frontend guidelines outlined above
