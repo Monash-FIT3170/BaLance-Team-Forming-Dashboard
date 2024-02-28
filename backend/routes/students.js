@@ -1,9 +1,3 @@
-/**
- * A module containing route handlers for student related
- * API calls
- *
- */
-
 const express = require("express");
 const router = express.Router();
 const {

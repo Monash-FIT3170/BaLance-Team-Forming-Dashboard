@@ -1,8 +1,3 @@
-/**
- * A module containing routes for analytics related API calls
- *
- */
-
 const express = require("express");
 const {
     getUnitAnalytics,

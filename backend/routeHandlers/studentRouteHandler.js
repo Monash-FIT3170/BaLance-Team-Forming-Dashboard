@@ -25,35 +25,33 @@ const getAllStudents = async (req, res) => {
         period,
     } = req.params;
 
-    const studentsData = await promiseBasedQuery( // FIXME: can this be simplified?
-        "SELECT stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val, group_number, lab_number " +
-        "FROM student stud " +
-        "INNER JOIN unit_enrolment ue ON ue.stud_unique_id = stud.stud_unique_id " +
-        "INNER JOIN unit_offering unit ON ue.unit_off_id = unit.unit_off_id " +
-        "LEFT JOIN ( " +
-        "    SELECT s1.student_id AS student_id, lab_number, group_number " +
-        "    FROM ( " +
-        "        SELECT s.student_id AS student_id, lab_number " +
-        "        FROM student s " +
-        "        INNER JOIN unit_enrolment ue ON ue.stud_unique_id = s.stud_unique_id " +
-        "        INNER JOIN unit_offering uo ON uo.unit_off_id = ue.unit_off_id " +
-        "        INNER JOIN student_lab_allocation sla ON sla.stud_unique_id = s.stud_unique_id " +
-        "        INNER JOIN unit_off_lab uol ON uol.unit_off_lab_id = sla.unit_off_lab_id " +
-        "        WHERE uo.unit_code=? AND uo.unit_off_year=? AND uo.unit_off_period=? " +
-        "    ) s1 " +
-        "    LEFT JOIN ( " +
-        "        SELECT stud.student_id AS student_id, group_number " +
-        "        FROM student stud " +
-        "        INNER JOIN group_allocation ga ON stud.stud_unique_id = ga.stud_unique_id " +
-        "        INNER JOIN lab_group lg ON ga.lab_group_id = lg.lab_group_id " +
-        "        INNER JOIN unit_off_lab uol ON uol.unit_off_lab_id = lg.unit_off_lab_id " +
-        "        INNER JOIN unit_offering uo ON uo.unit_off_id = uol.unit_off_id " +
-        "        WHERE uo.unit_code=? AND uo.unit_off_year=? AND uo.unit_off_period=? " +
-        "    ) s2 ON s1.student_id = s2.student_id " +
-        ") grp ON stud.student_id = grp.student_id " +
-        "WHERE unit.unit_code=? AND unit.unit_off_year=? AND unit.unit_off_period=? " +
+    const studentsData = await promiseBasedQuery(
+        "SELECT all_studs.student_id, all_studs.preferred_name, all_studs.last_name, all_studs.email_address, all_studs.wam_val, group_allocated_studs.group_number, all_studs.lab_number " +
+        "FROM ( " +
+        "   SELECT stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val, l_group.group_number, lab.lab_number " +
+        "   FROM student stud " +
+        "       INNER JOIN group_allocation g_alloc ON stud.stud_unique_id=g_alloc.stud_unique_id " +
+        "       INNER JOIN lab_group l_group ON g_alloc.lab_group_id=l_group.lab_group_id " +
+        "       INNER JOIN unit_off_lab lab ON lab.unit_off_lab_id=l_group.unit_off_lab_id " +
+        "       INNER JOIN unit_offering unit ON unit.unit_off_id=lab.unit_off_id " +
+        "   WHERE " +
+        "       unit.unit_code=? " +
+        "       AND unit.unit_off_year=? " +
+        "       AND unit.unit_off_period=? " +
+        ") AS group_allocated_studs " +
+        "RIGHT JOIN ( " +
+        "   SELECT stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val, lab.lab_number " +
+        "   FROM student stud " +
+        "       INNER JOIN student_lab_allocation l_alloc ON l_alloc.stud_unique_id=stud.stud_unique_id " +
+        "       INNER JOIN unit_off_lab lab ON lab.unit_off_lab_id=l_alloc.unit_off_lab_id " +
+        "       INNER JOIN unit_offering unit ON unit.unit_off_id=lab.unit_off_id " +
+        "   WHERE " +
+        "       unit.unit_code=? " +
+        "       AND unit.unit_off_year=? " +
+        "       AND unit.unit_off_period=? " +
+        ") AS all_studs ON group_allocated_studs.email_address=all_studs.email_address " +
         "ORDER BY group_number;",
-        [unitCode, year, period, unitCode, year, period, unitCode, year, period]
+        [unitCode, year, period, unitCode, year, period]
     );
 
     res.status(200).json(studentsData);

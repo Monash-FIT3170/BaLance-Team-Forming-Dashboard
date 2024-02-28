@@ -1,6 +1,6 @@
 /**
  * This module should only contain functions that handle routes related
- * to fetching unit analytics data
+ * to fetching unit analytics data for the analytics display
  *
  * */
 

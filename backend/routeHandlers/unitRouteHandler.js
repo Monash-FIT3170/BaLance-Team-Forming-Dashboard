@@ -63,7 +63,7 @@ const deleteUnit = async function (req, res) {
      * and removing associated rows in the order:
      * group allocs -> groups -> lab allocs -> labs -> enrolments -> test results -> test attempts -> unit
      *
-     * TODO use db transactions, temporarily reverted to not using them
+     * TODO temporarily reverted from db transactions to sequence of queries
      */
     const {
         unitCode,
