@@ -14,6 +14,7 @@ formation strategies for teaching associates to select from.
 2. [Basic Usage](#basic-usage)
     - [Running the application](#running-the-application)
     - [Walkthrough](#walkthrough)
+    - [CSV data](#csv-data-format)
 3. [Development guidelines](#development-guidelines)
 4. [Contributors](#contributors)
 5. [License](#license)
