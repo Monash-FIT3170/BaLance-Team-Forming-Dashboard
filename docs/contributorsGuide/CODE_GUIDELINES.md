@@ -44,8 +44,8 @@ import {  // again, importing 4 or more items should be done with 1 item per lin
 
 Readable code is the main thing that matters. BUT DO:
 
-* Use 4 space indentations
-* Use arrow functions for creating react components and for defining functions in general for the sake of consistency.
+* Use 4 space indentations across all languages
+* Use arrow functions for creating react components and for defining JS functions in general for the sake of consistency
 
 ## Frontend guidelines
 
@@ -58,4 +58,56 @@ Readable code is the main thing that matters. BUT DO:
 
 ## Backend guidelines
 
-With regard to import structure & code structure, refer to the frontend guidelines outlined above
+### Extracting MySQL data with bracket syntax
+
+Where relevant, it's preferred to use destructure syntax to extract data from arrays over bracket syntax.
+For example, the following MySQL query returns a single row and column of data in the following structure `[{key: value}]`
+
+If we want to assign value to a variable, use the following method:
+
+```javascript
+    const [{ numEnrolledStudents }] = await promiseBasedQuery(
+        "SELECT count(*) AS `numEnrolledStudents` FROM student s " +
+        "   INNER JOIN unit_enrolment e ON e.stud_unique_id=s.stud_unique_id " +
+        "   INNER JOIN unit_offering u ON u.unit_off_id=e.unit_off_id " +
+        "WHERE" +
+        "   u.unit_code=? " +
+        "   AND u.unit_off_year=? " +
+        "   AND u.unit_off_period=?;",
+        [unitCode, year, period]
+    );
+```
+
+Rather than:
+
+```javascript
+    const queryResult = await promiseBasedQuery(
+        "SELECT count(*) AS `numEnrolledStudents` FROM student s " +
+        "   INNER JOIN unit_enrolment e ON e.stud_unique_id=s.stud_unique_id " +
+        "   INNER JOIN unit_offering u ON u.unit_off_id=e.unit_off_id " +
+        "WHERE" +
+        "   u.unit_code=? " +
+        "   AND u.unit_off_year=? " +
+        "   AND u.unit_off_period=?;",
+        [unitCode, year, period]
+    );
+
+    numEnrolledStudents = queryResult[0]['numEnrolledStudents'];
+```
+
+## SQL guidelines
+
+Improve query readability by:
+* Use of caps lock for keywords rather than lower case e.g. `SELECT * FROM table1;' over `select * from table1;`
+* Indent segments of the query such as INNER JOINs and WHERE clauses from SELECT and FROM such as shown in the example below
+
+```mysql
+SELECT * 
+FROM table1
+    INNER JOIN table2 ON table1.col1 = table2.col2
+    INNER JOIN table3 ON table3.col1 = table2.col1
+WHERE
+    table1.col3=?
+    AND table2.col4
+ORDER BY table1.col5;
+```

@@ -8,7 +8,6 @@ DROP TRIGGER IF EXISTS enrolment_delete_trigger;
 
 -- UNIT_OFFERING ENROLMENT COUNT
 
-
 DELIMITER $$
 CREATE 
 	TRIGGER enrolment_insert_trigger 
