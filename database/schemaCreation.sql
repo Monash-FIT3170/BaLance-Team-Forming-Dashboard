@@ -26,8 +26,7 @@ CREATE TABLE IF NOT EXISTS unit_offering (
 ALTER TABLE unit_offering AUTO_INCREMENT=100000000;
 
 CREATE TABLE IF NOT EXISTS staff (
-    staff_unique_id INT AUTO_INCREMENT COMMENT 'unique identifier used by database for staff',
-    staff_code VARCHAR(50) COMMENT 'staff code used internally by an institute',
+    staff_unique_id INT AUTO_INCREMENT COMMENT 'unique identifier used by database for staff, distinct from monash staff id',
     preferred_name VARCHAR(50),
     last_name VARCHAR(50),
     email_address VARCHAR(256) CHECK (email_address LIKE '%@%'),
@@ -42,7 +41,6 @@ CREATE TABLE IF NOT EXISTS student (
     preferred_name VARCHAR(50),
     last_name VARCHAR(50),
     email_address VARCHAR(256) CHECK (email_address LIKE '%@%'),
-    wam_display VARCHAR(50), -- todo is this necessary? if centralised, these will change between student uploads
     wam_val INT,
     gender ENUM('M', 'F'),
     CONSTRAINT pk_student PRIMARY KEY (stud_unique_id),
@@ -72,7 +70,6 @@ CREATE TABLE IF NOT EXISTS unit_enrolment ( -- connection between student and un
     enrolment_id INT AUTO_INCREMENT COMMENT 'unique identifier to refer to a students enrolment to a unit offering',
     stud_unique_id INT,
     unit_off_id INT COMMENT 'unique identifier for a unit offering',
-    enrolment_status ENUM('active', 'inactive'), -- todo ask Rio if we still store and maintain this
     CONSTRAINT pk_unit_enrolment PRIMARY KEY (enrolment_id),
     CONSTRAINT ck_unit_enrolment UNIQUE (stud_unique_id, unit_off_id)
 );
