@@ -226,30 +226,33 @@ const deleteUnit = async function (req, res) {
 };
 
 const verifyAvailableGroupFormationStrats = async (req, res) => {
-  /**
-   * Checks to see which group formation strategy can be used by the user
-   * to form groups, based on what student data has been uploaded to the DB
-   *
-   */
+    /**
+    * Checks to see which group formation strategy can be used by the user
+    * to form groups, based on what student data has been uploaded to the DB
+    *
+    */
 
-  const { unitCode, year, period } = req.params;
+    const { unitCode, year, period } = req.params;
 
-  const [strategyAvailability] = await promiseBasedQuery(
-      "SELECT " +
-      "    COUNT(ue.enrolment_id) = COUNT(b.personality_test_attempt) AS belbin, " +
-      "    COUNT(ue.enrolment_id) = COUNT(e.personality_test_attempt) AS effort " +
-      "FROM unit_offering u " +
-      "    INNER JOIN unit_enrolment ue ON ue.unit_off_id=u.unit_off_id " +
-      "    LEFT JOIN personality_test_attempt ta ON ta.unit_off_id = u.unit_off_id " +
-      "    LEFT JOIN belbin_result b ON b.personality_test_attempt = ta.test_attempt_id " +
-      "    LEFT JOIN effort_result e ON e.personality_test_attempt = ta.test_attempt_id " +
-      "WHERE u.unit_code=? " +
-      "    AND u.unit_off_year=? " +
-      "    AND u.unit_off_period=?;",
-      [unitCode, year, period]
-  )
+    // FIXME no longer registering existing strats
+    const [strategyAvailability] = await promiseBasedQuery(
+        "SELECT " +
+        "    COUNT(ue.enrolment_id) = COUNT(b.personality_test_attempt) AS belbin, " +
+        "    COUNT(ue.enrolment_id) = COUNT(e.personality_test_attempt) AS effort " +
+        "FROM unit_offering u " +
+        "    INNER JOIN unit_enrolment ue ON ue.unit_off_id=u.unit_off_id " +
+        "    LEFT JOIN personality_test_attempt ta ON ta.unit_off_id = u.unit_off_id " +
+        "    LEFT JOIN belbin_result b ON b.personality_test_attempt = ta.test_attempt_id " +
+        "    LEFT JOIN effort_result e ON e.personality_test_attempt = ta.test_attempt_id " +
+        "WHERE u.unit_code=? " +
+        "    AND u.unit_off_year=? " +
+        "    AND u.unit_off_period=?;",
+        [unitCode, year, period]
+    )
 
-  res.status(200).json(strategyAvailability);
+    console.log(strategyAvailability);
+
+    res.status(200).json(strategyAvailability);
 }
 
 module.exports = {
