@@ -234,7 +234,8 @@ const verifyAvailableGroupFormationStrats = async (req, res) => {
 
     const { unitCode, year, period } = req.params;
 
-    // FIXME no longer registering existing strats
+    /* FIXME: works when we have only one or the other type but not both
+    * */
     const [strategyAvailability] = await promiseBasedQuery(
         "SELECT " +
         "    COUNT(ue.enrolment_id) = COUNT(b.personality_test_attempt) AS belbin, " +

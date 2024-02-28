@@ -1,4 +1,4 @@
-![Balance Logo](/docs/images/balance-logo.png)
+<img src="/docs/images/balance-logo.png" width="200"/>
 
 # BaLance - Team Forming Dashboard
 
