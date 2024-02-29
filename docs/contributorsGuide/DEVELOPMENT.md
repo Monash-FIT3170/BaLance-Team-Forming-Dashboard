@@ -25,22 +25,23 @@ In order to extend the available array of group formation strategies, the follow
 
 Implement a group formation strategy under backend/helpers/groupFormationHelpers.js and append it to the groupFormationStrategies object
 
-![Group formation strategies](/docs/images/extending_strats_forming_groups.png)
+<img width="500" src="/docs/images/extending_strats_forming_groups.png"/>
+
 
 Implement functions for fetching unit and group analytics using data for the new strategy and append them to the
 getUnitAnalyticStrategies and getGroupAnalyticStrategies functions respectively.
 
-![Group analytic strategies](/docs/images/extending_strats_analytics.png)
+<img width="500" src="/docs/images/extending_strats_analytics.png"/>
 
 - **!NOTE:** that the keys for the strategy you are adding must match across the 3 aforementioned objects as shown in the images above
 - **!NOTE:** that the following structure must be adhered to when creating the API response for analytics
 
-![Example analytics data](/docs/images/sample_analytics_data.png)
+<img width="500" src="/docs/images/sample_analytics_data.png"/>
 
 Add options to the dropdowns across Import.jsx and CreateGroups.jsx in frontend/src/pages, ensuring the option values match
 the keys for the objects that were added to in the backend as described above
 
-![Frontend changes](/docs/images/extending_strats_frontend_dropdowns.png)
+<img width="500" src="/docs/images/extending_strats_frontend_dropdowns.png"/>
 
 ## Authentication
 
