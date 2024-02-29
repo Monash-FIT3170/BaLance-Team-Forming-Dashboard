@@ -234,20 +234,19 @@ const verifyAvailableGroupFormationStrats = async (req, res) => {
 
     const { unitCode, year, period } = req.params;
 
-    /* FIXME: works when we have only one or the other type but not both
-    * */
     const [strategyAvailability] = await promiseBasedQuery(
         "SELECT " +
-        "    COUNT(ue.enrolment_id) = COUNT(b.personality_test_attempt) AS belbin, " +
-        "    COUNT(ue.enrolment_id) = COUNT(e.personality_test_attempt) AS effort " +
+        "    COUNT(CASE WHEN ta.test_type = 'effort' THEN 1 END) = COUNT(DISTINCT s.stud_unique_id) AS effort, " +
+        "    COUNT(CASE WHEN ta.test_type = 'belbin' THEN 1 END) = COUNT(DISTINCT s.stud_unique_id) AS belbin " +
         "FROM unit_offering u " +
+        "    INNER JOIN personality_test_attempt ta ON ta.unit_off_id = u.unit_off_id " +
         "    INNER JOIN unit_enrolment ue ON ue.unit_off_id=u.unit_off_id " +
-        "    LEFT JOIN personality_test_attempt ta ON ta.unit_off_id = u.unit_off_id " +
-        "    LEFT JOIN belbin_result b ON b.personality_test_attempt = ta.test_attempt_id " +
-        "    LEFT JOIN effort_result e ON e.personality_test_attempt = ta.test_attempt_id " +
+        "    INNER JOIN student s ON s.stud_unique_id=ue.stud_unique_id " +
         "WHERE u.unit_code=? " +
         "    AND u.unit_off_year=? " +
-        "    AND u.unit_off_period=?;",
+        "    AND u.unit_off_period=? " +
+        "    AND ta.stud_unique_id=s.stud_unique_id " +
+        "GROUP BY u.unit_off_id;",
         [unitCode, year, period]
     )
 
