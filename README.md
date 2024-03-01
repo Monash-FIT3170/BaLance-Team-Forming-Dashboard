@@ -33,7 +33,7 @@ Install and setup
 
 ```shell
 git clone https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard.git;
-cd backend; npm i; cd ../frontend; npm i cd ../database;
+cd BaLance-Team-Forming-Dashboard/backend; npm i; cd ../frontend; npm i cd ../database;
 mysql -h host_address -u user_name -p pass_word < schemaCreation.sql;
 ```
 
