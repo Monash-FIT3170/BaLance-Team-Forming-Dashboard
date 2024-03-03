@@ -98,7 +98,7 @@ Rather than:
 ## SQL guidelines
 
 Improve query readability by:
-* Use of caps lock for keywords rather than lower case e.g. `SELECT * FROM table1;' over `select * from table1;`
+* Use of caps lock for keywords rather than lower case e.g. `SELECT * FROM table1;` over `select * from table1;`
 * Indent segments of the query such as INNER JOINs and WHERE clauses from SELECT and FROM such as shown in the example below
 
 ```mysql
@@ -108,6 +108,6 @@ FROM table1
     INNER JOIN table3 ON table3.col1 = table2.col1
 WHERE
     table1.col3=?
-    AND table2.col4
+    AND table2.col4=?
 ORDER BY table1.col5;
 ```
