@@ -102,6 +102,10 @@ hourCommitment is the estimated number of hours that a student expects to commit
 
 Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup under docs/ for further details on how to add group formation strategies
 
+# Contributors [2024]
+
+[Rishi Bidani](https://github.com/Rishi-Bidani)
+
 # Contributors
 
 [Abigail Lithwick](https://github.com/abigail-rose)
