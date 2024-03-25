@@ -112,6 +112,8 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 
 [Zhijun Chen](https://github.com/ZCStephen)
 
+[Jeffrey Yan](hhttps://github.com/jeffreyyan4)
+
 # Contributors
 
 [Abigail Lithwick](https://github.com/abigail-rose)
