@@ -2,7 +2,7 @@
 
 # BaLance - Team Forming Dashboard
 
-BaLance is a tool for teaching associates to split student cohorts into well Balanced teams that gel well together 
+BaLance is a tool for teaching associates to split student cohorts into well Balanced teams that gel well together
 and work productively.
 
 It makes use of student personality data to determine the optimal team formations and provides a variety of team
@@ -12,18 +12,18 @@ formation strategies for teaching associates to select from.
 
 1. [Features](#features)
 2. [Basic Usage](#basic-usage)
-    - [Running the application](#running-the-application)
-    - [Walkthrough](#walkthrough)
-    - [CSV data](#csv-data-format)
+   - [Running the application](#running-the-application)
+   - [Walkthrough](#walkthrough)
+   - [CSV data](#csv-data-format)
 3. [Development guidelines](#development-guidelines)
 4. [Contributors](#contributors)
 5. [License](#license)
 
 # Features
 
-* Forms groups between students using one of multiple available formation strategies
-* View group by group and cohort wide analytics on personality distribution
-* Export group allocation data in CSV format for use with your learning management system
+- Forms groups between students using one of multiple available formation strategies
+- View group by group and cohort wide analytics on personality distribution
+- Export group allocation data in CSV format for use with your learning management system
 
 # Basic Usage
 
@@ -54,7 +54,7 @@ run from your local device as an existing image has not yet been implemented.
 2. Enter the unit and upload your csv list of students with their student details
 
 3. Upload student personality data in accordance with the strategy you would like to form teams
-against
+   against
 
 4. Select your group formation strategy and form groups
 
@@ -64,39 +64,37 @@ against
 
 ## CSV data format
 
-The following examples outline the expected structure and content of csv files. Note extra columns may be present 
+The following examples outline the expected structure and content of csv files. Note extra columns may be present
 but will be ignored and only what is shown will be used by the application.
 
 ### Student data
 
-|studentId|labCode|lastName|preferredName|email|wam|gender|
-|--|--|--|--|--|--|-|
-|12345678|01_DualMode|Jim|White|jwhi0001@student.monash.edu|93|M|
-|28462818|02_OnCampus|Jemma|Black|jbla0001@student.monash.edu|93|F|
+| studentId | labCode     | lastName | preferredName | email                       | wam | gender |
+| --------- | ----------- | -------- | ------------- | --------------------------- | --- | ------ |
+| 12345678  | 01_DualMode | Jim      | White         | jwhi0001@student.monash.edu | 93  | M      |
+| 28462818  | 02_OnCampus | Jemma    | Black         | jbla0001@student.monash.edu | 93  | F      |
 
-* studentId must be an 8-digit number
-* labCode must be prefixed by the number and '_' minimally
-* gender must be a single char
+- studentId must be an 8-digit number
+- labCode must be prefixed by the number and '\_' minimally
+- gender must be a single char
 
 ### Belbin data
 
 Belbin type must be one of people, thinking or action
 
-|studentId|belbinType|
-|--|--|
-|12345678|people  |
-|28462818|thinking|
-
+| studentId | belbinType |
+| --------- | ---------- |
+| 12345678  | people     |
+| 28462818  | thinking   |
 
 ### Effort data
 
 hourCommitment is the estimated number of hours that a student expects to commit in a week
 
-|studentId|hourCommitment|avgAssignmentMark|
-|--|--|--|
-|12345678|13|73|
-|28462818|18|84|
-
+| studentId | hourCommitment | avgAssignmentMark |
+| --------- | -------------- | ----------------- |
+| 12345678  | 13             | 73                |
+| 28462818  | 18             | 84                |
 
 # Development guidelines
 
@@ -108,13 +106,9 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 
 [Domico Carlo Wibowo](https://github.com/SetPizzaOnBroil30min)
 
-[Daniel Derek Michael Cornelius](https://github.com/dcor0010)
-
 [Zhijun Chen](https://github.com/ZCStephen)
 
 [Jeffrey Yan](hhttps://github.com/jeffreyyan4)
-
-[Trevor Yao](https://github.com/WofWaf)
 
 # Contributors
 
@@ -144,8 +138,6 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 
 [Nethara Athukorala](https://github.com/nath0002)
 
-
 # License
 
 The license we use for this project is the [GPL v3](https://www.gnu.org/licenses/quick-guide-gplv3.html)
-
