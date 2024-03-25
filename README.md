@@ -50,14 +50,10 @@ run from your local device as an existing image has not yet been implemented.
 ## Walkthrough
 
 1. To use the team forming dashboard, create a new offering for the unit you are currently running
-
 2. Enter the unit and upload your csv list of students with their student details
-
 3. Upload student personality data in accordance with the strategy you would like to form teams
    against
-
 4. Select your group formation strategy and form groups
-
 5. Optionally export group information as a csv to upload to your learning management system
 
 ![Basic runthrough](docs/videos/basic-runthrough.gif)
@@ -128,7 +124,9 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 
 [Aung Khant Kyaw](https://github.com/Aung33270333)
 
-# Contributors 
+[Mohammad Zawari](https://github.com/me-za)
+
+# Contributors
 
 [Abigail Lithwick](https://github.com/abigail-rose)
 
@@ -159,4 +157,3 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 # License
 
 The license we use for this project is the [GPL v3](https://www.gnu.org/licenses/quick-guide-gplv3.html)
-
