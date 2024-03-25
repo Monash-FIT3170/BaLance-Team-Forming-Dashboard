@@ -110,7 +110,7 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 
 [Jeffrey Yan](hhttps://github.com/jeffreyyan4)
 
-[Daniel Erik Hong](https://github.com/dhon0010)
+[Lachlan Williams](https://github.com/LachlanWilliams)
 
 # Contributors
 
