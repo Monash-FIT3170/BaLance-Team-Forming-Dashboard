@@ -110,6 +110,8 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 
 [Daniel Derek Michael Cornelius](https://github.com/dcor0010)
 
+[Zhijun Chen](https://github.com/ZCStephen)
+
 # Contributors
 
 [Abigail Lithwick](https://github.com/abigail-rose)
