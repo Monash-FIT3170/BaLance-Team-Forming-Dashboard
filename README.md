@@ -108,6 +108,8 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 
 [Domico Carlo Wibowo](https://github.com/SetPizzaOnBroil30min)
 
+[Jeffrey Yan](hhttps://github.com/jeffreyyan4)
+
 # Contributors
 
 [Abigail Lithwick](https://github.com/abigail-rose)
