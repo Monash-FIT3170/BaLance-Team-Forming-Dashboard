@@ -112,6 +112,8 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 
 [Lachlan Williams](https://github.com/LachlanWilliams)
 
+[Daniel Erik Hong](https://github.com/dhon0010)
+
 # Contributors
 
 [Abigail Lithwick](https://github.com/abigail-rose)
