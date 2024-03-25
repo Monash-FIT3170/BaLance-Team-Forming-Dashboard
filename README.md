@@ -108,6 +108,8 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 
 [Domico Carlo Wibowo](https://github.com/SetPizzaOnBroil30min)
 
+[Daniel Derek Michael Cornelius](https://github.com/dcor0010)
+
 [Zhijun Chen](https://github.com/ZCStephen)
 
 [Jeffrey Yan](hhttps://github.com/jeffreyyan4)
@@ -140,6 +142,7 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 
 [Nethara Athukorala](https://github.com/nath0002)
 
+[Trevor Yao](https://github.com/WofWaf)
 # License
 
 The license we use for this project is the [GPL v3](https://www.gnu.org/licenses/quick-guide-gplv3.html)
