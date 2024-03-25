@@ -138,6 +138,7 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 
 [Nethara Athukorala](https://github.com/nath0002)
 
+[Trevor Yao](https://github.com/WofWaf)
 # License
 
 The license we use for this project is the [GPL v3](https://www.gnu.org/licenses/quick-guide-gplv3.html)
