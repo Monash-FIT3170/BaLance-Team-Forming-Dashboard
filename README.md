@@ -145,3 +145,4 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 # License
 
 The license we use for this project is the [GPL v3](https://www.gnu.org/licenses/quick-guide-gplv3.html)
+
