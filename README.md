@@ -116,7 +116,9 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 
 [Daniel Erik Hong](https://github.com/dhon0010)
 
-# Contributors
+[Kenan Baydar](https://github.com/kbay0009)
+
+# Contributors 
 
 [Abigail Lithwick](https://github.com/abigail-rose)
 
