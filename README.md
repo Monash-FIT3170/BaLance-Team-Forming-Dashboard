@@ -114,6 +114,8 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 
 [Ying-Tsai Wang](https://github.com/ying-tsai-wang)
 
+[Daniel Erik Hong](https://github.com/dhon0010)
+
 # Contributors
 
 [Abigail Lithwick](https://github.com/abigail-rose)
