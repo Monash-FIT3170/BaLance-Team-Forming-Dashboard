@@ -120,6 +120,8 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 
 [Kenan Baydar](https://github.com/kbay0009)
 
+[Trevor Yao](https://github.com/WofWaf)
+
 # Contributors 
 
 [Abigail Lithwick](https://github.com/abigail-rose)
