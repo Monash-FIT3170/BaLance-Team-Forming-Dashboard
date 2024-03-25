@@ -110,7 +110,7 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 
 [Zhijun Chen](https://github.com/ZCStephen)
 
-[Daniel Erik Hong](https://github.com/dhon0010)
+[Jeffrey Yan](hhttps://github.com/jeffreyyan4)
 
 # Contributors
 
