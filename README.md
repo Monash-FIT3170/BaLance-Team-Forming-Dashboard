@@ -110,6 +110,8 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 
 [Jeffrey Yan](hhttps://github.com/jeffreyyan4)
 
+[Daniel Erik Hong](https://github.com/dhon0010)
+
 # Contributors
 
 [Abigail Lithwick](https://github.com/abigail-rose)
