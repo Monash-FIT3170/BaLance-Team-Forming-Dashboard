@@ -106,6 +106,8 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 
 [Rishi Bidani](https://github.com/Rishi-Bidani)
 
+[Domico Carlo Wibowo](https://github.com/SetPizzaOnBroil30min)
+
 # Contributors
 
 [Abigail Lithwick](https://github.com/abigail-rose)
