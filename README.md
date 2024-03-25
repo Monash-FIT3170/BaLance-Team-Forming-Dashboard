@@ -124,6 +124,8 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 
 [Oneil Chiang](https://github.com/oneil1625)
 
+[Ethan Chuen](https://github.com/echu0033)
+
 # Contributors 
 
 [Abigail Lithwick](https://github.com/abigail-rose)
