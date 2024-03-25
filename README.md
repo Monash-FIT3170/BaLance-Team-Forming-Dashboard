@@ -122,6 +122,8 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 
 [Trevor Yao](https://github.com/WofWaf)
 
+[Oneil Chiang](https://github.com/oneil1625)
+
 # Contributors 
 
 [Abigail Lithwick](https://github.com/abigail-rose)
