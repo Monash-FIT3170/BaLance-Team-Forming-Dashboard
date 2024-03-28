@@ -126,6 +126,8 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 
 [Mohammad Zawari](https://github.com/me-za)
 
+[Alexis Mcharo](https://github.com/alexismcharo)
+
 # Contributors
 
 [Abigail Lithwick](https://github.com/abigail-rose)
