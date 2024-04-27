@@ -32,20 +32,19 @@
 Can use for Home, Tutorial, FAQ, Contributors links - keeps consistency (not using at the moment).
 */
 .square-button {
-  width: 150px; /* Adjust width as needed */
-  height: 60px; /* Adjust height as needed */
-  border-radius: 9px;
+  width: 100px;
+  border-radius: px;
   background-color: #36b6d6;
   border: none;
   color: white;
-  padding: 20px 30px; /* Adjust padding as needed */
+  padding: 15px 14px;
   text-align: center;
   text-decoration: none;  
   display: inline-block;
-  font-size: 20px; /* Adjust font-size as needed */
+  font-size: 80px;
   cursor: pointer;
   transition: background-color 0.5s ease, color 0.5s ease; 
-  margin: 7px 7px;
+  margin: 10px 10px;
 }
 
 .units {
