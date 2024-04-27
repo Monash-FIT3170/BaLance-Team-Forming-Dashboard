@@ -1,17 +1,5 @@
-import { Link } from 'react-router-dom';
-
+// Nothing yet, blank page.
 function LandingPage() {
-    return (
-        <div>
-            <nav>
-                <ul>
-                    <li>
-                        <Link to="/home">Home</Link>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    );
 }
 
 export default LandingPage;

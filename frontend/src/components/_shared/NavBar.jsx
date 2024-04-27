@@ -5,9 +5,8 @@ import {
     Button,
     Box,
     Flex,
-    Spacer,
-    Link
 } from '@chakra-ui/react';
+import { Link } from 'react-router-dom'; // This is to avoid page refreshes, smoother experience (when returning to Landing Page).
 
 import { MockAuth } from '../../helpers/mockAuth';
 import logo from '../../assets/logo_separated.png';
@@ -35,39 +34,54 @@ const NavBar = ({ authenticated }) => {
             bgColor="balance.header_color"
             centerContent
             overflow="hidden"
-            zIndex={999}
-        >
-            <Flex w="100%">
-                <Box w="6em"/>
-                <Spacer/>
-                <Link href='/'>
-                    <Image
-                        height={{
-                            base:"3em",
-                            md: "4em"
-                        }}
-                        src={logo}
-                        alt="BaLance: Team Forming Dashboard"
-                    />
-                </Link>
-                <Spacer/>
-                {authenticated ? (
+            zIndex={999}>
+            <Flex
+                w="100%"
+                justify="space-between"
+                align="center"
+                pl="1em" >
+                <Box display="flex" alignItems="center">
+                    <Link to="/">
+                        <Image
+                            height={{
+                                base: "3em",
+                                md: "4em"
+                            }}
+                            src={logo}
+                            alt="BaLance: Team Forming Dashboard"
+                        />
+                    </Link>
                     <Button
-                        onClick={logout}
-                        h="3em"
-                        w='6em'
-                    >
-                        Logout
+                        as={Link} 
+                        to="/home"
+                        h="5em"
+                        w='8em'
+                        ml="15px"
+                        style={{
+                            marginLeft: "40px", 
+                        }}>
+                        Home
                     </Button>
-                ) : (
-                    <Button
-                        onClick={loginWithRedirect}
-                        h="3em"
-                        w='6em'
-                    >
-                        Login
-                    </Button>
-                )}
+                </Box>
+                <Box>
+                    {authenticated ? (
+                        <Button
+                            onClick={logout}
+                            h="5em"
+                            w='8em'
+                            ml="15px">
+                            Logout
+                        </Button>
+                    ) : (
+                        <Button
+                            onClick={loginWithRedirect}
+                            h="5em"
+                            w='8em'
+                            ml="15px">
+                            Login
+                        </Button>
+                    )}
+                </Box>
             </Flex>
         </Container>
     );
