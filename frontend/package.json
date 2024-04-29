@@ -13,6 +13,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@vitejs/plugin-react-swc": "^3.6.0",
     "axios": "^1.4.0",
     "chart.js": "^4.3.3",
     "framer-motion": "^10.12.2",
@@ -21,16 +22,20 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
     "react-router-dom": "^6.10.0",
-    "react-scripts": "^5.0.1",
+    "vite": "^5.2.10",
+    "vite-plugin-svgr": "^4.2.0",
+    "vite-tsconfig-paths": "^4.3.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
     "test": "exit 0",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
   },
   "eslintConfig": {
     "extends": [
@@ -58,5 +63,6 @@
     "printWidth": 90,
     "singleQuote": true,
     "semi": true
-  }
+  },
+  "type": "module"
 }
