@@ -114,6 +114,8 @@ Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup
 
 [Daniel Erik Hong](https://github.com/dhon0010)
 
+[Daniel Cornelius](https://github.com/dcor0010)
+
 [Kenan Baydar](https://github.com/kbay0009)
 
 [Trevor Yao](https://github.com/WofWaf)
