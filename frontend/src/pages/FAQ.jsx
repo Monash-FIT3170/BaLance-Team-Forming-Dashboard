@@ -28,7 +28,7 @@ let questionBody1 = {
                 <ul>
                         <li style = {{'font-size': '20px'}}>
                             <Text
-                            fontSize = 'lg'
+                            fontSize = 'xl'
                             style={{ 
                             color: '#24265D',
                             'font-family': 'Helvetica' }}>
@@ -37,7 +37,7 @@ let questionBody1 = {
                         </li>
                         <li style = {{'font-size': '20px'}}>
                             <Text
-                            fontSize = 'lg'
+                            fontSize = 'xl'
                             style={{ 
                             color: '#24265D',
                             'font-family': 'Helvetica' }}>
@@ -46,7 +46,7 @@ let questionBody1 = {
                         </li>
                         <li style = {{'font-size': '20px'}}>
                             <Text
-                            fontSize = 'lg'
+                            fontSize = 'xl'
                             style={{ 
                             color: '#24265D',
                             'font-family': 'Helvetica' }}>
@@ -95,7 +95,7 @@ let questionBody2 = {
     header: 'Belbin Data: ',
     bodyText: <Box>
                 <Text
-                fontSize = 'lg'
+                fontSize = 'xl'
                 style={{ 
                 color: '#24265D',
                 'font-family': 'Helvetica' }}>
@@ -128,7 +128,7 @@ let questionBody3 = {
     header: 'Effort Data: ',
     bodyText: <Box>
                 <Text
-                fontSize = 'lg'
+                fontSize = 'xl'
                 style={{ 
                 color: '#24265D',
                 'font-family': 'Helvetica' }}>
@@ -158,12 +158,28 @@ let questionBody3 = {
             </Box>
 }
 
-let question = {
+let question1 = {
     title: 'What type of CSV data are accepted?',
     b: [questionBody1, questionBody2, questionBody3]
 }
 
-let questions = [question]
+let questionBody4 = {
+    header: '',
+    bodyText: <Text
+            fontSize = 'xl'
+            style={{ 
+            color: '#24265D',
+            'font-family': 'Helvetica' }}>
+                yada yada yada
+            </Text>
+}
+
+let question2 = {
+    title: 'How are users grouped?',
+    b: [questionBody4]
+}
+
+let questions = [question1, question2]
 
 let questionDisplay = (
 
@@ -174,7 +190,8 @@ let questionDisplay = (
         >
             
             {questions.map((question) => {
-            return (<QuestionContainer title={question.title} body = {question.b}/>)
+            return ( <Box><QuestionContainer title={question.title} body = {question.b}/><Spacer/></Box>
+                )
             })}
         
         
