@@ -12,6 +12,7 @@ import Students from './pages/Students';
 import UnitAnalytics from './pages/UnitAnalytics';
 import GroupAnalytics from './pages/GroupAnalytics';
 import Import from './pages/Import';
+import ContributorsPage from './pages/ContributorsPage';
 
 const theme = extendTheme({
   colors: {
@@ -61,6 +62,7 @@ function App() {
                 path="/groupAnalytics/:unitCode/:year/:period/:groupNumber"
                 element={<GroupAnalytics />}
               />
+              <Route path="/ContributorPage" element={<ContributorsPage/>}></Route>
             </Routes>
           )}
           {!isAuthenticated && (

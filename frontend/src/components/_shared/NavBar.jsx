@@ -1,8 +1,10 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { Image, Container, Button, Box, Flex, Spacer, Link } from '@chakra-ui/react';
+import { ArrowBackIcon } from '@chakra-ui/icons';
 
 import { MockAuth } from '../../helpers/mockAuth';
 import logo from '../../assets/logo_separated.png';
+import { useNavigate } from 'react-router-dom';
 
 const NavBar = ({ authenticated }) => {
   let authService = {
@@ -12,6 +14,12 @@ const NavBar = ({ authenticated }) => {
 
   const { loginWithRedirect, logout } =
     authService[import.meta.env.VITE_REACT_APP_AUTH]();
+  const navigate = useNavigate();
+
+  const navigateToPage = () =>{
+    console.log("Going to contributors page")
+    navigate("/ContributorPage")
+  }
 
   return (
     <Container
@@ -43,6 +51,8 @@ const NavBar = ({ authenticated }) => {
           />
         </Link>
         <Spacer />
+        <Button onClick={navigateToPage} h="3em" w="10em">Contributors Page</Button>
+
         {authenticated ? (
           <Button onClick={logout} h="3em" w="6em">
             Logout
