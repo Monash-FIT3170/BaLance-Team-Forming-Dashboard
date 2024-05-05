@@ -3,7 +3,6 @@ import { Image, Container, Button, Box, Flex, Spacer, Link } from '@chakra-ui/re
 
 import { MockAuth } from '../../helpers/mockAuth';
 import logo from '../../assets/logo_separated.png';
-import NavButton from './NavButton';
 
 const NavBar = ({ authenticated }) => {
   let authService = {
@@ -30,26 +29,31 @@ const NavBar = ({ authenticated }) => {
       overflow="hidden"
       zIndex={999}
     >
-      <Flex w="100%">
-        <Box w="6em" />
-        <Link href="/">
-          <Image
-            height={{
-              base: '3em',
-              md: '4em',
-            }}
-            src={logo}
-            alt="BaLance: Team Forming Dashboard"
-          />
-        </Link>
-        <Spacer />
-        <Box paddingRight={1000}>
-          <Link href={'/FAQ/'}>
-            <Button colorScheme="gray" variant = "ghost"  h="4em" w="6em" fontSize={20}>
+      <Flex
+          w="100%"
+          justify="space-between"
+          align="center"
+          pl="1em" >
+          <Box display="flex" alignItems="center">
+              <Link href={'/'}>
+                  <Image
+                      height={{
+                          base: "3em",
+                          md: "4em"
+                      }}
+                      src={logo}
+                      alt="BaLance: Team Forming Dashboard"
+                  />
+              </Link>
+          </Box>
+          <Box paddingLeft={10}>
+          <Link href='/FAQ/'>
+            <Button colorScheme="gray" variant = "ghost"  h="3em" w="6em" fontSize={20}>
               FAQ
             </Button>
           </Link>
         </Box>
+        <Spacer />
         <Spacer />
         {authenticated ? (
           <Button onClick={logout} h="3em" w="6em">
