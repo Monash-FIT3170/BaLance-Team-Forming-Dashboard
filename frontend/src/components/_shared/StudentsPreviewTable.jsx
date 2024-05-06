@@ -69,8 +69,8 @@ const StudentsPreviewTable = ({ students, groupNumber, numberOfGroups, page, row
                 </Thead>
 
                 <Tbody>
-                    {students.map((student) => (
-                        <Tr h={rowHeights}>
+                    {students.map((student, index) => (
+                        <Tr h={rowHeights} key={'tr-' + index}>
                             <Td>{student.student_id}</Td>
                             <Td>{student.preferred_name}</Td>
                             <Td>{student.last_name}</Td>
