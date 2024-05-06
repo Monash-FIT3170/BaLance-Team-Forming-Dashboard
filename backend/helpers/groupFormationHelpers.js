@@ -394,7 +394,18 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
     ]);
 };
 
-const createGroupsTimePref = async () => {};
+const createGroupsTimePref = async (unitCode, year, period, groupSize, variance) => {
+    // promiseBasedQuery ?
+
+    // splitbylab 
+
+    // sorting to groups based on groupsize
+
+    // insert groups into database
+
+    // insert allocations of groups into database ??
+
+};
 
 const groupFormationStrategies = {
     /**
