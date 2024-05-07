@@ -9,8 +9,8 @@
   "imageSize": 0,
   "commit": false,
   "commitConvention": "none",
-  "contributors": [
-    {
+  "contributors": {
+    "2023":[{
       "login": "abigail-rose",
       "name": "Abby",
       "avatar_url": "https://avatars.githubusercontent.com/u/80239117?v=4",
@@ -184,6 +184,17 @@
         "data",
         "ideas"
       ]
+    }],
+    "2024":[{
+      "login": "oneil1625",
+      "name": "oneil1625",
+      "avatar_url": "https://avatars.githubusercontent.com/u/163804456?v=4",
+      "profile": "https://github.com/oneil1625",
+      "contributions": [
+        "code",
+        "design",
+        "bug"
+      ]
     },
     {
       "login": "Rishi-Bidani",
@@ -195,6 +206,7 @@
         "design",
         "bug"
       ]
+      
     },
     {
       "login": "SetPizzaOnBroil30min",
@@ -295,17 +307,7 @@
         "bug"
       ]
     },
-    {
-      "login": "oneil1625",
-      "name": "oneil1625",
-      "avatar_url": "https://avatars.githubusercontent.com/u/163804456?v=4",
-      "profile": "https://github.com/oneil1625",
-      "contributions": [
-        "code",
-        "design",
-        "bug"
-      ]
-    },
+    
     {
       "login": "echu0033",
       "name": "echu0033",
@@ -349,8 +351,9 @@
         "design",
         "bug"
       ]
-    }
-  ],
+    }]
+    
+  },
   "contributorsPerLine": 7,
   "linkToUsage": false
 }
