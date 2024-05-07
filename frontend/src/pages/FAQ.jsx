@@ -1,59 +1,44 @@
 import {
-    HStack,
     Container,
     Flex,
-    Center,
     VStack,
     Text,
-    Select,
     Box,
-    useToast,
     Spacer,
     Table,
     Thead,
     Tbody,
     Tr,
     Th,
-    Td
+    Td,
+    Heading
   } from '@chakra-ui/react';
   
 import QuestionContainer from '../components/faqPage/questionContainer';
-
-
 
 let questionBody1 = {
     header: 'Student Data: ',
     bodyText: <Box>
             <VStack alignItems = 'left' pl = '10'>
-                <ul>
-                        <li style = {{'font-size': '20px'}}>
-                            <Text
-                            fontSize = 'xl'
-                            style={{ 
-                            color: '#24265D',
-                            'font-family': 'Helvetica' }}>
-                                studentId must be an 8-digit number
-                            </Text>
-                        </li>
-                        <li style = {{'font-size': '20px'}}>
-                            <Text
-                            fontSize = 'xl'
-                            style={{ 
-                            color: '#24265D',
-                            'font-family': 'Helvetica' }}>
-                                labCode must be prefixed by the number and '_' minimally
-                            </Text>
-                        </li>
-                        <li style = {{'font-size': '20px'}}>
-                            <Text
-                            fontSize = 'xl'
-                            style={{ 
-                            color: '#24265D',
-                            'font-family': 'Helvetica' }}>
-                                gender must be a single char
-                            </Text>
-                        </li>
-                    </ul>
+                <Box>
+                    <ul>
+                            <li>
+                                <Text>
+                                    studentId must be an 8-digit number
+                                </Text>
+                            </li>
+                            <li>
+                                <Text>
+                                    labCode must be prefixed by the number and '_' minimally
+                                </Text>
+                            </li>
+                            <li>
+                                <Text>
+                                    gender must be a single char
+                                </Text>
+                            </li>
+                        </ul>
+                        </Box>
                 </VStack>
                 <Table variant = 'striped' size = 'md'>
                     <Thead>
@@ -94,13 +79,8 @@ let questionBody1 = {
 let questionBody2 = {
     header: 'Belbin Data: ',
     bodyText: <Box>
-                <Text
-                fontSize = 'xl'
-                style={{ 
-                color: '#24265D',
-                'font-family': 'Helvetica' }}>
+                <Text>
                     Belbin Team roles is a theory developed by Dr. Meredith Belbin, where these roles describe the behavioural patterns that people exhibit within teams, highlighting their strengths and weaknesses.
-                    <br></br>
                     Belbin type must be one of people, thinking or action:
                 </Text>
                 <Table variant = 'striped' size = 'lg'>
@@ -127,11 +107,7 @@ let questionBody2 = {
 let questionBody3 = {
     header: 'Effort Data: ',
     bodyText: <Box>
-                <Text
-                fontSize = 'xl'
-                style={{ 
-                color: '#24265D',
-                'font-family': 'Helvetica' }}>
+                <Text>
                     Hours commitment is the estimated number of hours that a student expects to commit in a week.
                 </Text>
                 <Table variant = 'striped' size = 'lg'>
@@ -165,11 +141,7 @@ let question1 = {
 
 let questionBody4 = {
     header: '',
-    bodyText: <Text
-            fontSize = 'xl'
-            style={{ 
-            color: '#24265D',
-            'font-family': 'Helvetica' }}>
+    bodyText: <Text>
                 yada yada yada
             </Text>
 }
@@ -181,15 +153,15 @@ let question2 = {
 
 let questions = [question1, question2]
 
-let questionDisplay = (
+export function questionDisplay(questionList) {
 
-    <Container 
+    return (<Container 
         className="questions" 
-        maxW='2000px'
+        maxW='1880'
         p="3" 
         >
             
-            {questions.map((question) => {
+            {questionList.map((question) => {
             return ( <Box><QuestionContainer title={question.title} body = {question.b}/><Spacer/></Box>
                 )
             })}
@@ -197,15 +169,22 @@ let questionDisplay = (
         
         
     </Container>)
+    }
 
-const FAQ = () => {
+export default function FAQ () {
     return (
         <Flex>
             <VStack>
-                {questionDisplay}
+                <Text style={{ 
+            color: '#24265D',
+            'font-family': 'Helvetica',
+            'font-size': 200 }} 
+            as='b'>
+                    FAQ
+                </Text>
+                {questionDisplay(questions)}
             </VStack>
         </Flex>
     )
 };
 
-export default FAQ

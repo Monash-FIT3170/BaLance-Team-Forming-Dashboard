@@ -1,27 +1,22 @@
 import {
-    HStack,
-    Container,
     Flex,
-    Center,
     VStack,
     Text,
-    Select,
-    Box,
-    useToast,
-    Spacer,
+    Spacer
   } from '@chakra-ui/react';
 
 const QuestionContainer = ({title, body}) => {
     return (
     <Flex
     alignItems="left"
-    pl="1em">
+    pl="1em"
+    style = {{
+      'font-family': 'Helvetica',
+      color: '#24265D'
+    }}>
       <VStack alignItems = "left" pl = '5'>
         <Text 
         fontSize = '5xl'
-        style={{ 
-          color: '#24265D',
-          'font-family': 'Helvetica' }}
           as='b'>
           {title}
         </Text>
@@ -30,14 +25,13 @@ const QuestionContainer = ({title, body}) => {
             return (<VStack alignItems='left'>
               <Text 
                 fontSize = '3xl'
-                style={{ 
-                  color: '#24265D',
-                  'font-family': 'Helvetica' }}
                 as='b'
                 >
                   {b.header}
               </Text>
-              {b.bodyText}
+              <Text fontSize = 'xl'>
+                  {b.bodyText}
+                </Text>
               <Spacer/>
               </VStack>
               
