@@ -1,5 +1,6 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import { Image, Container, Button, Box, Flex, Spacer, Link } from '@chakra-ui/react';
+import { Image, Flex, Button, Link } from '@chakra-ui/react';
+import { Link as RouterLink } from 'react-router-dom';
 
 import { MockAuth } from '../../helpers/mockAuth';
 import logo from '../../assets/logo_separated.png';
@@ -14,46 +15,42 @@ const NavBar = ({ authenticated }) => {
     authService[import.meta.env.VITE_REACT_APP_AUTH]();
 
   return (
-    <Container
-      as="header"
+    <Flex as="header"
       pos="fixed"
       top={0}
       left={0}
-      w="100%"
-      display="flex"
+      right={0}
       p="5"
-      maxH="8em"
-      minW="100vw"
       bgColor="balance.header_color"
-      centerContent
-      overflow="hidden"
+      justifyContent="space-between"
+      alignItems="center"
       zIndex={999}
     >
-      <Flex w="100%">
-        <Box w="6em" />
-        <Spacer />
-        <Link href="/">
+      <Flex alignItems="center">
+        <Link as={RouterLink} to="/">
           <Image
-            height={{
-              base: '3em',
-              md: '4em',
-            }}
+            height="auto"
+            maxHeight="4em"
             src={logo}
             alt="BaLance: Team Forming Dashboard"
           />
         </Link>
-        <Spacer />
-        {authenticated ? (
-          <Button onClick={logout} h="3em" w="6em">
-            Logout
+        <Link as={RouterLink} to="/home" ml="8">
+          <Button colorScheme="white" variant="solid" color="black" fontSize="20px" size="lg" height="63" px="6">
+            Home
           </Button>
+        </Link>
+      </Flex>
+      <Flex>
+        {authenticated ? (
+          <Button onClick={logout}>Logout</Button>
         ) : (
           <Button onClick={loginWithRedirect} h="3em" w="6em">
             Login
           </Button>
         )}
       </Flex>
-    </Container>
+    </Flex>
   );
 };
 
