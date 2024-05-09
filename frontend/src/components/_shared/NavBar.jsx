@@ -46,6 +46,16 @@ const NavBar = ({ authenticated }) => {
             Tutorial
           </Button>
         </Link>
+        <Link as={RouterLink} to="/faq" ml="8">
+          <Button colorScheme="white" variant="solid" color="black" fontSize="30px" fontWeight="light" size="lg" height="63" px="6">
+            FAQ
+          </Button>
+        </Link>
+        <Link as={RouterLink} to="/contributors" ml="8">
+          <Button colorScheme="white" variant="solid" color="black" fontSize="30px" fontWeight="light" size="lg" height="63" px="6">
+            Contributors
+          </Button>
+        </Link>
 
       </Flex>
       <Flex>
