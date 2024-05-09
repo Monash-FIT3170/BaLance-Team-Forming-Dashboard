@@ -36,14 +36,21 @@ const NavBar = ({ authenticated }) => {
           />
         </Link>
         <Link as={RouterLink} to="/home" ml="8">
-          <Button colorScheme="white" variant="solid" color="black" fontSize="20px" size="lg" height="63" px="6">
+          <Button colorScheme="white" variant="solid" color="black" fontSize="30px" fontWeight="light" size="lg" height="63" px="6">   
+          {/* original size is 20, and no fontWeight*/}
             Home
           </Button>
         </Link>
+        <Link as={RouterLink} to="/tutorial" ml="8">
+          <Button colorScheme="white" variant="solid" color="black" fontSize="30px" fontWeight="light" size="lg" height="63" px="6">
+            Tutorial
+          </Button>
+        </Link>
+
       </Flex>
       <Flex>
         {authenticated ? (
-          <Button onClick={logout}>Logout</Button>
+          <Button onClick={logout} size="lg" shadow="lg" >Logout</Button>
         ) : (
           <Button onClick={loginWithRedirect} h="3em" w="6em">
             Login
