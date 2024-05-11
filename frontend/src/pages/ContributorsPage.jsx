@@ -10,7 +10,7 @@ export default function ContributorsPage() {
     //link to the contributions file. Need to confirm that this is best practice
     const CONTRIBUTORS_FILE = "https://raw.githubusercontent.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/contributors_page/.all-contributorsrc"
     //contributors are a state variable so they are automatically updated when they are changed 
-    const [constributors, setContributors] = useState([])
+    const [contributors, setContributors] = useState([])
     useEffect(() => {
         fetch(CONTRIBUTORS_FILE, {
             method: "GET",
@@ -27,8 +27,19 @@ export default function ContributorsPage() {
     return (
         <Box paddingInline={'2rem'} marginBottom={'4rem'}>
             <Heading>Contributors Page</Heading>
+            <Grid gap={6}>
+                {Object.keys(contributors).map((year)=> YearBlock(year,contributors[year]))}
+            </Grid>
+
+        </Box>
+    )
+}
+export function YearBlock(year, contributors){
+    return(
+        <Box paddingInline={'2rem'} marginBottom={'4rem'}>
+            <Heading>{year}</Heading>
             <Grid templateColumns={'repeat(auto-fit, minmax(250px, 1fr))'} gap={6}>
-                {constributors.map((contributor) => Contributor(contributor))}
+                {contributors.map((contributor) => Contributor(contributor))}
             </Grid>
 
         </Box>
@@ -79,17 +90,16 @@ export function Contributor(contributor) {
     return (
         <GridItem p={4} boxShadow={'md'}>
             <Grid templateRows='repeat(2, 1fr)'templateColumns='repeat(2, 1fr)' justifyItems={'center'}>
-                <GridItem rowSpan={2} colSpan={1} >
+                <GridItem rowSpan={2} colSpan={1}>
                     <Avatar src={contributor.avatar_url} />
                 </GridItem>
-                <GridItem colSpan={1}>
+                <GridItem colSpan={1} isTruncated>
                     <Link href={contributor.profile} >{contributor.name}</Link>
                 </GridItem>
                 <GridItem colSpan={1}>
-                    {contributor.contributions.map((contributionType) => emojiKey[contributionType])}
+                    {contributor.contributions.map((contributionType,index) => emojiKey[contributionType])}
                 </GridItem>
-            </Grid>
-            
+            </Grid>            
         </GridItem>
     )
 }
