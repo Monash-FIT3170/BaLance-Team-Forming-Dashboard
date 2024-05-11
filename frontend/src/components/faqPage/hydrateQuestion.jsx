@@ -40,11 +40,11 @@ export function hydrateQuestionJSON(questionJSON) {
       }
 
       let qBody = (
-        <VStack alignItems="left">
+        <Box alignItems="left">
           <Text>{text}</Text>
           {list}
           {table}
-        </VStack>
+        </Box>
       );
       let hydratedBody = {
         header: qJSONBody.header,
