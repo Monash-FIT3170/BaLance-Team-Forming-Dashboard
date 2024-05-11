@@ -1,0 +1,16 @@
+{
+    "questions":
+    [
+        {
+            "title": "What type of CSV data are accepted?",
+            "body": [
+                {
+                    "header": "Student Data: ",
+                    "text": "Student data can be imported from a .csv file formatted as shown in the table below. The restrictions on ",
+                    "dotpoints:": [],
+                    "table": []
+                }
+            ]
+        }
+    ]
+}
