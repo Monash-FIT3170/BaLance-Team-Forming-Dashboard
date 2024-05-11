@@ -5,6 +5,7 @@ import {
   Text,
   Box,
   Spacer,
+  TableContainer,
   Table,
   Thead,
   Tbody,
@@ -12,8 +13,14 @@ import {
   Th,
   Td,
   Heading,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
 } from '@chakra-ui/react';
 
+import { PageHeader } from '../components/_shared';
 import QuestionContainer from '../components/faqPage/questionContainer';
 
 let questionBody1 = {
@@ -35,39 +42,41 @@ let questionBody1 = {
           </ul>
         </Box>
       </VStack>
-      <Table variant="striped" size="md">
-        <Thead>
-          <Tr>
-            <Th>studentId</Th>
-            <Th>labCode</Th>
-            <Th>lastName</Th>
-            <Th>preferredName</Th>
-            <Th>email</Th>
-            <Th>wam</Th>
-            <Th>gender</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          <Tr>
-            <Td>12345678</Td>
-            <Td>01_DualMode</Td>
-            <Td>White</Td>
-            <Td>Jim</Td>
-            <Td>jwhi0001@student.monash.edu</Td>
-            <Td>93</Td>
-            <Td>M</Td>
-          </Tr>
-          <Tr>
-            <Td>28462818</Td>
-            <Td>02_DualMode</Td>
-            <Td>Black</Td>
-            <Td>Jemma</Td>
-            <Td>jbla0001@student.monash.edu</Td>
-            <Td>93</Td>
-            <Td>F</Td>
-          </Tr>
-        </Tbody>
-      </Table>
+      <TableContainer>
+        <Table variant="striped">
+          <Thead>
+            <Tr>
+              <Th>studentId</Th>
+              <Th>labCode</Th>
+              <Th>lastName</Th>
+              <Th>preferredName</Th>
+              <Th>email</Th>
+              <Th>wam</Th>
+              <Th>gender</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            <Tr>
+              <Td>12345678</Td>
+              <Td>01_DualMode</Td>
+              <Td>White</Td>
+              <Td>Jim</Td>
+              <Td>jwhi0001@student.monash.edu</Td>
+              <Td>93</Td>
+              <Td>M</Td>
+            </Tr>
+            <Tr>
+              <Td>28462818</Td>
+              <Td>02_DualMode</Td>
+              <Td>Black</Td>
+              <Td>Jemma</Td>
+              <Td>jbla0001@student.monash.edu</Td>
+              <Td>93</Td>
+              <Td>F</Td>
+            </Tr>
+          </Tbody>
+        </Table>
+      </TableContainer>
     </Box>
   ),
 };
@@ -82,24 +91,26 @@ let questionBody2 = {
         their strengths and weaknesses. Belbin type must be one of people, thinking or
         action:
       </Text>
-      <Table variant="striped" size="lg">
-        <Thead>
-          <Tr>
-            <Th>studentId</Th>
-            <Th>belbintype</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          <Tr>
-            <Td>12345678</Td>
-            <Td>People</Td>
-          </Tr>
-          <Tr>
-            <Td>28462818</Td>
-            <Td>Thinking</Td>
-          </Tr>
-        </Tbody>
-      </Table>
+      <TableContainer>
+        <Table variant="striped">
+          <Thead>
+            <Tr>
+              <Th>studentId</Th>
+              <Th>belbintype</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            <Tr>
+              <Td>12345678</Td>
+              <Td>People</Td>
+            </Tr>
+            <Tr>
+              <Td>28462818</Td>
+              <Td>Thinking</Td>
+            </Tr>
+          </Tbody>
+        </Table>
+      </TableContainer>
     </Box>
   ),
 };
@@ -112,27 +123,29 @@ let questionBody3 = {
         Hours commitment is the estimated number of hours that a student expects to commit
         in a week.
       </Text>
-      <Table variant="striped" size="lg">
-        <Thead>
-          <Tr>
-            <Th>studentId</Th>
-            <Th>hourCommitment</Th>
-            <Th>avgAssignmentMark</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          <Tr>
-            <Td>12345678</Td>
-            <Td>13</Td>
-            <Td>73</Td>
-          </Tr>
-          <Tr>
-            <Td>28462818</Td>
-            <Td>18</Td>
-            <Td>84</Td>
-          </Tr>
-        </Tbody>
-      </Table>
+      <TableContainer>
+        <Table variant="striped">
+          <Thead>
+            <Tr>
+              <Th>studentId</Th>
+              <Th>hourCommitment</Th>
+              <Th>avgAssignmentMark</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            <Tr>
+              <Td>12345678</Td>
+              <Td>13</Td>
+              <Td>73</Td>
+            </Tr>
+            <Tr>
+              <Td>28462818</Td>
+              <Td>18</Td>
+              <Td>84</Td>
+            </Tr>
+          </Tbody>
+        </Table>
+      </TableContainer>
     </Box>
   ),
 };
@@ -156,35 +169,34 @@ let questions = [question1, question2];
 
 export function questionDisplay(questionList) {
   return (
-    <Container className="questions" maxW="1880" p="3">
+    <Accordion allowMultiple width="80%" marginTop="5rem">
       {questionList.map((question) => {
         return (
-          <Box>
-            <QuestionContainer title={question.title} body={question.b} />
+          <AccordionItem>
+            <h2>
+              <AccordionButton>
+                <Box flex="1" textAlign="left" fontSize="3xl">
+                  {question.title}
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+            </h2>
+            <AccordionPanel pb={4}>
+              <QuestionContainer title={question.title} body={question.b} />
+            </AccordionPanel>
             <Spacer />
-          </Box>
+          </AccordionItem>
         );
       })}
-    </Container>
+    </Accordion>
   );
 }
 
 export default function FAQ() {
   return (
-    <Flex>
-      <VStack>
-        <Text
-          style={{
-            color: '#24265D',
-            'font-family': 'Helvetica',
-            'font-size': 200,
-          }}
-          as="b"
-        >
-          FAQ
-        </Text>
-        {questionDisplay(questions)}
-      </VStack>
-    </Flex>
+    <VStack>
+      <PageHeader fontSize="4xl" pageDesc="Frequently Asked Questions" />
+      {questionDisplay(questions)}
+    </VStack>
   );
 }
