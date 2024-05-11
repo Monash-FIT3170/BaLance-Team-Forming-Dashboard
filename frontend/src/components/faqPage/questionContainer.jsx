@@ -1,6 +1,6 @@
 import { Flex, VStack, Text, Spacer } from '@chakra-ui/react';
 
-const QuestionContainer = ({ title, body }) => {
+const QuestionContainer = ({ body }) => {
   return (
     <VStack alignItems="left" pl="5">
       {body.map((b) => {
