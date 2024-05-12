@@ -1,5 +1,5 @@
 import {
-  VStack,
+  Image,
   Text,
   Box,
   TableContainer,
@@ -9,7 +9,10 @@ import {
   Tr,
   Th,
   Td,
+  Tooltip,
 } from '@chakra-ui/react';
+
+// Question sub-bodies have a strict order for elements. To forgo this, simply add new objects to the JSON without elements or a header.
 
 export function hydrateQuestionJSON(questionJSON) {
   let questionList = questionJSON.questions;
@@ -29,6 +32,7 @@ export function hydrateQuestionJSON(questionJSON) {
       let qJSONBody = qJSONBodies[j];
       let table = null;
       let list = null;
+      let image = null;
       let text = qJSONBody.text;
 
       if (qJSONBody.hasOwnProperty('dotpoints')) {
@@ -38,12 +42,16 @@ export function hydrateQuestionJSON(questionJSON) {
       if (qJSONBody.hasOwnProperty('table')) {
         table = generateTable(qJSONBody.table);
       }
+      if (qJSONBody.hasOwnProperty('image')) {
+        image = generateImage(qJSONBody.image);
+      }
 
       let qBody = (
         <Box alignItems="left">
           <Text>{text}</Text>
           {list}
           {table}
+          {image}
         </Box>
       );
       let hydratedBody = {
@@ -107,6 +115,19 @@ function generateDotPoints(listData) {
           );
         })}
       </ul>
+    </Box>
+  );
+}
+
+function generateImage(imagePath) {
+  let path = imagePath.split('/');
+  let name = path[path.length - 1];
+  console.log(imagePath);
+  return (
+    <Box>
+      <Tooltip label={name}>
+        <Image src={imagePath} alt={name} />
+      </Tooltip>
     </Box>
   );
 }
