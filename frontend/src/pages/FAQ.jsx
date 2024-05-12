@@ -7,7 +7,10 @@ import {
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
+  Button,
+  HStack
 } from '@chakra-ui/react';
+import { useState } from 'react';
 
 import { PageHeader } from '../components/_shared';
 import QuestionContainer from '../components/faqPage/questionContainer';
@@ -17,8 +20,20 @@ import { hydrateQuestionJSON } from '../components/faqPage/hydrateQuestion';
 let questions = hydrateQuestionJSON(questionData);
 
 export function questionDisplay(questionList) {
+
+  const [accordionState, toggleAccordion] = useState(-1);
+  let accordionCount = [...Array(questionList.length).keys()]
+
   return (
-    <Accordion allowMultiple width="80%" marginTop="5rem">
+    <Accordion allowToggle allowMultiple index={accordionState} onChange={toggleAccordion} width="80%" marginTop="5rem">
+        <HStack alignItems="left" pl="3" pb="3" spacing="3">
+          <Button onClick={() => toggleAccordion(accordionCount)} variant='link'>
+            Expand All
+          </Button>
+          <Button onClick={() => toggleAccordion(-1)} variant='link'>
+            Collapse All
+          </Button>
+        </HStack>
       {questionList.map((question) => {
         return (
           <AccordionItem>
@@ -43,9 +58,12 @@ export function questionDisplay(questionList) {
 
 export default function FAQ() {
   return (
-    <VStack>
+    <Box>
       <PageHeader fontSize="4xl" pageDesc="Frequently Asked Questions" />
-      {questionDisplay(questions)}
-    </VStack>
+
+      <VStack>
+        {questionDisplay(questions)}
+      </VStack>
+    </Box>
   );
 }
