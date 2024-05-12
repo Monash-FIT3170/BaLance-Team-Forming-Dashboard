@@ -123,6 +123,16 @@ CREATE TABLE IF NOT EXISTS belbin_result ( -- information on student's belbin pe
 );
 ALTER TABLE belbin_result AUTO_INCREMENT=100000000; 
 
+CREATE TABLE IF NOT EXISTS project_preference (
+    preference_id INT AUTO_INCREMENT COMMENT 'unique identifier for a student project preference',
+    stud_unique_id INT COMMENT 'unique identifier for the student',
+    unit_off_id INT COMMENT,
+    project_id INT COMMENT 'unique identifier for the project',
+    preference_rank INT COMMENT 'preference rank (1 - N)',
+    submission_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp of preference submission',
+    CONSTRAINT pk_project_preference PRIMARY KEY (preference_id)
+);
+ALTER TABLE project_preference AUTO_INCREMENT=100000000;
 
 -- FOREIGN KEY CREATION
 -- student to enrolment, group allocation, lab allocation, personality_test_attempt
@@ -150,3 +160,6 @@ ALTER TABLE group_allocation ADD FOREIGN KEY (lab_group_id) REFERENCES lab_group
 ALTER TABLE effort_result ADD FOREIGN KEY (personality_test_attempt) REFERENCES personality_test_attempt(test_attempt_id);
 ALTER TABLE belbin_result ADD FOREIGN KEY (personality_test_attempt) REFERENCES personality_test_attempt(test_attempt_id);
 
+-- FOREIGN KEY CREATION FOR project_preference TABLE
+ALTER TABLE project_preference ADD FOREIGN KEY (stud_unique_id) REFERENCES student(stud_unique_id);
+ALTER TABLE project_preference ADD FOREIGN KEY (project_id) REFERENCES project(project_id);
