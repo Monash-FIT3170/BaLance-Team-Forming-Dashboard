@@ -15,62 +15,35 @@ import {
 // Question sub-bodies have a strict order for elements. To forgo this, simply add new objects to the JSON without elements or a header.
 
 export function hydrateQuestionJSON(questionJSON) {
-  let questionList = questionJSON.questions;
-
-  let hydratedQuestions = [];
-
-  for (var i = 0; i < questionList.length; i++) {
-    let qTitle = '';
-    let qBodies = [];
-
-    let question = questionList[i];
-    let qJSONBodies = question.body;
-
-    qTitle = question.title;
-
-    for (var j = 0; j < qJSONBodies.length; j++) {
-      let qJSONBody = qJSONBodies[j];
-      let table = null;
-      let list = null;
-      let image = null;
-      let text = qJSONBody.text;
-
-      if (qJSONBody.hasOwnProperty('dotpoints')) {
-        list = generateDotPoints(qJSONBody.dotpoints);
-      }
-
-      if (qJSONBody.hasOwnProperty('table')) {
-        table = generateTable(qJSONBody.table);
-      }
-      if (qJSONBody.hasOwnProperty('image')) {
-        image = generateImage(qJSONBody.image);
-      }
-
+  const questions = questionJSON.questions.map((question) => {
+    const questionBodies = question.body.map((body) => {
+      let table = body.table ? generateTable(body.table) : null;
+      let list = body.dotpoints ? generateDotPoints(body.dotpoints) : null;
+      let image = body.image ? generateImage(body.image) : null;
+      let text = body.text ? generateText(body.text) : null;
+      
       let qBody = (
         <Box alignItems="left">
-          <Text>{text}</Text>
+          {text}
           {list}
           {table}
           {image}
         </Box>
       );
-      let hydratedBody = {
-        header: qJSONBody.header,
-        bodyText: qBody,
+
+      return {
+        header: body.header,
+        bodyText: qBody
       };
+    })
 
-      qBodies.push(hydratedBody);
-    }
-
-    let hydratedQuestion = {
-      title: qTitle,
-      b: qBodies,
+    return {
+      title: question.title,
+      b: questionBodies
     };
+  })
 
-    hydratedQuestions.push(hydratedQuestion);
-  }
-
-  return hydratedQuestions;
+  return questions;
 }
 
 function generateTable(tableData) {
@@ -130,4 +103,10 @@ function generateImage(imagePath) {
       </Tooltip>
     </Box>
   );
+}
+
+function generateText(text) {
+  return (
+    <Text>{text}</Text>
+  )
 }
