@@ -20,13 +20,13 @@ import { hydrateQuestionJSON } from '../components/faqPage/hydrateQuestion';
 let questions = hydrateQuestionJSON(questionData);
 
 export function questionDisplay(questionList) {
-  const [accordionState, toggleAccordion] = useState(-1);
+  const [accordionState, toggleAccordion] = useState([]);
   let accordionCount = [...Array(questionList.length).keys()];
 
   return (
     <Accordion
       allowToggle
-      allowMultiple
+      allowMultiple='true'
       index={accordionState}
       onChange={toggleAccordion}
       width="80%"
@@ -36,7 +36,7 @@ export function questionDisplay(questionList) {
         <Button onClick={() => toggleAccordion(accordionCount)} variant="link">
           Expand All
         </Button>
-        <Button onClick={() => toggleAccordion(-1)} variant="link">
+        <Button onClick={() => toggleAccordion([])} variant="link">
           Collapse All
         </Button>
       </HStack>
@@ -66,7 +66,6 @@ export default function FAQ() {
   return (
     <Box>
       <PageHeader fontSize="4xl" pageDesc="Frequently Asked Questions" />
-
       <VStack>{questionDisplay(questions)}</VStack>
     </Box>
   );
