@@ -11,24 +11,23 @@ import {
     useToast
 } from "@chakra-ui/react";
 
-import {TextField, InputNumber, Dropdown, MultipleDropdown} from "../../_shared";
+import {TextField, Dropdown, InputNumber} from "../../_shared";
 import ModalFooterButtonPair from "../../_shared/ModalFooterButtonPair";
 
-const AddTimeModalBody = ({isOpen, onClose, profilesList,setProfileList }) => {
+const AddTimeModalBody = ({isOpen, onClose, profilesList, setProfilesList}) => {
     const [studentID, setStudentID] = useState('');
     const [projectCount, setProjectCount] = useState(5); 
-    const [projectID, setProjectID] = useState('');
-    const [preferenceID, setPreferenceID] = useState('');
+    const [options, setOptions] = useState([1,2,3,4,5]);
+    const [preferences, setPreferences] = useState([1,1,1,1,1]);
     const [timeStamp, setTimeStamp] = useState('');
     const toast = useToast();
     const successMsg = "Added time preference result to the list of profiles for submission";
-    const [options, setOptions] = useState([1,2,3,4,5]);
 
     const closeModal = () => {
         setStudentID('');
-        setProjectID('');
-        setPreferenceID('');
-        setProjectCount('');
+        setProjectCount(5);
+        setOptions([1,2,3,4,5]);
+        setPreferences([1,1,1,1,1]);
         setTimeStamp('');
         onClose()
     }
@@ -43,27 +42,6 @@ const AddTimeModalBody = ({isOpen, onClose, profilesList,setProfileList }) => {
             errors.push('student ID must be an 8 digit number')
         }
 
-        // Number of projects 
-        if (projectCount === ''){
-            errors.push('Project count must be provided')
-        } else if (projectCount.search(/^[0-9]{1,3}$/) === -1){
-            errors.push('Project Count must be greater than 0')
-        }
-
-        // Validate project ID
-        if (projectID === '') {
-            errors.push('Project ID must be provided');
-        } else if (parseInt(projectID) < 0 || parseInt(projectID) > MAX_PROJECT_ID) {
-            errors.push('Project ID must be a number between 0 and ' + MAX_PROJECT_ID);
-        }
-
-        // Validate preference ID
-        if (preferenceID === '') {
-            errors.push('Preference ID must be provided');
-        } else if (parseInt(preferenceID) < 0 || parseInt(preferenceID) > parseInt(projectCount)) {
-            errors.push('Preference ID must be a number between 0 and ' + projectCount);
-        }
-
         // Validate timestamp
         if (timeStamp === '') {
             errors.push('Timestamp must be provided');
@@ -74,6 +52,7 @@ const AddTimeModalBody = ({isOpen, onClose, profilesList,setProfileList }) => {
                 errors.push('Timestamp must be a valid date format');
             }
         }
+        return errors;
     }
 
     const handleSubmit = () => {
@@ -94,8 +73,8 @@ const AddTimeModalBody = ({isOpen, onClose, profilesList,setProfileList }) => {
 
         const newProfile = {
             studentId: studentID,
-            projectCount: projectCount,
-            preferenceID: preferenceID
+            preferences: preferences,
+            timeStamp: timeStamp
         }
 
         setProfilesList([...profilesList, newProfile]);
@@ -115,17 +94,25 @@ const AddTimeModalBody = ({isOpen, onClose, profilesList,setProfileList }) => {
 
     const changeProjectCount = (event) => {
         setProjectCount(parseInt(event));
-        
-        console.log("Project count: " + projectCount + "\n");
-        console.log("event: " +event+"\n");
 
         let numbers = [];
+        let pref = new Array(parseInt(event)).fill(1);
 
-        for (let i = 0; i <= event; i++) {
+        for (let i = 1; i <= parseInt(event); i++) {
             numbers.push(i);
+            if (i < preferences.length){
+                pref[i-1] = preferences[i-1];
+            }
         }
+        setPreferences(pref);
         setOptions(numbers);
         return;
+    }
+
+    const addPreference = (event, option) => {
+        let temp = preferences;
+        temp[option - 1] = parseInt(event.target.value);
+        setPreferences(temp);
     }
 
     return(
@@ -144,33 +131,30 @@ const AddTimeModalBody = ({isOpen, onClose, profilesList,setProfileList }) => {
                         <InputNumber 
                             label="Number of Projects"
                             defaultValue={5}
-                            min={0}
+                            min={1}
                             value={projectCount}
                             onChange={(event) => { changeProjectCount(event);}}
                         />
-                        <FormLabel>Preference for project 1</FormLabel>
-                        <Dropdown 
-                            placeholder={'select'}
-                            required={true}
-                            options={options}
-                            onChange={(event) => { setPreferenceID(event.target.value);}}
-                        />
-                        <MultipleDropdown labelText={'project pref'}/>
-                        <TextField
-                            label="Project ID"
-                            value={projectID}
-                            onChange={(event) => { setProjectID(event.target.value); }}
-                        />
-                        <TextField
-                            label="Preference ID"
-                            value={preferenceID}
-                            onChange={(event) => { setPreferenceID(event.target.value); }}
-                        />
-                        <TextField
+                        {options.map((option) => {
+                            return (
+                                <div >
+                                    <FormLabel>{'Project Preference: '} {option}</FormLabel>
+                                    <Dropdown 
+                                    placeholder={''}
+                                    options={options}
+                                    onChange={(event) => { addPreference(event, option);}}
+                                    />
+                                </div>
+                            )
+                            
+                        })}
+                        {/* <TextField
                             label="Timestamp"
                             value={timeStamp}
                             onChange={(event) => { setTimeStamp(event.target.value); }}
-                        />
+                        /> */}
+                        <FormLabel>Timestamp</FormLabel>
+                        <input type="datetime-local" value={timeStamp} onChange={(event) => { setTimeStamp(event.target.value); }}/>
                     </FormControl>
                 </ModalBody>
                 <ModalFooterButtonPair

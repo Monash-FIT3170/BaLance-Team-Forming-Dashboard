@@ -10,7 +10,7 @@ const InputNumber = ({
   return (
     <div>
       <FormLabel>{label}</FormLabel>
-      <NumberInput defaultValue={defaultValue} min={min} onChange={onChange}>
+      <NumberInput defaultValue={defaultValue} min={min} onChange={onChange} mb="5">
         <NumberInputField />
         <NumberInputStepper>
           <NumberIncrementStepper />
