@@ -11,7 +11,7 @@ import {
     useToast
 } from "@chakra-ui/react";
 
-import {TextField, InputNumber, Dropdown} from "../../_shared";
+import {TextField, InputNumber, Dropdown, MultipleDropdown} from "../../_shared";
 import ModalFooterButtonPair from "../../_shared/ModalFooterButtonPair";
 
 const AddTimeModalBody = ({isOpen, onClose, profilesList,setProfileList }) => {
@@ -155,6 +155,7 @@ const AddTimeModalBody = ({isOpen, onClose, profilesList,setProfileList }) => {
                             options={options}
                             onChange={(event) => { setPreferenceID(event.target.value);}}
                         />
+                        <MultipleDropdown labelText={'project pref'}/>
                         <TextField
                             label="Project ID"
                             value={projectID}

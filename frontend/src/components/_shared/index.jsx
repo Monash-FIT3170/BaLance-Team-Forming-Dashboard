@@ -10,6 +10,7 @@ import TextField from "./TextField";
 import ToggleButtonGroup from "./ToggleButtonGroup";
 import ToastSettings from "./ToastSettings";
 import InputNumber from "./InputNumber";
+import MultipleDropdown from "./MultipleDropdown";
 
 export {
     AddButton,
@@ -23,5 +24,6 @@ export {
     TextField,
     ToggleButtonGroup,
     ToastSettings,
-    InputNumber
+    InputNumber,
+    MultipleDropdown
 };
