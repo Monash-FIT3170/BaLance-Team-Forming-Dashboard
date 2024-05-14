@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useLayoutEffect, useState} from 'react';
 import {
     FormControl,
     FormLabel,
@@ -14,21 +14,44 @@ import {
 import {TextField, Dropdown, InputNumber} from "../../_shared";
 import ModalFooterButtonPair from "../../_shared/ModalFooterButtonPair";
 
-const AddTimeModalBody = ({isOpen, onClose, profilesList, setProfilesList}) => {
+const EditTimeModal = ({isOpen, onClose, currProfile, profilesList, setProfilesList}) => {
     const [studentID, setStudentID] = useState('');
     const [projectCount, setProjectCount] = useState(5); 
     const [options, setOptions] = useState([1,2,3,4,5]);
     const [preferences, setPreferences] = useState([1,1,1,1,1]);
     const [timeStamp, setTimeStamp] = useState('');
     const toast = useToast();
-    const successMsg = "Added time preference result to the list of profiles for submission";
+    const successMsg = "Updated Time result";
+
+    useLayoutEffect(() => {
+        if (currProfile) {
+            setStudentID(currProfile.studentId)
+            setProjectCount(currProfile.preferences.length)
+            let numbers = [];
+            for (let i = 1; i <= currProfile.preferences.length; i++) {
+                numbers.push(i);
+            }
+            setOptions(numbers);
+            setPreferences(currProfile.preferences)
+            setTimeStamp(currProfile.timeStamp)
+        }
+    }, [])
+
+    useLayoutEffect(() => {
+        if (currProfile) {
+            setStudentID(currProfile.studentId)
+            setProjectCount(currProfile.preferences.length)
+            let numbers = [];
+            for (let i = 1; i <= currProfile.preferences.length; i++) {
+                numbers.push(i);
+            }
+            setOptions(numbers);
+            setPreferences(currProfile.preferences)
+            setTimeStamp(currProfile.timeStamp)
+        }
+    }, [currProfile])
 
     const closeModal = () => {
-        setStudentID('');
-        setProjectCount(5);
-        setOptions([1,2,3,4,5]);
-        setPreferences([1,1,1,1,1]);
-        setTimeStamp('');
         onClose()
     }
 
@@ -71,13 +94,15 @@ const AddTimeModalBody = ({isOpen, onClose, profilesList, setProfilesList}) => {
             return
         }
 
+        const newProfilesList = profilesList.filter(profile => profile !== currProfile)
+
         const newProfile = {
             studentId: studentID,
             preferences: preferences,
             timeStamp: timeStamp
         }
 
-        setProfilesList([...profilesList, newProfile]);
+        setProfilesList([...newProfilesList, newProfile]);
 
         toast({
             title: 'Profile added',
@@ -130,7 +155,7 @@ const AddTimeModalBody = ({isOpen, onClose, profilesList, setProfilesList}) => {
                         />
                         <InputNumber 
                             label="Number of Projects"
-                            defaultValue={5}
+                            defaultValue={projectCount}
                             min={1}
                             value={projectCount}
                             onChange={(event) => { changeProjectCount(event);}}
@@ -140,6 +165,7 @@ const AddTimeModalBody = ({isOpen, onClose, profilesList, setProfilesList}) => {
                                 <div >
                                     <FormLabel>{'Project Preference: '} {option}</FormLabel>
                                     <Dropdown 
+                                    defaultValue={preferences[option-1]}
                                     placeholder={''}
                                     options={options}
                                     onChange={(event) => { addPreference(event, option);}}
@@ -165,5 +191,5 @@ const AddTimeModalBody = ({isOpen, onClose, profilesList, setProfilesList}) => {
     )
 };
 
-export default AddTimeModalBody;
+export default EditTimeModal;
 

@@ -34,10 +34,17 @@ const effortDataHeaders = {
     avgAssignmentMark: "Average assignment marks"
 }
 
+const timeDataHeaders = {
+    studentId: "Student ID",
+    preference: "Preference",
+    timestamp: "Timestamp"
+}
+
 const headerMaps = {
     'students': studentDataHeaders,
     'belbin': belbinDataHeaders,
-    'effort': effortDataHeaders
+    'effort': effortDataHeaders,
+    'Times': timeDataHeaders
 }
 
 export default headerMaps;
