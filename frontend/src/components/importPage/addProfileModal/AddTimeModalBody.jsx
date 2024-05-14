@@ -11,17 +11,18 @@ import {
     useToast
 } from "@chakra-ui/react";
 
-import {Dropdown, TextField} from "../../_shared";
+import {TextField, InputNumber, Dropdown} from "../../_shared";
 import ModalFooterButtonPair from "../../_shared/ModalFooterButtonPair";
 
 const AddTimeModalBody = ({isOpen, onClose, profilesList,setProfileList }) => {
     const [studentID, setStudentID] = useState('');
-    const [projectCount, setProjectCount] = useState(''); 
+    const [projectCount, setProjectCount] = useState(5); 
     const [projectID, setProjectID] = useState('');
     const [preferenceID, setPreferenceID] = useState('');
     const [timeStamp, setTimeStamp] = useState('');
     const toast = useToast();
     const successMsg = "Added time preference result to the list of profiles for submission";
+    const [options, setOptions] = useState([1,2,3,4,5]);
 
     const closeModal = () => {
         setStudentID('');
@@ -33,6 +34,7 @@ const AddTimeModalBody = ({isOpen, onClose, profilesList,setProfileList }) => {
     }
 
     const validateFields = () => {
+        console.log("This is a console.log message");
         const errors = [];
 
         if (studentID.length === 0) {
@@ -111,6 +113,21 @@ const AddTimeModalBody = ({isOpen, onClose, profilesList,setProfileList }) => {
 
     }
 
+    const changeProjectCount = (event) => {
+        setProjectCount(parseInt(event));
+        
+        console.log("Project count: " + projectCount + "\n");
+        console.log("event: " +event+"\n");
+
+        let numbers = [];
+
+        for (let i = 0; i <= event; i++) {
+            numbers.push(i);
+        }
+        setOptions(numbers);
+        return;
+    }
+
     return(
         <Modal isOpen={isOpen} onClose={closeModal}>
             <ModalOverlay />
@@ -124,10 +141,19 @@ const AddTimeModalBody = ({isOpen, onClose, profilesList,setProfileList }) => {
                             value={studentID}
                             onChange={(event) => { setStudentID(event.target.value); }}
                         />
-                        <TextField
+                        <InputNumber 
                             label="Number of Projects"
+                            defaultValue={5}
+                            min={0}
                             value={projectCount}
-                            onChange={(event) => { setProjectCount(event.target.value); }}
+                            onChange={(event) => { changeProjectCount(event);}}
+                        />
+                        <FormLabel>Preference for project 1</FormLabel>
+                        <Dropdown 
+                            placeholder={'select'}
+                            required={true}
+                            options={options}
+                            onChange={(event) => { setPreferenceID(event.target.value);}}
                         />
                         <TextField
                             label="Project ID"

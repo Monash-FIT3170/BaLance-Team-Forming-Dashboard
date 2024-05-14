@@ -9,6 +9,7 @@ import StudentsPreviewTable from "./StudentsPreviewTable";
 import TextField from "./TextField";
 import ToggleButtonGroup from "./ToggleButtonGroup";
 import ToastSettings from "./ToastSettings";
+import InputNumber from "./InputNumber";
 
 export {
     AddButton,
@@ -21,5 +22,6 @@ export {
     StudentsPreviewTable,
     TextField,
     ToggleButtonGroup,
-    ToastSettings
+    ToastSettings,
+    InputNumber
 };
