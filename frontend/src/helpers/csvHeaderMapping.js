@@ -35,9 +35,11 @@ const effortDataHeaders = {
 }
 
 const timeDataHeaders = {
+    timestamp: "Timestamp",
+    email: "Email address",
+    fullname: "Full name",
     studentId: "Student ID",
-    preference: "Preference",
-    timestamp: "Timestamp"
+    preference: "Preference"
 }
 
 const headerMaps = {

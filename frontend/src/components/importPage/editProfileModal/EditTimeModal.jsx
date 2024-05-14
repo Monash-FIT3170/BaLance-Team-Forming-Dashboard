@@ -56,7 +56,6 @@ const EditTimeModal = ({isOpen, onClose, currProfile, profilesList, setProfilesL
     }
 
     const validateFields = () => {
-        console.log("This is a console.log message");
         const errors = [];
 
         if (studentID.length === 0) {
@@ -145,7 +144,7 @@ const EditTimeModal = ({isOpen, onClose, currProfile, profilesList, setProfilesL
             <ModalOverlay />
             <ModalContent>
                 <ModalCloseButton />
-                <ModalHeader>Add a Time Preference Result</ModalHeader>
+                <ModalHeader>Edit Time Preference Result</ModalHeader>
                 <ModalBody>
                     <FormControl isRequired>
                         <TextField

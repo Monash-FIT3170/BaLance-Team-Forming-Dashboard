@@ -122,6 +122,7 @@ const Import = () => {
                 onDeleteProfileOpen={onDeleteProfileOpen}
                 onEditProfileOpen={onEditProfileOpen}
                 setCurrProfile={setCurrProfile}
+                onChange={(event) => {alert(event)}}
             />
 
             <ConfirmClearSelection

@@ -16,6 +16,8 @@ import ModalFooterButtonPair from "../../_shared/ModalFooterButtonPair";
 
 const AddTimeModalBody = ({isOpen, onClose, profilesList, setProfilesList}) => {
     const [studentID, setStudentID] = useState('');
+    const [email, setEmail] = useState('');
+    const [fullname, setFullname] = useState('');
     const [projectCount, setProjectCount] = useState(5); 
     const [options, setOptions] = useState([1,2,3,4,5]);
     const [preferences, setPreferences] = useState([1,1,1,1,1]);
@@ -25,11 +27,19 @@ const AddTimeModalBody = ({isOpen, onClose, profilesList, setProfilesList}) => {
 
     const closeModal = () => {
         setStudentID('');
+        setEmail('');
+        setFullname('');
         setProjectCount(5);
         setOptions([1,2,3,4,5]);
         setPreferences([1,1,1,1,1]);
         setTimeStamp('');
         onClose()
+    }
+
+    const isEmailValid = (email) => {
+        // Regular expression for email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
     }
 
     const validateFields = () => {
@@ -40,6 +50,16 @@ const AddTimeModalBody = ({isOpen, onClose, profilesList, setProfilesList}) => {
             errors.push('student ID must be provided')
         } else if (studentID.search(/^[0-9]{8}$/) === -1) {
             errors.push('student ID must be an 8 digit number')
+        }
+
+        if (fullname === ''){
+            errors.push('Full name must be provided')
+        }
+
+        if (email === ''){
+            errors.push('Email must be provided')
+        }else if(!isEmailValid(email)){
+            errors.push('Email must be properly formatted')
         }
 
         // Validate timestamp
@@ -72,9 +92,11 @@ const AddTimeModalBody = ({isOpen, onClose, profilesList, setProfilesList}) => {
         }
 
         const newProfile = {
+            timeStamp: timeStamp,
+            email: email,
+            fullname: fullname,
             studentId: studentID,
-            preferences: preferences,
-            timeStamp: timeStamp
+            preferences: preferences
         }
 
         setProfilesList([...profilesList, newProfile]);
@@ -127,6 +149,16 @@ const AddTimeModalBody = ({isOpen, onClose, profilesList, setProfilesList}) => {
                             label="Student ID"
                             value={studentID}
                             onChange={(event) => { setStudentID(event.target.value); }}
+                        />
+                        <TextField 
+                            label="Full Name"
+                            value={fullname}
+                            onChange={(event) => { setFullname(event.target.value); }}
+                        />
+                        <TextField 
+                            label="Email"
+                            value={email}
+                            onChange={(event) => { setEmail(event.target.value); }}
                         />
                         <InputNumber 
                             label="Number of Projects"
