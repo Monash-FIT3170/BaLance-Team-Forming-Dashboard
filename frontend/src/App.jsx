@@ -7,6 +7,8 @@ import UploadGroupScript from './pages/UploadGroupScript';
 import CreateGroups from './pages/CreateGroups';
 import HomePage from './pages/Units';
 import LandingPage from './pages/LandingPage';
+import ContributorsPage from './pages/ContributorsPage';
+import FAQPage from './pages/FAQPage';
 import NavBar from './components/_shared/NavBar';
 import Groups from './pages/Groups';
 import Students from './pages/Students';
@@ -43,6 +45,8 @@ function App() {
           {isAuthenticated && (
             <Routes>
               <Route path="/" element={<LandingPage />} />
+              <Route path="/contributors" element={<ContributorsPage />} />
+              <Route path="/faq" element={<FAQPage />} />  
               <Route path="/home" element={<HomePage />} />
               <Route path="/groups/:unitCode/:year/:period" element={<Groups />} />
               <Route path="/students/:unitCode/:year/:period" element={<Students />} />
