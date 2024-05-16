@@ -7,6 +7,7 @@ import UploadGroupScript from './pages/UploadGroupScript';
 import CreateGroups from './pages/CreateGroups';
 import HomePage from './pages/Units';
 import LandingPage from './pages/LandingPage';
+import LoginPage from './pages/LoginPage.jsx';
 import ContributorsPage from './pages/ContributorsPage';
 import FAQPage from './pages/FAQPage';
 import NavBar from './components/_shared/NavBar';
@@ -37,7 +38,7 @@ function App() {
   return (
     <ChakraProvider theme={theme}>
       <BrowserRouter>
-        <NavBar authenticated={isAuthenticated} />
+        <NavBar authenticated={false} />
 
         <Box pt="12vh" />
 
@@ -66,6 +67,10 @@ function App() {
               <Route
                 path="/groupAnalytics/:unitCode/:year/:period/:groupNumber"
                 element={<GroupAnalytics />}
+              />
+              <Route
+                path="/login"
+                element={<LoginPage />}
               />
             </Routes>
           )}

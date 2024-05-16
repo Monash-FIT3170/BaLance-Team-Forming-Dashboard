@@ -62,9 +62,11 @@ const NavBar = ({ authenticated }) => {
         {authenticated ? (
           <Button onClick={logout} size="lg" shadow="lg" >Logout</Button>
         ) : (
-          <Button onClick={loginWithRedirect} h="3em" w="6em">
-            Login
-          </Button>
+          <Link as={RouterLink} to="/login" ml="8">
+            <Button h="3em" w="6em">
+              Login
+            </Button>
+          </Link>
         )}
       </Flex>
     </Flex>
