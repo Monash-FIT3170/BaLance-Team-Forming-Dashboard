@@ -21,7 +21,7 @@ const NavBar = ({ authenticated }) => {
       left={0}
       right={0}
       p="5"
-      height={["5vw", "5vh", "10vw", "10vh", "5em"]}
+      height={["4vh", "3vw", "8vh", "5vw", "5em"]}
       bgColor="balance.header_color"
       justifyContent="space-between"
       alignItems="center"
@@ -31,29 +31,31 @@ const NavBar = ({ authenticated }) => {
         <Link as={RouterLink} to="/">
           <Image
             height="auto"
+            minHeight="1em"
             maxHeight="4em"
+            minWidth="4em"
             src={logo}
             alt="BaLance: Team Forming Dashboard"
           />
         </Link>
-        <Link as={RouterLink} to="/home" ml="0.8vw">
-          <Button colorScheme="white" variant="solid" color="black" fontSize={["2vw", "2vw", "3vw", "2em"]} fontWeight="light" size="lg" height="63" px="6">   
+        <Link as={RouterLink} to="/home" ml="2vw">
+          <Button colorScheme="white" variant="solid" color="black" fontSize={["3.2vw", "3.2vw", "3.2vw", "2em"]} fontWeight="light" size="lg" height="63" px="2vw">   
           {/* original size is 20, and no fontWeight*/}
             Home
           </Button>
         </Link>
-        <Link as={RouterLink} to="/tutorial" ml="0.8vw">
-          <Button colorScheme="white" variant="solid" color="black" fontSize={["2vw", "2vw", "3vw", "2em"]} fontWeight="light" size="lg" height="63" px="6">
+        <Link as={RouterLink} to="/tutorial" ml="2vw">
+          <Button colorScheme="white" variant="solid" color="black" fontSize={["3.2vw", "3.2vw", "3.2vw", "2em"]} fontWeight="light" size="lg" height="63" px="2vw">
             Tutorial
           </Button>
         </Link>
-        <Link as={RouterLink} to="/faq" ml="0.8vw">
-          <Button colorScheme="white" variant="solid" color="black" fontSize={["2vw", "2vw", "3vw", "2em"]} fontWeight="light" size="lg" height="63" px="6">
+        <Link as={RouterLink} to="/faq" ml="2vw">
+          <Button colorScheme="white" variant="solid" color="black" fontSize={["3.2vw", "3.2vw", "3.2vw", "2em"]} fontWeight="light" size="lg" height="63" px="2vw">
             FAQ
           </Button>
         </Link>
-        <Link as={RouterLink} to="/contributors" ml="0.8vw">
-          <Button colorScheme="white" variant="solid" color="black" fontSize={["2vw", "2vw", "3vw", "2em"]} fontWeight="light" size="lg" height="63" px="6">
+        <Link as={RouterLink} to="/contributors" ml="2vw">
+          <Button colorScheme="white" variant="solid" color="black" fontSize={["3.2vw", "3.2vw", "3.2vw", "2em"]} fontWeight="light" size="lg" height="63" px="2vw">
             Contributors
           </Button>
         </Link>
@@ -61,10 +63,10 @@ const NavBar = ({ authenticated }) => {
       </Flex>
       <Flex>
         {authenticated ? (
-          <Button onClick={logout} size="lg" shadow="lg" h={["2vw", "2vh", "3em"]} w={["3vw", "4vh", "6em"]}>Logout</Button>
+          <Button onClick={logout} size="lg" shadow="lg">Logout</Button>
         ) : (
           <Link as={RouterLink} to="/login" ml="8">
-            <Button h={["2vw", "2vh", "3em"]} w={["3vw", "4vh", "6em"]}>
+            <Button>
               Login
             </Button>
           </Link>
