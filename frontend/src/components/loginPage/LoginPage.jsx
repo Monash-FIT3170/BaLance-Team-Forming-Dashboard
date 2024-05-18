@@ -41,7 +41,7 @@ function LoginPage() {
                 justifyContent="center"
                 alignItems="center"
             >
-                <Avatar bg="blue.500" />
+                <Avatar bg="yellow.400" />
                 <Heading>Login</Heading>
                 <Box minW={{ base: "90%", md: "468px" }}>
                     <form>
@@ -85,7 +85,7 @@ function LoginPage() {
                                 borderRadius={0}
                                 type="submit"
                                 variant="solid"
-                                colorScheme="blue"
+                                colorScheme="yellow"
                                 width="full"
                             >
                                 Login
@@ -96,7 +96,7 @@ function LoginPage() {
             </Stack>
             <Box>
                 New to us?{" "}
-                <Link as={RouterLink} to="/signup" color="black">
+                <Link as={RouterLink} to="/signup" color="yellow.400">
                     Sign Up
                 </Link>
             </Box>

@@ -41,7 +41,7 @@ function RegistrationPage() {
                 justifyContent="center"
                 alignItems="center"
             >
-                <Avatar bg="blue.500" />
+                <Avatar bg="yellow.400" />
                 <Heading>Sign Up</Heading>
                 <Box minW={{ base: "90%", md: "468px" }}>
                     <form>
@@ -85,7 +85,7 @@ function RegistrationPage() {
                                 borderRadius={0}
                                 type="submit"
                                 variant="solid"
-                                colorScheme="blue"
+                                colorScheme="yellow"
                                 width="full"
                             >
                                 Register
@@ -96,7 +96,7 @@ function RegistrationPage() {
             </Stack>
             <Box>
                 Already have an account?{" "}
-                <Link as={RouterLink} to="/login" color="black">
+                <Link as={RouterLink} to="/login" color="yellow.400">
                     Login
                 </Link>
             </Box>
