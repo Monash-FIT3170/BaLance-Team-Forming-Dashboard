@@ -395,9 +395,42 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
 };
 
 const createGroupsTimePref = async (unitCode, year, period, groupSize, variance) => {
-    // promiseBasedQuery ?
+    const unitOffId = await selectUnitOffKey(unitCode, year, period);
+
+
+    
+    // promiseBasedQuery ? select students
+    const students = await promiseBasedQuery(
+        "SELECT stud.stud_unique_id, alloc.unit_off_lab_id " +
+        "FROM student stud " +
+        "INNER JOIN student_lab_allocation alloc ON stud.stud_unique_id=alloc.stud_unique_id " +
+        "INNER JOIN unit_off_lab lab ON lab.unit_off_lab_id=alloc.unit_off_lab_id " +
+        "INNER JOIN unit_offering unit ON unit.unit_off_id=lab.unit_off_id " +
+        "INNER JOIN unit_offering unit ON unit.unit_off_id=lab.unit_off_id " +
+        "INNER JOIN project_preferences pref ON pref.stud_unique_id=stud.stud_unique_id" +
+
+        "WHERE " +
+        "   unit.unit_code=? " +
+        "   AND unit.unit_off_year=? " +
+        "   AND unit.unit_off_period=? " +
+        "   AND pref.project_id=? " +
+        "   AND pref.preference_rank=? " +
+        "   AND pref.submission_timestamp=?;" +
+        "ORDER BY unit_off_lab_id;",
+        [unitCode, year, period, "project", "prefRrank", "subTime"]
+    );
+
+
+
 
     // splitbylab 
+    const labStudents = {};
+    students.forEach((student) => {
+        if (!labStudents[student.unit_off_lab_id]) {
+            labStudents[student.unit_off_lab_id] = [];
+        }
+        labStudents[student.unit_off_lab_id].push(student.stud_unique_id);
+    });
 
     // sorting to groups based on groupsize
 
@@ -416,6 +449,7 @@ const groupFormationStrategies = {
     random: createGroupsRandom,
     effort: createGroupsEffort,
     belbin: createGroupsBelbin,
+    preference: createGroupsTimePref
 };
 
 const splitGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) => {
@@ -471,3 +505,4 @@ module.exports = {
     groupFormationStrategies,
     shuffle,
 };
+
