@@ -1,6 +1,7 @@
 import AddStudentModalBody from "./AddStudentModalBody";
 import AddBelbinModalBody from "./AddBelbinModalBody";
 import AddEffortModalBody from "./AddEffortModalBody";
+import AddTimeModalBody from "./AddTimeModalBody";
 
 const AddProfileModal = ({dataType, profilesList, setProfilesList, isOpen, onClose}) => {
 
@@ -35,6 +36,14 @@ const AddProfileModal = ({dataType, profilesList, setProfilesList, isOpen, onClo
                     profilesList={profilesList}
                     setProfilesList={setProfilesList}
                 />
+            case "times":
+                return <AddTimeModalBody
+                    isOpen={isOpen}
+                    onClose={onClose}
+                    profilesList={profilesList}
+                    setProfilesList={setProfilesList}
+                />
+
         }
     }
 

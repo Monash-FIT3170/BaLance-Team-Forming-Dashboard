@@ -92,7 +92,7 @@ const Import = () => {
                 <Flex width="33%" flexDirection="column" justifyContent="flex-end">
                     <Dropdown
                         dropDownDesc={'Select the type of data to upload'}
-                        options={['students', 'belbin', 'effort']}
+                        options={['students', 'belbin', 'effort','times']}
                         width="100%"
                         onChange={(event) => {
                             const selection = event.target.value;
@@ -122,6 +122,7 @@ const Import = () => {
                 onDeleteProfileOpen={onDeleteProfileOpen}
                 onEditProfileOpen={onEditProfileOpen}
                 setCurrProfile={setCurrProfile}
+                onChange={(event) => {alert(event)}}
             />
 
             <ConfirmClearSelection
