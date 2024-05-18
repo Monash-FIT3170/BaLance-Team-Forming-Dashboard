@@ -15,13 +15,14 @@ import {
     FormControl,
     FormHelperText,
     InputRightElement
-  } from "@chakra-ui/react";
+} from "@chakra-ui/react";
+import { Link as RouterLink } from 'react-router-dom';
 import { FaUserAlt, FaLock } from "react-icons/fa";
 
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
 
-function LoginPage() {
+function RegistrationPage() {
     const [showPassword, setShowPassword] = useState(false);
 
     const handleShowClick = () => setShowPassword(!showPassword);
@@ -41,7 +42,7 @@ function LoginPage() {
                 alignItems="center"
             >
                 <Avatar bg="blue.500" />
-                <Heading>Login</Heading>
+                <Heading>Sign Up</Heading>
                 <Box minW={{ base: "90%", md: "468px" }}>
                     <form>
                         <Stack
@@ -87,16 +88,16 @@ function LoginPage() {
                                 colorScheme="blue"
                                 width="full"
                             >
-                                Login
+                                Register
                             </Button>
                         </Stack>
                     </form>
                 </Box>
             </Stack>
             <Box>
-                New to us?{" "}
-                <Link color="black" href="#">
-                    Sign Up
+                Already have an account?{" "}
+                <Link as={RouterLink} to="/login" color="black">
+                    Login
                 </Link>
             </Box>
         </Flex>
@@ -104,4 +105,4 @@ function LoginPage() {
 
 }
 
-export default LoginPage;
+export default RegistrationPage;
