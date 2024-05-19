@@ -84,7 +84,12 @@ export function Contributor(contributor) {
         "tutorial": "✅",
         "talk": "📢",
         "userTesting": "📓",
-        "video": "📹"
+        "video": "📹",
+        "team1": "1️⃣",
+        "team2": "2️⃣",
+        "team2": "3️⃣",
+        "releaseTrainEngineer": "🚂",
+        "systemArchitect": "🏛️",
     }
     //TODO: Add some better styling
     return (
