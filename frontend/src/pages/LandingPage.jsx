@@ -6,8 +6,10 @@ import {
     Text,
     Button,
     Box,
-    Image
+    Image,
+    Link
 } from '@chakra-ui/react';
+import { Link as RouterLink } from 'react-router-dom';
 
 import logo from '../assets/logo.png';
 function LandingPage() {
@@ -57,23 +59,27 @@ function LandingPage() {
                     <Stack
                         spacing={{ base: 4, sm: 6 }}
                         direction={{ base: 'column', sm: 'row' }}>
-                        <Button
-                            rounded={'full'}
-                            size={'lg'}
-                            fontWeight={'normal'}
-                            px={6}
-                            colorScheme={'yellow'}
-                            bg={'yellow.400'}
-                            _hover={{ bg: 'yellow.500' }}>
-                            Get Started
-                        </Button>
-                        <Button
-                            rounded={'full'}
-                            size={'lg'}
-                            fontWeight={'normal'}
-                            px={6}>
-                            Another button
-                        </Button>
+                        <Link as={RouterLink} to="/home" ml="8">
+                            <Button
+                                rounded={'full'}
+                                size={'lg'}
+                                fontWeight={'normal'}
+                                px={6}
+                                colorScheme={'yellow'}
+                                bg={'yellow.400'}
+                                _hover={{ bg: 'yellow.500' }}>
+                                Get Started
+                            </Button>
+                        </Link>
+                        <Link as={RouterLink} to="/login" ml="8">
+                            <Button
+                                rounded={'full'}
+                                size={'lg'}
+                                fontWeight={'normal'}
+                                px={6}>
+                                Log In
+                            </Button>
+                        </Link>
                     </Stack>
                 </Stack>
                 <Flex

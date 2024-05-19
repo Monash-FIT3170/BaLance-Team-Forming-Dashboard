@@ -81,15 +81,17 @@ function LoginPage() {
                                     <Link>forgot password?</Link>
                                 </FormHelperText>
                             </FormControl>
-                            <Button
-                                borderRadius={0}
-                                type="submit"
-                                variant="solid"
-                                colorScheme="yellow"
-                                width="full"
-                            >
-                                Login
-                            </Button>
+                            <Link as={RouterLink} to="/home" ml="8">
+                                <Button
+                                    borderRadius={0}
+                                    type="submit"
+                                    variant="solid"
+                                    colorScheme="yellow"
+                                    width="full"
+                                >
+                                    Login
+                                </Button>
+                            </Link>
                         </Stack>
                     </form>
                 </Box>
