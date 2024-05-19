@@ -29,6 +29,7 @@ import UnitAnalytics from './pages/UnitAnalytics';
 import GroupAnalytics from './pages/GroupAnalytics';
 import Import from './pages/Import';
 import RegistrationPage from "./components/loginPage/RegistrationPage.jsx";
+import FAQ from './pages/FAQ';
 
 const theme = extendTheme({
   colors: {
@@ -80,6 +81,10 @@ function App() {
               <Route
                 path="/groupAnalytics/:unitCode/:year/:period/:groupNumber"
                 element={<GroupAnalytics />}
+              />
+              <Route
+                path="/FAQ"
+                element={<FAQ />}
               />
               <Route
                 path="/login"
