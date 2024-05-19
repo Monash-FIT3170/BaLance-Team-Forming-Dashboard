@@ -122,7 +122,7 @@ const EditTimeModal = ({isOpen, onClose, currProfile, profilesList, setProfilesL
             email: email,
             fullname: fullname,
             studentId: studentID,
-            preferences: preferences
+            preferences: preferencesToString(preferences)
         }
 
         setProfilesList([...newProfilesList, newProfile]);
@@ -138,6 +138,15 @@ const EditTimeModal = ({isOpen, onClose, currProfile, profilesList, setProfilesL
         closeModal()
 
 
+    }
+
+    const preferencesToString = (preferences) => {
+        let preferencesString = ""
+        for(let i = 0; i < preferences.length; i++){
+            preferencesString += preferences[i]
+            preferencesString += " "
+        }
+        return preferencesString
     }
 
     const changeProjectCount = (event) => {

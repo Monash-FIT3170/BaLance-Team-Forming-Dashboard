@@ -96,8 +96,14 @@ const AddTimeModalBody = ({isOpen, onClose, profilesList, setProfilesList}) => {
             email: email,
             fullname: fullname,
             studentId: studentID,
-            preferences: preferences
+            preferences: preferencesToString(preferences)
         }
+        // for( i = 0; i < preferences.length; i++){
+        //     newProfile["Project " + i + " Preference"] = preferences[i]
+        // }
+        // console.log(newProfile);
+
+
 
         setProfilesList([...profilesList, newProfile]);
 
@@ -112,6 +118,15 @@ const AddTimeModalBody = ({isOpen, onClose, profilesList, setProfilesList}) => {
         closeModal()
 
 
+    }
+
+    const preferencesToString = (preferences) => {
+        let preferencesString = ""
+        for(let i = 0; i < preferences.length; i++){
+            preferencesString += preferences[i]
+            preferencesString += " "
+        }
+        return preferencesString
     }
 
     const changeProjectCount = (event) => {
