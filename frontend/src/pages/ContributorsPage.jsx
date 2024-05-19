@@ -1,60 +1,112 @@
-import React from 'react';
 
-function ContributorsPage() {
-    // Define the contributor data by year
-    const contributorData = {
-        2024: [
-            { name: "Alexis Mcharo", url: "https://github.com/alexismcharo" },
-            { name: "Aung Khant Kyaw", url: "https://github.com/Aung33270333" },
-            { name: "Daniel Erik Hong", url: "https://github.com/dhon0010" },
-            { name: "Domico Carlo Wibowo", url: "https://github.com/SetPizzaOnBroil30min" },
-            { name: "Ethan Chuen", url: "https://github.com/echu0033" },
-            { name: "Jeffrey Yan", url: "https://github.com/jeffreyyan4" },
-            { name: "Kenan Baydar", url: "https://github.com/kbay0009" },
-            { name: "Lachlan Williams", url: "https://github.com/LachlanWilliams" },
-            { name: "Mohammad Zawari", url: "https://github.com/me-za" },
-            { name: "Oneil Chiang", url: "https://github.com/oneil1625" },
-            { name: "Rishi Bidani", url: "https://github.com/Rishi-Bidani" },
-            { name: "Thejas Thekkekara Vinod", url: "https://github.com/Alucardigan" },
-            { name: "Trevor Yao", url: "https://github.com/WofWaf" },
-            { name: "Ying-Tsai Wang", url: "https://github.com/ying-tsai-wang" },
-            { name: "Zhijun Chen", url: "https://github.com/ZCStephen" }
-        ],
-        2023: [
-            { name: "Abigail Lithwick", url: "https://github.com/abigail-rose" },
-            { name: "Ahmed Khadawardi", url: "https://github.com/ahes0001" },
-            { name: "Alex Kanellis", url: "https://github.com/akanel15" },
-            { name: "Baaset Moslih", url: "https://github.com/AbBaSaMo" },
-            { name: "Cheryl Lau", url: "https://github.com/clau-0016" },
-            { name: "Francis Anthony", url: "https://github.com/francisanthony17" },
-            { name: "James Hunt", url: "https://github.com/jhun0012" },
-            { name: "Jon Yip", url: "https://github.com/jon65" },
-            { name: "Luke Bonso", url: "https://github.com/lbon0008" },
-            { name: "Mariah McCleery", url: "https://github.com/MariahMcCleery" },
-            { name: "Mark Mikhail", url: "https://github.com/Mark-Mikhail" },
-            { name: "Matthew Finis", url: "https://github.com/mfin0008" },
-            { name: "Nethara Athukorala", url: "https://github.com/nath0002" }
-        ]
-    };
+//external
+import { useEffect, useState } from "react"
+import { Avatar, Box, Grid, GridItem, Heading, Link, Text, Wrap, WrapItem } from '@chakra-ui/react'
+//internal
+
+/*
+Contributors page: used to display the contributions 
+*/
+export default function ContributorsPage() {
+    //link to the contributions file. Need to confirm that this is best practice
+    const CONTRIBUTORS_FILE = "https://raw.githubusercontent.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/contributors_page/.all-contributorsrc"
+    //contributors are a state variable so they are automatically updated when they are changed 
+    const [contributors, setContributors] = useState([])
+    useEffect(() => {
+        fetch(CONTRIBUTORS_FILE, {
+            method: "GET",
+            mode: "cors",//need this to pass header check
+
+        }
+        ).then(response => response.json()).then(data => {//convert response to json then set the state variable to the json 
+            setContributors(data.contributors)
+
+        },
+        )
+    }, []);//useEffect hook that has no dependency. Used to fetch the allconstributors file on page load and update the contributors state variable 
 
     return (
-        <div style={{ padding: '20px' }}>
-            {Object.entries(contributorData).map(([year, contributors]) => (
-                <div key={year}>
-                    <h2 style={{ fontFamily: 'Arial, sans-serif', fontWeight: 'bold', fontSize: '24px', color: '#333', marginBottom: '10px' }}>
-                        Contributors ({year})
-                    </h2>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
-                        {contributors.map((contributor, index) => (
-                            <a key={index} href={contributor.url} target="_blank" style={{ textDecoration: 'none', color: 'blue', fontFamily: 'Arial, sans-serif', fontSize: '16px' }}>
-                                {contributor.name}
-                            </a>
-                        ))}
-                    </div>
-                </div>
-            ))}
-        </div>
-    );
+        <Box paddingInline={'2rem'} marginBottom={'4rem'}>
+            <Heading>Contributors Page</Heading>
+            <Grid gap={6}>
+                {Object.keys(contributors).map((year)=> YearBlock(year,contributors[year]))}
+            </Grid>
+
+        </Box>
+    )
+}
+export function YearBlock(year, contributors){
+    return(
+        <Box paddingInline={'2rem'} marginBottom={'4rem'}>
+            <Heading>{year}</Heading>
+            <Grid templateColumns={'repeat(auto-fit, minmax(250px, 1fr))'} gap={6}>
+                {contributors.map((contributor) => Contributor(contributor))}
+            </Grid>
+
+        </Box>
+    )
+}
+/*'
+Contributors Component
+Takes a contributor object in the format of the allcontributors guide and fits it into a neat component. 
+*/
+export function Contributor(contributor) {
+    //TODO: Need a better way to do this
+    const emojiKey = {
+        "audio": "🔊",
+        "a11y": "♿️",
+        "bug": "🐛",
+        "blog": "📝",
+        "business": "💼",
+        "code": "💻",
+        "content": "🖋",
+        "data": "🔣",
+        "doc": "📖",
+        "design": "🎨",
+        "example": "💡",
+        "eventOrganizing": "📋",
+        "financial": "💵",
+        "fundingFinding": "🔍",
+        "ideas": "🤔",
+        "infra": "🚇",
+        "maintenance": "🚧",
+        "mentoring": "🧑‍🏫",
+        "platform": "📦",
+        "plugin": "🔌",
+        "projectManagement": "📆",
+        "promotion": "📢",
+        "question": "💬",
+        "research": "🔬",
+        "review": "👀",
+        "security": "🛡️",
+        "tool": "🔧",
+        "translation": "🌐",
+        "test": "⚠️",
+        "tutorial": "✅",
+        "talk": "📢",
+        "userTesting": "📓",
+        "video": "📹",
+        "team1": "1️⃣",
+        "team2": "2️⃣",
+        "team2": "3️⃣",
+        "releaseTrainEngineer": "🚂",
+        "systemArchitect": "🏛️",
+    }
+    //TODO: Add some better styling
+    return (
+        <GridItem p={4} boxShadow={'md'}>
+            <Grid templateRows='repeat(2, 1fr)'templateColumns='repeat(2, 1fr)' justifyItems={'center'}>
+                <GridItem rowSpan={2} colSpan={1}>
+                    <Avatar src={contributor.avatar_url} />
+                </GridItem>
+                <GridItem colSpan={1} isTruncated>
+                    <Link href={contributor.profile} >{contributor.name}</Link>
+                </GridItem>
+                <GridItem colSpan={1}>
+                    {contributor.contributions.map((contributionType,index) => emojiKey[contributionType])}
+                </GridItem>
+            </Grid>            
+        </GridItem>
+    )
 }
 
-export default ContributorsPage;

@@ -4,6 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 
 import { MockAuth } from '../../helpers/mockAuth';
 import logo from '../../assets/logo_separated.png';
+import { useNavigate } from 'react-router-dom';
 
 const NavBar = ({ authenticated }) => {
   let authService = {
@@ -13,6 +14,12 @@ const NavBar = ({ authenticated }) => {
 
   const { loginWithRedirect, logout } =
     authService[import.meta.env.VITE_REACT_APP_AUTH]();
+  const navigate = useNavigate();
+
+  const navigateToPage = () =>{
+    console.log("Going to contributors page")
+    navigate("/ContributorPage")
+  }
 
   return (
     <Flex as="header"
@@ -52,7 +59,7 @@ const NavBar = ({ authenticated }) => {
             <b>Tutorial</b>
           </Button>
         </Link>
-        <Link as={RouterLink} to="/faq" ml="8">
+        <Link as={RouterLink} to="/FAQ" ml="8">
           <Button colorScheme="white" variant="solid" color="black" fontSize="1.4em" fontWeight="light" size="lg" height="63" px="6">
             <b>FAQ</b>
           </Button>

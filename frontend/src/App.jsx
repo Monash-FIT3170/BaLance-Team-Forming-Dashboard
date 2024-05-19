@@ -21,7 +21,6 @@ import HomePage from './pages/Units';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './components/loginPage/LoginPage.jsx';
 import ContributorsPage from './pages/ContributorsPage';
-import FAQPage from './pages/FAQPage';
 import NavBar from './components/_shared/NavBar';
 import Groups from './pages/Groups';
 import Students from './pages/Students';
@@ -89,6 +88,10 @@ function App() {
               <Route
                 path="/FAQ"
                 element={<FAQ />}
+              />
+              <Route
+                path="/login"
+                element={<LoginPage />}
               />
             </Routes>
           )}

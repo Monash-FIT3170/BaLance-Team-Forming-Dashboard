@@ -1,0 +1,402 @@
+{
+  "projectName": "BaLance-Team-Forming-Dashboard",
+  "projectOwner": "Monash-FIT3170",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 0,
+  "commit": false,
+  "commitConvention": "none",
+  "contributors": {
+    "2023":[{
+      "login": "abigail-rose",
+      "name": "Abby",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80239117?v=4",
+      "profile": "https://github.com/abigail-rose",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "review"
+      ]
+    },
+    {
+      "login": "ahes0001",
+      "name": "ahes0001",
+      "avatar_url": "https://avatars.githubusercontent.com/u/105088591?v=4",
+      "profile": "https://github.com/ahes0001",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "review"
+      ]
+    },
+    {
+      "login": "akanel15",
+      "name": "Alex",
+      "avatar_url": "https://avatars.githubusercontent.com/u/126401755?v=4",
+      "profile": "https://github.com/akanel15",
+      "contributions": [
+        "code",
+        "design",
+        "bug"
+      ]
+    },
+    {
+      "login": "AbBaSaMo",
+      "name": "AbBaSamo",
+      "avatar_url": "https://avatars.githubusercontent.com/u/95030427?v=4",
+      "profile": "https://github.com/AbBaSaMo",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "review",
+        "doc"
+      ]
+    },
+    {
+      "login": "clau-0016",
+      "name": "clau-0016",
+      "avatar_url": "https://avatars.githubusercontent.com/u/128362499?v=4",
+      "profile": "https://github.com/clau-0016",
+      "contributions": [
+        "code",
+        "design",
+        "bug"
+      ]
+    },
+    {
+      "login": "francisanthony17",
+      "name": "francisanthony17",
+      "avatar_url": "https://avatars.githubusercontent.com/u/109979329?v=4",
+      "profile": "https://github.com/francisanthony17",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "review"
+      ]
+    },
+    {
+      "login": "jhun0012",
+      "name": "jhun0012",
+      "avatar_url": "https://avatars.githubusercontent.com/u/128357966?v=4",
+      "profile": "https://github.com/jhun0012",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "review",
+        "doc"
+      ]
+    },
+    {
+      "login": "jon65",
+      "name": "Jonathan Yip",
+      "avatar_url": "https://avatars.githubusercontent.com/u/64187809?v=4",
+      "profile": "https://github.com/jon65",
+      "contributions": [
+        "code",
+        "design",
+        "bug"
+      ]
+    },
+    {
+      "login": "lbon0008",
+      "name": "lbon0008",
+      "avatar_url": "https://avatars.githubusercontent.com/u/61959810?v=4",
+      "profile": "https://github.com/lbon0008",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "review"
+      ]
+    },
+    {
+      "login": "MariahMcCleery",
+      "name": "MariahMcCleery",
+      "avatar_url": "https://avatars.githubusercontent.com/u/89681870?v=4",
+      "profile": "https://github.com/MariahMcCleery",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "doc"
+      ]
+    },
+    {
+      "login": "Mark-Mikhail",
+      "name": "Mark-Mikhail",
+      "avatar_url": "https://avatars.githubusercontent.com/u/128358310?v=4",
+      "profile": "https://github.com/Mark-Mikhail",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "review"
+      ]
+    },
+    {
+      "login": "mfin0008",
+      "name": "mfin0008",
+      "avatar_url": "https://avatars.githubusercontent.com/u/88076329?v=4",
+      "profile": "https://github.com/mfin0008",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "review"
+      ]
+    },
+    {
+      "login": "nath0002",
+      "name": "nath0002",
+      "avatar_url": "https://avatars.githubusercontent.com/u/111645579?v=4",
+      "profile": "https://github.com/nath0002",
+      "contributions": [
+        "code",
+        "design",
+        "bug"
+      ]
+    },
+    {
+      "login": "Iandawarrior",
+      "name": "Ian Kabil Felix",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17513301?v=4",
+      "profile": "https://github.com/Iandawarrior",
+      "contributions": [
+        "mentoring"
+      ]
+    },
+    {
+      "login": "riordanalfredo",
+      "name": "Riordan Alfredo",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17421174?v=4",
+      "profile": "https://github.com/riordanalfredo",
+      "contributions": [
+        "mentoring",
+        "design",
+        "data",
+        "ideas"
+      ]
+    }],
+    "2024":[{
+      "login": "oneil1625",
+      "name": "oneil1625",
+      "avatar_url": "https://avatars.githubusercontent.com/u/163804456?v=4",
+      "profile": "https://github.com/oneil1625",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "team2",
+        "releaseTrainEngineer"
+      ]
+    },
+    {
+      "login": "dcor0010",
+      "name": "dcor0010",
+      "avatar_url": "https://avatars.githubusercontent.com/u/163801705?v=4",
+      "profile": "https://github.com/dcor0010",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "team3",
+        "projectManagement"
+      ]
+    },
+    {
+      "login": "Rishi-Bidani",
+      "name": "Rishi-Bidani",
+      "avatar_url": "https://avatars.githubusercontent.com/u/64310471?v=4",
+      "profile": "https://github.com/Rishi-Bidani",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "team2",
+        "systemArchitect"
+      ]
+      
+    },
+    {
+      "login": "SetPizzaOnBroil30min",
+      "name": "Domico Carlo",
+      "avatar_url": "https://avatars.githubusercontent.com/u/123727073?v=4",
+      "profile": "https://github.com/SetPizzaOnBroil30min",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "team1",
+        "systemArchitect"
+      ]
+    },
+    {
+      "login": "Alucardigan",
+      "name": "Thejas ",
+      "avatar_url": "https://avatars.githubusercontent.com/u/100405818?v=4",
+      "profile": "https://github.com/Alucardigan",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "team3",
+        "systemArchitect"
+      ]
+    },
+    {
+      "login": "ZCStephen",
+      "name": "ZCStephen",
+      "avatar_url": "https://avatars.githubusercontent.com/u/131650135?v=4",
+      "profile": "https://github.com/ZCStephen",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "team1",
+        "projectManagement"
+      ]
+    },
+    {
+      "login": "jeffreyyan4",
+      "name": "jeffreyyan4",
+      "avatar_url": "https://avatars.githubusercontent.com/u/163799488?v=4",
+      "profile": "https://github.com/jeffreyyan4",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "team2",
+        "projectManagement"
+      ]
+    },
+    {
+      "login": "LachlanWilliams",
+      "name": "Lachlan Williams",
+      "avatar_url": "https://avatars.githubusercontent.com/u/93383173?v=4",
+      "profile": "https://github.com/LachlanWilliams",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "team2",
+        "projectManagement"
+      ]
+    },
+    {
+      "login": "ying-tsai-wang",
+      "name": "charles",
+      "avatar_url": "https://avatars.githubusercontent.com/u/127176651?v=4",
+      "profile": "https://github.com/ying-tsai-wang",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "team1",
+        "projectManagement"
+      ]
+    },
+    {
+      "login": "dhon0010",
+      "name": "dhon0010",
+      "avatar_url": "https://avatars.githubusercontent.com/u/162076320?v=4",
+      "profile": "https://github.com/dhon0010",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "team3",
+        "projectManagement"
+      ]
+    },
+    {
+      "login": "kbay0009",
+      "name": "kbay0009",
+      "avatar_url": "https://avatars.githubusercontent.com/u/102573143?v=4",
+      "profile": "https://github.com/kbay0009",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "team1",
+        "releaseTrainEngineer"
+      ]
+    },
+    {
+      "login": "WofWaf",
+      "name": "Trevor Yao",
+      "avatar_url": "https://avatars.githubusercontent.com/u/97369669?v=4",
+      "profile": "https://github.com/WofWaf",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "team2",
+        "releaseTrainEngineer"
+      ]
+    },
+    
+    {
+      "login": "echu0033",
+      "name": "echu0033",
+      "avatar_url": "https://avatars.githubusercontent.com/u/163799481?v=4",
+      "profile": "https://github.com/echu0033",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "team1",
+        "releaseTrainEngineer"
+      ]
+    },
+    {
+      "login": "Aung33270333",
+      "name": "Aung33270333",
+      "avatar_url": "https://avatars.githubusercontent.com/u/127281485?v=4",
+      "profile": "https://github.com/Aung33270333",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "team3",
+        "releaseTrainEngineer"
+      ]
+    },
+    {
+      "login": "me-za",
+      "name": "me-za",
+      "avatar_url": "https://avatars.githubusercontent.com/u/90816008?v=4",
+      "profile": "https://github.com/me-za",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "team3",
+        "releaseTrainEngineer"
+      ]
+    },
+    {
+      "login": "alexismcharo",
+      "name": "alexismcharo",
+      "avatar_url": "https://avatars.githubusercontent.com/u/163802955?v=4",
+      "profile": "https://github.com/alexismcharo",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "team3",
+        "systemArchitect"
+      ]
+    }]
+    
+  },
+  "contributorsPerLine": 7,
+  "linkToUsage": false
+}
