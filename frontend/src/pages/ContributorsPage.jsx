@@ -9,7 +9,7 @@ Contributors page: used to display the contributions
 */
 export default function ContributorsPage() {
     //link to the contributions file. Need to confirm that this is best practice
-    const CONTRIBUTORS_FILE = "https://raw.githubusercontent.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/contributors_page/.all-contributorsrc"
+    const CONTRIBUTORS_FILE = "https://raw.githubusercontent.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/main/.all-contributorsrc"
     //contributors are a state variable so they are automatically updated when they are changed 
     const [contributors, setContributors] = useState([])
     useEffect(() => {
