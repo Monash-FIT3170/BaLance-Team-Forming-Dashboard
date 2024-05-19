@@ -193,7 +193,22 @@
       "contributions": [
         "code",
         "design",
-        "bug"
+        "bug",
+        "team2",
+        "releaseTrainEngineer"
+      ]
+    },
+    {
+      "login": "dcor0010",
+      "name": "dcor0010",
+      "avatar_url": "https://avatars.githubusercontent.com/u/163801705?v=4",
+      "profile": "https://github.com/dcor0010",
+      "contributions": [
+        "code",
+        "design",
+        "bug",
+        "team3",
+        "projectManagement"
       ]
     },
     {
@@ -204,7 +219,9 @@
       "contributions": [
         "code",
         "design",
-        "bug"
+        "bug",
+        "team2",
+        "systemArchitect"
       ]
       
     },
@@ -216,7 +233,9 @@
       "contributions": [
         "code",
         "design",
-        "bug"
+        "bug",
+        "team1",
+        "systemArchitect"
       ]
     },
     {
@@ -227,7 +246,9 @@
       "contributions": [
         "code",
         "design",
-        "bug"
+        "bug",
+        "team3",
+        "systemArchitect"
       ]
     },
     {
@@ -238,7 +259,9 @@
       "contributions": [
         "code",
         "design",
-        "bug"
+        "bug",
+        "team1",
+        "projectManagement"
       ]
     },
     {
@@ -249,7 +272,9 @@
       "contributions": [
         "code",
         "design",
-        "bug"
+        "bug",
+        "team2",
+        "projectManagement"
       ]
     },
     {
@@ -260,7 +285,9 @@
       "contributions": [
         "code",
         "design",
-        "bug"
+        "bug",
+        "team2",
+        "projectManagement"
       ]
     },
     {
@@ -271,7 +298,9 @@
       "contributions": [
         "code",
         "design",
-        "bug"
+        "bug",
+        "team1",
+        "projectManagement"
       ]
     },
     {
@@ -282,7 +311,9 @@
       "contributions": [
         "code",
         "design",
-        "bug"
+        "bug",
+        "team3",
+        "projectManagement"
       ]
     },
     {
@@ -293,7 +324,9 @@
       "contributions": [
         "code",
         "design",
-        "bug"
+        "bug",
+        "team1",
+        "releaseTrainEngineer"
       ]
     },
     {
@@ -304,7 +337,9 @@
       "contributions": [
         "code",
         "design",
-        "bug"
+        "bug",
+        "team2",
+        "releaseTrainEngineer"
       ]
     },
     
@@ -316,7 +351,9 @@
       "contributions": [
         "code",
         "design",
-        "bug"
+        "bug",
+        "team1",
+        "releaseTrainEngineer"
       ]
     },
     {
@@ -327,7 +364,9 @@
       "contributions": [
         "code",
         "design",
-        "bug"
+        "bug",
+        "team3",
+        "releaseTrainEngineer"
       ]
     },
     {
@@ -338,7 +377,9 @@
       "contributions": [
         "code",
         "design",
-        "bug"
+        "bug",
+        "team3",
+        "releaseTrainEngineer"
       ]
     },
     {
@@ -349,7 +390,9 @@
       "contributions": [
         "code",
         "design",
-        "bug"
+        "bug",
+        "team3",
+        "systemArchitect"
       ]
     }]
     
