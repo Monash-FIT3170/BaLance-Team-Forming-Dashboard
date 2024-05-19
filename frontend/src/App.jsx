@@ -60,6 +60,7 @@ function App() {
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/contributors" element={<ContributorsPage />} />
+              <Route path="/faq" element={<FAQPage />} />  
               <Route path="/home" element={<HomePage />} />
               <Route path="/groups/:unitCode/:year/:period" element={<Groups />} />
               <Route path="/students/:unitCode/:year/:period" element={<Students />} />
@@ -79,6 +80,10 @@ function App() {
               <Route
                 path="/groupAnalytics/:unitCode/:year/:period/:groupNumber"
                 element={<GroupAnalytics />}
+              />
+              <Route
+                path="/login"
+                element={<LoginPage />}
               />
               <Route
                 path="/FAQ"
