@@ -37,7 +37,7 @@ const effortDataHeaders = {
 const timeDataHeaders = {
     timestamp: "Timestamp",
     email: "Email address",
-    fullname: "Full name",
+    fullName: "Full name",
     studentId: "Student ID",
     preference: "Preference"
 }
@@ -46,7 +46,7 @@ const headerMaps = {
     'students': studentDataHeaders,
     'belbin': belbinDataHeaders,
     'effort': effortDataHeaders,
-    'Times': timeDataHeaders
+    'times': timeDataHeaders
 }
 
 export default headerMaps;

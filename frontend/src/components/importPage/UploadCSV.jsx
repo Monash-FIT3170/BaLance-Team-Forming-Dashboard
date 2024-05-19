@@ -117,6 +117,35 @@ const UploadCSV = ({
       const csvLines = event.target.result.split('\r\n');
       const csvHeaders = csvLines[0].split(',');
 
+      console.log(csvHeaders);
+      console.log(Object.keys(headerMap));
+      if (csvHeaders[0] == 'timestamp') {
+        const csvData = csvLines.slice(1);
+
+        // Derived from http://techslides.com/convert-csv-to-json-in-javascript
+        // Convert csvData into a list of objects
+        const csvDataAsObjects = csvData.map((line) => {
+          const obj = {};
+          const data = line.split(',');
+
+          // Map the basic fields
+          obj['timestamp'] = data[0];
+          obj['email'] = data[1];
+          obj['fullname'] = data[2];
+          obj['studentId'] = data[3];
+
+          // Combine all preferences into a single string
+          const preferences = data.slice(4, 13).join(' ');
+          obj['preference'] = preferences;
+
+          return obj;
+        });
+
+        setCsvFile(file);
+        setProfiles(csvDataAsObjects);
+        return;
+      }
+
       if (JSON.stringify(csvHeaders) !== JSON.stringify(Object.keys(headerMap))) {
         getToast(
           'The inputted .csv file does not match the required headers for your selected data type. Check the ? for more information.',

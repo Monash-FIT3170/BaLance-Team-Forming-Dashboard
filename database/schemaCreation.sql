@@ -123,10 +123,16 @@ CREATE TABLE IF NOT EXISTS belbin_result ( -- information on student's belbin pe
 );
 ALTER TABLE belbin_result AUTO_INCREMENT=100000000; 
 
+CREATE TABLE IF NOT EXISTS project (
+    project_id INT AUTO_INCREMENT COMMENT 'unique identifier for a project',
+    CONSTRAINT pk_project PRIMARY KEY (project_id)
+);
+ALTER TABLE project AUTO_INCREMENT=100000000;
+
 CREATE TABLE IF NOT EXISTS project_preference (
     preference_id INT AUTO_INCREMENT COMMENT 'unique identifier for a student project preference',
     stud_unique_id INT COMMENT 'unique identifier for the student',
-    unit_off_id INT COMMENT,
+    unit_off_id INT,
     project_id INT COMMENT 'unique identifier for the project',
     preference_rank INT COMMENT 'preference rank (1 - N)',
     submission_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp of preference submission',
