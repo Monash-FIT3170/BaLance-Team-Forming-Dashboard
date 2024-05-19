@@ -146,7 +146,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/me-za"><img src="https://avatars.githubusercontent.com/u/90816008?v=4?s=0" width="0px;" alt="me-za"/><br /><sub><b>me-za</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=me-za" title="Code">💻</a> <a href="#design-me-za" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Ame-za" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/dcor0010"><img src="https://avatars.githubusercontent.com/u/163801705?v=4" width="0px;" alt="dcor0010"/><br /><sub><b>dcor0010</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=dcor0010" title="Code">💻</a> <a href="#design-dcor0010" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Adcor0010" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/alexismcharo"><img src="https://avatars.githubusercontent.com/u/163802955?v=4?s=0" width="0px;" alt="alexismcharo"/><br /><sub><b>alexismcharo</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=alexismcharo" title="Code">💻</a> <a href="#design-alexismcharo" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Aalexismcharo" title="Bug reports">🐛</a></td>
+      
     </tr>
   </tbody>
 </table>
