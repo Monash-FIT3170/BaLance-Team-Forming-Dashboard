@@ -1,7 +1,7 @@
 {
   "questions": [
     {
-      "title": "Is BaLance free to use",
+      "title": "Is BaLance free to use?",
       "body": [
         {
           "text": "BaLance is a free to use, open source project to assist teachers and lecturers to form groups with high performance, efficiency and compatibility."
@@ -129,7 +129,7 @@
       ]
     },
     {
-      "title": "Can I reconfigure the teams afterwards",
+      "title": "Can I reconfigure the teams afterwards?",
       "body": [
         {
           "text": "As of current iteration, BaLance does not allow manual reconfiguration of student teams other than removal of students."
