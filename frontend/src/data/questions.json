@@ -1,6 +1,14 @@
 {
   "questions": [
     {
+      "title": "Is BaLance free to use",
+      "body": [
+        {
+          "text": "BaLance is a free to use, open source project to assist teachers and lecturers to form groups with high performance, efficiency and compatibility."
+        }
+      ]
+    },
+    {
       "title": "How does BaLance work?",
       "body": [
         {
@@ -13,6 +21,14 @@
             "Optionally export information as a CSV file to upload to other learning management systems"
           ],
           "image": "/tutorial.gif"
+        }
+      ]
+    },
+    {
+      "title": "Do I need to create an account for BaLance?",
+      "body": [
+        {
+          "text": "Yes. An account is needed to use BaLance. In future developments, BaLance aim to limit its access to only to accounts within education institution domains for a safer and more secure data access."
         }
       ]
     },
@@ -121,7 +137,7 @@
       ]
     },
     {
-      "title": "Data Handling",
+      "title": "Data Handling and Additional Information",
       "body": [
         {
           "text": "BaLance values the privacy of every individual’s personal information and is committed to the protection of this information. Personal information collected by Monash is handled in accordance with the Privacy and Data Protection Act 2014 (VIC) and with other privacy laws as applicable.",
@@ -129,6 +145,5 @@
         }
       ]
     }
-
   ]
 }
