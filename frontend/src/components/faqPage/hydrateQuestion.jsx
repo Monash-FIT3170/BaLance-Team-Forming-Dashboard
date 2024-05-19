@@ -10,8 +10,9 @@ import {
   Th,
   Td,
   Tooltip,
+  Link
 } from '@chakra-ui/react';
-
+import {ExternalLinkIcon} from '@chakra-ui/icons'
 // Question sub-bodies have a strict order for elements. To forgo this, simply add new objects to the JSON without elements or a header.
 
 export function hydrateQuestionJSON(questionJSON) {
@@ -21,6 +22,7 @@ export function hydrateQuestionJSON(questionJSON) {
       let list = body.dotpoints ? generateDotPoints(body.dotpoints) : null;
       let image = body.image ? generateImage(body.image) : null;
       let text = body.text ? generateText(body.text) : null;
+      let link = body.link ? generateLink(body.link) : null;
       
       let qBody = (
         <Box alignItems="left">
@@ -28,6 +30,7 @@ export function hydrateQuestionJSON(questionJSON) {
           {list}
           {table}
           {image}
+          {link}
         </Box>
       );
 
@@ -109,4 +112,16 @@ function generateText(text) {
   return (
     <Text>{text}</Text>
   )
+}
+function generateLink(link) {
+    let hyperlink = link.split('|');
+    let text = hyperlink[0];
+    let string = hyperlink[1];
+    let url = hyperlink[hyperlink.length - 1];
+    return(
+        <Link
+        href={url} isExternal>
+            <Text color = "blue.400">{text}{string}<ExternalLinkIcon mx='3px'/></Text>
+        </Link>
+    )
 }
