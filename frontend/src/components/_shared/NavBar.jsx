@@ -1,5 +1,6 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import { Image, Container, Button, Box, Flex, Spacer, Link } from '@chakra-ui/react';
+import { Image, Flex, Button, Link } from '@chakra-ui/react';
+import { Link as RouterLink } from 'react-router-dom';
 
 import { MockAuth } from '../../helpers/mockAuth';
 import logo from '../../assets/logo_separated.png';
@@ -14,58 +15,67 @@ const NavBar = ({ authenticated }) => {
     authService[import.meta.env.VITE_REACT_APP_AUTH]();
 
   return (
-    <Container
-      as="header"
+    <Flex as="header"
       pos="fixed"
       top={0}
       left={0}
-      w="100%"
-      display="flex"
+      right={0}
       p="5"
-      maxH="8em"
-      minW="100vw"
+      height="10vh"
+      maxHeight="5em"
       bgColor="balance.header_color"
-      centerContent
-      overflow="hidden"
+      justifyContent="space-between"
+      alignItems="center"
       zIndex={999}
     >
-      <Flex
-          w="100%"
-          justify="space-between"
-          align="center"
-          pl="1em" >
-          <Box display="flex" alignItems="center">
-              <Link href={'/'}>
-                  <Image
-                      height={{
-                          base: "3em",
-                          md: "4em"
-                      }}
-                      src={logo}
-                      alt="BaLance: Team Forming Dashboard"
-                  />
-              </Link>
-          </Box>
-          <Box paddingLeft={10}>
-          <Link href='/FAQ/'>
-            <Button colorScheme="gray" variant = "ghost"  h="3em" w="6em" fontSize={20}>
-              FAQ
+      <Flex alignItems="center">
+        <Link as={RouterLink} to="/">
+          <Image
+            height="8vh"
+            width="40vh"
+            minHeight="1.8em"
+            maxHeight="4em"
+            maxWidth="20em"
+            minWidth="9em"
+            src={logo}
+            alt="BaLance: Team Forming Dashboard"
+          />
+        </Link>
+        <Link as={RouterLink} to="/home" ml="8">
+          <Button colorScheme="white" variant="solid" color="black" fontSize="1.4em" fontWeight="light" size="lg" height="63" px="6">   
+          {/* original size is 20, and no fontWeight*/}
+            <b>Home</b>
+          </Button>
+        </Link>
+        <Link as={RouterLink} to="/tutorial" ml="8">
+          <Button colorScheme="white" variant="solid" color="black" fontSize="1.4em" fontWeight="light" size="lg" height="63" px="6">
+            <b>Tutorial</b>
+          </Button>
+        </Link>
+        <Link as={RouterLink} to="/faq" ml="8">
+          <Button colorScheme="white" variant="solid" color="black" fontSize="1.4em" fontWeight="light" size="lg" height="63" px="6">
+            <b>FAQ</b>
+          </Button>
+        </Link>
+        <Link as={RouterLink} to="/contributors" ml="8">
+          <Button colorScheme="white" variant="solid" color="black" fontSize="1.4em" fontWeight="light" size="lg" height="63" px="6">
+            <b>Contributors</b>
+          </Button>
+        </Link>
+
+      </Flex>
+      <Flex>
+        {authenticated ? (
+              <Button onClick={logout} height="8vh" width="14vh" maxHeight="2.6em" minHeight="1.8em" maxWidth="6.5em" minWidth="4.3em" boxShadow="lg">Logout</Button>
+        ) : (
+          <Link as={RouterLink} to="/login" ml="8">
+            <Button>
+              Login
             </Button>
           </Link>
-        </Box>
-        <Spacer />
-        <Spacer />
-        {authenticated ? (
-          <Button onClick={logout} h="3em" w="6em">
-            Logout
-          </Button>
-        ) : (
-          <Button onClick={loginWithRedirect} h="3em" w="6em">
-            Login
-          </Button>
         )}
       </Flex>
-    </Container>
+    </Flex>
   );
 };
 
