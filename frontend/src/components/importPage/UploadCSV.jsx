@@ -15,7 +15,6 @@ import {
 } from '@chakra-ui/react';
 
 import { MockAuth } from '../../helpers/mockAuth';
-import CsvInfoButton from './CsvInfoButton';
 import getToastSettings from '../_shared/ToastSettings';
 
 const UploadCSV = ({
@@ -201,14 +200,6 @@ const UploadCSV = ({
       }
     }
   };
-
-  // const generateInfoDesc = () => {
-  //   if (!headerMap) return null;
-  //   const headers = Object.keys(headerMap);
-  //   const requiredHeaders = headers.map((header) => header).join(', ');
-  //   const desc = `Upload a CSV file containing ${csvHeaderType} data with the following required headers: ${requiredHeaders}`;
-  //   return <p>{desc}</p>;
-  // };
 
   // HTML
   const fileChosenDisplay = () => {
