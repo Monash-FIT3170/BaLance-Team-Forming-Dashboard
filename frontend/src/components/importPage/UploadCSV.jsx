@@ -239,17 +239,20 @@ const UploadCSV = ({
           }}
           onDragOver={(e) => e.preventDefault()}
         >
-          <Box display="inline-flex" alignItems="center">
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            position="relative"
+            _hover={{ bg: '#E2E8F0', cursor: 'pointer' }}
+            height="100%"
+            width="100%"
+            transition="color 0.3s ease"
+            cursor="pointer"
+            padding="10px"
+          >
             <Text as="span">Drop file here or</Text>
-            <Box
-              as="span"
-              position="relative"
-              display="inline-block"
-              transition="color 0.3s ease"
-              _hover={{ bg: '#E2E8F0', cursor: 'pointer' }}
-              cursor="pointer"
-              padding="10px"
-            >
+            <Box as="div" padding="1ch">
               <Input
                 type="file"
                 onChange={(e) => {
@@ -258,24 +261,18 @@ const UploadCSV = ({
                 }}
                 opacity={0}
                 position="absolute"
-                width="100%"
-                height="100%"
-                top="0"
-                left="0"
+                inset="0"
                 cursor="pointer"
-                zIndex="2"
               />
               <Link
                 color="blue.500"
-                zIndex="1"
-                display="inline-block"
-                padding="10"
                 px={2}
                 py={1}
                 borderRadius="md"
                 borderWidth="1px"
                 borderColor="blue.500"
                 cursor="pointer"
+                style={{ textDecoration: 'none' }}
               >
                 select
               </Link>
