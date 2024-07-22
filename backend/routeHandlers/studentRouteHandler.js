@@ -7,11 +7,11 @@
 const { promiseBasedQuery, selectUnitOffKey } = require("../helpers/commonHelpers");
 
 const {
-  insertStudents,
-  selectStudentsKeys,
-  insertStudentEnrolment,
-  insertUnitOffLabs,
-  insertStudentLabAllocations,
+    insertStudents,
+    selectStudentsKeys,
+    insertStudentEnrolment,
+    insertUnitOffLabs,
+    insertStudentLabAllocations,
 } = require("../helpers/studentRouteHandlerHelpers");
 
 const getAllStudents = async (req, res) => {
@@ -78,7 +78,7 @@ const addAllStudents = async (req, res) => {
         // get the attributes we need and their values in prep for SQL queries
         //   e.g. {id: 5, name: 'jim'} becomes [5, 'jim'] to comply with mysql2 API
         const studentInsertData = requestBody.map(({ labCode, ...rest }) => {
-          return Object.values(rest);
+            return Object.values(rest);
         });
         await insertStudents(studentInsertData);
 
@@ -296,7 +296,7 @@ const addPersonalityData = async (req, res) => {
 
     if (numEnrolledStudents !== students.length) {
         res.status(400).json({
-          error: "personality data does not address all enrolled students",
+            error: "personality data does not address all enrolled students",
         });
         return;
     }
@@ -413,6 +413,13 @@ const addStudentEffort = async (personalityTestAttemptKeys, students) => {
     }
 };
 
+const addStudentTimesAndPreferences = async (req, res) => {
+    // read the data from the request
+    const { unitCode, year, period } = req.params;
+    const { students, times } = req.body;
+    console.log(unitCode, year, period, students, times);
+}
+
 const addTestResultFunctionStrats = {
     /**
      * A store of 'strategies' for adding different personality types with different
@@ -428,4 +435,5 @@ module.exports = {
     deleteStudentEnrolment,
     deleteStudentGroupAlloc,
     addPersonalityData,
+    addStudentTimesAndPreferences
 };
