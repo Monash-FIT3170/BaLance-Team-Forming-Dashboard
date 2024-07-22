@@ -48,7 +48,7 @@ function CreateGroups() {
       console.log('fetching strategies we can use');
       const token = await getAccessTokenSilently();
       const groupingStratsResponse = await fetch(
-        `http://localhost:8080/api/units/groupingStrategies/${unitCode}/${year}/${period}`,
+        `/api/units/groupingStrategies/${unitCode}/${year}/${period}`,
         {
           method: 'GET',
           headers: new Headers({
