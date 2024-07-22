@@ -211,6 +211,7 @@ const EditTimeModal = ({isOpen, onClose, currProfile, profilesList, setProfilesL
                                     placeholder={''}
                                     options={options}
                                     onChange={(event) => { addPreference(event, option);}}
+                                    key={option.toString()}
                                     />
                                 </div>
                             )

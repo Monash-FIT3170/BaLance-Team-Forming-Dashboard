@@ -190,6 +190,7 @@ const AddTimeModalBody = ({isOpen, onClose, profilesList, setProfilesList}) => {
                                     placeholder={''}
                                     options={options}
                                     onChange={(event) => { addPreference(event, option);}}
+                                    key={option}
                                     />
                                 </div>
                             )
