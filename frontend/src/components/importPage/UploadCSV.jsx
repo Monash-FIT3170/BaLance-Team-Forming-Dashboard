@@ -61,7 +61,13 @@ const UploadCSV = ({
   const handleAddProfilesClick = async () => {
     const accessToken = await getAccessTokenSilently();
     // Make API call
-    const apiCall = csvHeaderType === 'students' ? csvHeaderType : 'students/personality';
+    // const apiCall = csvHeaderType === 'students' ? csvHeaderType : 'students/personality';
+    const apiCall =
+      {
+        // headerType: apiCall endpoint
+        students: 'students',
+        times: 'times',
+      }[csvHeaderType] ?? 'students/personality';
 
     const profilesObject = {
       students: profiles,
@@ -113,27 +119,18 @@ const UploadCSV = ({
       const csvLines = event.target.result.split('\r\n');
       const csvHeaders = csvLines[0].split(',');
 
-      console.log(csvHeaders);
-      console.log(Object.keys(headerMap));
       if (csvHeaders[0] == 'timestamp') {
         const csvData = csvLines.slice(1);
-
         // Derived from http://techslides.com/convert-csv-to-json-in-javascript
-        // Convert csvData into a list of objects
         const csvDataAsObjects = csvData.map((line) => {
-          const obj = {};
-          const data = line.split(',');
-
-          // Map the basic fields
-          obj['timestamp'] = data[0];
-          obj['email'] = data[1];
-          obj['fullname'] = data[2];
-          obj['studentId'] = data[3];
-
-          // Combine all preferences into a single string
-          const preferences = data.slice(4, 13).join(' ');
-          obj['preference'] = preferences;
-
+          const { timestamp, email, fullname, studentId, ...rest } = JSON.parse(line);
+          const obj = {
+            timestamp,
+            email,
+            fullName,
+            studentId,
+            preference: Object.values(rest).join(' '),
+          };
           return obj;
         });
 
@@ -141,8 +138,13 @@ const UploadCSV = ({
         setProfiles(csvDataAsObjects);
         return;
       }
-
-      if (JSON.stringify(csvHeaders) !== JSON.stringify(Object.keys(headerMap))) {
+      // console.log(JSON.stringify(csvHeaders), Object.keys(headerMap));
+      // check if all the headerMap is a subset of csvHeaders
+      if (!Object.keys(headerMap).every((header) => csvHeaders.includes(header))) {
+        // print out which header exists and which doesn't
+        console.log(csvHeaders, [
+          ...new Set(Object.keys(headerMap).filter((x) => !csvHeaders.includes(x))),
+        ]);
         getToast(
           'The inputted .csv file does not match the required headers for your selected data type. Check the ? for more information.',
           'error'
