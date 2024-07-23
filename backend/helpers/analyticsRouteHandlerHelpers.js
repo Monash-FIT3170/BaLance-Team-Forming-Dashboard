@@ -167,6 +167,45 @@ const getUnitAnalyticsEffort = async (unitCode, year, period) => {
     return effortAnalyticsData;
 };
 
+const getUnitAnalyticsPreference = async (unitCode, year, period) => {
+    /**
+     * Given a unit offering, obtains all information related to student preference
+     * to group matching
+     */
+
+    const preferenceAnalyticsData = {
+        "personality title": "Preference Selection",
+        "description":
+            "Based on the input of each student, our algorithm attempts to a" +
+            "ssign each student their most preferred group. This is an aggre" +
+            "gation of how many students were assigned to their nth preferre" +
+            "d selection.",
+        data: [],
+    };
+
+    /** const preferenceResults = await promiseBasedQuery("FILL THIS SQL CODE IN THANKS" [unitCode, year, period]) */
+
+    const preferenceBarChartData = {
+        type: "bar",
+        title: "Number of students assigned to their nth preferred group",
+        "x label": "Student effort",
+        "y label": "Number of students",
+        x: [],
+        y: [],
+    };
+
+    if (preferenceResults.length > 0) {
+        // preferenceResults.forEach((result) => {
+        //     preferenceBarChartData["x"].push(result["preference"]);
+        //     preferenceBarChartData["y"].push(result["count"]);
+        // });
+
+        preferenceAnalyticsData["data"].push(preferenceBarChartData);
+    }
+    
+    return preferenceAnalyticsData
+}
+
 const getUnitAnalyticsStrategies = {
     /**
      * A store of various get analytics strategies for a unit that can be called by their key
@@ -175,6 +214,7 @@ const getUnitAnalyticsStrategies = {
 
     effort: getUnitAnalyticsEffort,
     belbin: getUnitAnalyticsBelbin,
+    preference: getUnitAnalyticsPreference
 };
 
 const getGroupAnalyticsBelbin = async (unitCode, year, period, groupNumber) => {
@@ -362,6 +402,45 @@ const getGroupAnalyticsEffort = async (unitCode, year, period, groupNumber) => {
     return effortAnalyticsData;
 };
 
+const getGroupAnalyticsPreference = async (unitCode, year, period, groupNumber) => {
+    /**
+     * Given a grpup, obtains all information related to student preference
+     * to group matching
+     */
+
+    const preferenceAnalyticsData = {
+        "personality title": "Preference Selection",
+        "description":
+            "Based on the input of each student, our algorithm attempts to a" +
+            "ssign each student their most preferred group. This is an aggre" +
+            "gation of how many students were assigned to their nth preferre" +
+            "d selection.",
+        data: [],
+    };
+
+    /** const preferenceResults = await promiseBasedQuery("FILL THIS SQL CODE IN THANKS" [unitCode, year, period, groupNumber]) */
+
+    const preferenceBarChartData = {
+        type: "bar",
+        title: "Number of students assigned to their nth preferred group",
+        "x label": "Student effort",
+        "y label": "Number of students",
+        x: [],
+        y: [],
+    };
+
+    if (preferenceResults.length > 0) {
+        // preferenceResults.forEach((result) => {
+        //     preferenceBarChartData["x"].push(result["preference"]);
+        //     preferenceBarChartData["y"].push(result["count"]);
+        // });
+
+        preferenceAnalyticsData["data"].push(preferenceBarChartData);
+    }
+    
+    return preferenceAnalyticsData
+}
+
 const getGroupAnalyticsStrategies = {
     /**
      * A store of various get analytics strategies that can be called by their key
@@ -370,6 +449,7 @@ const getGroupAnalyticsStrategies = {
 
     effort: getGroupAnalyticsEffort,
     belbin: getGroupAnalyticsBelbin,
+    preference: getGroupAnalyticsPreference
 };
 
 module.exports = {
