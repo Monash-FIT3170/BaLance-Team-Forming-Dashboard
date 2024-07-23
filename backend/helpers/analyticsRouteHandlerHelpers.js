@@ -194,14 +194,14 @@ const getUnitAnalyticsPreference = async (unitCode, year, period) => {
         y: [],
     };
 
-    if (preferenceResults.length > 0) {
-        // preferenceResults.forEach((result) => {
-        //     preferenceBarChartData["x"].push(result["preference"]);
-        //     preferenceBarChartData["y"].push(result["count"]);
-        // });
+    // if (preferenceResults.length > 0) {
+    //     preferenceResults.forEach((result) => {
+    //         preferenceBarChartData["x"].push(result["preference"]);
+    //         preferenceBarChartData["y"].push(result["count"]);
+    //     });
 
-        preferenceAnalyticsData["data"].push(preferenceBarChartData);
-    }
+    //     preferenceAnalyticsData["data"].push(preferenceBarChartData);
+    // }
     
     return preferenceAnalyticsData
 }
@@ -404,7 +404,7 @@ const getGroupAnalyticsEffort = async (unitCode, year, period, groupNumber) => {
 
 const getGroupAnalyticsPreference = async (unitCode, year, period, groupNumber) => {
     /**
-     * Given a grpup, obtains all information related to student preference
+     * Given a group, obtains all information related to student preference
      * to group matching
      */
 
@@ -429,14 +429,14 @@ const getGroupAnalyticsPreference = async (unitCode, year, period, groupNumber) 
         y: [],
     };
 
-    if (preferenceResults.length > 0) {
-        // preferenceResults.forEach((result) => {
-        //     preferenceBarChartData["x"].push(result["preference"]);
-        //     preferenceBarChartData["y"].push(result["count"]);
-        // });
+    // if (preferenceResults.length > 0) {
+    //     preferenceResults.forEach((result) => {
+    //          preferenceBarChartData["x"].push(result["preference"]);
+    //          preferenceBarChartData["y"].push(result["count"]);
+    //     });
 
-        preferenceAnalyticsData["data"].push(preferenceBarChartData);
-    }
+    //     preferenceAnalyticsData["data"].push(preferenceBarChartData);
+    // }
     
     return preferenceAnalyticsData
 }
