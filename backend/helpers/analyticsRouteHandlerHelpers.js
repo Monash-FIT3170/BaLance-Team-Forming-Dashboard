@@ -216,8 +216,8 @@ const getUnitAnalyticsPreference = async (unitCode, year, period) => {
             preferenceBarChartData["y"].push(result["count"]);
         });
 
-        preferenceAnalyticsData["data"].push(preferenceBarChartData);
-    }
+    //     preferenceAnalyticsData["data"].push(preferenceBarChartData);
+    // }
     
     return preferenceAnalyticsData
 }
