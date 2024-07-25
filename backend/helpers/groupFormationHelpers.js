@@ -394,6 +394,15 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
     ]);
 };
 
+const createGroupsPreference = async (unitCode, year, period, groupSize, variance) => {
+    /**
+     * Given a unit offering, group size and acceptable group variance from a group size,
+     * forms groups within the units labs based on student preferences and submission
+     * times
+     *
+     */
+}
+
 const groupFormationStrategies = {
     /**
      * A store of various group formation strategies that can be called by their key
@@ -403,6 +412,7 @@ const groupFormationStrategies = {
     random: createGroupsRandom,
     effort: createGroupsEffort,
     belbin: createGroupsBelbin,
+    preference: createGroupsPreference,
 };
 
 const splitGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) => {
