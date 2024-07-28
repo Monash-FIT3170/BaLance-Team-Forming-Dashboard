@@ -140,7 +140,9 @@ const UploadCSV = ({
       }
       // console.log(JSON.stringify(csvHeaders), Object.keys(headerMap));
       // check if all the headerMap is a subset of csvHeaders
-      if (!Object.keys(headerMap).every((header) => csvHeaders.includes(header))) {
+      //if (!Object.keys(headerMap).every((header) => csvHeaders.includes(header))) {
+
+      if (JSON.stringify(csvHeaders) !== JSON.stringify(Object.keys(headerMap))) {
         // print out which header exists and which doesn't
         console.log(csvHeaders, [
           ...new Set(Object.keys(headerMap).filter((x) => !csvHeaders.includes(x))),

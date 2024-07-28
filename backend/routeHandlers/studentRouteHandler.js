@@ -413,11 +413,30 @@ const addStudentEffort = async (personalityTestAttemptKeys, students) => {
     }
 };
 
-const addStudentTimesAndPreferences = async (req, res) => {
+const addStudentTimesAndPreferences = async (req, students) => {
+    console.log("hello?")
     // read the data from the request
     const { unitCode, year, period } = req.params;
-    const { students, times } = req.body;
-    console.log(unitCode, year, period, students, times);
+    const { students, times, pref } = req.body;
+    // insert into db
+    console.log(unitCode, year, period, students, times, pref);
+
+    const resultInsertData = [];
+    req.forEach((attempt) => {
+        // find the student who made this attempt
+        const [student] = students.filter((student) => {
+            return student.studentId === attempt.student_id;
+        });
+        resultInsertData.push([
+            // student id
+            
+            // unit off id
+            
+            // pref rank
+            
+            // submission timestamp
+        ]);
+    });
 }
 
 const addTestResultFunctionStrats = {
