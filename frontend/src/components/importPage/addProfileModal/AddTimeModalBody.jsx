@@ -184,13 +184,13 @@ const AddTimeModalBody = ({isOpen, onClose, profilesList, setProfilesList}) => {
                         />
                         {options.map((option) => {
                             return (
-                                <div >
+                                <div key={preferences[option-1]}>
                                     <FormLabel>{'Project Preference: '} {option}</FormLabel>
                                     <Dropdown 
                                     placeholder={''}
                                     options={options}
                                     onChange={(event) => { addPreference(event, option);}}
-                                    key={option}
+                                    key={preferences[option-1]}
                                     />
                                 </div>
                             )

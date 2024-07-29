@@ -204,14 +204,14 @@ const EditTimeModal = ({isOpen, onClose, currProfile, profilesList, setProfilesL
                         />
                         {options.map((option) => {
                             return (
-                                <div >
+                                <div key={preferences[option-1]}>
                                     <FormLabel>{'Project Preference: '} {option}</FormLabel>
                                     <Dropdown 
                                     defaultValue={preferences[option-1]}
                                     placeholder={''}
                                     options={options}
                                     onChange={(event) => { addPreference(event, option);}}
-                                    key={option.toString()}
+                                    key={preferences[option-1].toString()}
                                     />
                                 </div>
                             )
