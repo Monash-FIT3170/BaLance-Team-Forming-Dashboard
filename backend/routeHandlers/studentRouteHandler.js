@@ -417,7 +417,7 @@ const addStudentTimesAndPreferences = async (req, students) => {
     console.log("hello?")
     // read the data from the request
     const { unitCode, year, period } = req.params;
-    const { students, times, pref } = req.body;
+    const { studentData, times, pref } = req.body;
     // insert into db
     console.log(unitCode, year, period, students, times, pref);
 
