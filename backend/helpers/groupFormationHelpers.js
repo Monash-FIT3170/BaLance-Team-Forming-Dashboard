@@ -394,8 +394,13 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
     ]);
 };
 
-<<<<<<< HEAD
 const createGroupsTimePref = async (unitCode, year, period, groupSize, variance) => {
+    /**
+     * Given a unit offering, group size and acceptable group variance from a group size,
+     * forms groups within the units labs based on student preferences and submission
+     * times
+     *
+     */
     const unitOffId = await selectUnitOffKey(unitCode, year, period);
 
 
@@ -418,7 +423,7 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
         "   AND pref.preference_rank=? " +
         "   AND pref.submission_timestamp=?;" +
         "ORDER BY unit_off_lab_id;",
-        [unitCode, year, period, "project", "prefRrank", "subTime"]
+        [unitCode, year, period, "project", "prefRank", "subTime"]
     );
 
 
@@ -440,16 +445,6 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
     // insert allocations of groups into database ??
 
 };
-=======
-const createGroupsPreference = async (unitCode, year, period, groupSize, variance) => {
-    /**
-     * Given a unit offering, group size and acceptable group variance from a group size,
-     * forms groups within the units labs based on student preferences and submission
-     * times
-     *
-     */
-}
->>>>>>> Feature/Analytics-Page-Times&Prefs
 
 const groupFormationStrategies = {
     /**
@@ -460,11 +455,7 @@ const groupFormationStrategies = {
     random: createGroupsRandom,
     effort: createGroupsEffort,
     belbin: createGroupsBelbin,
-<<<<<<< HEAD
     preference: createGroupsTimePref
-=======
-    preference: createGroupsPreference,
->>>>>>> Feature/Analytics-Page-Times&Prefs
 };
 
 const splitGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) => {
