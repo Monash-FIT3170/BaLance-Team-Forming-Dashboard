@@ -1,0 +1,149 @@
+{
+  "questions": [
+    {
+      "title": "Is BaLance free to use?",
+      "body": [
+        {
+          "text": "BaLance is a free to use, open source project to assist teachers and lecturers to form groups with high performance, efficiency and compatibility."
+        }
+      ]
+    },
+    {
+      "title": "How does BaLance work?",
+      "body": [
+        {
+          "text": "To use the team forming dashboard,",
+          "dotpoints": [
+            "Create a new offering for the unit you are currently running",
+            "Enter the unit and Upload your CSV list of students with their student details",
+            "Upload Student personality data in accordance with the strategy you would like to form teams against",
+            "Select your group formation strategy adn form groups",
+            "Optionally export information as a CSV file to upload to other learning management systems"
+          ],
+          "image": "/tutorial.gif"
+        }
+      ]
+    },
+    {
+      "title": "Do I need to create an account for BaLance?",
+      "body": [
+        {
+          "text": "Yes. An account is needed to use BaLance. In future developments, BaLance aim to limit its access to only to accounts within education institution domains for a safer and more secure data access."
+        }
+      ]
+    },
+    {
+      "title": "What type of CSV data are accepted?",
+      "body": [
+        {
+          "header": "Student Data: ",
+          "text": "Student data can be imported from a .csv file formatted as shown in the table below. The restrictions on data types are the following:",
+          "dotpoints": [
+            "studentId must be an 8-digit number",
+            "labCode must be prefixed by the number and '_' minimally",
+            "gender must be a single char"
+          ],
+          "table": {
+            "rowHeaders": [
+              "studentId",
+              "labCode",
+              "lastName",
+              "firstName",
+              "email",
+              "wam",
+              "gender"
+            ],
+            "rowContent": [
+              [
+                "12345678",
+                "01_DualMode",
+                "White",
+                "Jim",
+                "jwhi0001@student.monash.edu",
+                "93",
+                "M"
+              ],
+              [
+                "28462818",
+                "02_DualMode",
+                "Black",
+                "Jemma",
+                "jbla0001@student.monash.edu",
+                "93",
+                "F"
+              ]
+            ]
+          }
+        },
+        {
+          "header": "Belbin Data: ",
+          "text": "Belbin Team roles is a theory developed by Dr. Meredith Belbin, where these roles describe the behavioural patterns that people exhibit within teams, highlighting their strengths and weaknesses. Belbin type must be one of: People, Thinking or Action.",
+          "table": {
+            "rowHeaders": [
+              "studentId",
+              "belbinType"
+            ],
+            "rowContent": [
+              [
+                "12345678",
+                "People"
+              ],
+              [
+                "28462818",
+                "Thinking"
+              ]
+            ]
+          }
+        },
+        {
+          "header": "Effort Data: ",
+          "text": "Hours commitment is the estimated number of hours that a student expects to commit in a week.",
+          "table": {
+            "rowHeaders": [
+              "studentId",
+              "hourCommitment",
+              "avgAssignmentMark"
+            ],
+            "rowContent": [
+              [
+                "12345678",
+                "13",
+                "73"
+              ],
+              [
+                "28462818",
+                "18",
+                "84"
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "title": "How are the students grouped?",
+      "body": [
+        {
+          "text": "The Student are formed into groups using one of multiple available group formation strategies such as 'Belbin Roles' or 'Estimated Effort'. The uploaded CSV data of students and their Belbin roles or Effort data is fed to the algorithm to produce groups with maximum efficiency. In future developments, BaLance will allow users to upload custom python scripts which will run on user data and populate teams based on the provided algorithms."
+        }
+      ]
+    },
+    {
+      "title": "Can I reconfigure the teams afterwards?",
+      "body": [
+        {
+          "text": "As of current iteration, BaLance does not allow manual reconfiguration of student teams other than removal of students."
+        }
+      ]
+    },
+    {
+      "title": "Data Handling and Additional Information",
+      "body": [
+        {
+          "text": "BaLance values the privacy of every individual’s personal information and is committed to the protection of this information. Personal information collected by Monash is handled in accordance with the Privacy and Data Protection Act 2014 (VIC) and with other privacy laws as applicable.",
+          "link": " Additional Information about BaLance can be found at our |GitHub Page|https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/tree/main"
+        }
+      ]
+    }
+  ]
+}

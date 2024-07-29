@@ -33,6 +33,7 @@ function CreateGroups() {
   const [viableStrats, setViableStrats] = useState({
     belbin: false,
     effort: false,
+    preference: false,
   });
   const navigate = useNavigate();
   const toast = useToast();
@@ -197,7 +198,7 @@ function CreateGroups() {
           <VStack>
             <FormLabel ml="1em">Group Formation Strategy</FormLabel>
             <Dropdown
-              options={['random', 'effort', 'belbin']}
+              options={['random', 'effort', 'belbin', 'preference']}
               width="12em"
               onChange={(event) => setStrategy(event.target.value)}
             />
