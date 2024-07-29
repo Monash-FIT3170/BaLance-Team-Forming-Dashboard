@@ -413,30 +413,36 @@ const addStudentEffort = async (personalityTestAttemptKeys, students) => {
     }
 };
 
-const addStudentTimesAndPreferences = async (req, students) => {
-    console.log("hello?")
+const addStudentTimesAndPreferences = async (req, res) => {
     // read the data from the request
     const { unitCode, year, period } = req.params;
-    const { students, times, pref } = req.body;
+    const { students } = req.body;
     // insert into db
-    console.log(unitCode, year, period, students, times, pref);
+    console.log(unitCode, year, period);
+    console.log("length of students: ", students.length);
+    console.log("random student: ", students[Math.floor(Math.random() * students.length)]);
 
-    const resultInsertData = [];
-    req.forEach((attempt) => {
-        // find the student who made this attempt
-        const [student] = students.filter((student) => {
-            return student.studentId === attempt.student_id;
-        });
-        resultInsertData.push([
-            // student id
-            
-            // unit off id
-            
-            // pref rank
-            
-            // submission timestamp
-        ]);
-    });
+    students.forEach(student => {
+        const { timestamp, email, fullName, studentId, ...preferences } = student;
+        // console.log(studentId, preferences);
+    })
+
+    // const resultInsertData = [];
+    // req.forEach((attempt) => {
+    //     // find the student who made this attempt
+    //     const [student] = students.filter((student) => {
+    //         return student.studentId === attempt.student_id;
+    //     });
+    //     resultInsertData.push([
+    //         // student id
+
+    //         // unit off id
+
+    //         // pref rank
+
+    //         // submission timestamp
+    //     ]);
+    // });
 }
 
 const addTestResultFunctionStrats = {
