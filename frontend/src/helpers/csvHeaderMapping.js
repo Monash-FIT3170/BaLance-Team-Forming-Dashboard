@@ -39,7 +39,7 @@ const timeDataHeaders = {
     email: "Email address",
     fullName: "Full name",
     studentId: "Student ID",
-    preference: "Preference"
+    // preference: "Preference"
 }
 
 const headerMaps = {
