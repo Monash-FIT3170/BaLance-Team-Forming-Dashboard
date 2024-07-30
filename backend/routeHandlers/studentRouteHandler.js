@@ -413,6 +413,52 @@ const addStudentEffort = async (personalityTestAttemptKeys, students) => {
     }
 };
 
+const addStudentPreferences = async(personalityTestAttemptKeys, students) => {
+    /**
+     * Implements the logic required to add 'Preferences' personality data to the
+     * database given the unique column requirements it has.
+     */
+    const resultInsertData = [];
+    // format the data so it fulfils the database column requirements
+    personalityTestAttemptKeys.forEach((attempt) => {
+        // find the student who made this attempt
+        const [student] = students.filter((student) => {
+            return student.studentId === attempt.student_id;
+        });
+        // add their data in a suitable format
+        resultInsertData.push([
+            attempt.test_attempt_id,
+            student.submission_timestamp,
+
+            //TODO: find out how to each project preference
+            
+        ])
+
+    });
+
+    try {
+        await promiseBasedQuery(
+            "INSERT IGNORE INTO preference_submission" +
+            "(personality_test_attempt, submission_timestamp) " + 
+            "VALUES ?;",
+            [resultInsertData]
+        );
+
+    } catch (err) {
+        console.log(err);
+    }
+
+};
+
+const addProjectPreferences = async(personalityTestAttemptKeys, students) => {
+    /**
+     * Implements the logic for adding each project preference to a given preference submission
+     */
+    const resultInsertData = []; 
+
+    //TODO: find out how to each add project preference
+};
+
 const addStudentTimesAndPreferences = async (req, res) => {
     // read the data from the request
     const { unitCode, year, period } = req.params;
@@ -451,7 +497,8 @@ const addTestResultFunctionStrats = {
      * column requirements to the database.
      */
     belbin: addStudentBelbin,
-    effort: addStudentEffort
+    effort: addStudentEffort,
+    preference: addStudentPreferences
 };
 
 module.exports = {
