@@ -448,15 +448,49 @@ const addStudentPreferences = async(personalityTestAttemptKeys, students) => {
         console.log(err);
     }
 
+
 };
 
-const addProjectPreferences = async(personalityTestAttemptKeys, students) => {
+const addProjectPreferences = async(personalityTestAttemptKey, students) => {
     /**
      * Implements the logic for adding each project preference to a given preference submission
      */
     const resultInsertData = []; 
+    // format the data so it fulfils the database column requirements
+    // For each student 
+    personalityTestAttemptKeys.forEach(async (attempt) => {
+        // find the student who made this attempt
+        const [student] = students.filter((student) => {
+            return student.studentId === attempt.student_id;
+        });
 
-    //TODO: find out how to each add project preference
+        // get the preference submission ID 
+        try {
+            const [{preference_submission_id}] = await promiseBasedQuery(
+                "SELECT preference_submission_id FROM preference_submission WHERE personality_test_attempt=?;",
+                [attempt.test_attempt_id]
+            );
+        } catch (err) {
+            console.log(err);
+        }
+
+        // Turning the string preferences into an array of numbers 
+        let arr = student.preferences.split(" "); 
+        const preferencesArray = arr.map(Number);
+
+        // for each project 
+        for(let i = 0; i < preferencesArray.length(); i++){
+            resultInsertData.push([
+                preference_submission_id,
+                i,
+                preferencesArray[i]
+            ])
+        }
+
+    });
+
+    //TODO: check if the above is correct 
+    //TODO: if so then insert
 };
 
 const addStudentTimesAndPreferences = async (req, res) => {
