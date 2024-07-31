@@ -429,11 +429,7 @@ const addStudentPreferences = async(personalityTestAttemptKeys, students) => {
         resultInsertData.push([
             attempt.test_attempt_id,
             student.submission_timestamp,
-
-            //TODO: find out how to each project preference
-            
         ])
-
     });
 
     try {
@@ -448,7 +444,8 @@ const addStudentPreferences = async(personalityTestAttemptKeys, students) => {
         console.log(err);
     }
 
-
+    // is this it?
+    addProjectPreferences(personalityTestAttemptKeys, students)
 };
 
 const addProjectPreferences = async(personalityTestAttemptKey, students) => {
@@ -504,6 +501,7 @@ const addProjectPreferences = async(personalityTestAttemptKey, students) => {
     //TODO: check if the above is correct
 };
 
+// TODO: confirm this function is useless, remove from module.export
 const addStudentTimesAndPreferences = async (req, res) => {
     // read the data from the request
     const { unitCode, year, period } = req.params;
@@ -552,5 +550,6 @@ module.exports = {
     deleteStudentEnrolment,
     deleteStudentGroupAlloc,
     addPersonalityData,
+    // TODO: Delete
     addStudentTimesAndPreferences
 };
