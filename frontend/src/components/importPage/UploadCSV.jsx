@@ -127,7 +127,6 @@ const UploadCSV = ({
          * Processes a CSV file and converts it to an array of student profiles
          * containing the relevant data
          */
-
         if (!file.type.match('csv.*')) {
             getToast('Please select a CSV file!', 'error');
             return;
@@ -140,17 +139,8 @@ const UploadCSV = ({
             const csvLines = event.target.result.split(/\r?\n/);
             const csvHeaders = csvLines[0].split(',');
 
-            // TODO: test whether other uploads are working and then get rid of the following commented out code
-            // if (csvHeaders[0] == 'timestamp') {
-            //     const csvDataAsObjects = csvToArr(event.target.result);
-            //     setCsvFile(file);
-            //     setProfiles(csvDataAsObjects);
-            //     return;
-            // }
-
             // check if all the headerMap is a subset of csvHeaders
             if (!Object.keys(headerMap).every((header) => csvHeaders.includes(header))) {
-                // if (JSON.stringify(csvHeaders) !== JSON.stringify(Object.keys(headerMap))) {
                 getToast(
                     'The inputted .csv file does not match the required headers for your selected data type. Check the ? for more information.',
                     'error'
@@ -158,28 +148,6 @@ const UploadCSV = ({
                 setIsFileChosen(false);
                 return;
             }
-            // TODO: test whether other uploads are working and then get rid of the following commented out code
-            // const csvData = csvLines.slice(1);
-            // // obtain the index of headers we care about
-            // const headerMapKeys = Object.keys(headerMap);
-            // const headerIndexes = [];
-            // csvHeaders.forEach((csvHeader, index) => {
-            //     if (headerMapKeys.includes(csvHeader)) {
-            //         headerIndexes.push(index);
-            //     }
-            // });
-
-            // // derived from http://techslides.com/convert-csv-to-json-in-javascript
-            // // convert csvData into a list of objects
-            // const csvDataAsObjects = csvData.map((line) => {
-            //     const obj = {};
-            //     const data = line.split(',');
-            //     headerIndexes.forEach((index) => {
-            //         obj[csvHeaders[index]] = data[index];
-            //     });
-
-            //     return obj;
-            // });
             const csvDataAsObjects = csvToArr(event.target.result);
 
             setCsvFile(file);
@@ -188,10 +156,6 @@ const UploadCSV = ({
     };
 
     const handleFileUpload = (e) => {
-        /**
-         * Handles file upload when clicking the upload CSV button
-         */
-
         e.preventDefault();
         e.stopPropagation();
         const file = e.target.files[0];
