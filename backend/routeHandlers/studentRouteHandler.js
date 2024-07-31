@@ -463,34 +463,45 @@ const addProjectPreferences = async(personalityTestAttemptKey, students) => {
         const [student] = students.filter((student) => {
             return student.studentId === attempt.student_id;
         });
-
+        
         // get the preference submission ID 
+        let preference_submission_id;
         try {
-            const [{preference_submission_id}] = await promiseBasedQuery(
+            const [{preference_submission_id: id}] = await promiseBasedQuery(
                 "SELECT preference_submission_id FROM preference_submission WHERE personality_test_attempt=?;",
                 [attempt.test_attempt_id]
             );
+            preference_submission_id = id;
         } catch (err) {
             console.log(err);
         }
 
         // Turning the string preferences into an array of numbers 
-        let arr = student.preferences.split(" "); 
-        const preferencesArray = arr.map(Number);
+        const preferencesArray = student.preferences.split(" ").map(Number); 
 
         // for each project 
-        for(let i = 0; i < preferencesArray.length(); i++){
+        for(let i = 0; i < preferencesArray.length; i++){
             resultInsertData.push([
                 preference_submission_id,
                 i,
                 preferencesArray[i]
-            ])
+            ]);
+
+            // insert for each project 
+            // this looks like bad practice to insert in a for loop, im not sure how to fix since there will be N project_preference for N projects
+            try {
+                await promiseBasedQuery(
+                    "INSERT IGNORE INTO project_preference" +
+                    "(preference_submission_id, project_number, preference_rank) " + 
+                    "VALUES ?;",
+                    resultInsertData[i]
+                );
+            } catch (err) {
+                console.log(err);
+            }
         }
-
     });
-
-    //TODO: check if the above is correct 
-    //TODO: if so then insert
+    //TODO: check if the above is correct
 };
 
 const addStudentTimesAndPreferences = async (req, res) => {
