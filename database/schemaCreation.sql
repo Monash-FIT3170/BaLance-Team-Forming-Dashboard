@@ -127,10 +127,10 @@ CREATE TABLE IF NOT EXISTS preference_submission (
     preference_submission_id INT AUTO_INCREMENT COMMENT 'unique identifier for preference submission result',
     personality_test_attempt INT,
     submission_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp of preference submission',
-    CONSTRAINT pk_preference_submission PRIMARY KEY (preference_submission_id)
+    CONSTRAINT pk_preference_submission PRIMARY KEY (preference_submission_id),
     CONSTRAINT ck_preference_submission UNIQUE (personality_test_attempt)
-)
-ALTER TABLE preference_submission=100000000;
+);
+ALTER TABLE preference_submission AUTO_INCREMENT=100000000;
 
 CREATE TABLE IF NOT EXISTS project_preference (
     project_preference_id INT AUTO_INCREMENT COMMENT 'unique identifier for a student project preference',
