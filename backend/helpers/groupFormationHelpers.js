@@ -401,45 +401,40 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
      * times
      *
      */
-    const unitOffId = await selectUnitOffKey(unitCode, year, period);
-
 
     
-    // promiseBasedQuery ? select students
+    /* 
+    Fetches student data in the format:                       || example data:
+    {                                                         || {
+    stud_unique_id: <student_unique_id>,                      || stud_unique_id: 100000000,
+    unit_off_lab_id: <student_lab_allocation>,                || unit_off_lab_id: 100000000,
+    submission_timestamp: <submission timestamp>,             || submission_timestamp: 2024-02-25T22:00:39.000Z,
+    project_numbers: <project_id (csv format)>,               || project_numbers: '1,2,3,4,5,6,7,8,9',
+    preference_ranks: <project_preference (csv format)>'      || preference_ranks: '9,10,4,3,2,6,5,7,1'
+    }                                                         || }
+    
+    Good Luck! o/
+    */
     const students = await promiseBasedQuery(
-        "SELECT stud.stud_unique_id, alloc.unit_off_lab_id " +
+        "SELECT stud.stud_unique_id, alloc.unit_off_lab_id, submit.submission_timestamp, GROUP_CONCAT(pref.project_number) AS project_numbers, GROUP_CONCAT(pref.preference_rank) AS preference_ranks " +
         "FROM student stud " +
         "INNER JOIN student_lab_allocation alloc ON stud.stud_unique_id=alloc.stud_unique_id " +
         "INNER JOIN unit_off_lab lab ON lab.unit_off_lab_id=alloc.unit_off_lab_id " +
         "INNER JOIN unit_offering unit ON unit.unit_off_id=lab.unit_off_id " +
-        "INNER JOIN unit_offering unit ON unit.unit_off_id=lab.unit_off_id " +
-        "INNER JOIN project_preferences pref ON pref.stud_unique_id=stud.stud_unique_id" +
-
+        "INNER JOIN personality_test_attempt test ON test.stud_unique_id=stud.stud_unique_id " +
+        "INNER JOIN preference_submission submit ON submit.personality_test_attempt=test.test_attempt_id " +
+        "INNER JOIN project_preference pref ON pref.preference_submission_id=test.stud_unique_id " +
         "WHERE " +
         "   unit.unit_code=? " +
         "   AND unit.unit_off_year=? " +
         "   AND unit.unit_off_period=? " +
-        "   AND pref.project_id=? " +
-        "   AND pref.preference_rank=? " +
-        "   AND pref.submission_timestamp=?;" +
-        "ORDER BY unit_off_lab_id;",
-        [unitCode, year, period, "project", "prefRank", "subTime"]
-    );
+        "   AND test.test_type=? " +
+        "GROUP BY stud.stud_unique_id, alloc.unit_off_lab_id, submit.submission_timestamp " +
+        "ORDER BY submit.submission_timestamp;",
+        [unitCode, year, period, "times"]
+    )
 
-    // splitbylab 
-    const labStudents = {};
-    students.forEach((student) => {
-        if (!labStudents[student.unit_off_lab_id]) {
-            labStudents[student.unit_off_lab_id] = [];
-        }
-        labStudents[student.unit_off_lab_id].push(student.stud_unique_id);
-    });
-
-    // sorting to groups based on groupsize
-
-    // insert groups into database
-
-    // insert allocations of groups into database ??
+    // Write grouping algrithm here
 
 };
 
