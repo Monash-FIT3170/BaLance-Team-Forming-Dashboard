@@ -183,7 +183,22 @@ const getUnitAnalyticsPreference = async (unitCode, year, period) => {
         data: [],
     };
 
-    /** const preferenceResults = await promiseBasedQuery("FILL THIS SQL CODE IN THANKS" [unitCode, year, period]) */
+    const preferenceResults = await promiseBasedQuery(
+        "SELECT pp.preference_rank AS preference, COUNT(pp.preference_rank) AS 'count' " +
+        "FROM unit_offering u " +
+        "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
+        "INNER JOIN preference_submission ps ON ps.personality_test_attempt = pa.test_attempt_id " +
+        "INNER JOIN project_preference pp ON pp.preference_submission_id = ps.preference_submission_id " +
+        "INNER JOIN student s ON s.stud_unique_id = pa.stud_unique_id " +
+        "INNER JOIN group_allocation ga ON ga.stud_unique_id = s.stud_unique_id " +
+        "INNER JOIN lab_group lg ON lg.lab_group_id = ga.lab_group_id " +
+        "   WHERE pp.project_number = lg.group_number " +
+        "   AND u.unit_code=? " +
+        "   AND u.unit_off_year=? " +
+        "   AND u.unit_off_period=? " +
+        "GROUP BY pp.preference_rank; ",
+        [unitCode, year, period]
+    );
 
     const preferenceBarChartData = {
         type: "bar",
@@ -194,14 +209,14 @@ const getUnitAnalyticsPreference = async (unitCode, year, period) => {
         y: [],
     };
 
-    // if (preferenceResults.length > 0) {
-    //     preferenceResults.forEach((result) => {
-    //         preferenceBarChartData["x"].push(result["preference"]);
-    //         preferenceBarChartData["y"].push(result["count"]);
-    //     });
+    if (preferenceResults.length > 0) {
+        preferenceResults.forEach((result) => {
+            preferenceBarChartData["x"].push(result["preference"]);
+            preferenceBarChartData["y"].push(result["count"]);
+        });
 
-    //     preferenceAnalyticsData["data"].push(preferenceBarChartData);
-    // }
+        preferenceAnalyticsData["data"].push(preferenceBarChartData);
+    }
     
     return preferenceAnalyticsData
 }
