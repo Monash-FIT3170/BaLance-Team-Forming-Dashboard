@@ -95,7 +95,7 @@ ALTER TABLE group_allocation AUTO_INCREMENT=100000000;
 
 CREATE TABLE IF NOT EXISTS personality_test_attempt ( -- stores a student's personality data
 	test_attempt_id INT AUTO_INCREMENT COMMENT 'unique identifier for the personality test attempt',
-    test_type ENUM('effort', 'belbin'), 
+    test_type ENUM('effort', 'belbin', 'times'), 
     stud_unique_id INT,
     unit_off_id INT,
 	CONSTRAINT pk_personality_test_attempt PRIMARY KEY (test_attempt_id),
@@ -126,7 +126,7 @@ ALTER TABLE belbin_result AUTO_INCREMENT=100000000;
 CREATE TABLE IF NOT EXISTS preference_submission (
     preference_submission_id INT AUTO_INCREMENT COMMENT 'unique identifier for preference submission result',
     personality_test_attempt INT,
-    submission_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'timestamp of preference submission',
+    submission_timestamp TIMESTAMP COMMENT 'timestamp of preference submission',
     CONSTRAINT pk_preference_submission PRIMARY KEY (preference_submission_id),
     CONSTRAINT ck_preference_submission UNIQUE (personality_test_attempt)
 );
