@@ -425,9 +425,7 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
         "ORDER BY unit_off_lab_id;",
         [unitCode, year, period, "project", "prefRank", "subTime"]
     );
-
-
-
+    console.log(students);
 
     // splitbylab 
     const labStudents = {};
@@ -455,7 +453,7 @@ const groupFormationStrategies = {
     random: createGroupsRandom,
     effort: createGroupsEffort,
     belbin: createGroupsBelbin,
-    preference: createGroupsTimePref
+    times: createGroupsTimePref
 };
 
 const splitGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) => {
