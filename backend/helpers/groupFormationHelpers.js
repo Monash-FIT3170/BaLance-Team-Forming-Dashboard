@@ -425,7 +425,6 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
         "ORDER BY unit_off_lab_id;",
         [unitCode, year, period, "project", "prefRank", "subTime"]
     );
-    console.log(students);
 
     // splitbylab 
     const labStudents = {};
