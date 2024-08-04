@@ -75,11 +75,9 @@ const NavBar = ({ authenticated }) => {
         {authenticated ? (
               <Button onClick={logout} height="8vh" width="14vh" maxHeight="2.6em" minHeight="1.8em" maxWidth="6.5em" minWidth="4.3em" boxShadow="lg">Logout</Button>
         ) : (
-          <Link as={RouterLink} to="/login" ml="8">
-            <Button>
+            <Button onClick={()=> loginWithRedirect()}>
               Login
             </Button>
-          </Link>
         )}
       </Flex>
     </Flex>
