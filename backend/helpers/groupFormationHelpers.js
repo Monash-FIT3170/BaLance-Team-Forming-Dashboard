@@ -402,7 +402,6 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
      *
      */
 
-    
     /* 
     Fetches student data in the format:                       || example data:
     {                                                         || {
@@ -436,12 +435,12 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
 
     // Write grouping algrithm here
 
-
+    // Sorting students by submission time.
     students.sort((a, b) => {
         const timeA = new Date(a.submission_timestamp).getTime();
         const timeB = new Date(b.submission_timestamp).getTime();
         if (timeA === timeB) {
-            return Math.random() - 0.5; 
+            return Math.random() - 0.5;
         }
         return timeA - timeB;
     });
@@ -474,26 +473,12 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
         }
     });
 
-    
     return teams;
 };
 
 module.exports = {
     groupFormationStrategies,
     shuffle,
-};
-};
-
-const groupFormationStrategies = {
-    /**
-     * A store of various group formation strategies that can be called by their key
-     *
-     */
-
-    random: createGroupsRandom,
-    effort: createGroupsEffort,
-    belbin: createGroupsBelbin,
-    times: createGroupsTimePref
 };
 
 const splitGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) => {
@@ -543,6 +528,18 @@ const splitGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) 
     }
 
     return groups;
+};
+
+const groupFormationStrategies = {
+    /**
+     * A store of various group formation strategies that can be called by their key
+     *
+     */
+
+    random: createGroupsRandom,
+    effort: createGroupsEffort,
+    belbin: createGroupsBelbin,
+    times: createGroupsTimePref
 };
 
 module.exports = {
