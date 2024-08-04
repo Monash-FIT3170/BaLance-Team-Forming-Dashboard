@@ -436,6 +436,52 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
 
     // Write grouping algrithm here
 
+
+    students.sort((a, b) => {
+        const timeA = new Date(a.submission_timestamp).getTime();
+        const timeB = new Date(b.submission_timestamp).getTime();
+        if (timeA === timeB) {
+            return Math.random() - 0.5; 
+        }
+        return timeA - timeB;
+    });
+
+    let projectCount = 0;
+
+    students.forEach(student => {
+        const projectNumbers = student.project_numbers.split(',');
+    
+        const projectNumberCount = projectNumbers.length;
+    
+        if (projectNumberCount > projectCount) {
+            projectCount = projectNumberCount;
+        }
+    });
+    
+    const teams = [];
+    
+    for (let i = 0; i < projectCount; i++) {
+        teams.push([]);
+    }
+
+    students.forEach(student => {
+        const preferences = student.preference_ranks.split(',').map(Number);
+        for (const preference of preferences) {
+            if (teams[preference].length < groupSize + variance) {
+                teams[preference].push(student.stud_unique_id);
+                break;
+            }
+        }
+    });
+
+    
+    return teams;
+};
+
+module.exports = {
+    groupFormationStrategies,
+    shuffle,
+};
 };
 
 const groupFormationStrategies = {
