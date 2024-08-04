@@ -476,11 +476,6 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
     return teams;
 };
 
-module.exports = {
-    groupFormationStrategies,
-    shuffle,
-};
-
 const splitGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) => {
     /**
      * Splits students into groups of groupSize +/- variance
