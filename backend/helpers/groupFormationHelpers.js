@@ -399,7 +399,13 @@ const createGroupsPreference = async (unitCode, year, period, groupSize, varianc
      * Given a unit offering, group size and acceptable group variance from a group size,
      * forms groups within the units labs based on student preferences and submission
      * times
-     *
+     * 
+     * @param {string} unitCode - The code of the unit offering.
+     * @param {number} year - The year of the unit offering.
+     * @param {string} period - The period of the unit offering.
+     * @param {number} groupSize - The desired size of each group.
+     * @param {number} variance - The acceptable variance from the desired group size.
+     * @returns {Promise<void>} - A promise that resolves when the groups are created.
      */
 }
 
