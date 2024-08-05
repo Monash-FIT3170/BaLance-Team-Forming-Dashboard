@@ -394,12 +394,19 @@ const createGroupsBelbin = async (unitCode, year, period, groupSize, variance) =
     ]);
 };
 
+
 const createGroupsTimePref = async (unitCode, year, period, groupSize, variance) => {
     /**
      * Given a unit offering, group size and acceptable group variance from a group size,
      * forms groups within the units labs based on student preferences and submission
-     * times
+     * times.
      *
+     * @param {string} unitCode - The code of the unit offering.
+     * @param {number} year - The year of the unit offering.
+     * @param {number} period - The period of the unit offering.
+     * @param {number} groupSize - The desired group size.
+     * @param {number} variance - The acceptable variance from the group size.
+     * @returns {Array<Array<number>>} - An array of arrays representing the formed groups.
      */
 
     /* 
