@@ -403,19 +403,20 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
      */
 
     /* 
-    Fetches student data in the format:                       || example data:
+    Fetches student data sorted by submission time in the format:
+
+    Format:                                                   || example data:
     {                                                         || {
     stud_unique_id: <student_unique_id>,                      || stud_unique_id: 100000000,
     unit_off_lab_id: <student_lab_allocation>,                || unit_off_lab_id: 100000000,
     submission_timestamp: <submission timestamp>,             || submission_timestamp: 2024-02-25T22:00:39.000Z,
-    project_numbers: <project_id (csv format)>,               || project_numbers: '1,2,3,4,5,6,7,8,9',
-    preference_ranks: <project_preference (csv format)>'      || preference_ranks: '9,10,4,3,2,6,5,7,1'
+    preference_rank: <project_id (csv format)>,               || preference_rank: '1,2,3,4,5,6,7,8,9',
     }                                                         || }
-    
-    Good Luck! o/
+
+    Project choices are sorted by preference rank in ascending order.
     */
     const students = await promiseBasedQuery(
-        "SELECT stud.stud_unique_id, alloc.unit_off_lab_id, submit.submission_timestamp, GROUP_CONCAT(pref.project_number) AS project_numbers, GROUP_CONCAT(pref.preference_rank) AS preference_ranks " +
+        "SELECT stud.stud_unique_id, alloc.unit_off_lab_id, submit.submission_timestamp, GROUP_CONCAT(pref.preference_rank) AS preference_rank " +
         "FROM student stud " +
         "INNER JOIN student_lab_allocation alloc ON stud.stud_unique_id=alloc.stud_unique_id " +
         "INNER JOIN unit_off_lab lab ON lab.unit_off_lab_id=alloc.unit_off_lab_id " +
@@ -429,51 +430,42 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
         "   AND unit.unit_off_period=? " +
         "   AND test.test_type=? " +
         "GROUP BY stud.stud_unique_id, alloc.unit_off_lab_id, submit.submission_timestamp " +
-        "ORDER BY submit.submission_timestamp;",
+        "ORDER BY submit.submission_timestamp ASC;",
         [unitCode, year, period, "times"]
-    )
+    );
 
-    // Write grouping algrithm here
+    const size = students[0]["preference_rank"].split(",").length;
+    const groups = [];
 
-    // Sorting students by submission time.
-    students.sort((a, b) => {
-        const timeA = new Date(a.submission_timestamp).getTime();
-        const timeB = new Date(b.submission_timestamp).getTime();
-        if (timeA === timeB) {
-            return Math.random() - 0.5;
-        }
-        return timeA - timeB;
-    });
+    // Set a group size to limit group fill for even spread
+    groupSize = Math.floor(students.length/size);
+    const projects = {};
 
-    let projectCount = 0;
-
-    students.forEach(student => {
-        const projectNumbers = student.project_numbers.split(',');
-    
-        const projectNumberCount = projectNumbers.length;
-    
-        if (projectNumberCount > projectCount) {
-            projectCount = projectNumberCount;
-        }
-    });
-    
-    const teams = [];
-    
-    for (let i = 0; i < projectCount; i++) {
-        teams.push([]);
+    // Create an empty dictionary of all projects with lists to store students allocated
+    for (let i = 1; i <= size; i++) {
+        projects[i] = [];
     }
+    
+    while (students.length != 0) {
+        for (let index = 0; index < students.length; index++) {
+            let student = students[index];
+            if (students.length == 0) { break; }
+                
+            // Start looking for students with current preference level for current project out of all students
+            for (let prefIndex = 0; prefIndex < size; prefIndex++) {
+                let currentPref = parseInt(student["preference_rank"][2 * prefIndex]);
 
-    students.forEach(student => {
-        const preferences = student.preference_ranks.split(',').map(Number);
-        for (const preference of preferences) {
-            if (teams[preference].length < groupSize + variance) {
-                teams[preference].push(student.stud_unique_id);
+                if (projects[currentPref].length >= groupSize) { continue; } // If current looked at group is full, go to next preference level
+
+                projects[currentPref].push(student["stud_unique_id"])
+                groups.push([student["stud_unique_id"], currentPref]);
+                students.splice(index, 1);
+                index--;
                 break;
             }
         }
-    });
-
-    return teams;
+        groupSize++
+    }
 };
 
 const splitGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) => {
