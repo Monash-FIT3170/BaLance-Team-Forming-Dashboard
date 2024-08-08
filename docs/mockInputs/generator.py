@@ -6,6 +6,7 @@ import pandas as pd
 import requests, argparse
 import pprint as p
 import datetime
+import csv
 
 ###########################################
 ###    command line input validation    ###
@@ -162,9 +163,6 @@ print("\n")
 ###      export to respective CSVs      ###
 ###########################################
 
-print(len(students))
-print(len(response))
-
 students_df = pd.DataFrame(data=students)
 belbin_df = pd.DataFrame(data=belbin_data)
 effort_df = pd.DataFrame(data=effort_data)
@@ -174,3 +172,14 @@ students_df.to_csv("students.csv", header=True, index=False, lineterminator="\n"
 belbin_df.to_csv("belbin.csv", header=True, index=False, lineterminator="\n")
 effort_df.to_csv("effort.csv", header=True, index=False, lineterminator="\n")
 time_pref_df.to_csv("time_pref.csv", header=True, index=False, lineterminator="\n")
+
+
+for file_name in ["students.csv", "belbin.csv", "effort.csv", "time_pref.csv"]:
+    with open(file_name, 'r') as file:
+        lines = list(csv.reader(file))
+
+    lines = lines[:-1]
+
+    with open(file_name, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerows(lines)
