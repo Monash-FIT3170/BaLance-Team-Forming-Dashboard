@@ -104,7 +104,7 @@ Run the following commands under the `docs/mockInputs` directory to create a vir
 
 ```bash
 python -m venv .venv
-source .venv/bib/activate # .venv/Scripts/activate for Windows
+source .venv/bin/activate # .venv/Scripts/activate for Windows
 pip install -r requirements.txt
 python ./generator.py --help
 ```
