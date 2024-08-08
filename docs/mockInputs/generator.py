@@ -17,7 +17,7 @@ parser = argparse.ArgumentParser(
 )
 
 parser.add_argument('-r', '--rows', default=50, type=int, help="The number of rows (students) to generate mock data for.")
-parser.add_argument('-n', '--labs', default=4, type=int, help="The number of labs students should be shared across. Note, this must be <= rows")
+parser.add_argument('-l', '--labs', default=4, type=int, help="The number of labs students should be shared across. Note, this must be <= rows")
 parser.add_argument('-k', '--key', type=str, required=True, help="The API key from mockaroo to be used as part of mock data generation.")
 
 args = parser.parse_args()
@@ -94,16 +94,41 @@ for student in students:
 
 print("SAMPLE FROM GENERATED STUDENTS\n##############################")
 p.pprint(students[0:3])
+print("\n")
 
 ###########################################
 ###        generate belbin data         ###
 ###########################################
 
+belbin_options = ["people", "thinking", "action"]
+belbin_data = []
+
+for student in students:
+    belbin_data.append({
+        "studentId": student["studentId"],
+        "belbinType": belbin_options[randint(0,2)]
+    })
+
+print("SAMPLE FROM GENERATED BELBIN\n##############################")
+p.pprint(belbin_data[0:3])
+print("\n")
 
 ###########################################
 ###        generate effort data         ###
 ###########################################
 
+effort_data = []
+
+for student in students:
+    effort_data.append({
+        "studentId": student["studentId"],
+        "hourCommitment": randint(1, 7*24),
+        "avgAssignmentMark": randint(0,100)
+    })
+
+print("SAMPLE FROM GENERATED EFFORT\n##############################")
+p.pprint(effort_data[0:3])
+print("\n")
 
 ###########################################
 ###     generate time and pref data     ###
