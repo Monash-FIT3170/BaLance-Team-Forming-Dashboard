@@ -18,12 +18,22 @@ async function createForm(auth,formBody){
     return result;
 }
 //note: this can probably only fetch responses from forms the service account has access to, either send the form to the email or make the account create it using createForm. 
-async function getFormResponses(auth,formId){
+async function getFormResponseList(auth,formId){
     const authClient = await auth.getClient();
     const forms = google.forms({ version: 'v1', auth: authClient });
     const responses = await forms.forms.responses.list({ formId });
-    console.log(responses)
+    console.log(responses.data)
     return responses;
 }
+
+async function getFormResponse(auth,formId,responseId){
+    const authClient = await auth.getClient();
+    const forms = google.forms({ version: 'v1', auth: authClient });
+    const response = await forms.forms.responses.get({formId,responseId})
+    console.log(response)
+    return response
+}
+
 //example usage is getFormResponses(forms,'1KKE9CKONUECsCMMTLWql0Q9PPmgk7z2RH0FuQ6-rLq0')
-const responses = getFormResponses(auth,'1KKE9CKONUECsCMMTLWql0Q9PPmgk7z2RH0FuQ6-rLq0')
+const responses = getFormResponseList(auth,'1KKE9CKONUECsCMMTLWql0Q9PPmgk7z2RH0FuQ6-rLq0')
+getFormResponse(auth,'1KKE9CKONUECsCMMTLWql0Q9PPmgk7z2RH0FuQ6-rLq0','ACYDBNjssChpdwkl8oUDIVEC215r8JGH4ptQUh1UfKT3iMA6kEVqiVU5aE2pkdsHjJTyn5k')
