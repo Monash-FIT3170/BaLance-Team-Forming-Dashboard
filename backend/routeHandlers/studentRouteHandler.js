@@ -542,26 +542,29 @@ async function populateProjectPreference(students) {
         [studentKeys]
     );
     const testAttemptKeysArray = testAttemptKeys.map((testAttempt) => testAttempt.test_attempt_id);
+    console.log(testAttemptKeysArray)
     const projectPreferences = students.map((student) => {
         const { timestamp, email, fullName, studentId, ...preferences } = student;
         return preferences;
     });
     const projectPreferencesArray = projectPreferences.map(preferences => {
-        const preferenceKeys = Object.keys(preferences).map(key => key.slice(-1)).map(Number).sort(
-            (a, b) => a - b
-        )
-        return preferenceKeys.map(key => preferences["Project Preference " + key]).map(Number);
-    })
+        const preferenceKeys = Object.keys(preferences)
+            .map(key => parseInt(key.replace("Project Preference ", ""), 10)) // Extract the number and convert to integer
+            .sort((a, b) => a - b); // Sort numerically
+        return preferenceKeys.map(key => preferences[`Project Preference ${key}`]).map(Number);
+    });
+    
     const preferenceSubmissionKeys = await promiseBasedQuery(
         "SELECT preference_submission_id FROM preference_submission WHERE personality_test_attempt IN (?);",
         [testAttemptKeysArray]
     );
+    console.log(preferenceSubmissionKeys)
     const preferenceSubmissionKeysArray = preferenceSubmissionKeys.map(submission => submission.preference_submission_id);
     const projectPreferenceData = preferenceSubmissionKeysArray.map((submission, index) => {
-        const preferences = projectPreferencesArray[index];
+        const preferences = projectPreferencesArray[submission - 100000000];
         return preferences ? preferences.map((preference, rank) => [submission, rank + 1, preference]) : null;
     }).filter(data => data !== null).flat(1);
-
+    console.log(projectPreferenceData)
     await promiseBasedQuery(
         "INSERT IGNORE INTO project_preference (preference_submission_id, project_number, preference_rank) " +
         "VALUES ?;",
