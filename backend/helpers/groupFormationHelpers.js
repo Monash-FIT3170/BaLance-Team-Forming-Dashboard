@@ -423,14 +423,14 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
     Project choices are sorted by preference rank in ascending order.
     */
     const students = await promiseBasedQuery(
-        "SELECT stud.stud_unique_id, alloc.unit_off_lab_id, submit.submission_timestamp, GROUP_CONCAT(pref.preference_rank) AS preference_rank " +
+        "SELECT stud.preferred_name name, stud.stud_unique_id, alloc.unit_off_lab_id, submit.submission_timestamp, GROUP_CONCAT(pref.project_number ORDER BY pref.preference_rank, pref.project_number ASC) AS preference_rank " +
         "FROM student stud " +
-        "INNER JOIN student_lab_allocation alloc ON stud.stud_unique_id=alloc.stud_unique_id " +
+        "INNER JOIN student_lab_allocation alloc ON alloc.stud_unique_id=stud.stud_unique_id " +
         "INNER JOIN unit_off_lab lab ON lab.unit_off_lab_id=alloc.unit_off_lab_id " +
         "INNER JOIN unit_offering unit ON unit.unit_off_id=lab.unit_off_id " +
-        "INNER JOIN personality_test_attempt test ON test.stud_unique_id=stud.stud_unique_id " +
+        "INNER JOIN personality_test_attempt test ON test.stud_unique_id=alloc.stud_unique_id " +
         "INNER JOIN preference_submission submit ON submit.personality_test_attempt=test.test_attempt_id " +
-        "INNER JOIN project_preference pref ON pref.preference_submission_id=test.stud_unique_id " +
+        "INNER JOIN project_preference pref ON pref.preference_submission_id=submit.preference_submission_id " +
         "WHERE " +
         "   unit.unit_code=? " +
         "   AND unit.unit_off_year=? " +
@@ -442,10 +442,15 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
     );
 
     const size = students[0]["preference_rank"].split(",").length;
-    const groups = [];
+    
 
-    // Set a group size to limit group fill for even spread
-    groupSize = Math.floor(students.length/size);
+    for (let i = 0; i < students.length; i++) {
+        students[i]["preference_rank"] = students[i]["preference_rank"].split(","); // Use list format for preferences
+    }
+    
+    
+    const groups = [];
+    groupSize = Math.ceil(students.length/size); // Set a group size to limit group fill for even spread
     const projects = {};
 
     // Create an empty dictionary of all projects with lists to store students allocated
@@ -460,19 +465,66 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
                 
             // Start looking for students with current preference level for current project out of all students
             for (let prefIndex = 0; prefIndex < size; prefIndex++) {
-                let currentPref = parseInt(student["preference_rank"][2 * prefIndex]);
+                let currentPref = parseInt(student["preference_rank"][prefIndex]);
 
-                if (projects[currentPref].length >= groupSize) { continue; } // If current looked at group is full, go to next preference level
-
-                projects[currentPref].push(student["stud_unique_id"])
-                groups.push([student["stud_unique_id"], currentPref]);
-                students.splice(index, 1);
-                index--;
-                break;
+                if (projects[currentPref].length < groupSize) { // If current looked at group is full, go to next preference level
+                    console.log("Allocated " + student["name"] + " to group " + currentPref)
+                    projects[currentPref].push(student["stud_unique_id"])
+                    groups.push([student["stud_unique_id"], currentPref]);
+                    students.splice(index, 1);
+                    index--;
+                    break;
+                }
             }
         }
-        groupSize++
     }
+
+    const unitId = await promiseBasedQuery(
+        "SELECT labs.unit_off_lab_id lab_id " + 
+        "FROM unit_offering off " + 
+        "INNER JOIN unit_off_lab labs ON labs.unit_off_id=off.unit_off_id " + 
+        "WHERE " +
+        "   off.unit_code=? " +
+        "   AND off.unit_off_year=? " +
+        "   AND off.unit_off_period=?;",
+        [unitCode, year, period]
+    );
+    
+    const groupInsertData = []
+    let numGroups = 0;
+    for (let id of unitId) {
+        for (let projectNum of Object.keys(projects)) {
+            groupInsertData.push([id["lab_id"], projectNum]);
+            numGroups++;
+        }
+    }
+
+    await promiseBasedQuery("INSERT IGNORE INTO lab_group (unit_off_lab_id, group_number) VALUES ?;", [groupInsertData]);
+
+
+    /* INSERT THE ALLOCATIONS TO GROUPS INTO THE DATABASE */
+    // get all groups in this unit as [ >> group_id <<, lab_id]
+    const groupData = await promiseBasedQuery(
+        "SELECT g.lab_group_id, g.unit_off_lab_id " +
+        "FROM lab_group g " +
+        "INNER JOIN unit_off_lab l ON g.unit_off_lab_id=l.unit_off_lab_id " +
+        "INNER JOIN unit_offering u ON u.unit_off_id=l.unit_off_id " +
+        "WHERE " +
+        "   u.unit_code=? " +
+        "   AND u.unit_off_year=? " +
+        "   AND u.unit_off_period=?;",
+        [unitCode, year, period]
+    );
+
+    for (let i = 0; i < groups.length; i++) {
+        groups[i] = [groups[i][0], groupData[parseInt(groups[i][1]) - 1]["lab_group_id"]]
+    }
+
+    
+    // // student allocations are created as [~~group_alloc_id~~, stud_unique_id, lab_group_id]
+    await promiseBasedQuery("INSERT IGNORE INTO group_allocation (stud_unique_id, lab_group_id) VALUES ?;", [
+        groups,
+    ]);
 };
 
 const splitGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) => {
