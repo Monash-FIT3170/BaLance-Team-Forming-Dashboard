@@ -442,7 +442,6 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
     );
 
     const size = students[0]["preference_rank"].split(",").length;
-    
 
     for (let i = 0; i < students.length; i++) {
         students[i]["preference_rank"] = students[i]["preference_rank"].split(","); // Use list format for preferences
@@ -468,7 +467,6 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
                 let currentPref = parseInt(student["preference_rank"][prefIndex]);
 
                 if (projects[currentPref].length < groupSize) { // If current looked at group is full, go to next preference level
-                    console.log("Allocated " + student["name"] + " to group " + currentPref)
                     projects[currentPref].push(student["stud_unique_id"])
                     groups.push([student["stud_unique_id"], currentPref]);
                     students.splice(index, 1);
@@ -499,6 +497,7 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
         }
     }
 
+    // Functionality for multiple might have to be re-reviewed when we actually make this compatible for it
     await promiseBasedQuery("INSERT IGNORE INTO lab_group (unit_off_lab_id, group_number) VALUES ?;", [groupInsertData]);
 
 
