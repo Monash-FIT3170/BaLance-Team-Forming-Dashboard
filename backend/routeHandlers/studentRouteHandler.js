@@ -476,26 +476,25 @@ const addProjectPreferences = async (personalityTestAttemptKey, students) => {
         // Turning the string preferences into an array of numbers 
         const preferencesArray = student.preferences.split(" ").map(Number);
 
-        // for each project 
+        // Gather data for each project
         for (let i = 0; i < preferencesArray.length; i++) {
             resultInsertData.push([
                 preference_submission_id,
                 i,
                 preferencesArray[i]
             ]);
-
-            // insert for each project 
-            // this looks like bad practice to insert in a for loop, im not sure how to fix since there will be N project_preference for N projects
-            try {
-                await promiseBasedQuery(
-                    "INSERT IGNORE INTO project_preference" +
-                    "(preference_submission_id, project_number, preference_rank) " +
-                    "VALUES ?;",
-                    resultInsertData[i]
-                );
-            } catch (err) {
-                console.log(err);
-            }
+        }
+        
+        // Perform a single insert for all projects
+        try {
+            await promiseBasedQuery(
+                "INSERT IGNORE INTO project_preference " +
+                "(preference_submission_id, project_number, preference_rank) " +
+                "VALUES ?;",
+                [resultInsertData]
+            );
+        } catch (err) {
+            console.log(err);
         }
     });
     //TODO: check if the above is correct
