@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { useDisclosure, Grid, Box, Flex, Spacer, Center } from '@chakra-ui/react';
+import { useDisclosure, Grid, Box, Flex, Spacer, Center, VStack } from '@chakra-ui/react';
 
 import { MockAuth } from '../helpers/mockAuth';
 import UnitCard from '../components/homePage/UnitCard';
@@ -47,17 +47,7 @@ function Units() {
           <Spacer />
           <PageHeader fontSize="4xl" pageDesc="Home" />
           <Spacer />
-          <Box mt="1.2em" mr="4em" w="200px">
-            <AddButton
-              buttonText="Create form"
-              onClick={onFormOpen}
-              width={{
-                sm: '150px',
-                md: '200px',
-              }}
-              />
-          </Box>
-          <Box mt="1.2em" mr="4em" w="200px">
+          <VStack mt="1.2em" mr="4em" w="200px" spacing={4}>
             <AddButton
               buttonText="Add offering"
               onClick={onAddOpen}
@@ -66,7 +56,15 @@ function Units() {
                 md: '200px',
               }}
             />
-          </Box>
+            <AddButton
+              buttonText="Create form"
+              onClick={onFormOpen}
+              width={{
+                sm: '150px',
+                md: '200px',
+              }}
+            />
+          </VStack>
         </Flex>
       </Box>
 
