@@ -10,7 +10,8 @@ import {
   ModalOverlay,
   Stack,
   Text,
-  Button
+  Button,
+  Box,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 
@@ -24,11 +25,12 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
 
     if (isModalOpen) {
       setTimeLeft(15); // Reset timer back to the original time of 15 secs
-      setFormClosed(false); // Forms opened again
+      setFormClosed(false);
       timer = setInterval(() => {
         setTimeLeft(prevTime => {
           if (prevTime <= 1) {
             clearInterval(timer);
+            setFormClosed(true); // Form closes if time is up
             return 0;
           }
           return prevTime - 1;
@@ -49,13 +51,13 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
 
   const closeModal = () => {
     setSubmitted(false);
-    setFormClosed(true);
     onModalClose();
   };
 
   const sendForm = (event) => {
     event.preventDefault();
     setSubmitted(true);
+    setTimeLeft(0); // Stop the timer
   };
 
   const renderForm = () => (
@@ -66,7 +68,11 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
           <Checkbox>Preference</Checkbox>
         </Stack>
       </FormControl>
-      <Text mt={4}>Time left: {formatTime(timeLeft)}</Text>
+      <Box position="relative">
+          <Text position="absolute" top="10px" right="10px">
+            Time left: {formatTime(timeLeft)}
+          </Text>
+        </Box>
     </form>
   );
 
@@ -74,15 +80,21 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
     <Modal closeOnOverlayClick={false} isOpen={isModalOpen} onClose={closeModal}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>New Form</ModalHeader>
+        <ModalHeader textAlign="center">New Form</ModalHeader>
         <ModalCloseButton />
         <hr />
 
         <ModalBody pb={10}>
-          {!submitted ? (
+          {formClosed && !submitted ? (
+            <Flex justify="center" align="center" height="100px">
+              <Text fontSize="2xl">
+                Your session has expired.
+              </Text>
+            </Flex>
+          ):!submitted? (
             renderForm()
           ) : (
-            <Text>Success!</Text>
+            <Text>Blank</Text>
           )}
         </ModalBody>
 
