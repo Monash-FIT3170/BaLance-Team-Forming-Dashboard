@@ -33,6 +33,7 @@ function CreateGroups() {
   const [viableStrats, setViableStrats] = useState({
     belbin: false,
     effort: false,
+    times: false,
   });
   const navigate = useNavigate();
   const toast = useToast();
@@ -48,7 +49,7 @@ function CreateGroups() {
       console.log('fetching strategies we can use');
       const token = await getAccessTokenSilently();
       const groupingStratsResponse = await fetch(
-        `http://localhost:8080/api/units/groupingStrategies/${unitCode}/${year}/${period}`,
+        `/api/units/groupingStrategies/${unitCode}/${year}/${period}`,
         {
           method: 'GET',
           headers: new Headers({
@@ -167,6 +168,34 @@ function CreateGroups() {
     }
   };
 
+  const setGroupSizeField = () => {
+    if (strategy !== "times") {
+        return (
+        <>
+            <FormLabel>Group Size</FormLabel>
+            <NumberInput
+                w="12em"
+                min={strategy === 'belbin' ? '3' : '2'}
+                defaultValue={strategy === 'belbin' ? '3' : '2'}
+                onChange={(valueString) => setGroupSize(parseInt(valueString))}
+            >
+                <NumberInputField />
+                <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+                </NumberInputStepper>
+            </NumberInput>
+    
+            <FormHelperText>
+                Minimum group size is {strategy === 'belbin' ? '3' : '2'}
+            </FormHelperText>
+        </>
+        );
+    } else {
+        return <FormHelperText>Preset group sizes are not compatible with this strategy.</FormHelperText>;
+    }
+  } 
+
   return (
     <div>
       <PageHeader
@@ -197,29 +226,12 @@ function CreateGroups() {
           <VStack>
             <FormLabel ml="1em">Group Formation Strategy</FormLabel>
             <Dropdown
-              options={['random', 'effort', 'belbin']}
+              options={['random', 'effort', 'belbin', 'times']}
               width="12em"
               onChange={(event) => setStrategy(event.target.value)}
             />
-
-            <FormLabel>Group Size</FormLabel>
-
-            <NumberInput
-              w="12em"
-              min={strategy === 'belbin' ? '3' : '2'}
-              defaultValue={strategy === 'belbin' ? '3' : '2'}
-              onChange={(valueString) => setGroupSize(parseInt(valueString))}
-            >
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-
-            <FormHelperText>
-              Minimum group size is {strategy === 'belbin' ? '3' : '2'}
-            </FormHelperText>
+            {setGroupSizeField()}
+        
           </VStack>
         </FormControl>
 

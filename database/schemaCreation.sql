@@ -95,7 +95,7 @@ ALTER TABLE group_allocation AUTO_INCREMENT=100000000;
 
 CREATE TABLE IF NOT EXISTS personality_test_attempt ( -- stores a student's personality data
 	test_attempt_id INT AUTO_INCREMENT COMMENT 'unique identifier for the personality test attempt',
-    test_type ENUM('effort', 'belbin'), 
+    test_type ENUM('effort', 'belbin', 'times'), 
     stud_unique_id INT,
     unit_off_id INT,
 	CONSTRAINT pk_personality_test_attempt PRIMARY KEY (test_attempt_id),
@@ -123,6 +123,23 @@ CREATE TABLE IF NOT EXISTS belbin_result ( -- information on student's belbin pe
 );
 ALTER TABLE belbin_result AUTO_INCREMENT=100000000; 
 
+CREATE TABLE IF NOT EXISTS preference_submission (
+    preference_submission_id INT AUTO_INCREMENT COMMENT 'unique identifier for preference submission result',
+    personality_test_attempt INT,
+    submission_timestamp TIMESTAMP COMMENT 'timestamp of preference submission',
+    CONSTRAINT pk_preference_submission PRIMARY KEY (preference_submission_id),
+    CONSTRAINT ck_preference_submission UNIQUE (personality_test_attempt)
+);
+ALTER TABLE preference_submission AUTO_INCREMENT=100000000;
+
+CREATE TABLE IF NOT EXISTS project_preference (
+    project_preference_id INT AUTO_INCREMENT COMMENT 'unique identifier for a student project preference',
+    preference_submission_id INT COMMENT 'identifier for preference submission',
+    project_number INT COMMENT 'unique identifier for given project',
+    preference_rank INT COMMENT 'preference rank (1 - N)',
+    CONSTRAINT pk_project_preference PRIMARY KEY (project_preference_id)
+);
+ALTER TABLE project_preference AUTO_INCREMENT=100000000;
 
 -- FOREIGN KEY CREATION
 -- student to enrolment, group allocation, lab allocation, personality_test_attempt
@@ -146,7 +163,10 @@ ALTER TABLE lab_group ADD FOREIGN KEY (unit_off_lab_id) REFERENCES unit_off_lab(
 -- groups to group allocations
 ALTER TABLE group_allocation ADD FOREIGN KEY (lab_group_id) REFERENCES lab_group(lab_group_id);
 
--- personality test attempt to effort result, belbin result
+-- personality test attempt to effort result, belbin result, preference 
 ALTER TABLE effort_result ADD FOREIGN KEY (personality_test_attempt) REFERENCES personality_test_attempt(test_attempt_id);
 ALTER TABLE belbin_result ADD FOREIGN KEY (personality_test_attempt) REFERENCES personality_test_attempt(test_attempt_id);
+ALTER TABLE preference_submission ADD FOREIGN KEY (personality_test_attempt) REFERENCES personality_test_attempt(test_attempt_id);
 
+-- FOREIGN KEY CREATION FOR project_preference TABLE
+ALTER TABLE project_preference ADD FOREIGN KEY (preference_submission_id) REFERENCES preference_submission(preference_submission_id);

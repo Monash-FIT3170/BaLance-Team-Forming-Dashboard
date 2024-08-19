@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { useState } from 'react';
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import {
     Box,
     Center,
@@ -8,8 +8,8 @@ import {
     Td,
     Thead,
     Tr,
-    useDisclosure
-} from "@chakra-ui/react";
+    useDisclosure,
+} from '@chakra-ui/react';
 
 const CsvPreviewTable = ({
     headerMap,
@@ -17,9 +17,8 @@ const CsvPreviewTable = ({
     setProfileToDelete,
     onDeleteProfileOpen,
     onEditProfileOpen,
-    setCurrProfile
+    setCurrProfile,
 }) => {
-
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
 
     const sortedProfiles = [...profiles].sort((a, b) => {
@@ -38,7 +37,8 @@ const CsvPreviewTable = ({
         if (sortConfig.key === key) {
             setSortConfig({
                 ...sortConfig,
-                direction: sortConfig.direction === 'ascending' ? 'descending' : 'ascending',
+                direction:
+                    sortConfig.direction === 'ascending' ? 'descending' : 'ascending',
             });
         } else {
             setSortConfig({ key, direction: 'ascending' });
@@ -58,20 +58,26 @@ const CsvPreviewTable = ({
             <Thead>
                 <Tr>
                     {Object.keys(profiles[0]).map((key) => {
-                        return (<td><b>{key.toUpperCase()}</b></td>)
+                        return (
+                            <td key={key}>
+                                <b>{key.toUpperCase()}</b>
+                            </td>
+                        );
                     })}
                 </Tr>
             </Thead>
-        )
-    }
+        );
+    };
 
     const renderBody = () => {
         return (
             <Tbody>
-                {profiles.map((profile) => (
-                    <Tr>
-                        {Object.keys(profile).map((key) => {return (<td>{profile[key]}</td>)})}
-                        <Td>
+                {profiles.map((profile, index) => (
+                    <Tr key={profile + index}>
+                        {Object.keys(profile).map((key, index) => {
+                            return <td key={profile[key] + index}>{profile[key]}</td>;
+                        })}
+                        <Td key={profile}>
                             <EditIcon
                                 style={{ cursor: 'pointer' }}
                                 onClick={() => {
@@ -82,30 +88,28 @@ const CsvPreviewTable = ({
                         </Td>
                         <Td>
                             <DeleteIcon
-                                style={{ cursor: 'pointer'}}
-                                onClick={() => {handleDeleteProfile(profile.studentId)}}
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => {
+                                    handleDeleteProfile(profile.studentId);
+                                }}
                             />
                         </Td>
                     </Tr>
                 ))}
             </Tbody>
-        )
-    }
+        );
+    };
 
-    return (
-        (profiles.length === 0) ? (
-            <Box bg='#E6EBF0' p={4} alignContent="center" width="80%">
-                <Center>
-                    No data uploaded.
-                </Center>
-            </Box>
-        ):(
-            <Table variant="striped" size="sm" maxWidth="90vw" marginBottom="3vh">
-                {renderHeader()}
-                {renderBody()}
-            </Table>
-        )
-    )
-}
+    return profiles.length === 0 ? (
+        <Box bg="#E6EBF0" p={4} alignContent="center" width="80%">
+            <Center>No data uploaded.</Center>
+        </Box>
+    ) : (
+        <Table variant="striped" size="sm" maxWidth="90vw" marginBottom="3vh">
+            {renderHeader()}
+            {renderBody()}
+        </Table>
+    );
+};
 
 export default CsvPreviewTable;
