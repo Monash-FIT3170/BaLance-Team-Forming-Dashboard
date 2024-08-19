@@ -2,7 +2,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useParams } from 'react-router';
 import { HStack, Center } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
-import { AddIcon, EditIcon, ViewIcon } from '@chakra-ui/icons';
+import { AddIcon, CalendarIcon, EditIcon, ViewIcon } from '@chakra-ui/icons';
 
 import { MockAuth } from '../helpers/mockAuth';
 import NavButton from '../components/_shared/NavButton';
@@ -72,6 +72,11 @@ function Students() {
           buttonText="View offering analytics"
           buttonUrl={`/unitAnalytics/${unitCode}/${year}/${period}`}
           buttonIcon={<ViewIcon />}
+        />
+        <NavButton
+          buttonText="Form Options"
+          buttonUrl={`/Forms/${unitCode}/${year}/${period}`}
+          buttonIcon={<CalendarIcon />}
         />
       </HStack>
       <br />
