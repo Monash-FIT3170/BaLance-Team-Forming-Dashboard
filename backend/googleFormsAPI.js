@@ -22,7 +22,7 @@ async function getFormResponseList(auth,formId){
     const authClient = await auth.getClient();
     const forms = google.forms({ version: 'v1', auth: authClient });
     const responses = await forms.forms.responses.list({ formId });
-    console.log(responses.data)
+    console.log(responses.data.responses)
     return responses;
 }
 
@@ -30,10 +30,20 @@ async function getFormResponse(auth,formId,responseId){
     const authClient = await auth.getClient();
     const forms = google.forms({ version: 'v1', auth: authClient });
     const response = await forms.forms.responses.get({formId,responseId})
-    console.log(response)
     return response
 }
 
+async function getForm(auth, formId){
+    const authClient = await auth.getClient();
+    const forms = google.forms({ version: 'v1', auth: authClient });
+    const form = await forms.forms.get({formId})
+    console.log(form.data.items[0].questionItem)
+
+}
+
 //example usage is getFormResponses(forms,'1KKE9CKONUECsCMMTLWql0Q9PPmgk7z2RH0FuQ6-rLq0')
-const responses = getFormResponseList(auth,'1KKE9CKONUECsCMMTLWql0Q9PPmgk7z2RH0FuQ6-rLq0')
-getFormResponse(auth,'1KKE9CKONUECsCMMTLWql0Q9PPmgk7z2RH0FuQ6-rLq0','ACYDBNjssChpdwkl8oUDIVEC215r8JGH4ptQUh1UfKT3iMA6kEVqiVU5aE2pkdsHjJTyn5k')
+//const responses = getFormResponseList(auth,'1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE')
+const form = getForm(auth, "1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE")
+
+
+
