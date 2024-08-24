@@ -2,7 +2,8 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useParams } from 'react-router';
 import { HStack, Center } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
-import { AddIcon, EditIcon, ViewIcon } from '@chakra-ui/icons';
+import { AddIcon, EditIcon, ViewIcon, RepeatIcon, CheckIcon} from '@chakra-ui/icons';
+import { Button, Text, Spacer} from '@chakra-ui/react';
 
 import { MockAuth } from '../helpers/mockAuth';
 import NavButton from '../components/_shared/NavButton';
@@ -73,6 +74,22 @@ function Students() {
           buttonUrl={`/unitAnalytics/${unitCode}/${year}/${period}`}
           buttonIcon={<ViewIcon />}
         />
+      </HStack>
+      <HStack justifyContent={'center'} marginTop={'10px'}>
+      <Button onClick={'updateResponses'}>
+          <HStack>
+            <RepeatIcon />
+            <Spacer />
+            <Text>Update Responses</Text>
+          </HStack>
+        </Button>
+        <Button onClick={'pushData'}>
+          <HStack>
+            <CheckIcon />
+            <Spacer />
+            <Text>Save Responses</Text>
+          </HStack>
+        </Button>
       </HStack>
       <br />
       <br />
