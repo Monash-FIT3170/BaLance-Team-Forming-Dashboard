@@ -2,6 +2,8 @@
    and setup of the application database and components
    relating to unit, student, lab and groups
 */
+ GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'password' WITH GRANT OPTION;
+ FLUSH PRIVILEGES;
 
 -- START FROM CLEAN SLATE
 DROP SCHEMA IF EXISTS student_group_db;
