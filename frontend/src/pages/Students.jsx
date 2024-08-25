@@ -11,6 +11,18 @@ import ToggleButtonGroup from '../components/_shared/ToggleButtonGroup';
 import PageHeader from '../components/_shared/PageHeader';
 import StudentsPreviewTable from '../components/_shared/StudentsPreviewTable';
 
+function updateResponses() {
+  belbin = getBelbinResponse(auth, '1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE');
+  effort = getEffortResponse(auth, '1gaVlsQARmiYYTmgr3wezZdWFJxVcyrWAaFpX5QleVy8');
+  preferences = getPreferenceResponse(auth, '1BPup6OBO3qyp3Tob2fpTZloGHPuvbzzmFADdNI_NcTg');
+
+  pushData(belbin, effort, preferences);
+}
+
+function pushData() {
+
+}
+
 function Students() {
   let authService = {
     DEV: MockAuth,
