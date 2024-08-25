@@ -19,9 +19,36 @@ function updateResponses() {
   pushData(belbin, effort, preferences);
 }
 
-function pushData() {
-
-}
+function pushData(belbin, effort, preferences) {
+  getAccessTokenSilently().then((token) => {
+    fetch(
+      `http://localhost:8080/api/students/personality/${unitCode}/${year}/${period}`,
+      {
+        method: 'POST',
+        headers: new Headers({
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        }),
+        body: JSON.stringify({students, personalityData}),
+      }
+    )
+    .then((response) => {
+      if (response.ok) {
+        getToast('Your data has been imported successfully!', 'success');
+      } else {
+        return response.text().then((responseText) => {
+          getToast('There was an error importing your file!', 'error');
+            throw new Error('Error sending data to the REST API');
+        });
+      }
+    })
+    .catch((error) => {
+      console.error('Error sending data to the REST API:', error);
+      // Optionally show an error message to the user.
+    });
+  });
+};
 
 function Students() {
   let authService = {
@@ -88,7 +115,7 @@ function Students() {
         />
       </HStack>
       <HStack justifyContent={'center'} marginTop={'10px'}>
-      <Button onClick={'updateResponses'}>
+      <Button onClick={updateResponses}>
           <HStack>
             <RepeatIcon />
             <Spacer />
