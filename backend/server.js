@@ -13,9 +13,9 @@ const { mockAuthMiddleware } = require('./middleware/mockAuthMiddleware');
 require('dotenv').config();
 
 const corsOptions = {
-    origin:'*',
-    credentials:true,
-    optionsSuccessStatus:200,
+    origin: '*',
+    credentials: true,
+    optionsSuccessStatus: 200,
 }
 
 const app = express();
@@ -28,12 +28,12 @@ app.use((req, res, next) => {
     next();
 });
 
-if (process.env.AUTH == "TEST"){ auth0Middleware(app); }
-if (process.env.AUTH == "DEV" || process.env.AUTH == null){ mockAuthMiddleware(app); }
+if (process.env.AUTH == "TEST") { auth0Middleware(app); }
+if (process.env.AUTH == "DEV" || process.env.AUTH == null) { mockAuthMiddleware(app); }
 
 app.use(async (req, res, next) => {
     results = await db_connection.promise().query(`SELECT * FROM staff WHERE email_address='${req.user.email}';`);
-    if (results[0].length === 0){
+    if (results[0].length === 0) {
         await db_connection.promise().query(
             `INSERT INTO staff (preferred_name, last_name, email_address)
             VALUES ('${req.user.nickname}', '${req.user.nickname}', '${req.user.email}');`
@@ -48,6 +48,6 @@ app.use('/api/students/', studentRoutes);
 app.use('/api/analytics/', analyticsRoutes);
 app.use('/api/forms/', formsRoutes);
 
-app.listen(process.env.PORT || 8080, () => {
+app.listen(process.env.PORT || 8080, "0.0.0.0", () => {
     console.log(`listening to port ${process.env.PORT || 8080}`);
 });

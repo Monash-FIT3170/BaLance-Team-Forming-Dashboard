@@ -220,7 +220,7 @@ const getUnitAnalyticsPreference = async (unitCode, year, period) => {
     }
     
     return preferenceAnalyticsData
-}
+};
 
 const getUnitAnalyticsStrategies = {
     /**
@@ -418,7 +418,7 @@ const getGroupAnalyticsEffort = async (unitCode, year, period, groupNumber) => {
     return effortAnalyticsData;
 };
 
-const getGroupAnalyticsPreference = async (unitCode, year, period, groupNumber) => {
+const getGroupAnalyticsTime = async (unitCode, year, period, groupNumber) => {
     /**
      * Given a group, obtains all information related to student preference
      * to group matching
@@ -485,7 +485,7 @@ const getGroupAnalyticsStrategies = {
     effort: getGroupAnalyticsEffort,
     belbin: getGroupAnalyticsBelbin,
     times: getGroupAnalyticsPreference
-};
+
 
 module.exports = {
     getUnitAnalyticsStrategies,

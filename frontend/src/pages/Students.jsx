@@ -38,16 +38,16 @@ function preparePersonalityData(belbinResponses, effortResponses) {
 }
 
 function Students() {
-  let authService = {
-    DEV: MockAuth,
-    TEST: useAuth0,
-  };
+    let authService = {
+        DEV: MockAuth,
+        TEST: useAuth0,
+    };
 
-  const { getAccessTokenSilently } = authService[import.meta.env.VITE_REACT_APP_AUTH]();
-  const [students, setStudents] = useState([]);
-  const [numberOfGroups, setNumberOfGroups] = useState(0);
+    const { getAccessTokenSilently } = authService[import.meta.env.VITE_REACT_APP_AUTH]();
+    const [students, setStudents] = useState([]);
+    const [numberOfGroups, setNumberOfGroups] = useState(0);
 
-  const { unitCode, year, period } = useParams();
+    const { unitCode, year, period } = useParams();
 
   function pushData() {
 
@@ -96,23 +96,22 @@ function Students() {
         })
         .catch((err) => console.error(err));
 
-      // fetch groups from the backend
-      fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`, {
-        method: 'get',
-        headers: new Headers({
-          Authorization: `Bearer ${token}`,
-        }),
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          if (res.length > 0) {
-            setNumberOfGroups(res.length);
-          }
-        })
-        .catch((err) => console.error(err));
-    });
-  }, []);
-
+            // fetch groups from the backend
+            fetch(`/api/groups/${unitCode}/${year}/${period}`, {
+                method: 'get',
+                headers: new Headers({
+                    Authorization: `Bearer ${token}`,
+                }),
+            })
+                .then((res) => res.json())
+                .then((res) => {
+                    if (res.length > 0) {
+                        setNumberOfGroups(res.length);
+                    }
+                })
+                .catch((err) => console.error(err));
+        });
+    }, []);
   return (
     <div>
       <PageHeader fontSize={'4xl'} pageDesc={`${unitCode} ${period} ${year}`} />
