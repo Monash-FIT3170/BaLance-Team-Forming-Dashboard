@@ -531,17 +531,24 @@ async function populatePreferenceSubmission(students) {
         "VALUES ?;",
         [submissionData]
     );
+    console.log(submissionData)
 }
 
-async function populateProjectPreference(students) {
+async function populateProjectPreference(students, unitCode) {
     const studentEmails = students.map((student) => student.email);
     const studentKeys = (await selectStudentsKeys(studentEmails)).map((student) => student.stud_unique_id);
+    const unit_offering_id = await promiseBasedQuery(
+        "SELECT unit_off_id FROM unit_offering where unit_code = ?;",
+        [unitCode]
+    )
+    const unit_off_id = unit_offering_id[0].unit_off_id
+    console.log(unit_off_id)
     const testAttemptKeys = await promiseBasedQuery(
-        "SELECT test_attempt_id FROM personality_test_attempt WHERE stud_unique_id IN (?);",
-        [studentKeys]
+        "SELECT test_attempt_id FROM personality_test_attempt WHERE stud_unique_id IN (?) and unit_off_id=?;",
+        [studentKeys, unit_off_id]
     );
     const testAttemptKeysArray = testAttemptKeys.map((testAttempt) => testAttempt.test_attempt_id);
-    console.log(testAttemptKeysArray)
+    console.log("Test Attempt Keys Array: ",testAttemptKeysArray)
     const projectPreferences = students.map((student) => {
         const { timestamp, email, fullName, studentId, ...preferences } = student;
         return preferences;
@@ -553,16 +560,22 @@ async function populateProjectPreference(students) {
         return preferenceKeys.map(key => preferences[`Project Preference ${key}`]).map(Number);
     });
     
+    console.log("Project Preference Array", projectPreferencesArray)
+
     const preferenceSubmissionKeys = await promiseBasedQuery(
         "SELECT preference_submission_id FROM preference_submission WHERE personality_test_attempt IN (?);",
         [testAttemptKeysArray]
     );
     console.log(preferenceSubmissionKeys)
     const preferenceSubmissionKeysArray = preferenceSubmissionKeys.map(submission => submission.preference_submission_id);
+    console.log(preferenceSubmissionKeysArray)
+    const minimumKey = Math.min(...preferenceSubmissionKeysArray)
+    console.log(minimumKey)
     const projectPreferenceData = preferenceSubmissionKeysArray.map((submission, index) => {
-        const preferences = projectPreferencesArray[submission - 100000000];
+        const preferences = projectPreferencesArray[submission - minimumKey];
         return preferences ? preferences.map((preference, rank) => [submission, rank + 1, preference]) : null;
     }).filter(data => data !== null).flat(1);
+    console.log("Project Preference Data:")
     console.log(projectPreferenceData)
     await promiseBasedQuery(
         "INSERT IGNORE INTO project_preference (preference_submission_id, project_number, preference_rank) " +
@@ -583,6 +596,8 @@ const addStudentTimesAndPreferences = async (req, res) => {
         return Object.keys(preferences).length;
     })
 
+    console.log(numberOfPreferencesForEachStudent)
+
     // get the maximum number of preferences submitted by a student
     const maxPreferences = Math.max(...numberOfPreferencesForEachStudent);
     // validate that each student has submitted the same number of preferences
@@ -594,7 +609,7 @@ const addStudentTimesAndPreferences = async (req, res) => {
     try {
         await populatepersonalityTestAttempt(filteredStudents, unitCode, year, period, testType);
         await populatePreferenceSubmission(filteredStudents);
-        await populateProjectPreference(filteredStudents);
+        await populateProjectPreference(filteredStudents, unitCode);
         res.status(200).send();
     } catch (error) {
         console.log(error)
