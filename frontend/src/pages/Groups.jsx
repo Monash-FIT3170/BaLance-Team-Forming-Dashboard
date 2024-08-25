@@ -13,6 +13,7 @@ import {
     Box,
     useToast,
     Spacer,
+    Button,
 } from '@chakra-ui/react';
 
 import GroupCard from '../components/groupsPage/GroupCard';
@@ -58,30 +59,31 @@ function Groups() {
         });
     }, []);
 
-    let groupsDisplay =
-        groups.length === 0 ? (
-            <Box bg="#E6EBF0" w="60vw" p={4} alignContent="left">
-                <Center>
-                    No groups have been created for this offering. Click
-                    "Create/Reconfigure Groups" to create groups for the offering.
-                </Center>
-            </Box>
-        ) : (
-            <Container className="groups" maxW="80vw">
-                {groups.map((group) => {
-                    const cardKey = `${group.lab_number}_${group.group_number}`;
-                    if ((filteredClass == 'All') | (filteredClass == group.lab_number)) {
-                        return (
-                            <GroupCard
-                                groupData={group}
-                                numberOfGroups={groups.length}
-                                key={cardKey}
-                            />
-                        );
-                    }
-                })}
-            </Container>
-        );
+    const groupsDisplayBox = (
+        <Box bg="#E6EBF0" w="60vw" p={4} alignContent="left">
+            <Center>
+                No groups have been created for this offering. Click "Create/Reconfigure
+                Groups" to create groups for the offering.
+            </Center>
+        </Box>
+    );
+    const groupsDisplayContainer = (
+        <Container className="groups" maxW="80vw">
+            {groups.map((group) => {
+                const cardKey = `${group.lab_number}_${group.group_number}`;
+                if ((filteredClass == 'All') | (filteredClass == group.lab_number)) {
+                    return (
+                        <GroupCard
+                            groupData={group}
+                            numberOfGroups={groups.length}
+                            key={cardKey}
+                        />
+                    );
+                }
+            })}
+        </Container>
+    );
+    const groupsDisplay = groups.length === 0 ? groupsDisplayBox : groupsDisplayContainer;
 
     const classFilterOptions = [{ value: 'All', label: 'All labs' }];
     const foundClasses = [];
@@ -95,41 +97,41 @@ function Groups() {
         }
     }
 
-    const handleExportToCSV = () => {
-        /* creating the csv */
+    function handleExportToCSV() {
+        console.log('reached');
         const csvRows = [['Group', 'Current role', 'Full name', 'Username']];
-        let newRow = [];
-        for (const group of groups) {
-            for (const student of group.students) {
-                newRow.push(`Lab${group.lab_number}Group${group.group_number}`);
-                newRow.push('Student');
-                newRow.push(`${student.preferred_name} ${student.last_name}`);
-                newRow.push(student.email_address.split('@', 1)[0]);
-                csvRows.push(newRow);
-                newRow = [];
-            }
-        }
-        console.log(csvRows);
-        let csvContent =
-            'data:text/csv;charset=utf-8,' + csvRows.map((e) => e.join(',')).join('\n');
 
-        /* downloading the csv file */
+        groups.forEach((group) => {
+            group.students.forEach((student) => {
+                const labNumber = group.lab_number;
+                const groupNumber = group.group_number;
+                const currentRole = 'Student';
+                const fullName = `${student.preferred_name} ${student.last_name}`;
+                const username = student.email_address.split('@', 1)[0];
+                const groupName = `Lab${labNumber}Group${groupNumber}`;
+
+                csvRows.push([groupName, currentRole, fullName, username]);
+            });
+        });
+        const csvContent =
+            'data:text/csv;charset=utf-8,' + csvRows.map((e) => e.join(',')).join('\n');
         try {
-            let encodedUri = encodeURI(csvContent);
-            let link = document.createElement('a');
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement('a');
             link.setAttribute('href', encodedUri);
-            const file_name = `${unitCode}_${year}_${period}_groups.csv`;
-            link.setAttribute('download', file_name);
-            document.body.appendChild(link); // Required for FF
+            const fileName = `${unitCode}_${year}_${period}_groups.csv`;
+            link.setAttribute('download', fileName);
             link.click();
-            getToast('Your group data is being downloaded...', 'info');
         } catch (error) {
-            console.log(error);
             getToast('Failed to download group data', 'error');
         }
-    };
+    }
 
-    console.log(groups);
+    // console.log(groups);
+    const flexGapped = {
+        display: 'flex',
+        gap: '1rem',
+    };
 
     return (
         <div>
@@ -161,11 +163,10 @@ function Groups() {
                 mx="auto"
             >
                 {groups.length > 0 ? (
-                    <NavButton
-                        buttonText="Export group data to .csv"
-                        buttonIcon={<DownloadIcon />}
-                        onClick={handleExportToCSV}
-                    />
+                    <Button onClick={handleExportToCSV} style={flexGapped}>
+                        <DownloadIcon />
+                        <span>Export group data to .csv</span>
+                    </Button>
                 ) : (
                     <Spacer />
                 )}

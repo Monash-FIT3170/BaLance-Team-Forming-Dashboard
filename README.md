@@ -82,6 +82,7 @@ Belbin type must be one of people, thinking or action
 | --------- | ---------- |
 | 12345678  | people     |
 | 28462818  | thinking   |
+| 41161886  | action     |
 
 ### Effort data
 
@@ -96,68 +97,77 @@ hourCommitment is the estimated number of hours that a student expects to commit
 
 Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup under docs/ for further details on how to add group formation strategies
 
-# Contributors [2024]
+### Mock data
 
-[Rishi Bidani](https://github.com/Rishi-Bidani)
+For the purpose of testing, a script to generate mock input data can be found under `docs/mockInputs`.
+Run the following commands under the `docs/mockInputs` directory to create a virtual environment and view details on usage:
 
-[Domico Carlo Wibowo](https://github.com/SetPizzaOnBroil30min)
+```bash
+python -m venv .venv
+source .venv/bin/activate # .venv/Scripts/activate for Windows
+pip install -r requirements.txt
+python ./generator.py --help
+```
 
-[Thejas Thekkekara Vinod](https://github.com/Alucardigan)
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-31-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+## Contributors ✨
 
-[Zhijun Chen](https://github.com/ZCStephen)
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
-[Jeffrey Yan](https://github.com/jeffreyyan4)
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/abigail-rose"><img src="https://avatars.githubusercontent.com/u/80239117?v=4?s=0" width="0px;" alt="Abby"/><br /><sub><b>Abby</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=abigail-rose" title="Code">💻</a> <a href="#design-abigail-rose" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Aabigail-rose" title="Bug reports">🐛</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/pulls?q=is%3Apr+reviewed-by%3Aabigail-rose" title="Reviewed Pull Requests">👀</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ahes0001"><img src="https://avatars.githubusercontent.com/u/105088591?v=4?s=0" width="0px;" alt="ahes0001"/><br /><sub><b>ahes0001</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=ahes0001" title="Code">💻</a> <a href="#design-ahes0001" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Aahes0001" title="Bug reports">🐛</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/pulls?q=is%3Apr+reviewed-by%3Aahes0001" title="Reviewed Pull Requests">👀</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/akanel15"><img src="https://avatars.githubusercontent.com/u/126401755?v=4?s=0" width="0px;" alt="Alex"/><br /><sub><b>Alex</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=akanel15" title="Code">💻</a> <a href="#design-akanel15" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Aakanel15" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/AbBaSaMo"><img src="https://avatars.githubusercontent.com/u/95030427?v=4?s=0" width="0px;" alt="AbBaSamo"/><br /><sub><b>AbBaSamo</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=AbBaSaMo" title="Code">💻</a> <a href="#design-AbBaSaMo" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3AAbBaSaMo" title="Bug reports">🐛</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/pulls?q=is%3Apr+reviewed-by%3AAbBaSaMo" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=AbBaSaMo" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/clau-0016"><img src="https://avatars.githubusercontent.com/u/128362499?v=4?s=0" width="0px;" alt="clau-0016"/><br /><sub><b>clau-0016</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=clau-0016" title="Code">💻</a> <a href="#design-clau-0016" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Aclau-0016" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/francisanthony17"><img src="https://avatars.githubusercontent.com/u/109979329?v=4?s=0" width="0px;" alt="francisanthony17"/><br /><sub><b>francisanthony17</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=francisanthony17" title="Code">💻</a> <a href="#design-francisanthony17" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Afrancisanthony17" title="Bug reports">🐛</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/pulls?q=is%3Apr+reviewed-by%3Afrancisanthony17" title="Reviewed Pull Requests">👀</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/jhun0012"><img src="https://avatars.githubusercontent.com/u/128357966?v=4?s=0" width="0px;" alt="jhun0012"/><br /><sub><b>jhun0012</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=jhun0012" title="Code">💻</a> <a href="#design-jhun0012" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Ajhun0012" title="Bug reports">🐛</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/pulls?q=is%3Apr+reviewed-by%3Ajhun0012" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=jhun0012" title="Documentation">📖</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/jon65"><img src="https://avatars.githubusercontent.com/u/64187809?v=4?s=0" width="0px;" alt="Jonathan Yip"/><br /><sub><b>Jonathan Yip</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=jon65" title="Code">💻</a> <a href="#design-jon65" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Ajon65" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/lbon0008"><img src="https://avatars.githubusercontent.com/u/61959810?v=4?s=0" width="0px;" alt="lbon0008"/><br /><sub><b>lbon0008</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=lbon0008" title="Code">💻</a> <a href="#design-lbon0008" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Albon0008" title="Bug reports">🐛</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/pulls?q=is%3Apr+reviewed-by%3Albon0008" title="Reviewed Pull Requests">👀</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/MariahMcCleery"><img src="https://avatars.githubusercontent.com/u/89681870?v=4?s=0" width="0px;" alt="MariahMcCleery"/><br /><sub><b>MariahMcCleery</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=MariahMcCleery" title="Code">💻</a> <a href="#design-MariahMcCleery" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3AMariahMcCleery" title="Bug reports">🐛</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=MariahMcCleery" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Mark-Mikhail"><img src="https://avatars.githubusercontent.com/u/128358310?v=4?s=0" width="0px;" alt="Mark-Mikhail"/><br /><sub><b>Mark-Mikhail</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=Mark-Mikhail" title="Code">💻</a> <a href="#design-Mark-Mikhail" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3AMark-Mikhail" title="Bug reports">🐛</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/pulls?q=is%3Apr+reviewed-by%3AMark-Mikhail" title="Reviewed Pull Requests">👀</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/mfin0008"><img src="https://avatars.githubusercontent.com/u/88076329?v=4?s=0" width="0px;" alt="mfin0008"/><br /><sub><b>mfin0008</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=mfin0008" title="Code">💻</a> <a href="#design-mfin0008" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Amfin0008" title="Bug reports">🐛</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/pulls?q=is%3Apr+reviewed-by%3Amfin0008" title="Reviewed Pull Requests">👀</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/nath0002"><img src="https://avatars.githubusercontent.com/u/111645579?v=4?s=0" width="0px;" alt="nath0002"/><br /><sub><b>nath0002</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=nath0002" title="Code">💻</a> <a href="#design-nath0002" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Anath0002" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Iandawarrior"><img src="https://avatars.githubusercontent.com/u/17513301?v=4?s=0" width="0px;" alt="Ian Kabil Felix"/><br /><sub><b>Ian Kabil Felix</b></sub></a><br /><a href="#mentoring-Iandawarrior" title="Mentoring">🧑‍🏫</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/riordanalfredo"><img src="https://avatars.githubusercontent.com/u/17421174?v=4?s=0" width="0px;" alt="Riordan Alfredo"/><br /><sub><b>Riordan Alfredo</b></sub></a><br /><a href="#mentoring-riordanalfredo" title="Mentoring">🧑‍🏫</a> <a href="#design-riordanalfredo" title="Design">🎨</a> <a href="#data-riordanalfredo" title="Data">🔣</a> <a href="#ideas-riordanalfredo" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Rishi-Bidani"><img src="https://avatars.githubusercontent.com/u/64310471?v=4?s=0" width="0px;" alt="Rishi-Bidani"/><br /><sub><b>Rishi-Bidani</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=Rishi-Bidani" title="Code">💻</a> <a href="#design-Rishi-Bidani" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3ARishi-Bidani" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/SetPizzaOnBroil30min"><img src="https://avatars.githubusercontent.com/u/123727073?v=4?s=0" width="0px;" alt="Domico Carlo"/><br /><sub><b>Domico Carlo</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=SetPizzaOnBroil30min" title="Code">💻</a> <a href="#design-SetPizzaOnBroil30min" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3ASetPizzaOnBroil30min" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Alucardigan"><img src="https://avatars.githubusercontent.com/u/100405818?v=4?s=0" width="0px;" alt="Thejas "/><br /><sub><b>Thejas </b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=Alucardigan" title="Code">💻</a> <a href="#design-Alucardigan" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3AAlucardigan" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ZCStephen"><img src="https://avatars.githubusercontent.com/u/131650135?v=4?s=0" width="0px;" alt="ZCStephen"/><br /><sub><b>ZCStephen</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=ZCStephen" title="Code">💻</a> <a href="#design-ZCStephen" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3AZCStephen" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/jeffreyyan4"><img src="https://avatars.githubusercontent.com/u/163799488?v=4?s=0" width="0px;" alt="jeffreyyan4"/><br /><sub><b>jeffreyyan4</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=jeffreyyan4" title="Code">💻</a> <a href="#design-jeffreyyan4" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Ajeffreyyan4" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/LachlanWilliams"><img src="https://avatars.githubusercontent.com/u/93383173?v=4?s=0" width="0px;" alt="Lachlan Williams"/><br /><sub><b>Lachlan Williams</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=LachlanWilliams" title="Code">💻</a> <a href="#design-LachlanWilliams" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3ALachlanWilliams" title="Bug reports">🐛</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ying-tsai-wang"><img src="https://avatars.githubusercontent.com/u/127176651?v=4?s=0" width="0px;" alt="charles"/><br /><sub><b>charles</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=ying-tsai-wang" title="Code">💻</a> <a href="#design-ying-tsai-wang" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Aying-tsai-wang" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/dhon0010"><img src="https://avatars.githubusercontent.com/u/162076320?v=4?s=0" width="0px;" alt="dhon0010"/><br /><sub><b>dhon0010</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=dhon0010" title="Code">💻</a> <a href="#design-dhon0010" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Adhon0010" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/kbay0009"><img src="https://avatars.githubusercontent.com/u/102573143?v=4?s=0" width="0px;" alt="kbay0009"/><br /><sub><b>kbay0009</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=kbay0009" title="Code">💻</a> <a href="#design-kbay0009" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Akbay0009" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/WofWaf"><img src="https://avatars.githubusercontent.com/u/97369669?v=4?s=0" width="0px;" alt="Trevor Yao"/><br /><sub><b>Trevor Yao</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=WofWaf" title="Code">💻</a> <a href="#design-WofWaf" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3AWofWaf" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/oneil1625"><img src="https://avatars.githubusercontent.com/u/163804456?v=4?s=0" width="0px;" alt="oneil1625"/><br /><sub><b>oneil1625</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=oneil1625" title="Code">💻</a> <a href="#design-oneil1625" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Aoneil1625" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/echu0033"><img src="https://avatars.githubusercontent.com/u/163799481?v=4?s=0" width="0px;" alt="echu0033"/><br /><sub><b>echu0033</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=echu0033" title="Code">💻</a> <a href="#design-echu0033" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Aechu0033" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Aung33270333"><img src="https://avatars.githubusercontent.com/u/127281485?v=4?s=0" width="0px;" alt="Aung33270333"/><br /><sub><b>Aung33270333</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=Aung33270333" title="Code">💻</a> <a href="#design-Aung33270333" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3AAung33270333" title="Bug reports">🐛</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/me-za"><img src="https://avatars.githubusercontent.com/u/90816008?v=4?s=0" width="0px;" alt="me-za"/><br /><sub><b>me-za</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=me-za" title="Code">💻</a> <a href="#design-me-za" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Ame-za" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/dcor0010"><img src="https://avatars.githubusercontent.com/u/163801705?v=4" width="0px;" alt="dcor0010"/><br /><sub><b>dcor0010</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=dcor0010" title="Code">💻</a> <a href="#design-dcor0010" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Adcor0010" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/alexismcharo"><img src="https://avatars.githubusercontent.com/u/163802955?v=4?s=0" width="0px;" alt="alexismcharo"/><br /><sub><b>alexismcharo</b></sub></a><br /><a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/commits?author=alexismcharo" title="Code">💻</a> <a href="#design-alexismcharo" title="Design">🎨</a> <a href="https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard/issues?q=author%3Aalexismcharo" title="Bug reports">🐛</a></td>
+    </tr>
+  </tbody>
+</table>
 
-[Lachlan Williams](https://github.com/LachlanWilliams)
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
 
-[Ying-Tsai Wang](https://github.com/ying-tsai-wang)
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
-[Daniel Erik Hong](https://github.com/dhon0010)
-
-[Daniel Cornelius](https://github.com/dcor0010)
-
-[Kenan Baydar](https://github.com/kbay0009)
-
-[Trevor Yao](https://github.com/WofWaf)
-
-[Oneil Chiang](https://github.com/oneil1625)
-
-[Ethan Chuen](https://github.com/echu0033)
-
-[Aung Khant Kyaw](https://github.com/Aung33270333)
-
-[Mohammad Zawari](https://github.com/me-za)
-
-[Alexis Mcharo](https://github.com/alexismcharo)
-
-# Contributors
-
-[Abigail Lithwick](https://github.com/abigail-rose)
-
-[Ahmed Khadawardi](https://github.com/ahes0001)
-
-[Alex Kanellis](https://github.com/akanel15)
-
-[Baaset Moslih](https://github.com/AbBaSaMo)
-
-[Cheryl Lau](https://github.com/clau-0016)
-
-[Francis Anthony](https://github.com/francisanthony17)
-
-[James Hunt](https://github.com/jhun0012)
-
-[Jon Yip](https://github.com/jon65)
-
-[Luke Bonso](https://github.com/lbon0008)
-
-[Mariah McCleery](https://github.com/MariahMcCleery)
-
-[Mark Mikhail](https://github.com/Mark-Mikhail)
-
-[Matthew Finis](https://github.com/mfin0008)
-
-[Nethara Athukorala](https://github.com/nath0002)
-
-# License
-
-The license we use for this project is the [GPL v3](https://www.gnu.org/licenses/quick-guide-gplv3.html)
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

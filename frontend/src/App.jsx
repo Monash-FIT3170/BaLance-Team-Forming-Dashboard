@@ -1,17 +1,34 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Box, ChakraProvider, Container, Heading, extendTheme } from '@chakra-ui/react';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link as RouterLink
+} from 'react-router-dom';
+import {
+  Box,
+  ChakraProvider,
+  Container,
+  Heading,
+  extendTheme,
+  Link
+} from '@chakra-ui/react';
 import { useAuth0 } from '@auth0/auth0-react';
 
 import { MockAuth } from './helpers/mockAuth';
 import UploadGroupScript from './pages/UploadGroupScript';
 import CreateGroups from './pages/CreateGroups';
 import HomePage from './pages/Units';
+import LandingPage from './pages/LandingPage';
+import LoginPage from './components/loginPage/LoginPage.jsx';
+import ContributorsPage from './pages/ContributorsPage';
 import NavBar from './components/_shared/NavBar';
 import Groups from './pages/Groups';
 import Students from './pages/Students';
 import UnitAnalytics from './pages/UnitAnalytics';
 import GroupAnalytics from './pages/GroupAnalytics';
 import Import from './pages/Import';
+import RegistrationPage from "./components/loginPage/RegistrationPage.jsx";
+import FAQ from './pages/FAQ';
 
 const theme = extendTheme({
   colors: {
@@ -41,7 +58,10 @@ function App() {
         <div className="App">
           {isAuthenticated && (
             <Routes>
-              <Route path="/" element={<HomePage />} />
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/contributors" element={<ContributorsPage />} />
+              <Route path="/faq" element={<FAQ />} />  
+              <Route path="/home" element={<HomePage />} />
               <Route path="/groups/:unitCode/:year/:period" element={<Groups />} />
               <Route path="/students/:unitCode/:year/:period" element={<Students />} />
               <Route
@@ -61,17 +81,41 @@ function App() {
                 path="/groupAnalytics/:unitCode/:year/:period/:groupNumber"
                 element={<GroupAnalytics />}
               />
+              <Route
+                path="/login"
+                element={<LoginPage />}
+              />
+              <Route
+                path="/FAQ"
+                element={<FAQ />}
+              />
+              <Route
+                path="/login"
+                element={<LoginPage />}
+              />
             </Routes>
           )}
           {!isAuthenticated && (
             <Container centerContent>
+              <Routes>
+                <Route
+                  path="/login"
+                  element={<LoginPage />}
+                />
+                <Route
+                  path="signup"
+                  element={<RegistrationPage />}
+                />
+              </Routes>
               <Box height="100px"></Box>
               <Heading as="h3" size="xl">
-                <button onClick={loginWithRedirect}>
-                  <Heading as="h2" size="xl" variant="underline">
-                    Login
-                  </Heading>
-                </button>{' '}
+                <Link as={RouterLink} to="login" ml="8">
+                  <button>
+                    <Heading as="h2" size="xl" variant="underline">
+                      Login
+                    </Heading>
+                  </button>{' '}
+                </Link>
                 to Create Groups!
               </Heading>
             </Container>

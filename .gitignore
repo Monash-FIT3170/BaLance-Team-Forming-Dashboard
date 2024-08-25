@@ -1,8 +1,12 @@
 # DEPENDENCIES
+node_modules
 backend/node_modules
 frontend/node_modules
 frontend/.pnp
 frontend/.pnp.js
+backend/package-lock.json
+frontend/package-lock.json
+*venv
 
 # TESTING
 frontend/coverage
