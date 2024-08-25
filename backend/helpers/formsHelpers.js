@@ -1,5 +1,6 @@
 const { google } = require('googleapis');
 const { GoogleAuth } = require('google-auth-library');
+const { response } = require('express');
 require('dotenv').config();``
 
 const SERVICE_ACCOUNT_JSON = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_TOKEN )
@@ -56,6 +57,7 @@ async function getBelbinResponse(auth, formId) {
         responseList.push([studentId, belbinType])
     }
     console.log(responseList)
+    return responseList
 }
 
 async function getEffortResponse(auth, formId) {
@@ -68,6 +70,7 @@ async function getEffortResponse(auth, formId) {
         responseList.push([studentId, effort, 70])
     }
     console.log(responseList)
+    return responseList
 }
 
 
@@ -90,11 +93,14 @@ async function getPreferenceResponse(auth, formId) {
         responseList.push([studentId, pref1, pref2, pref3, pref4, pref5, pref6, pref7, pref8, pref9, pref10])
     }
     console.log(responseList)
+    return responseList
 }
 
-getBelbinResponse(auth, '1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE')
-getEffortResponse(auth, '1gaVlsQARmiYYTmgr3wezZdWFJxVcyrWAaFpX5QleVy8')
-getPreferenceResponse(auth, '1BPup6OBO3qyp3Tob2fpTZloGHPuvbzzmFADdNI_NcTg')
+// getBelbinResponse(auth, '1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE')
+// getEffortResponse(auth, '1gaVlsQARmiYYTmgr3wezZdWFJxVcyrWAaFpX5QleVy8')
+// getPreferenceResponse(auth, '1BPup6OBO3qyp3Tob2fpTZloGHPuvbzzmFADdNI_NcTg')
+
+
 
 module.exports = {
     getBelbinResponse,

@@ -27,37 +27,6 @@ const getUnitAnalyticsBelbin = async (unitCode, year, period) => {
         y: [],
     };
 
-    const hoursDoughnutChartData = {
-        type: "doughnut",
-        title: "Weekly hours commitment distribution by people people",
-        "x label": "Weekly hours commitment",
-        "y label": "Number of students",
-        x: [],
-        y: [],
-    };
-
-    const hourResults = await promiseBasedQuery(
-        "SELECT hours, COUNT(*) AS 'count' " +
-        "FROM( " +
-        "SELECT CASE " +
-        "       WHEN e.time_commitment_hrs <4 AND b.belbin_type = 'people' THEN '0-4' " +
-        "       WHEN e.time_commitment_hrs <8 AND b.belbin_type = 'people' THEN '4-8' " +
-        "       WHEN e.time_commitment_hrs <12 AND b.belbin_type = 'people' THEN '8-12' " +
-        "       WHEN e.time_commitment_hrs >=12 AND b.belbin_type = 'people' THEN '12+' " +
-        "   END AS hours " +
-        "FROM unit_offering u " +
-        "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
-        "INNER JOIN effort_result e ON e.personality_test_attempt = pa.test_attempt_id " +
-        "INNER JOIN belbin_result b ON b.belbin_result_id = e.effort_result_id " +
-        "   WHERE u.unit_code=? " +
-        "   AND u.unit_off_year=? " +
-        "   AND u.unit_off_period=? " +
-        ")AS subquery " +
-        "WHERE hours IS NOT NULL " +
-        "GROUP BY hours;",
-       [unitCode, year, period]
-    );
-
     const belbinResults = await promiseBasedQuery(
         "SELECT b.belbin_type, count(b.belbin_type) AS 'count' " +
         "FROM unit_offering u " +
@@ -70,19 +39,13 @@ const getUnitAnalyticsBelbin = async (unitCode, year, period) => {
         [unitCode, year, period]
     );
 
-    if (belbinResults.length > 0 && hourResults.length > 0) {
+    if (belbinResults.length > 0) {
         belbinResults.forEach((result) => {
             belbinDoughnutChartData["x"].push(result["belbin_type"]);
             belbinDoughnutChartData["y"].push(result["count"]);
         });
 
-        hourResults.forEach((result) => {
-            hoursDoughnutChartData["x"].push(result["hours"]);
-            hoursDoughnutChartData["y"].push(result["count"]);
-        });
-
         belbinAnalyticData["data"].push(belbinDoughnutChartData);
-        belbinAnalyticData["data"].push(hoursDoughnutChartData);
     }
 
     return belbinAnalyticData;
@@ -176,8 +139,7 @@ const getUnitAnalyticsEffort = async (unitCode, year, period) => {
         "   WHERE u.unit_code=? " +
         "   AND u.unit_off_year=? " +
         "   AND u.unit_off_period=? " +
-        "   GROUP BY effort " +
-        "ORDER BY effort;",
+        "GROUP BY effort;",
         [unitCode, year, period]
     );
 
@@ -205,118 +167,60 @@ const getUnitAnalyticsEffort = async (unitCode, year, period) => {
     return effortAnalyticsData;
 };
 
-const getUnitAnalyticsTime = async (unitCode, year, period) => {
+const getUnitAnalyticsPreference = async (unitCode, year, period) => {
     /**
-     * Given a unit offering, obtains all information related to the distribution
-     * of student time and preference across the offering and returns it
-     *
+     * Given a unit offering, obtains all information related to student preference
+     * to group matching
      */
 
-    const timeAnalyticsData = {
-        "personality title": "Time and Preference",
+    const preferenceAnalyticsData = {
+        "personality title": "Preference Selection",
         "description":
-            "Preferences of project from student based on time",
+            "Based on the input of each student, our algorithm attempts to a" +
+            "ssign each student their most preferred group. This is an aggre" +
+            "gation of how many students were assigned to their nth preferre" +
+            "d selection.",
         data: [],
     };
 
-    const marksDoughnutChartData = {
-        type: "doughnut",
-        title: "Average marks distribution",
-        "x label": "Average marks estimate",
-        "y label": "Number of students",
-        x: [],
-        y: [],
-    };
+    const preferenceResults = await promiseBasedQuery(
+        "SELECT pp.preference_rank AS preference, COUNT(pp.preference_rank) AS 'count' " +
+        "FROM unit_offering u " +
+        "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
+        "INNER JOIN preference_submission ps ON ps.personality_test_attempt = pa.test_attempt_id " +
+        "INNER JOIN project_preference pp ON pp.preference_submission_id = ps.preference_submission_id " +
+        "INNER JOIN student s ON s.stud_unique_id = pa.stud_unique_id " +
+        "INNER JOIN group_allocation ga ON ga.stud_unique_id = s.stud_unique_id " +
+        "INNER JOIN lab_group lg ON lg.lab_group_id = ga.lab_group_id " +
+        "   WHERE pp.project_number = lg.group_number " +
+        "   AND u.unit_code=? " +
+        "   AND u.unit_off_year=? " +
+        "   AND u.unit_off_period=? " +
+        "GROUP BY pp.preference_rank " +
+        "ORDER BY pp.preference_rank ASC; ",
+        [unitCode, year, period]
+    );
 
-    const hoursDoughnutChartData = {
-        type: "doughnut",
-        title: "Weekly hours commitment distribution",
-        "x label": "Weekly hours commitment",
-        "y label": "Number of students",
-        x: [],
-        y: [],
-    };
-
-    const effortBarChartData = {
+    const preferenceBarChartData = {
         type: "bar",
-        title: "Estimation of expected effort into unit distribution",
+        title: "Number of students assigned to their nth preferred group",
         "x label": "Student effort",
         "y label": "Number of students",
         x: [],
         y: [],
     };
 
-    const gradeResults = await promiseBasedQuery(
-        "SELECT CASE " +
-        "       WHEN e.assignment_avg <50 THEN 'N' " +
-        "       WHEN e.assignment_avg <60 THEN 'P' " +
-        "       WHEN e.assignment_avg <70 THEN 'C' " +
-        "       WHEN e.assignment_avg <80 THEN 'D' " +
-        "       WHEN e.assignment_avg <=100 THEN 'HD' " +
-        "   END AS letter_grade, count(e.assignment_avg) AS 'count' " +
-        "FROM unit_offering u " +
-        "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
-        "INNER JOIN effort_result e ON e.personality_test_attempt = pa.test_attempt_id " +
-        "   WHERE u.unit_code=? " +
-        "   AND u.unit_off_year=? " +
-        "   AND u.unit_off_period=? " +
-        "GROUP BY letter_grade;",
-        [unitCode, year, period]
-    );
-
-    const hourResults = await promiseBasedQuery(
-        "SELECT CASE " +
-        "       WHEN e.time_commitment_hrs <4 THEN '0-4' " +
-        "       WHEN e.time_commitment_hrs <8 THEN '4-8' " +
-        "       WHEN e.time_commitment_hrs <12 THEN '8-12' " +
-        "       WHEN e.time_commitment_hrs >=12 THEN '12+' " +
-        "   END AS hours, count(e.time_commitment_hrs) AS 'count' " +
-        "FROM unit_offering u " +
-        "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
-        "INNER JOIN effort_result e ON e.personality_test_attempt = pa.test_attempt_id " +
-        "   WHERE u.unit_code=? " +
-        "   AND u.unit_off_year=? " +
-        "   AND u.unit_off_period=? " +
-        "GROUP BY hours;",
-       [unitCode, year, period]
-    );
-
-    const timeResults = await promiseBasedQuery(
-        "SELECT p.project_id AS preference, avg(p.preference_rank) AS 'average' " +
-        "FROM unit_offering u " +
-        "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
-        "INNER JOIN project_preference p ON p.unit_off_id = pa.test_attempt_id " +
-        "   WHERE u.unit_code=? " +
-        "   AND u.unit_off_year=? " +
-        "   AND u.unit_off_period=? " +
-        "   GROUP BY preference " +
-        "ORDER BY preference;",
-        [unitCode, year, period]
-    );
-
-    if (gradeResults.length > 0 && hourResults.length > 0 && timeResults.length > 0) {
-        gradeResults.forEach((result) => {
-            marksDoughnutChartData["x"].push(result["letter_grade"]);
-            marksDoughnutChartData["y"].push(result["count"]);
+    if (preferenceResults.length > 0) {
+        preferenceResults.forEach((result) => {
+            preferenceBarChartData["x"].push(result["preference"]);
+            preferenceBarChartData["y"].push(result["count"]);
         });
 
-        hourResults.forEach((result) => {
-            hoursDoughnutChartData["x"].push(result["hours"]);
-            hoursDoughnutChartData["y"].push(result["count"]);
-        });
-
-        timeResults.forEach((result) => {
-            effortBarChartData["x"].push(result["preference"]);
-            effortBarChartData["y"].push(result["average"]);
-        });
-
-        timeAnalyticsData["data"].push(marksDoughnutChartData);
-        timeAnalyticsData["data"].push(hoursDoughnutChartData);
-        timeAnalyticsData["data"].push(effortBarChartData);
+        preferenceAnalyticsData["data"].push(preferenceBarChartData);
     }
-
-    return timeAnalyticsData;
-};
+    
+    return preferenceAnalyticsData
+}
 
 const getUnitAnalyticsStrategies = {
     /**
@@ -326,7 +230,7 @@ const getUnitAnalyticsStrategies = {
 
     effort: getUnitAnalyticsEffort,
     belbin: getUnitAnalyticsBelbin,
-    time: getUnitAnalyticsTime,
+    times: getUnitAnalyticsPreference
 };
 
 const getGroupAnalyticsBelbin = async (unitCode, year, period, groupNumber) => {
@@ -530,6 +434,25 @@ const getGroupAnalyticsPreference = async (unitCode, year, period, groupNumber) 
         data: [],
     };
 
+    const preferenceResults = await promiseBasedQuery(
+        "SELECT pp.preference_rank AS preference, COUNT(pp.preference_rank) AS 'count' " +
+        "FROM unit_offering u " +
+        "INNER JOIN personality_test_attempt pa ON u.unit_off_id = pa.unit_off_id " +
+        "INNER JOIN preference_submission ps ON ps.personality_test_attempt = pa.test_attempt_id " +
+        "INNER JOIN project_preference pp ON pp.preference_submission_id = ps.preference_submission_id " +
+        "INNER JOIN student s ON s.stud_unique_id = pa.stud_unique_id " +
+        "INNER JOIN group_allocation ga ON ga.stud_unique_id = s.stud_unique_id " +
+        "INNER JOIN lab_group lg ON lg.lab_group_id = ga.lab_group_id " +
+        "WHERE pp.project_number = lg.group_number " +
+        "AND u.unit_code =? " +
+        "AND u.unit_off_year =? " +
+        "AND u.unit_off_period =? " +
+        "AND lg.group_number =? " +
+        "GROUP BY pp.preference_rank " +
+        "ORDER BY pp.preference_rank ASC; ",
+        [unitCode, year, period, groupNumber]
+    )
+
     /** const preferenceResults = await promiseBasedQuery("FILL THIS SQL CODE IN THANKS" [unitCode, year, period, groupNumber]) */
 
     const preferenceBarChartData = {
@@ -541,14 +464,14 @@ const getGroupAnalyticsPreference = async (unitCode, year, period, groupNumber) 
         y: [],
     };
 
-    // if (preferenceResults.length > 0) {
-    //     preferenceResults.forEach((result) => {
-    //          preferenceBarChartData["x"].push(result["preference"]);
-    //          preferenceBarChartData["y"].push(result["count"]);
-    //     });
+   if (preferenceResults.length > 0) {
+         preferenceResults.forEach((result) => {
+              preferenceBarChartData["x"].push(result["preference"]);
+              preferenceBarChartData["y"].push(result["count"]);
+         });
 
-    //     preferenceAnalyticsData["data"].push(preferenceBarChartData);
-    // }
+         preferenceAnalyticsData["data"].push(preferenceBarChartData);
+     }
     
     return preferenceAnalyticsData
 }
@@ -561,7 +484,7 @@ const getGroupAnalyticsStrategies = {
 
     effort: getGroupAnalyticsEffort,
     belbin: getGroupAnalyticsBelbin,
-    preference: getGroupAnalyticsPreference
+    times: getGroupAnalyticsPreference
 };
 
 module.exports = {
