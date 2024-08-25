@@ -11,43 +11,69 @@ import ToggleButtonGroup from '../components/_shared/ToggleButtonGroup';
 import PageHeader from '../components/_shared/PageHeader';
 import StudentsPreviewTable from '../components/_shared/StudentsPreviewTable';
 
-function updateResponses() {
-  belbin = getBelbinResponse(auth, '1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE');
-  effort = getEffortResponse(auth, '1gaVlsQARmiYYTmgr3wezZdWFJxVcyrWAaFpX5QleVy8');
-  preferences = getPreferenceResponse(auth, '1BPup6OBO3qyp3Tob2fpTZloGHPuvbzzmFADdNI_NcTg');
+function preparePersonalityData(belbinResponses, effortResponses) {
+  
+  const belbinData = belbinResponses.map(([studentId, belbinType]) => ({
+    studentId,
+    belbinType,
+  }));
+  const effortData = effortResponses.map(([studentId, effort]) => ({
+    studentId,
+    effort,
+  }));
 
-  pushData(belbin, effort, preferences);
+  const personalityData = [
+    {
+      students: belbinData,
+      testType: 'belbin'
+    },
+    {
+      students: effortData,
+      testType: 'effort'
+    }
+  ];
+
+  return personalityData
 }
 
-function pushData(belbin, effort, preferences) {
-  getAccessTokenSilently().then((token) => {
-    fetch(
-      `http://localhost:8080/api/students/personality/${unitCode}/${year}/${period}`,
-      {
-        method: 'POST',
-        headers: new Headers({
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        }),
-        body: JSON.stringify({students, personalityData}),
-      }
-    )
-    .then((response) => {
-      if (response.ok) {
-        getToast('Your data has been imported successfully!', 'success');
-      } else {
-        return response.text().then((responseText) => {
-          getToast('There was an error importing your file!', 'error');
-            throw new Error('Error sending data to the REST API');
-        });
-      }
-    })
-    .catch((error) => {
-      console.error('Error sending data to the REST API:', error);
-      // Optionally show an error message to the user.
+async function pushData() {
+  belbinResponses = getBelbinResponse(auth, '1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE');
+  effortResponses = getEffortResponse(auth, '1gaVlsQARmiYYTmgr3wezZdWFJxVcyrWAaFpX5QleVy8');
+  preferenceResponses = getPreferenceResponse(auth, '1BPup6OBO3qyp3Tob2fpTZloGHPuvbzzmFADdNI_NcTg');
+
+  personalityData = preparePersonalityData(belbinResponses, effortResponses)
+
+  for (const data of personalityData) {
+    getAccessTokenSilently().then((token) => {
+      fetch(
+        `http://localhost:8080/api/students/personality/${unitCode}/${year}/${period}`,
+        {
+          method: 'POST',
+          headers: new Headers({
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          }),
+          body: JSON.stringify({students: data.students, testType: data.testType}),
+        }
+      )
+      .then((response) => {
+        if (response.ok) {
+          getToast('Your data has been imported successfully!', 'success');
+        } else {
+          return response.text().then((responseText) => {
+            getToast('There was an error importing your file!', 'error');
+              throw new Error('Error sending data to the REST API');
+          });
+        }
+      })
+      .catch((error) => {
+        console.error('Error sending data to the REST API:', error);
+        // Optionally show an error message to the user.
+      });
     });
-  });
+  }
+
 };
 
 function Students() {
