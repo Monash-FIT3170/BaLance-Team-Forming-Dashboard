@@ -6,6 +6,7 @@ const {
     deleteStudentEnrolment,
     deleteStudentGroupAlloc,
     addPersonalityData,
+    addStudentTimesAndPreferences,
 } = require("../routeHandlers/studentRouteHandler");
 
 // get all students from a unit
@@ -16,6 +17,9 @@ router.post("/:unitCode/:year/:period", addAllStudents);
 
 // add personality data to students
 router.post("/personality/:unitCode/:year/:period", addPersonalityData);
+
+// add times and preferences data
+router.post("/times/:unitCode/:year/:period", addStudentTimesAndPreferences);
 
 // delete a specific student from a unit
 router.delete("/enrolment/:unitCode/:year/:period/:studentId", deleteStudentEnrolment);

@@ -237,7 +237,8 @@ const verifyAvailableGroupFormationStrats = async (req, res) => {
     const [strategyAvailability] = await promiseBasedQuery(
         "SELECT " +
         "    COUNT(CASE WHEN ta.test_type = 'effort' THEN 1 END) = COUNT(DISTINCT s.stud_unique_id) AS effort, " +
-        "    COUNT(CASE WHEN ta.test_type = 'belbin' THEN 1 END) = COUNT(DISTINCT s.stud_unique_id) AS belbin " +
+        "    COUNT(CASE WHEN ta.test_type = 'belbin' THEN 1 END) = COUNT(DISTINCT s.stud_unique_id) AS belbin, " +
+        "    COUNT(CASE WHEN ta.test_type = 'times' THEN 1 END) = COUNT(DISTINCT s.stud_unique_id) AS times " +
         "FROM unit_offering u " +
         "    INNER JOIN personality_test_attempt ta ON ta.unit_off_id = u.unit_off_id " +
         "    INNER JOIN unit_enrolment ue ON ue.unit_off_id=u.unit_off_id " +

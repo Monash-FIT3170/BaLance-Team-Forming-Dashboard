@@ -7,11 +7,11 @@
 const { promiseBasedQuery, selectUnitOffKey } = require("../helpers/commonHelpers");
 
 const {
-  insertStudents,
-  selectStudentsKeys,
-  insertStudentEnrolment,
-  insertUnitOffLabs,
-  insertStudentLabAllocations,
+    insertStudents,
+    selectStudentsKeys,
+    insertStudentEnrolment,
+    insertUnitOffLabs,
+    insertStudentLabAllocations,
 } = require("../helpers/studentRouteHandlerHelpers");
 
 const getAllStudents = async (req, res) => {
@@ -78,7 +78,7 @@ const addAllStudents = async (req, res) => {
         // get the attributes we need and their values in prep for SQL queries
         //   e.g. {id: 5, name: 'jim'} becomes [5, 'jim'] to comply with mysql2 API
         const studentInsertData = requestBody.map(({ labCode, ...rest }) => {
-          return Object.values(rest);
+            return Object.values(rest);
         });
         await insertStudents(studentInsertData);
 
@@ -296,7 +296,7 @@ const addPersonalityData = async (req, res) => {
 
     if (numEnrolledStudents !== students.length) {
         res.status(400).json({
-          error: "personality data does not address all enrolled students",
+            error: "personality data does not address all enrolled students",
         });
         return;
     }
@@ -413,13 +413,204 @@ const addStudentEffort = async (personalityTestAttemptKeys, students) => {
     }
 };
 
+const addStudentPreferences = async (personalityTestAttemptKeys, students) => {
+    /**
+     * Implements the logic required to add 'Preferences' personality data to the
+     * database given the unique column requirements it has.
+     */
+    const resultInsertData = [];
+    // format the data so it fulfils the database column requirements
+    personalityTestAttemptKeys.forEach((attempt) => {
+        // find the student who made this attempt
+        const [student] = students.filter((student) => {
+            return student.studentId === attempt.student_id;
+        });
+        // add their data in a suitable format
+        resultInsertData.push([
+            attempt.test_attempt_id,
+            student.submission_timestamp,
+        ])
+    });
+
+    try {
+        await promiseBasedQuery(
+            "INSERT IGNORE INTO preference_submission" +
+            "(personality_test_attempt, submission_timestamp) " +
+            "VALUES ?;",
+            [resultInsertData]
+        );
+
+    } catch (err) {
+        console.log(err);
+    }
+
+    // is this it?
+    // addProjectPreferences(personalityTestAttemptKeys, students)
+};
+
+const addProjectPreferences = async (personalityTestAttemptKey, students) => {
+    /**
+     * Implements the logic for adding each project preference to a given preference submission
+     */
+    const resultInsertData = [];
+    // format the data so it fulfils the database column requirements
+    // For each student 
+    personalityTestAttemptKeys.forEach(async (attempt) => {
+        // find the student who made this attempt
+        const [student] = students.filter((student) => {
+            return student.studentId === attempt.student_id;
+        });
+
+        // get the preference submission ID 
+        let preference_submission_id;
+        try {
+            const [{ preference_submission_id: id }] = await promiseBasedQuery(
+                "SELECT preference_submission_id FROM preference_submission WHERE personality_test_attempt=?;",
+                [attempt.test_attempt_id]
+            );
+            preference_submission_id = id;
+        } catch (err) {
+            console.log(err);
+        }
+
+        // Turning the string preferences into an array of numbers 
+        const preferencesArray = student.preferences.split(" ").map(Number);
+
+        // Gather data for each project
+        for (let i = 0; i < preferencesArray.length; i++) {
+            resultInsertData.push([
+                preference_submission_id,
+                i,
+                preferencesArray[i]
+            ]);
+        }
+        
+        // Perform a single insert for all projects
+        try {
+            await promiseBasedQuery(
+                "INSERT IGNORE INTO project_preference " +
+                "(preference_submission_id, project_number, preference_rank) " +
+                "VALUES ?;",
+                [resultInsertData]
+            );
+        } catch (err) {
+            console.log(err);
+        }
+    });
+    //TODO: check if the above is correct
+};
+
+async function populatepersonalityTestAttempt(students, unitCode, year, period, testType) {
+    const unitOffId = await selectUnitOffKey(unitCode, year, period);
+    const studentEmails = students.map((student) => student.email);
+    const studentKeys = await selectStudentsKeys(studentEmails);
+    const testTypeConst = testType
+    const testAttemptInsertData = [];
+    studentKeys.forEach((student) => {
+        testAttemptInsertData.push([testType, unitOffId, student.stud_unique_id]);
+    });
+    await promiseBasedQuery(
+        "INSERT IGNORE INTO personality_test_attempt (test_type, unit_off_id, stud_unique_id) " + "VALUES ?;",
+        [testAttemptInsertData]
+    );
+
+}
+
+async function populatePreferenceSubmission(students) {
+    const studentEmails = students.map((student) => student.email);
+    const studentKeys = (await selectStudentsKeys(studentEmails)).map((student) => student.stud_unique_id);
+    const testAttemptKeys = await promiseBasedQuery(
+        "SELECT test_attempt_id FROM personality_test_attempt WHERE stud_unique_id IN (?);",
+        [studentKeys]
+    );
+    const testAttemptKeysArray = testAttemptKeys.map((testAttempt) => testAttempt.test_attempt_id);
+    const submissionTimestamps = students.map((student) => new Date(student.timestamp).toISOString().slice(0, 19).replace('T', ' '));
+    const submissionData = testAttemptKeysArray.map((testAttempt, index) => [testAttempt, submissionTimestamps[index]]);
+    await promiseBasedQuery(
+        "INSERT IGNORE INTO preference_submission (personality_test_attempt, submission_timestamp) " +
+        "VALUES ?;",
+        [submissionData]
+    );
+}
+
+async function populateProjectPreference(students) {
+    const studentEmails = students.map((student) => student.email);
+    const studentKeys = (await selectStudentsKeys(studentEmails)).map((student) => student.stud_unique_id);
+    const testAttemptKeys = await promiseBasedQuery(
+        "SELECT test_attempt_id FROM personality_test_attempt WHERE stud_unique_id IN (?);",
+        [studentKeys]
+    );
+    const testAttemptKeysArray = testAttemptKeys.map((testAttempt) => testAttempt.test_attempt_id);
+    console.log(testAttemptKeysArray)
+    const projectPreferences = students.map((student) => {
+        const { timestamp, email, fullName, studentId, ...preferences } = student;
+        return preferences;
+    });
+    const projectPreferencesArray = projectPreferences.map(preferences => {
+        const preferenceKeys = Object.keys(preferences)
+            .map(key => parseInt(key.replace("Project Preference ", ""), 10)) // Extract the number and convert to integer
+            .sort((a, b) => a - b); // Sort numerically
+        return preferenceKeys.map(key => preferences[`Project Preference ${key}`]).map(Number);
+    });
+    
+    const preferenceSubmissionKeys = await promiseBasedQuery(
+        "SELECT preference_submission_id FROM preference_submission WHERE personality_test_attempt IN (?);",
+        [testAttemptKeysArray]
+    );
+    console.log(preferenceSubmissionKeys)
+    const preferenceSubmissionKeysArray = preferenceSubmissionKeys.map(submission => submission.preference_submission_id);
+    const projectPreferenceData = preferenceSubmissionKeysArray.map((submission, index) => {
+        const preferences = projectPreferencesArray[submission - 100000000];
+        return preferences ? preferences.map((preference, rank) => [submission, rank + 1, preference]) : null;
+    }).filter(data => data !== null).flat(1);
+    console.log(projectPreferenceData)
+    await promiseBasedQuery(
+        "INSERT IGNORE INTO project_preference (preference_submission_id, project_number, preference_rank) " +
+        "VALUES ?;",
+        [projectPreferenceData]
+    );
+}
+
+
+const addStudentTimesAndPreferences = async (req, res) => {
+    // read the data from the request
+    const { unitCode, year, period } = req.params;
+    const { students, testType } = req.body;
+
+    // check how many preferences each student has submitted
+    const numberOfPreferencesForEachStudent = students.map(student => {
+        const { timestamp, email, fullName, studentId, ...preferences } = student;
+        return Object.keys(preferences).length;
+    })
+
+    // get the maximum number of preferences submitted by a student
+    const maxPreferences = Math.max(...numberOfPreferencesForEachStudent);
+    // validate that each student has submitted the same number of preferences
+    const filteredStudents = students.filter(student => {
+        // return only if the student has submitted maxPreferences number of preferences
+        const { timestamp, email, fullName, studentId, ...preferences } = student;
+        return Object.keys(preferences).length === maxPreferences;
+    })
+    try {
+        await populatepersonalityTestAttempt(filteredStudents, unitCode, year, period, testType);
+        await populatePreferenceSubmission(filteredStudents);
+        await populateProjectPreference(filteredStudents);
+        res.status(200).send();
+    } catch (error) {
+        console.log(error)
+        res.status(500).send();
+    }
+}
+
 const addTestResultFunctionStrats = {
     /**
      * A store of 'strategies' for adding different personality types with different
      * column requirements to the database.
      */
     belbin: addStudentBelbin,
-    effort: addStudentEffort
+    effort: addStudentEffort,
+    // the format of data is quite different, we can make it modular later.
+    // preference: addStudentPreferences
 };
 
 module.exports = {
@@ -428,4 +619,5 @@ module.exports = {
     deleteStudentEnrolment,
     deleteStudentGroupAlloc,
     addPersonalityData,
+    addStudentTimesAndPreferences
 };

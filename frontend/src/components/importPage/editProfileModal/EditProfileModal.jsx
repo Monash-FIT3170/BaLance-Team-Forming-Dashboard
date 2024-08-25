@@ -1,6 +1,7 @@
 import EditStudentModal from "./EditStudentModal";
 import EditBelbinModal from "./EditBelbinModal";
 import EditEffortModal from "./EditEffortModal";
+import EditTimeModal from "./EditTimeModal";
 
 const EditProfileModal = ({dataType, currProfile, profilesList, setProfilesList, isOpen, onClose}) => {
 
@@ -32,6 +33,15 @@ const EditProfileModal = ({dataType, currProfile, profilesList, setProfilesList,
 
             case "belbin":
                 return <EditBelbinModal
+                    isOpen={isOpen}
+                    onClose={onClose}
+                    currProfile={currProfile}
+                    profilesList={profilesList}
+                    setProfilesList={setProfilesList}
+                />
+            
+            case "times":
+                return <EditTimeModal 
                     isOpen={isOpen}
                     onClose={onClose}
                     currProfile={currProfile}

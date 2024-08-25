@@ -19,9 +19,10 @@ const Dropdown = ({dropDownDesc, placeholder, required, options, width, onChange
                 width={width}
                 onChange={onChange}
                 defaultValue={defaultValue ? defaultValue : null}
+                mb="5"
             >
                 {options.map((option) => {
-                    return <option value={option} label={option}/>
+                    return <option value={option} label={option} key={option}/>
                 })}
             </Select>
         </VStack>
