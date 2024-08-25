@@ -141,14 +141,7 @@ function Students() {
         />
       </HStack>
       <HStack justifyContent={'center'} marginTop={'10px'}>
-      <Button onClick={updateResponses}>
-          <HStack>
-            <RepeatIcon />
-            <Spacer />
-            <Text>Update Responses</Text>
-          </HStack>
-        </Button>
-        <Button onClick={'pushData'}>
+        <Button onClick={pushData}>
           <HStack>
             <CheckIcon />
             <Spacer />
