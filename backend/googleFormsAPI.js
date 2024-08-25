@@ -65,7 +65,7 @@ async function getEffortResponse(auth, formId) {
         answer = belbinResponses.data.responses[i].answers
         effort = answer['4d44c000'].textAnswers.answers[0].value
         studentId = answer['16df7bea'].textAnswers.answers[0].value
-        responseList.push([studentId, effort])
+        responseList.push([studentId, effort, 70])
     }
     console.log(responseList)
 }

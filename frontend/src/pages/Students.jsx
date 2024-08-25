@@ -18,9 +18,10 @@ function preparePersonalityData(belbinResponses, effortResponses) {
     studentId,
     belbinType,
   }));
-  const effortData = effortResponses.map(([studentId, effort]) => ({
+  const effortData = effortResponses.map(([studentId, hourCommitment, avgAssignmentMark]) => ({
     studentId,
-    effort,
+    hourCommitment,
+    avgAssignmentMark,
   }));
 
   const personalityData = [
