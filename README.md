@@ -93,6 +93,15 @@ hourCommitment is the estimated number of hours that a student expects to commit
 | 12345678  | 13             | 73                |
 | 28462818  | 18             | 84                |
 
+### Times and Preferences data
+
+Preferences can be added to the end of the table as needed
+
+| timestamp           | studentId | full name   | email                       | Project Pref n |              
+| ------------------- | --------- | ------------| --------------------------- | -------------- | 
+| 2/26/2024 20:00:39  | 12345678  | Jim White   | jwhi0001@student.monash.edu | 1              |
+| 2/26/2024 20:00:39  | 28462818  | Jemma Black | jbla0001@student.monash.edu | 9              |
+
 # Development guidelines
 
 Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup under docs/ for further details on how to add group formation strategies
