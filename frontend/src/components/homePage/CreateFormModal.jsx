@@ -17,37 +17,8 @@ import { useState, useEffect } from "react";
 
 const CreateFormModal = ({ isModalOpen, onModalClose }) => {
   const [submitted, setSubmitted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(15); // 15 sec timer
   const [formClosed, setFormClosed] = useState(false);
 
-  useEffect(() => {
-    let timer;
-
-    if (isModalOpen) {
-      setTimeLeft(15); // Reset timer back to the original time of 15 secs
-      setFormClosed(false);
-      timer = setInterval(() => {
-        setTimeLeft(prevTime => {
-          if (prevTime <= 1) {
-            clearInterval(timer);
-            setFormClosed(true); // Form closes if time is up
-            return 0;
-          }
-          return prevTime - 1;
-        });
-      }, 1000);
-    } else {
-      clearInterval(timer);
-    }
-
-    return () => clearInterval(timer);
-  }, [isModalOpen]);
-
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-  };
 
   const closeModal = () => {
     setSubmitted(false);
@@ -57,7 +28,6 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
   const sendForm = (event) => {
     event.preventDefault();
     setSubmitted(true);
-    setTimeLeft(0); // Stop the timer
   };
 
   const renderForm = () => (
@@ -70,9 +40,6 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
         </Stack>
       </FormControl>
       <Box position="relative">
-          <Text position="absolute" top="10px" right="10px">
-            Time left: {formatTime(timeLeft)}
-          </Text>
         </Box>
     </form>
   );
