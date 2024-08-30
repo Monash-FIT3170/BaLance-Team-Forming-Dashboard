@@ -422,6 +422,7 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
 
     Project choices are sorted by preference rank in ascending order.
     */
+    console.log("Creating groups by times and preferences")
     const students = await promiseBasedQuery(
         "SELECT stud.preferred_name name, stud.stud_unique_id, alloc.unit_off_lab_id, submit.submission_timestamp, GROUP_CONCAT(pref.project_number ORDER BY pref.preference_rank, pref.project_number ASC) AS preference_rank " +
         "FROM student stud " +
@@ -441,6 +442,17 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
         [unitCode, year, period, "times"]
     );
 
+
+    // TEMP FIX
+    // TODO: Fix multiple of the same preference rank being inserted into database
+    students.forEach(student => {
+        // Split the preference_rank string into an array of numbers, removing duplicates and sorting
+        let uniquePreferences = Array.from(new Set(student.preference_rank.split(',').map(Number)));
+        
+        // Convert the array back to a comma-separated string
+        student.preference_rank = uniquePreferences.join(',');
+    });
+    
     const size = students[0]["preference_rank"].split(",").length;
 
     for (let i = 0; i < students.length; i++) {
@@ -448,8 +460,10 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
     }
     
     
+    
     const groups = [];
     groupSize = Math.ceil(students.length/size); // Set a group size to limit group fill for even spread
+    console.log(students.length, size)
     const projects = {};
 
     // Create an empty dictionary of all projects with lists to store students allocated
@@ -457,24 +471,45 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
         projects[i] = [];
     }
     
-    while (students.length != 0) {
+    let previousLength = students.length;
+
+    while (students.length > 0) {
+        console.log("Processing students. Remaining:", students.length);
+    
+        // Iterate through students and attempt to allocate them
         for (let index = 0; index < students.length; index++) {
             let student = students[index];
-            if (students.length == 0) { break; }
-                
-            // Start looking for students with current preference level for current project out of all students
-            for (let prefIndex = 0; prefIndex < size; prefIndex++) {
-                let currentPref = parseInt(student["preference_rank"][prefIndex]);
-
-                if (projects[currentPref].length < groupSize) { // If current looked at group is full, go to next preference level
-                    projects[currentPref].push(student["stud_unique_id"])
-                    groups.push([student["stud_unique_id"], currentPref]);
+            let allocated = false;
+    
+            // Try to allocate the student based on their preferences
+            for (let prefIndex = 0; prefIndex < student.preference_rank.length; prefIndex++) {
+                let preferredProject = parseInt(student.preference_rank[prefIndex]);
+    
+                if (projects[preferredProject].length < groupSize) {
+                    // Allocate student to the preferred project
+                    projects[preferredProject].push(student.stud_unique_id);
+                    groups.push([student.stud_unique_id, preferredProject]);
+    
+                    // Remove student from the list and adjust index
                     students.splice(index, 1);
                     index--;
-                    break;
+                    allocated = true;
+                    break; // Exit preference loop since student is allocated
                 }
             }
+    
+            // Optionally log if the student could not be allocated
+            if (!allocated) {
+                console.log(`Student ${student.stud_unique_id} could not be allocated.`);
+            }
         }
+        
+        // Optional: Break the loop if no progress is made to prevent potential infinite loops
+        if (students.length == previousLength) {
+            console.log("No progress in allocation. Exiting to prevent infinite loop.");
+            break;
+        }
+        previousLength = students.length;
     }
 
     const unitId = await promiseBasedQuery(
@@ -521,9 +556,13 @@ const createGroupsTimePref = async (unitCode, year, period, groupSize, variance)
 
     
     // // student allocations are created as [~~group_alloc_id~~, stud_unique_id, lab_group_id]
+    try {
     await promiseBasedQuery("INSERT IGNORE INTO group_allocation (stud_unique_id, lab_group_id) VALUES ?;", [
         groups,
     ]);
+    } catch (err) {
+        console.log(err);
+    } 
 };
 
 const splitGroupsRandom = (unitOffId, labId, studentsList, groupSize, variance) => {
