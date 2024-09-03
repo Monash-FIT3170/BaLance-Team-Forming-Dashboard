@@ -1,4 +1,5 @@
 const { promiseBasedQuery } = require("./commonHelpers");
+const {nodemailer} = require("nodemailer")//new module for email
 
 const getAllEmails = async (unitCode,year,period) => {
     /**
@@ -17,11 +18,27 @@ const getAllEmails = async (unitCode,year,period) => {
         [unitCode, year, period]
     );
 
-    const emails = studentsEmail.map(row => row.email_address);
+    const emails = studentsEmail.map(row => row.email_address); //array of emails
 
     return emails
 };
 
+const createEmail = async(sender,receiver,subject,text) => {
+    /**
+     * creates a email to send. currently meant to send to one email. can be changed for multiple receivers.
+     */
+
+    const email = {
+        from:sender, //the email which is sending the emails
+        to:receiver, //the emails which will recieve the email
+        subject:subject,//subject of the email
+        text:text//the text of the email i.e. the google form link
+    }
+
+    return email
+}
+
 module.exports = {
     getAllEmails,
+    createEmail,
 };
