@@ -1,3 +1,7 @@
-# start mysql
-ls
 
+until mysql -h"$MYSQLHOST" -P"$MYSQLPORT" -u"$MYSQLUSER" -p"$MYSQLPASSWORD" -e "SELECT 1"; do
+  echo "Waiting for database connection..."
+  sleep 5
+done
+
+mysql -h"$MYSQLHOST" -P"$MYSQLPORT" -u"$MYSQLUSER" -p"$MYSQLPASSWORD" "$MYSQLDATABASE" < database/database_setup.sh
