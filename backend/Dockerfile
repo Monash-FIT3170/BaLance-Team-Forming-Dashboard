@@ -15,7 +15,7 @@ COPY package.json .
 RUN npm install
 COPY . .
 
-RUN chmod +x ../database/database_setup.sh
+RUN chmod +x /database/database_setup.sh
 
 # copy code in parent dir to speficied WORKDIR
 # if code changes, only here below is run
