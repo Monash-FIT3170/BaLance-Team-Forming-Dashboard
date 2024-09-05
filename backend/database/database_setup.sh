@@ -5,3 +5,4 @@ until mysql -h"$MYSQLHOST" -P"$MYSQLPORT" -u"$MYSQLUSER" -p"$MYSQLPASSWORD" -e "
 done
 
 mysql -h"$MYSQLHOST" -P"$MYSQLPORT" -u"$MYSQLUSER" -p"$MYSQLPASSWORD" "$MYSQLDATABASE" < database/schemaCreation.sql
+echo "Database schema has been created successfully."
