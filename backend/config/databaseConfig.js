@@ -9,7 +9,7 @@
 
 const mysql = require('mysql2');
 require('dotenv').config();
-
+console.log(process.env.DB_HOST,process.env.DB_USER,process.env.MYSQL_ROOT_PASSWORD, process.env.DB, process.env.MYSQL_TCP_PORT,process.env.MYSQLHOST,process.env.MYSQLUSER )
 const connection = mysql.createConnection({
     host: process.env.DOCKER_USE_MYSQL_HOST ? "database" : process.env.DB_HOST,  // docker compose service name which resolves to internal IP (by docker)
     user: process.env.DB_USER,
