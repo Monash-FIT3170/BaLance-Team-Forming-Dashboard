@@ -62,7 +62,7 @@ const Forms = () => {
             {/* Placeholder for Open Forms */}
             <Box width="80%">
                 <Text fontSize="xl" fontWeight="bold" mb={4}>
-                    Forms In Prograss
+                    Forms In Progress
                 </Text>
             </Box>
 
