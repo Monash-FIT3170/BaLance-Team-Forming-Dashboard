@@ -27,8 +27,6 @@ app.use((req, res, next) => {
     next();
 });
 
-if (process.env.AUTH == "TEST") { auth0Middleware(app); }
-if (process.env.AUTH == "DEV" || process.env.AUTH == null) { mockAuthMiddleware(app); }
 
 app.use(async (req, res, next) => {
     results = await db_connection.promise().query(`SELECT * FROM staff WHERE email_address='${req.user.email}';`);
