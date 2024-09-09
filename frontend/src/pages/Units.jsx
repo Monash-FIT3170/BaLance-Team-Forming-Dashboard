@@ -19,8 +19,6 @@ function Units() {
 
     const { isOpen: isAddOpen, onOpen: onAddOpen, onClose: onAddClose } = useDisclosure();
 
-    console.log(process.env.BACKEND_TARGET);
-
     useEffect(() => {
         getAccessTokenSilently().then((token) => {
             fetch('balance-team-forming-dashboard-production.up.railway.app/api/units/', {
