@@ -44,6 +44,6 @@ app.use('/api/groups/', groupRoutes);
 app.use('/api/students/', studentRoutes);
 app.use('/api/analytics/', analyticsRoutes)
 
-app.listen(process.env.PORT || 8080, "0.0.0.0", () => {
-    console.log(`listening to port ${process.env.PORT || 8080}`);
+app.listen(process.env.PORT, "0.0.0.0", () => {
+    console.log(`listening to port ${process.env.PORT}`);
 });
