@@ -41,7 +41,7 @@ const UnitAnalytics = () => {
 
     useEffect(() => {
         getAccessTokenSilently().then((token) => {
-            fetch(`/api/analytics/${unitCode}/${year}/${period}/${groupNumber}`, {
+            fetch(`${import.meta.env.VITE_BACKEND_URL}/api/analytics/${unitCode}/${year}/${period}/${groupNumber}`, {
                 headers: new Headers({
                     Authorization: `Bearer ${token}`,
                 }),

@@ -49,7 +49,7 @@ export default function ConfirmChangeGroupModal({
     // });
     // fetch new lab number
     getAccessTokenSilently().then((token) => {
-        fetch(`/api/groups/${unitCode}/${year}/${period}/labNumber/${newGroupNumber}`, {
+        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/groups/${unitCode}/${year}/${period}/labNumber/${newGroupNumber}`, {
             method: 'get',
             headers: new Headers({
                 Authorization: `Bearer ${token}`,

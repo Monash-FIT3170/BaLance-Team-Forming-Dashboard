@@ -45,7 +45,7 @@ function UploadGroupScript() {
                 console.log(scriptContent);
 
                 getAccessTokenSilently().then((token) => {
-                    fetch(`/api/groups/${unitCode}/${year}/${period}/uploadScript`, {
+                    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/groups/${unitCode}/${year}/${period}/uploadScript`, {
                         method: 'POST',
                         headers: new Headers({
                             Authorization: `Bearer ${token}`,

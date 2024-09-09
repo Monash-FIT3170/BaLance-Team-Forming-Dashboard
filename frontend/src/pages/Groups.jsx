@@ -44,7 +44,7 @@ function Groups() {
 
     useEffect(() => {
         getAccessTokenSilently().then((token) => {
-            fetch(`/api/groups/${unitCode}/${year}/${period}`, {
+            fetch(`${import.meta.env.VITE_BACKEND_URL}/api/groups/${unitCode}/${year}/${period}`, {
                 method: 'get',
                 headers: new Headers({
                     Authorization: `Bearer ${token}`,

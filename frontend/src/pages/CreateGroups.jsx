@@ -49,7 +49,7 @@ function CreateGroups() {
             console.log('fetching strategies we can use');
             const token = await getAccessTokenSilently();
             const groupingStratsResponse = await fetch(
-                `/api/units/groupingStrategies/${unitCode}/${year}/${period}`,
+                `${import.meta.env.VITE_BACKEND_URL}/api/units/groupingStrategies/${unitCode}/${year}/${period}`,
                 {
                     method: 'GET',
                     headers: new Headers({
@@ -119,7 +119,7 @@ function CreateGroups() {
 
         try {
             const token = await getAccessTokenSilently();
-            result = await fetch(`/api/groups/shuffle/${unitCode}/${year}/${period}`, {
+            result = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/groups/shuffle/${unitCode}/${year}/${period}`, {
                 method: 'POST',
                 headers: new Headers({
                     Authorization: `Bearer ${token}`,

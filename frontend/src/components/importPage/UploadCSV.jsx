@@ -96,7 +96,7 @@ const UploadCSV = ({
         try {
             //data parameter is the type of data, eg students,effort,personality
             const response = await fetch(
-                `/api/${apiCall}/${unitCode}/${year}/${period}`,
+                `${import.meta.env.VITE_BACKEND_URL}/api/${apiCall}/${unitCode}/${year}/${period}`,
                 {
                     method: 'POST',
                     headers: new Headers({

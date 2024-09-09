@@ -67,7 +67,7 @@ const UnitCard = (unit) => {
             <DeleteModal
                 modalHeader="Delete unit"
                 modalText="Are you sure you want to delete this unit?"
-                apiEndpoint={`/api/units/${unit_code}/${unit_off_year}/${unit_off_period}`}
+                apiEndpoint={`${import.meta.env.VITE_BACKEND_URL}/api/units/${unit_code}/${unit_off_year}/${unit_off_period}`}
                 onClose={onClose}
                 isOpen={isOpen}
             />

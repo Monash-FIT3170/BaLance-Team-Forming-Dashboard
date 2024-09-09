@@ -64,7 +64,7 @@ export default function ChangeGroupModal({ studentData, numberOfGroups }) {
         onClose();
         let token = await getAccessTokenSilently();
         await fetch(
-            `/api/groups/${unitCode}/${year}/${period}/move/${student_id}/${hasAGroup}`,
+            `${import.meta.env.VITE_BACKEND_URL}/api/groups/${unitCode}/${year}/${period}/move/${student_id}/${hasAGroup}`,
             {
                 method: 'PATCH',
                 body: JSON.stringify({ newGroup: group }),

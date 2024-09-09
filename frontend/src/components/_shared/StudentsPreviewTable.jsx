@@ -50,7 +50,7 @@ const StudentsPreviewTable = ({
     const handleDeletionClick = (student) => {
         if (page === 'students') {
             setDeleteEndpoint(
-                `/api/students/enrolment/${unitCode}/${year}/${period}/${student.student_id}`
+                `${import.meta.env.VITE_BACKEND_URL}/api/students/enrolment/${unitCode}/${year}/${period}/${student.student_id}`
             );
             setDeleteModalHeader(`Delete student from unit?`);
             setDeleteModalText(
@@ -58,7 +58,7 @@ const StudentsPreviewTable = ({
             );
         } else {
             setDeleteEndpoint(
-                `/api/students/groupAlloc/${unitCode}/${year}/${period}/${student.student_id}`
+                `${import.meta.env.VITE_BACKEND_URL}/api/students/groupAlloc/${unitCode}/${year}/${period}/${student.student_id}`
             );
             setDeleteModalHeader(`Delete student from group?`);
             setDeleteModalText(

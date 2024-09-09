@@ -25,7 +25,7 @@ function Students() {
     useEffect(() => {
         getAccessTokenSilently().then((token) => {
             // fetch students from the backend
-            fetch(`/api/students/${unitCode}/${year}/${period}`, {
+            fetch(`${import.meta.env.VITE_BACKEND_URL}/api/students/${unitCode}/${year}/${period}`, {
                 method: 'get',
                 headers: new Headers({
                     Authorization: `Bearer ${token}`,
@@ -38,7 +38,7 @@ function Students() {
                 .catch((err) => console.error(err));
 
             // fetch groups from the backend
-            fetch(`/api/groups/${unitCode}/${year}/${period}`, {
+            fetch(`${import.meta.env.VITE_BACKEND_URL}/api/groups/${unitCode}/${year}/${period}`, {
                 method: 'get',
                 headers: new Headers({
                     Authorization: `Bearer ${token}`,

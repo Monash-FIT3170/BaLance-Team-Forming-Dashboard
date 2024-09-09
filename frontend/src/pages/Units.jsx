@@ -21,7 +21,7 @@ function Units() {
 
     useEffect(() => {
         getAccessTokenSilently().then((token) => {
-            fetch('/api/units/', {
+            fetch(`${import.meta.env.VITE_BACKEND_URL}/api/units/`, {
                 method: 'get',
                 headers: new Headers({
                     Authorization: `Bearer ${token}`,

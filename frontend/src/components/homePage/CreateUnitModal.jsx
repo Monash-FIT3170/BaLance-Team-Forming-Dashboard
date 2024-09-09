@@ -106,7 +106,7 @@ const CreateUnitModal = ({ isModalOpen, onModalClose }) => {
 
         getAccessTokenSilently()
             .then((token) => {
-                fetch('/api/units/', {
+                fetch(`${import.meta.env.VITE_BACKEND_URL}/api/units/`, {
                     method: 'POST',
                     headers: new Headers({
                         Authorization: `Bearer ${token}`,
