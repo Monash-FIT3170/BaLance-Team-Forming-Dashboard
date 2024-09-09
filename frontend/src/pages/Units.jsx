@@ -21,7 +21,7 @@ function Units() {
 
     useEffect(() => {
         getAccessTokenSilently().then((token) => {
-            fetch('balance-team-forming-dashboard-production.up.railway.app/api/units/', {
+            fetch('/api/units/', {
                 method: 'get',
                 headers: new Headers({
                     Authorization: `Bearer ${token}`,
