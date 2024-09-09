@@ -5,6 +5,13 @@
  GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'password' WITH GRANT OPTION;
  FLUSH PRIVILEGES;
 
+-- START FROM CLEAN SLATE
+DROP SCHEMA IF EXISTS student_group_db;
+
+-- DATABASE CREATION AND SPECIFICATION
+CREATE DATABASE IF NOT EXISTS student_group_db;
+USE student_group_db;
+
 -- TABLE CREATION
 CREATE TABLE IF NOT EXISTS unit_offering (
     unit_off_id INT AUTO_INCREMENT COMMENT 'unique identifier for a unit offering',
