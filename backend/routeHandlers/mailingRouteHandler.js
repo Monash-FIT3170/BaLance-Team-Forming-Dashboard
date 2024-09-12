@@ -18,22 +18,20 @@ const getStudentEmails = async (req,res) => {
 
 
 const sendEmails = async (req,res) => {
-    const {unitCode,year,period,sender,receiver,subject,text} = req.params; 
+    const {unitCode,year,period} = req.params; 
     const studentEmails = await getAllEmails(unitCode,year,period); //either this to get student emails or get it from receiver
 
     const transporter = nodemailer.createTransport({//transporter for email
-        host: "host of emails",
-        port: 587,
-        secure: false, // Use `true` for port 465, `false` for all other ports
+        service: 'gmail',
         auth: {
-          user: "email address",
-          pass: "password",
+          user: "sender email",
+          pass: "sender password",
         },
       });
 
     for(address in studentEmails){
         //sends new email for every student
-        transporter.sendMail(createEmail(sender,address,subject,text));
+        transporter.sendMail(createEmail(user,address,"subject","text"));
     }
     
     res.status(200).send();
