@@ -239,6 +239,8 @@ const getUnitAnalyticsTime = async (unitCode, year, period) => {
         [unitCode, year, period]
     );
 
+    console.log(preferenceResults)
+
     const preferenceBarChartData = {
         type: "bar",
         title: "Number of students assigned to their nth preferred group",
@@ -490,6 +492,7 @@ const getGroupAnalyticsTime = async (unitCode, year, period, groupNumber) => {
         "ORDER BY pp.preference_rank ASC; ",
         [unitCode, year, period, groupNumber]
     )
+    console.log(preferenceResults)
 
     /** const preferenceResults = await promiseBasedQuery("FILL THIS SQL CODE IN THANKS" [unitCode, year, period, groupNumber]) */
 
