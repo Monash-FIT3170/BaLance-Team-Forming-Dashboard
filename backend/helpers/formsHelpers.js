@@ -127,7 +127,7 @@ async function updateToBelbinForm(auth, formId) {
             {
                 "createItem": {
                     "item": {
-                        "title": "Belbin Type",
+                        "title": "Effort",
                         "questionItem": {
                             "question": {
                                 "required": true,
@@ -154,6 +154,59 @@ async function updateToBelbinForm(auth, formId) {
     }
 }
 
+async function updateToEffortForm(auth, formId) {
+    // TODO: Still need to test this 
+    // same thing as the Belbin update function unsure if it will mess with the IDs 
+    const authClient = await auth.getClient();
+    const forms = google.forms({ version: 'v1', auth: authClient });
+
+    const formBody = {
+        "requests": [
+            {
+                "createItem": {
+                    "item": {
+                        "title": "Student ID",
+                        "questionItem": {
+                            "question": {
+                                "required": true,
+                                "textQuestion": {}
+                            }
+                        }
+                    },
+                    "location": {
+                        "index": 0
+                    }
+                }
+            },
+            {
+                "createItem": {
+                    "item": {
+                        "title": "Belbin Type",
+                        "questionItem": {
+                            "question": {
+                                "required": true,
+                                "textQuestion": {}
+                            }
+                        }
+                    },
+                    "location": {
+                        "index": 1
+                    }
+                }
+            }
+        ]
+    };
+
+    try {
+        const result = await forms.forms.batchUpdate({
+            formId: formId,
+            requestBody: formBody,
+        });
+        console.log('Form updated:', result.data);
+    } catch (error) {
+        console.error('Error updating form:', error);
+    }
+}
 
 
 
