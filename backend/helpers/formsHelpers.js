@@ -100,6 +100,61 @@ async function getPreferenceResponse(auth, formId) {
 // getEffortResponse(auth, '1gaVlsQARmiYYTmgr3wezZdWFJxVcyrWAaFpX5QleVy8')
 // getPreferenceResponse(auth, '1BPup6OBO3qyp3Tob2fpTZloGHPuvbzzmFADdNI_NcTg')
 
+async function updateToBelbinForm(auth, formId) {
+    // TODO: Still need to test this 
+    // not sure whether there are questions with set IDs, so not sure if updating will erase these hardcoded IDs
+    const authClient = await auth.getClient();
+    const forms = google.forms({ version: 'v1', auth: authClient });
+
+    const formBody = {
+        "requests": [
+            {
+                "createItem": {
+                    "item": {
+                        "title": "Student ID",
+                        "questionItem": {
+                            "question": {
+                                "required": true,
+                                "textQuestion": {}
+                            }
+                        }
+                    },
+                    "location": {
+                        "index": 0
+                    }
+                }
+            },
+            {
+                "createItem": {
+                    "item": {
+                        "title": "Belbin Type",
+                        "questionItem": {
+                            "question": {
+                                "required": true,
+                                "textQuestion": {}
+                            }
+                        }
+                    },
+                    "location": {
+                        "index": 1
+                    }
+                }
+            }
+        ]
+    };
+
+    try {
+        const result = await forms.forms.batchUpdate({
+            formId: formId,
+            requestBody: formBody,
+        });
+        console.log('Form updated:', result.data);
+    } catch (error) {
+        console.error('Error updating form:', error);
+    }
+}
+
+
 
 
 module.exports = {
