@@ -208,6 +208,205 @@ async function updateToEffortForm(auth, formId) {
     }
 }
 
+async function updateToPreferenceForm(auth, formId) {
+    //TODO: needs testing
+    // ID issue again not sure if it overrides the hardcoded ids in the get...Response functions 
+    const authClient = await auth.getClient();
+    const forms = google.forms({ version: 'v1', auth: authClient });
+
+    const formBody = {
+        "requests": [
+            {
+                "createItem": {
+                    "item": {
+                        "title": "Student ID",
+                        "questionItem": {
+                            "question": {
+                                "required": true,
+                                "textQuestion": {}
+                            }
+                        }
+                    },
+                    "location": {
+                        "index": 0
+                    }
+                }
+            },
+            {
+                "createItem": {
+                    "item": {
+                        "title": "Preference 1",
+                        "questionItem": {
+                            "question": {
+                                "required": true,
+                                "textQuestion": {}
+                            }
+                        }
+                    },
+                    "location": {
+                        "index": 1
+                    }
+                }
+            },
+            {
+                "createItem": {
+                    "item": {
+                        "title": "Preference 2",
+                        "questionItem": {
+                            "question": {
+                                "required": true,
+                                "textQuestion": {}
+                            }
+                        }
+                    },
+                    "location": {
+                        "index": 2
+                    }
+                }
+            },
+            {
+                "createItem": {
+                    "item": {
+                        "title": "Preference 3",
+                        "questionItem": {
+                            "question": {
+                                "required": true,
+                                "textQuestion": {}
+                            }
+                        }
+                    },
+                    "location": {
+                        "index": 3
+                    }
+                }
+            },
+            {
+                "createItem": {
+                    "item": {
+                        "title": "Preference 4",
+                        "questionItem": {
+                            "question": {
+                                "required": true,
+                                "textQuestion": {}
+                            }
+                        }
+                    },
+                    "location": {
+                        "index": 4
+                    }
+                }
+            },
+            {
+                "createItem": {
+                    "item": {
+                        "title": "Preference 5",
+                        "questionItem": {
+                            "question": {
+                                "required": true,
+                                "textQuestion": {}
+                            }
+                        }
+                    },
+                    "location": {
+                        "index": 5
+                    }
+                }
+            },
+            {
+                "createItem": {
+                    "item": {
+                        "title": "Preference 6",
+                        "questionItem": {
+                            "question": {
+                                "required": true,
+                                "textQuestion": {}
+                            }
+                        }
+                    },
+                    "location": {
+                        "index": 6
+                    }
+                }
+            },
+            {
+                "createItem": {
+                    "item": {
+                        "title": "Preference 7",
+                        "questionItem": {
+                            "question": {
+                                "required": true,
+                                "textQuestion": {}
+                            }
+                        }
+                    },
+                    "location": {
+                        "index": 7
+                    }
+                }
+            },
+            {
+                "createItem": {
+                    "item": {
+                        "title": "Preference 8",
+                        "questionItem": {
+                            "question": {
+                                "required": true,
+                                "textQuestion": {}
+                            }
+                        }
+                    },
+                    "location": {
+                        "index": 8
+                    }
+                }
+            },
+            {
+                "createItem": {
+                    "item": {
+                        "title": "Preference 9",
+                        "questionItem": {
+                            "question": {
+                                "required": true,
+                                "textQuestion": {}
+                            }
+                        }
+                    },
+                    "location": {
+                        "index": 9
+                    }
+                }
+            },
+            {
+                "createItem": {
+                    "item": {
+                        "title": "Preference 10",
+                        "questionItem": {
+                            "question": {
+                                "required": true,
+                                "textQuestion": {}
+                            }
+                        }
+                    },
+                    "location": {
+                        "index": 10
+                    }
+                }
+            }
+        ]
+    };
+
+    try {
+        const result = await forms.forms.batchUpdate({
+            formId: formId,
+            requestBody: formBody,
+        });
+        console.log('Form updated:', result.data);
+    } catch (error) {
+        console.error('Error updating form:', error);
+    }
+}
+
+
 
 
 module.exports = {
