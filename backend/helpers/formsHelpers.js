@@ -101,8 +101,6 @@ async function getPreferenceResponse(auth, formId) {
 // getPreferenceResponse(auth, '1BPup6OBO3qyp3Tob2fpTZloGHPuvbzzmFADdNI_NcTg')
 
 async function updateToBelbinForm(auth, formId) {
-    // TODO: Still need to test this 
-    // not sure whether there are questions with set IDs, so not sure if updating will erase these hardcoded IDs
     const authClient = await auth.getClient();
     const forms = google.forms({ version: 'v1', auth: authClient });
 
@@ -116,7 +114,8 @@ async function updateToBelbinForm(auth, formId) {
                             "question": {
                                 "required": true,
                                 "textQuestion": {}
-                            }
+                            },
+                            "questionId": "16df7bea"  // Custom question ID
                         }
                     },
                     "location": {
@@ -132,7 +131,8 @@ async function updateToBelbinForm(auth, formId) {
                             "question": {
                                 "required": true,
                                 "textQuestion": {}
-                            }
+                            },
+                            "questionId": "4d44c000"  // Custom question ID
                         }
                     },
                     "location": {
