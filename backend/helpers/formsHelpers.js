@@ -155,8 +155,6 @@ async function updateToBelbinForm(auth, formId) {
 }
 
 async function updateToEffortForm(auth, formId) {
-    // TODO: Still need to test this 
-    // same thing as the Belbin update function unsure if it will mess with the IDs 
     const authClient = await auth.getClient();
     const forms = google.forms({ version: 'v1', auth: authClient });
 
@@ -170,7 +168,8 @@ async function updateToEffortForm(auth, formId) {
                             "question": {
                                 "required": true,
                                 "textQuestion": {}
-                            }
+                            },
+                            "questionId": "16df7bea"  // Custom question ID
                         }
                     },
                     "location": {
@@ -186,7 +185,8 @@ async function updateToEffortForm(auth, formId) {
                             "question": {
                                 "required": true,
                                 "textQuestion": {}
-                            }
+                            },
+                            "questionId": "299979bf"  // Custom question ID
                         }
                     },
                     "location": {
