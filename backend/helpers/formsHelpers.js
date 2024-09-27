@@ -74,26 +74,37 @@ async function getEffortResponse(auth, formId) {
 }
 
 
-async function getPreferenceResponse(auth, formId) {
-    const belbinResponses = await getFormResponseList(auth,formId);
-    responseList = []
+async function getPreferenceResponse(auth, formId, prefNum) {
+    const belbinResponses = await getFormResponseList(auth, formId);
+    const responseList = [];
+
+    // Iterate over each response
     for (let i = 0; i < belbinResponses.data.responses.length; i++) {
-        answer = belbinResponses.data.responses[i].answers
-        studentId = answer['16df7bea'].textAnswers.answers[0].value
-        pref1 = answer['785732d7'].textAnswers.answers[0].value
-        pref2 = answer['48f63368'].textAnswers.answers[0].value
-        pref3 = answer['62f90bcd'].textAnswers.answers[0].value
-        pref4 = answer['3ecb43fa'].textAnswers.answers[0].value        
-        pref5 = answer['502b627b'].textAnswers.answers[0].value
-        pref6 = answer['31406d5e'].textAnswers.answers[0].value
-        pref7 = answer['7128b09f'].textAnswers.answers[0].value
-        pref8 = answer['0113e93b'].textAnswers.answers[0].value
-        pref9 = answer['3a0af029'].textAnswers.answers[0].value
-        pref10 = answer['075ae5ce'].textAnswers.answers[0].value
-        responseList.push([studentId, pref1, pref2, pref3, pref4, pref5, pref6, pref7, pref8, pref9, pref10])
+        const answer = belbinResponses.data.responses[i].answers;
+        
+        // Get the Student ID from its specific ID (unchanged)
+        const studentId = answer['16df7bea'].textAnswers.answers[0].value;
+
+        // Initialize an array to hold the preferences for this student
+        const preferences = [studentId];
+
+        // Dynamically loop through the preferences based on prefNum
+        for (let j = 1; j <= prefNum; j++) {
+            const prefId = `pref_${j}`;
+            if (answer[prefId]) {
+                const prefValue = answer[prefId].textAnswers.answers[0].value;
+                preferences.push(prefValue);
+            } else {
+                preferences.push(null);  // In case there's a missing response, add null
+            }
+        }
+
+        // Add the student's ID and preferences to the response list
+        responseList.push(preferences);
     }
-    console.log(responseList)
-    return responseList
+
+    console.log(responseList);
+    return responseList;
 }
 
 // getBelbinResponse(auth, '1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE')
