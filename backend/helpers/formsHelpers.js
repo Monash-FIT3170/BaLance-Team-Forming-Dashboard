@@ -208,13 +208,12 @@ async function updateToEffortForm(auth, formId) {
     }
 }
 
-async function updateToPreferenceForm(auth, formId) {
-    //TODO: needs testing
-    // ID issue again not sure if it overrides the hardcoded ids in the get...Response functions 
+async function updateToPreferenceForm(auth, formId, prefNum) {
     const authClient = await auth.getClient();
     const forms = google.forms({ version: 'v1', auth: authClient });
 
-    const formBody = {
+    // Start with the "Student ID" question
+    let formBody = {
         "requests": [
             {
                 "createItem": {
@@ -224,177 +223,40 @@ async function updateToPreferenceForm(auth, formId) {
                             "question": {
                                 "required": true,
                                 "textQuestion": {}
-                            }
+                            },
+                            "questionId": "16df7bea"  // Custom question ID for Student ID
                         }
                     },
                     "location": {
                         "index": 0
                     }
                 }
-            },
-            {
-                "createItem": {
-                    "item": {
-                        "title": "Preference 1",
-                        "questionItem": {
-                            "question": {
-                                "required": true,
-                                "textQuestion": {}
-                            }
-                        }
-                    },
-                    "location": {
-                        "index": 1
-                    }
-                }
-            },
-            {
-                "createItem": {
-                    "item": {
-                        "title": "Preference 2",
-                        "questionItem": {
-                            "question": {
-                                "required": true,
-                                "textQuestion": {}
-                            }
-                        }
-                    },
-                    "location": {
-                        "index": 2
-                    }
-                }
-            },
-            {
-                "createItem": {
-                    "item": {
-                        "title": "Preference 3",
-                        "questionItem": {
-                            "question": {
-                                "required": true,
-                                "textQuestion": {}
-                            }
-                        }
-                    },
-                    "location": {
-                        "index": 3
-                    }
-                }
-            },
-            {
-                "createItem": {
-                    "item": {
-                        "title": "Preference 4",
-                        "questionItem": {
-                            "question": {
-                                "required": true,
-                                "textQuestion": {}
-                            }
-                        }
-                    },
-                    "location": {
-                        "index": 4
-                    }
-                }
-            },
-            {
-                "createItem": {
-                    "item": {
-                        "title": "Preference 5",
-                        "questionItem": {
-                            "question": {
-                                "required": true,
-                                "textQuestion": {}
-                            }
-                        }
-                    },
-                    "location": {
-                        "index": 5
-                    }
-                }
-            },
-            {
-                "createItem": {
-                    "item": {
-                        "title": "Preference 6",
-                        "questionItem": {
-                            "question": {
-                                "required": true,
-                                "textQuestion": {}
-                            }
-                        }
-                    },
-                    "location": {
-                        "index": 6
-                    }
-                }
-            },
-            {
-                "createItem": {
-                    "item": {
-                        "title": "Preference 7",
-                        "questionItem": {
-                            "question": {
-                                "required": true,
-                                "textQuestion": {}
-                            }
-                        }
-                    },
-                    "location": {
-                        "index": 7
-                    }
-                }
-            },
-            {
-                "createItem": {
-                    "item": {
-                        "title": "Preference 8",
-                        "questionItem": {
-                            "question": {
-                                "required": true,
-                                "textQuestion": {}
-                            }
-                        }
-                    },
-                    "location": {
-                        "index": 8
-                    }
-                }
-            },
-            {
-                "createItem": {
-                    "item": {
-                        "title": "Preference 9",
-                        "questionItem": {
-                            "question": {
-                                "required": true,
-                                "textQuestion": {}
-                            }
-                        }
-                    },
-                    "location": {
-                        "index": 9
-                    }
-                }
-            },
-            {
-                "createItem": {
-                    "item": {
-                        "title": "Preference 10",
-                        "questionItem": {
-                            "question": {
-                                "required": true,
-                                "textQuestion": {}
-                            }
-                        }
-                    },
-                    "location": {
-                        "index": 10
-                    }
-                }
             }
         ]
     };
 
+    // Dynamically add preference questions based on prefNum
+    for (let i = 1; i <= prefNum; i++) {
+        formBody.requests.push({
+            "createItem": {
+                "item": {
+                    "title": `Preference ${i}`,
+                    "questionItem": {
+                        "question": {
+                            "required": true,
+                            "textQuestion": {}
+                        },
+                        "questionId": `pref_${i}`  // Custom question ID for each preference
+                    }
+                },
+                "location": {
+                    "index": i
+                }
+            }
+        });
+    }
+
+    // Attempt to update the form
     try {
         const result = await forms.forms.batchUpdate({
             formId: formId,
@@ -405,9 +267,6 @@ async function updateToPreferenceForm(auth, formId) {
         console.error('Error updating form:', error);
     }
 }
-
-
-
 
 module.exports = {
     getBelbinResponse,
