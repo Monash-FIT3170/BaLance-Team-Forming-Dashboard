@@ -282,5 +282,8 @@ async function updateToPreferenceForm(auth, formId, prefNum) {
 module.exports = {
     getBelbinResponse,
     getEffortResponse,
-    getPreferenceResponse
+    getPreferenceResponse,
+    updateToBelbinForm,
+    updateToEffortForm,
+    updateToPreferenceForm
 }
