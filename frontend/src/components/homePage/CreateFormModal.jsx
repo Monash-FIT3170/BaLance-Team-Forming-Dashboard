@@ -36,7 +36,7 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
         <Stack spacing={5} direction='column'>
           <Checkbox>Belbin</Checkbox>
           <Checkbox>Effort</Checkbox>
-          <Checkbox>Time&Preference</Checkbox>
+          <Checkbox>Time & Preference</Checkbox>
         </Stack>
       </FormControl>
       <Box position="relative">
