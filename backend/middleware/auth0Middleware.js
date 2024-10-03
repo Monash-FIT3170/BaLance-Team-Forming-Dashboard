@@ -21,13 +21,13 @@ async function delay(time) {
 
 
 const auth0Middleware = (app) => {
-    const verifyJwt = auth({
-        audience: 'balance-api-endpoint',
-        issuerBaseURL: process.env.AUTH_DOMAIN,
+    const jwtCheck = auth({
+        audience: 'https://balance-api-endpoint',
+        issuerBaseURL: 'https://balancedev.au.auth0.com/',
         tokenSigningAlg: 'RS256'
       });
     
-    app.use(verifyJwt);
+    app.use(jwtCheck);
 
     app.use(async (req, res, next) => {
         try {

@@ -29,6 +29,7 @@ app.use((req, res, next) => {
 });
 
 if (process.env.AUTH == "TEST") { auth0Middleware(app); }
+
 if (process.env.AUTH == "DEV" || process.env.AUTH == null) { mockAuthMiddleware(app); }
 
 app.use(async (req, res, next) => {
@@ -41,6 +42,28 @@ app.use(async (req, res, next) => {
     }
     next();
 })
+
+
+app.use(async (req, res, next) => {
+    try {
+        if (req.user && req.user.email) {
+            const results = await db_connection.promise().query(
+                `SELECT * FROM staff WHERE email_address='${req.user.email}';`
+            );
+
+            if (results[0].length === 0) {
+                await db_connection.promise().query(
+                    `INSERT INTO staff (preferred_name, last_name, email_address)
+                     VALUES ('${req.user.nickname}', '${req.user.nickname}', '${req.user.email}');`
+                );
+            }
+        }
+        next();
+    } catch (error) {
+        console.error('Error updating staff info:', error);
+        res.status(500).send('Server error');
+    }
+});
 
 app.use('/api/units/', unitRoutes);
 app.use('/api/groups/', groupRoutes);
