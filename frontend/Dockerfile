@@ -1,4 +1,4 @@
-FROM node:18.16-alpine3.17
+FROM node:20-alpine
 LABEL authors="s.a.baaset.moslih@gmail.com"
 
 WORKDIR /balance_frontend

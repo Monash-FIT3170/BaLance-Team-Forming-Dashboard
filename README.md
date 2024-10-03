@@ -82,6 +82,7 @@ Belbin type must be one of people, thinking or action
 | --------- | ---------- |
 | 12345678  | people     |
 | 28462818  | thinking   |
+| 41161886  | action     |
 
 ### Effort data
 
@@ -92,9 +93,30 @@ hourCommitment is the estimated number of hours that a student expects to commit
 | 12345678  | 13             | 73                |
 | 28462818  | 18             | 84                |
 
+### Times and Preferences data
+
+Preferences can be added to the end of the table as needed
+
+| timestamp           | studentId | full name   | email                       | Project Pref n |              
+| ------------------- | --------- | ------------| --------------------------- | -------------- | 
+| 2/26/2024 20:00:39  | 12345678  | Jim White   | jwhi0001@student.monash.edu | 1              |
+| 2/26/2024 20:00:39  | 28462818  | Jemma Black | jbla0001@student.monash.edu | 9              |
+
 # Development guidelines
 
 Refer to the [feature extention](/docs/contributorsGuide/DEVELOPMENT.md) writeup under docs/ for further details on how to add group formation strategies
+
+### Mock data
+
+For the purpose of testing, a script to generate mock input data can be found under `docs/mockInputs`.
+Run the following commands under the `docs/mockInputs` directory to create a virtual environment and view details on usage:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate # .venv/Scripts/activate for Windows
+pip install -r requirements.txt
+python ./generator.py --help
+```
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-31-orange.svg?style=flat-square)](#contributors-)

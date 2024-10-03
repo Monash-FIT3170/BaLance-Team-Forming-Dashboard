@@ -2,7 +2,8 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useParams } from 'react-router';
 import { HStack, Center } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
-import { AddIcon, EditIcon, ViewIcon } from '@chakra-ui/icons';
+import { AddIcon, EditIcon, ViewIcon, RepeatIcon, CheckIcon} from '@chakra-ui/icons';
+import { Button, Text, Spacer} from '@chakra-ui/react';
 
 import { MockAuth } from '../helpers/mockAuth';
 import NavButton from '../components/_shared/NavButton';
@@ -10,17 +11,75 @@ import ToggleButtonGroup from '../components/_shared/ToggleButtonGroup';
 import PageHeader from '../components/_shared/PageHeader';
 import StudentsPreviewTable from '../components/_shared/StudentsPreviewTable';
 
+function preparePersonalityData(belbinResponses, effortResponses) {
+  
+  const belbinData = belbinResponses.map(([studentId, belbinType]) => ({
+    studentId,
+    belbinType,
+  }));
+  const effortData = effortResponses.map(([studentId, hourCommitment, avgAssignmentMark]) => ({
+    studentId,
+    hourCommitment,
+    avgAssignmentMark,
+  }));
+
+  const personalityData = [
+    {
+      students: belbinData,
+      testType: 'belbin'
+    },
+    {
+      students: effortData,
+      testType: 'effort'
+    }
+  ];
+
+  return personalityData
+}
+
 function Students() {
-  let authService = {
-    DEV: MockAuth,
-    TEST: useAuth0,
-  };
+    let authService = {
+        DEV: MockAuth,
+        TEST: useAuth0,
+    };
 
-  const { getAccessTokenSilently } = authService[import.meta.env.VITE_REACT_APP_AUTH]();
-  const [students, setStudents] = useState([]);
-  const [numberOfGroups, setNumberOfGroups] = useState(0);
+    const { getAccessTokenSilently } = authService[import.meta.env.VITE_REACT_APP_AUTH]();
+    const [students, setStudents] = useState([]);
+    const [numberOfGroups, setNumberOfGroups] = useState(0);
 
-  const { unitCode, year, period } = useParams();
+    const { unitCode, year, period } = useParams();
+
+  function pushData() {
+
+    getAccessTokenSilently().then((token) => {
+      
+      fetch(
+      `/api/forms/${unitCode}/${year}/${period}`,
+      {
+        method: 'POST',
+        headers: new Headers({
+          Authorization: `Bearer 0000`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        })
+        // body: JSON.stringify({students: data.students, testType: data.testType}),
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          console.log("it worked!!!!!!!!!!");
+        } else {
+          return response.text().then((responseText) => {
+            console.log("it worked!!!")
+          });
+        }
+      })
+      .catch((error) => {
+        console.error('Error sending data to the REST API:', error);
+        // Optionally show an error message to the user.
+      });
+  }
+  )};
 
   useEffect(() => {
     getAccessTokenSilently().then((token) => {
@@ -37,23 +96,22 @@ function Students() {
         })
         .catch((err) => console.error(err));
 
-      // fetch groups from the backend
-      fetch(`http://localhost:8080/api/groups/${unitCode}/${year}/${period}`, {
-        method: 'get',
-        headers: new Headers({
-          Authorization: `Bearer ${token}`,
-        }),
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          if (res.length > 0) {
-            setNumberOfGroups(res.length);
-          }
-        })
-        .catch((err) => console.error(err));
-    });
-  }, []);
-
+            // fetch groups from the backend
+            fetch(`/api/groups/${unitCode}/${year}/${period}`, {
+                method: 'get',
+                headers: new Headers({
+                    Authorization: `Bearer ${token}`,
+                }),
+            })
+                .then((res) => res.json())
+                .then((res) => {
+                    if (res.length > 0) {
+                        setNumberOfGroups(res.length);
+                    }
+                })
+                .catch((err) => console.error(err));
+        });
+    }, []);
   return (
     <div>
       <PageHeader fontSize={'4xl'} pageDesc={`${unitCode} ${period} ${year}`} />
@@ -73,6 +131,15 @@ function Students() {
           buttonUrl={`/unitAnalytics/${unitCode}/${year}/${period}`}
           buttonIcon={<ViewIcon />}
         />
+      </HStack>
+      <HStack justifyContent={'center'} marginTop={'10px'}>
+        <Button onClick={pushData}>
+          <HStack>
+            <CheckIcon />
+            <Spacer />
+            <Text>Save Responses</Text>
+          </HStack>
+        </Button>
       </HStack>
       <br />
       <br />
