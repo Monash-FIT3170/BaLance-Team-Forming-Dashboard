@@ -44,7 +44,11 @@ async function getForm(auth, formId){
 
 //example usage is getFormResponses(forms,'1KKE9CKONUECsCMMTLWql0Q9PPmgk7z2RH0FuQ6-rLq0')
 //const responses = getFormResponseList(auth,'1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE')
-const form = getForm(auth, "1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE")
+
+// TODO: Replace with standardised IDs
+BELBIN_TYPE_ID = '299979bf'
+EFFORT_ID = '4d44c000'
+STUDENT_ID = '16df7bea'
 
 
 async function getBelbinResponse(auth, formId) {
@@ -52,11 +56,10 @@ async function getBelbinResponse(auth, formId) {
     responseList = []
     for (let i = 0; i < belbinResponses.data.responses.length; i++) {
         answer = belbinResponses.data.responses[i].answers
-        belbinType = answer['299979bf'].textAnswers.answers[0].value
-        studentId = answer['16df7bea'].textAnswers.answers[0].value
+        belbinType = answer[BELBIN_TYPE_ID].textAnswers.answers[0].value
+        studentId = answer[STUDENT_ID].textAnswers.answers[0].value
         responseList.push([studentId, belbinType])
     }
-    console.log(responseList)
     return responseList
 }
 
@@ -65,34 +68,30 @@ async function getEffortResponse(auth, formId) {
     responseList = []
     for (let i = 0; i < belbinResponses.data.responses.length; i++) {
         answer = belbinResponses.data.responses[i].answers
-        effort = answer['4d44c000'].textAnswers.answers[0].value
-        studentId = answer['16df7bea'].textAnswers.answers[0].value
+        effort = answer[EFFORT_ID].textAnswers.answers[0].value
+        studentId = answer[STUDENT_ID].textAnswers.answers[0].value
         responseList.push([studentId, effort, 70])
     }
-    console.log(responseList)
     return responseList
 }
 
+// TODO: Replace with check for number for IDs to form
+// ORDER SENSITIVE! Preference IDs MUST be listed in the order they are in the SQL table
+preference_ids = ['785732d7', '48f63368', '62f90bcd', '3ecb43fa', '502b627b', '31406d5e', '7128b09f', '0113e93b', '3a0af029', '075ae5ce']
 
 async function getPreferenceResponse(auth, formId) {
     const belbinResponses = await getFormResponseList(auth,formId);
-    responseList = []
+    let responseList = []
     for (let i = 0; i < belbinResponses.data.responses.length; i++) {
         answer = belbinResponses.data.responses[i].answers
-        studentId = answer['16df7bea'].textAnswers.answers[0].value
-        pref1 = answer['785732d7'].textAnswers.answers[0].value
-        pref2 = answer['48f63368'].textAnswers.answers[0].value
-        pref3 = answer['62f90bcd'].textAnswers.answers[0].value
-        pref4 = answer['3ecb43fa'].textAnswers.answers[0].value        
-        pref5 = answer['502b627b'].textAnswers.answers[0].value
-        pref6 = answer['31406d5e'].textAnswers.answers[0].value
-        pref7 = answer['7128b09f'].textAnswers.answers[0].value
-        pref8 = answer['0113e93b'].textAnswers.answers[0].value
-        pref9 = answer['3a0af029'].textAnswers.answers[0].value
-        pref10 = answer['075ae5ce'].textAnswers.answers[0].value
-        responseList.push([studentId, pref1, pref2, pref3, pref4, pref5, pref6, pref7, pref8, pref9, pref10])
+        studentId = answer[STUDENT_ID].textAnswers.answers[0].value
+
+        let response = [studentId]
+        for (let j = 0; j < preference_ids.length; j++) {
+            response.push(preference_ids[j]);
+        }
+        responseList.push(response)
     }
-    console.log(responseList)
     return responseList
 }
 

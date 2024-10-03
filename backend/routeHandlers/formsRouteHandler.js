@@ -12,6 +12,10 @@ const auth = new GoogleAuth({
     scopes: SCOPES,
 });
 
+// TODO: Replace with SQL query for retrieving form ID from unit + type
+BELBIN_ID = "1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE";
+EFFORT_ID = "1gaVlsQARmiYYTmgr3wezZdWFJxVcyrWAaFpX5QleVy8";
+
 const pushData = async (req, res) => {
     /**
      * Pushes data from google forms into the database
@@ -20,11 +24,8 @@ const pushData = async (req, res) => {
 
     const { unitCode, year, period } = req.params;
 
-    console.log("pushData called")
-
-    const belbinResponse = await getBelbinResponse(auth, '1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE')
-    const effortResponse = await getEffortResponse(auth, '1gaVlsQARmiYYTmgr3wezZdWFJxVcyrWAaFpX5QleVy8')
-    console.log(belbinResponse)
+    const belbinResponse = await getBelbinResponse(auth, BELBIN_ID)
+    const effortResponse = await getEffortResponse(auth, EFFORT_ID)
 
     personalityData = preparePersonalityData(belbinResponse, effortResponse)
 
@@ -36,7 +37,6 @@ const pushData = async (req, res) => {
 };
 
 function preparePersonalityData(belbinResponses, effortResponses) {
-    console.log(belbinResponses)
     const belbinData = belbinResponses.map(([studentId, belbinType]) => ({
       studentId,
       belbinType,
@@ -98,10 +98,6 @@ const addPersonalityData = async(students, testType, unitCode, year, period) => 
         [unitCode, year, period, studentIds]
     );
 
-    console.log("here")
-    console.log(unitCode)
-    console.log(studentIdKeyData)
-
     /* CONVERT VALUES INTO AN APPROPRIATE FORMAT FOR INSERT QUERY FOR PERSONALITY_TEST_ATTEMPT */
     // [[testType, unitOffKey, studentPrimaryKey], ...] for insert to personality_test_attempt
     const testAttemptInsertData = [];
@@ -109,7 +105,6 @@ const addPersonalityData = async(students, testType, unitCode, year, period) => 
         testAttemptInsertData.push([testType, unitOffKey, student.stud_unique_id]);
     });
 
-    console.log(testAttemptInsertData)
     /* INSERT PERSONALITY TEST ATTEMPT */
     try {
         await promiseBasedQuery(
