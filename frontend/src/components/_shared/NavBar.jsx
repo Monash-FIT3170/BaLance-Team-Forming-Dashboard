@@ -59,6 +59,11 @@ const NavBar = ({ authenticated }) => {
             <b>Tutorial</b>
           </Button>
         </Link>
+        <Link as={RouterLink} to="/userInfo" ml="8">
+          <Button colorScheme="white" variant="solid" color="black" fontSize="1.4em" fontWeight="light" size="lg" height="63" px="6">
+            <b>User</b>
+          </Button>
+        </Link>
         <Link as={RouterLink} to="/FAQ" ml="8">
           <Button colorScheme="white" variant="solid" color="black" fontSize="1.4em" fontWeight="light" size="lg" height="63" px="6">
             <b>FAQ</b>
