@@ -23,10 +23,7 @@ const app = express();
 // required to attach reqs with a body to the req object for req handling
 app.use(express.json());
 app.use(cors(corsOptions));
-app.use((req, res, next) => {
-    console.log(req.path, req.method);
-    next();
-});
+
 
 if (process.env.AUTH == "TEST") { auth0Middleware(app); }
 
@@ -63,6 +60,15 @@ app.use(async (req, res, next) => {
         console.error('Error updating staff info:', error);
         res.status(500).send('Server error');
     }
+});
+app.use((req, res, next) => {
+    console.log(req.path, req.method);
+    if (req.user) {
+        console.log('Authenticated user');
+    } else {
+        console.log('Unauthenticated request');
+    }
+    next();
 });
 
 app.use('/api/units/', unitRoutes);

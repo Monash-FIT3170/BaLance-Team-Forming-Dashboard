@@ -46,10 +46,6 @@ const auth0Middleware = (app) => {
             }
         }
     })
-    app.use((req, res, next) => {
-        console.log('User info after authentication:',req.user);
-        next();
-    });
 }
 
 module.exports = {
