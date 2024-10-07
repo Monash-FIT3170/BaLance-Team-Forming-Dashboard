@@ -4,13 +4,12 @@ const axios = require('axios');
 
 async function getUserDetails(req) {
     const accessToken = req.auth.token;
-        const userResponse = await axios.get(process.env.AUTH_DOMAIN+ 'userinfo',
+        const userResponse = await axios.get(process.env.AUTH_DOMAIN+ '/userinfo',
         {
             headers: {
                 authorization: `Bearer ${accessToken}`
             }
         })
-
         return userResponse.data;
 }
 
@@ -27,8 +26,10 @@ const auth0Middleware = (app) => {
         tokenSigningAlg: 'RS256'
       });
     
-    app.use(jwtCheck);
-
+    app.use(jwtCheck, (req, res, next) => {
+        next();
+    });
+    
     app.use(async (req, res, next) => {
         try {
             req.user = await getUserDetails(req);
@@ -45,6 +46,10 @@ const auth0Middleware = (app) => {
             }
         }
     })
+    app.use((req, res, next) => {
+        console.log('User info after authentication:',req.user);
+        next();
+    });
 }
 
 module.exports = {
