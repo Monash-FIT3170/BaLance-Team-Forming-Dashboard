@@ -11,6 +11,13 @@ const auth = new GoogleAuth({
     scopes: SCOPES,
 });
 
+const belbinFormId = null
+const belbinRevisionId = null
+const projectFormId = null
+const projectRevisionId = null
+const effortFormId = null
+const effortRevisionId = null
+
 async function createForm(auth,formBody){
     const authClient = await auth.getClient();
     const forms = google.forms({ version: 'v1', auth: authClient });
@@ -405,6 +412,37 @@ function belbinForm(uniqueFormId, uniqueRevisionId) {
     };
 }
 
+async function generateForms(effort, project, belbin) {
+
+    var forms = []
+
+    if (effort) {
+        effortFormId = uuidv4();
+        effortRevisionId = uuidv4();
+        var effortFormBody = effortForm(effortFormId, effortRevisionId)
+        var effForm = createForm(auth, effortFormBody)
+        forms.push(effForm)
+    }
+
+    if (project) {
+        projectFormId = uuidv4();
+        projectRevisionId = uuidv4();
+        var projectFormBody = projectPreferencesForm(projectFormId, projectRevisionId)
+        var projForm = createForm(auth, projectFormBody)
+        forms.push(projForm)
+    }
+
+    if (belbin) {
+        belbinFormId = uuidv4();
+        belbinRevisionId = uuidv4();
+        var belbinFormBody = belbinForm(belbinFormId, belbinRevisionId)
+        var belbForm = createForm(auth, belbinFormBody)
+        forms.push(belbForm)
+    }
+
+    return forms
+
+}
 
 
 //note: this can probably only fetch responses from forms the service account has access to, either send the form to the email or make the account create it using createForm. 
