@@ -93,6 +93,91 @@ function effortForm(uniqueFormId, uniqueRevisionId) {
     }
 }
 
+function projectPreferencesForm(uniqueFormId, uniqueRevisionId) {
+    return {
+        "formId": uniqueFormId,
+        "info": {
+          "title": "Project Preferences Survey",
+          "description": "Please rank your project preferences for the upcoming term.",
+          "documentTitle": "Project Preferences"
+        },
+        "settings": {
+          "quizSettings": {
+            "isQuiz": false
+          }
+        },
+        "revisionId": uniqueRevisionId,
+        "responderUri": `https://docs.google.com/forms/d/e/${uniqueFormId}/viewform`,
+        "items": [
+          {
+            "itemId": "project_pref_1",
+            "title": "What is your name?",
+            "questionItem": {
+              "question": {
+                "questionId": "project_pref_q1",
+                "required": true,
+                "textQuestion": {
+                  "paragraph": false
+                }
+              }
+            }
+          },
+          {
+            "itemId": "project_pref_2",
+            "title": "What is your student ID?",
+            "questionItem": {
+              "question": {
+                "questionId": "project_pref_q2",
+                "required": true,
+                "textQuestion": {
+                  "paragraph": false
+                }
+              }
+            }
+          },
+          {
+            "itemId": "project_pref_3",
+            "title": "Rank projects in order of preference",
+            "questionItem": {
+              "question": {
+                "questionId": "project_pref_q3",
+                "required": true,
+                "gridQuestion": {
+                  "rows": [
+                    { "value": "1" }, { "value": "2" }, { "value": "3" }, { "value": "4" },
+                    { "value": "5" }, { "value": "6" }, { "value": "7" }, { "value": "8" },
+                    { "value": "9" }, { "value": "10" }
+                  ],
+                  "columns": [
+                    { "value": "1" }, { "value": "2" }, { "value": "3" }, { "value": "4" },
+                    { "value": "5" }, { "value": "6" }, { "value": "7" }, { "value": "8" },
+                    { "value": "9" }, { "value": "10" }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "itemId": "project_pref_4",
+            "title": "Do you consent to this data being stored for the duration of this unit?",
+            "questionItem": {
+              "question": {
+                "questionId": "project_pref_q4",
+                "required": true,
+                "choiceQuestion": {
+                  "type": "RADIO",
+                  "options": [
+                    { "value": "Yes" }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+    }
+}
+
+
 
 //note: this can probably only fetch responses from forms the service account has access to, either send the form to the email or make the account create it using createForm. 
 async function getFormResponseList(auth,formId){
