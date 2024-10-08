@@ -1,6 +1,7 @@
 const { google } = require('googleapis');
 const { GoogleAuth } = require('google-auth-library');
 const { response } = require('express');
+const { v4: uuidv4 } = require('uuid')
 require('dotenv').config();``
 
 const SERVICE_ACCOUNT_JSON = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_TOKEN )
@@ -10,14 +11,89 @@ const auth = new GoogleAuth({
     scopes: SCOPES,
 });
 
-
-
 async function createForm(auth,formBody){
     const authClient = await auth.getClient();
     const forms = google.forms({ version: 'v1', auth: authClient });
     const result = await forms.forms.create({ requestBody: formBody });
     return result;
 }
+
+function effortForm(uniqueFormId, uniqueRevisionId) {
+    return {
+        "formId": uniqueFormId,
+        "info": {
+          "title": "Effort Allocation Survey",
+          "description": "Please provide information about your effort allocation for this unit.",
+          "documentTitle": "Effort Survey"
+        },
+        "settings": {
+          "quizSettings": {
+            "isQuiz": false
+          }
+        },
+        "revisionId": uniqueRevisionId,
+        "responderUri": `https://docs.google.com/forms/d/e/${uniqueFormId}/viewform`,
+        "items": [
+          {
+            "itemId": "effort_1",
+            "title": "What is your name?",
+            "questionItem": {
+              "question": {
+                "questionId": "effort_q1",
+                "required": true,
+                "textQuestion": {
+                  "paragraph": false
+                }
+              }
+            }
+          },
+          {
+            "itemId": "effort_2",
+            "title": "What is your student ID?",
+            "questionItem": {
+              "question": {
+                "questionId": "effort_q2",
+                "required": true,
+                "textQuestion": {
+                  "paragraph": false
+                }
+              }
+            }
+          },
+          {
+            "itemId": "effort_3",
+            "title": "How many hours are you willing to allocate to this unit per week?",
+            "questionItem": {
+              "question": {
+                "questionId": "effort_q3",
+                "required": true,
+                "textQuestion": {
+                  "paragraph": false
+                }
+              }
+            }
+          },
+          {
+            "itemId": "effort_4",
+            "title": "Do you consent to this data being stored for the duration of this unit?",
+            "questionItem": {
+              "question": {
+                "questionId": "effort_q4",
+                "required": true,
+                "choiceQuestion": {
+                  "type": "RADIO",
+                  "options": [
+                    { "value": "Yes" }
+                  ]
+                }
+              }
+            }
+        }
+    ]
+    }
+}
+
+
 //note: this can probably only fetch responses from forms the service account has access to, either send the form to the email or make the account create it using createForm. 
 async function getFormResponseList(auth,formId){
     const authClient = await auth.getClient();
@@ -107,3 +183,4 @@ module.exports = {
     getEffortResponse,
     getPreferenceResponse
 }
+
