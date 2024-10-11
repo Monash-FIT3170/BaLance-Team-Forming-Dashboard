@@ -1030,7 +1030,7 @@ async function getFormResponseList(auth,formId){
     const authClient = await auth.getClient();
     const forms = google.forms({ version: 'v1', auth: authClient });
     const responses = await forms.forms.responses.list({ formId });
-    // console.log(responses.data.responses)
+    // console.log(JSON.stringify(responses.data.responses))
     return responses;
 }
 
@@ -1045,13 +1045,12 @@ async function getForm(auth, formId){
     const authClient = await auth.getClient();
     const forms = google.forms({ version: 'v1', auth: authClient });
     const form = await forms.forms.get({formId})
-    // console.log(form.data.items[0].questionItem)
 
 }
 
 //example usage is getFormResponses(forms,'1KKE9CKONUECsCMMTLWql0Q9PPmgk7z2RH0FuQ6-rLq0')
 //const responses = getFormResponseList(auth,'1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE')
-const form = getForm(auth, "1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE")
+//const form = getForm(auth, "1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE")
 
 
 async function getBelbinResponse(auth, formId) {
@@ -1060,32 +1059,89 @@ async function getBelbinResponse(auth, formId) {
   
   for (let i = 0; i < belbinResponses.data.responses.length; i++) {
       const answer = belbinResponses.data.responses[i].answers;
-      const studentId = answer['belbin_q2'].textAnswers.answers[0].value;
-      const i = answer['belbin_q3'].gridAnswers.answers;
-      const ii = answer['belbin_q4'].gridAnswers.answers;
-      const iii = answer['belbin_q5'].gridAnswers.answers;
-      const iv = answer['belbin_q6'].gridAnswers.answers;
-      const v = answer['belbin_q7'].gridAnswers.answers;
-      const vi = answer['belbin_q8'].gridAnswers.answers;
-      const vii = answer['belbin_q9'].gridAnswers.answers;
+      const studentId = answer['00000001'].textAnswers.answers[0].value;
+      const ia = parseInt(answer['00000021'].textAnswers.answers[0].value, 10);
+      const ib = parseInt(answer['00000022'].textAnswers.answers[0].value, 10);
+      const ic = parseInt(answer['00000023'].textAnswers.answers[0].value, 10);
+      const id = parseInt(answer['00000024'].textAnswers.answers[0].value, 10);
+      const ie = parseInt(answer['00000025'].textAnswers.answers[0].value, 10);
+      const iF = parseInt(answer['00000026'].textAnswers.answers[0].value, 10);
+      const ig = parseInt(answer['00000027'].textAnswers.answers[0].value, 10);
+      const ih = parseInt(answer['00000028'].textAnswers.answers[0].value, 10);
+      
+      const iia = parseInt(answer['00000031'].textAnswers.answers[0].value, 10);
+      const iib = parseInt(answer['00000032'].textAnswers.answers[0].value, 10);
+      const iic = parseInt(answer['00000033'].textAnswers.answers[0].value, 10);
+      const iid = parseInt(answer['00000034'].textAnswers.answers[0].value, 10);
+      const iie = parseInt(answer['00000035'].textAnswers.answers[0].value, 10);
+      const iiF = parseInt(answer['00000036'].textAnswers.answers[0].value, 10);
+      const iig = parseInt(answer['00000037'].textAnswers.answers[0].value, 10);
+      const iih = parseInt(answer['00000038'].textAnswers.answers[0].value, 10);
+      
+      const iiia = parseInt(answer['00000040'].textAnswers.answers[0].value, 10);
+      const iiib = parseInt(answer['00000041'].textAnswers.answers[0].value, 10);
+      const iiic = parseInt(answer['00000042'].textAnswers.answers[0].value, 10);
+      const iiid = parseInt(answer['00000043'].textAnswers.answers[0].value, 10);
+      const iiie = parseInt(answer['00000044'].textAnswers.answers[0].value, 10);
+      const iiiF = parseInt(answer['00000045'].textAnswers.answers[0].value, 10);
+      const iiig = parseInt(answer['00000046'].textAnswers.answers[0].value, 10);
+      const iiih = parseInt(answer['00000047'].textAnswers.answers[0].value, 10);
+      
+      const iva = parseInt(answer['00000051'].textAnswers.answers[0].value, 10);
+      const ivb = parseInt(answer['00000052'].textAnswers.answers[0].value, 10);
+      const ivc = parseInt(answer['00000053'].textAnswers.answers[0].value, 10);
+      const ivd = parseInt(answer['00000054'].textAnswers.answers[0].value, 10);
+      const ive = parseInt(answer['00000055'].textAnswers.answers[0].value, 10);
+      const ivF = parseInt(answer['00000056'].textAnswers.answers[0].value, 10);
+      const ivg = parseInt(answer['00000057'].textAnswers.answers[0].value, 10);
+      const ivh = parseInt(answer['00000058'].textAnswers.answers[0].value, 10);
+      
+      const va = parseInt(answer['00000061'].textAnswers.answers[0].value, 10);
+      const vb = parseInt(answer['00000062'].textAnswers.answers[0].value, 10);
+      const vc = parseInt(answer['00000063'].textAnswers.answers[0].value, 10);
+      const vd = parseInt(answer['00000064'].textAnswers.answers[0].value, 10);
+      const ve = parseInt(answer['00000065'].textAnswers.answers[0].value, 10);
+      const vF = parseInt(answer['00000066'].textAnswers.answers[0].value, 10);
+      const vg = parseInt(answer['00000067'].textAnswers.answers[0].value, 10);
+      const vh = parseInt(answer['00000068'].textAnswers.answers[0].value, 10);
+      
+      const via = parseInt(answer['00000071'].textAnswers.answers[0].value, 10);
+      const vib = parseInt(answer['00000072'].textAnswers.answers[0].value, 10);
+      const vic = parseInt(answer['00000073'].textAnswers.answers[0].value, 10);
+      const vid = parseInt(answer['00000074'].textAnswers.answers[0].value, 10);
+      const vie = parseInt(answer['00000075'].textAnswers.answers[0].value, 10);
+      const viF = parseInt(answer['00000076'].textAnswers.answers[0].value, 10);
+      const vig = parseInt(answer['00000077'].textAnswers.answers[0].value, 10);
+      const vih = parseInt(answer['00000078'].textAnswers.answers[0].value, 10);
+      
+      const viia = parseInt(answer['00000081'].textAnswers.answers[0].value, 10);
+      const viib = parseInt(answer['00000082'].textAnswers.answers[0].value, 10);
+      const viic = parseInt(answer['00000083'].textAnswers.answers[0].value, 10);
+      const viid = parseInt(answer['00000084'].textAnswers.answers[0].value, 10);
+      const viie = parseInt(answer['00000085'].textAnswers.answers[0].value, 10);
+      const viiF = parseInt(answer['00000086'].textAnswers.answers[0].value, 10);
+      const viig = parseInt(answer['00000087'].textAnswers.answers[0].value, 10);
+      const viih = parseInt(answer['00000088'].textAnswers.answers[0].value, 10);
+      
 
-      let IM = i[6] + ii[0] + iii[7] + iv[3] + v[1] + vi[5] + vii[4];
-      let CO = i[3] + ii[1] + iii[0] + iv[7] + v[5] + vi[2] + vii[6];
-      let SH = i[5] + ii[4] + iii[2] + iv[1] + v[3] + vi[6] + vii[0];
-      let PL = i[2] + ii[6] + iii[3] + iv[4] + v[7] + vi[0] + vi[5];
-      let RI = i[0] + ii[2] + iii[5] + iv[6] + v[4] + vi[7] + vii[3];
-      let ME = i[7] + ii[3] + iii[6] + iv[2] + v[0] + vi[4] + vii[1];
-      let TW = i[1] + ii[5] + iii[4] + iv[0] + v[2] + vi[1] + vii[7];
-      let CF = i[4] + ii[7] + iii[1] + iv[5] + v[6] + vi[3] + vii[2];
+      let IM = ig + iia + iiih + ivd + vb + viF + viie;
+      let CO = id + iib + iiia + ivh + vF + vic + viig;
+      let SH = iF + iie + iiic + ivb + vd + vig + viia;
+      let PL = ic + iig + iiid + ive + vh + via + viF;
+      let RI = ia + iic + iiiF + ivg + ve + vih + viid;
+      let ME = ih + iid + iiig + ivc + va + vie + viib;
+      let TW = ib + iiF + iiie + iva + vc + vib + viih;
+      let CF = ie + iih + iiib + ivF + vg + vid + viic;
 
       let attributes = [["IM", IM], ["CO", CO], ["SH", SH], ["PL", PL], ["RI", RI], ["ME", ME], ["TW", TW], ["CF", CF]];
+      console.log(attributes)
 
       let max_value = 0;
       let max_attribute = null;
       
       for (let j = 0; j < attributes.length; j++) {
-        if (j[i][1] > max_value) {
-          max_attribute = j[i][0];
+        if (attributes[j][1] > max_value) {
+          max_attribute = attributes[j][0];
         }
       }
 
@@ -1114,8 +1170,8 @@ async function getEffortResponse(auth, formId) {
   
   for (let i = 0; i < effortResponses.data.responses.length; i++) {
       const answer = effortResponses.data.responses[i].answers;
-      const studentId = answer['effort_q2'].textAnswers.answers[0].value;
-      const effortHours = answer['effort_q3'].textAnswers.answers[0].value;
+      const studentId = answer['00000001'].textAnswers.answers[0].value;
+      const effortHours = answer['00000002'].textAnswers.answers[0].value;
       
       responseList.push([studentId, effortHours, 70]);
   }
@@ -1124,28 +1180,36 @@ async function getEffortResponse(auth, formId) {
   return responseList;
 }
 
-
 async function getPreferenceResponse(auth, formId) {
   const projectPreferencesResponses = await getFormResponseList(auth, formId);
   let responseList = [];
   
   for (let i = 0; i < projectPreferencesResponses.data.responses.length; i++) {
       const answer = projectPreferencesResponses.data.responses[i].answers;
-      const studentId = answer['project_pref_q2'].textAnswers.answers[0].value;
-      const preferences = answer['project_pref_q3'].choiceAnswers.answers.map(pref => pref.value);
+      const studentId = answer['00000001'].textAnswers.answers[0].value;
+      const pref1 = answer['00000021'].textAnswers.answers[0].value;
+      const pref2 = answer['00000022'].textAnswers.answers[0].value;
+      const pref3 = answer['00000023'].textAnswers.answers[0].value;
+      const pref4 = answer['00000024'].textAnswers.answers[0].value;
+      const pref5 = answer['00000025'].textAnswers.answers[0].value;
+      const pref6 = answer['00000026'].textAnswers.answers[0].value;
+      const pref7 = answer['00000027'].textAnswers.answers[0].value;
+      const pref8 = answer['00000028'].textAnswers.answers[0].value;
+      const pref9 = answer['00000029'].textAnswers.answers[0].value;
+      const pref10 = answer['00000210'].textAnswers.answers[0].value;
 
-      responseList.push([studentId, ...preferences]);
+      responseList.push([studentId, pref1, pref2, pref3, pref4, pref5, pref6, pref7, pref8, pref9, pref10]);
   }
   
   console.log(responseList);
   return responseList;
 }
 
-// getBelbinResponse(auth, '1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE')
-// getEffortResponse(auth, '1gaVlsQARmiYYTmgr3wezZdWFJxVcyrWAaFpX5QleVy8')
-// getPreferenceResponse(auth, '1BPup6OBO3qyp3Tob2fpTZloGHPuvbzzmFADdNI_NcTg')
-
-console.log(generateForms(true, true, true))
+getEffortResponse(auth, '1sP60_O2YJ5LpD7M6bNHFJ5CKShYhH1DwpZSnknwTBaQ')
+console.log("===============================================")
+ getPreferenceResponse(auth, '11bFqG_0MsJDI7FqqCx9ZJ9x5FzTtq1R_PqUHlHfrzio')
+console.log("===============================================")
+getBelbinResponse(auth, '1GR2Fa8X8q-1Qcfos7pH1tkAyNIvEvZAY3X3vUKPZjX0')
 
 module.exports = {
     getBelbinResponse,
