@@ -222,72 +222,176 @@ const belbinItems = [
       }
   }
 ]
-const projectItems = [
+const projectRequest = [
   {
-    "itemId": "project_pref_1",
-    "title": "What is your name?",
-    "questionItem": {
-      "question": {
-        "questionId": "project_pref_q1",
-        "required": true,
-        "textQuestion": {
-          "paragraph": false
+    "createItem": {
+      "item": {
+        "itemId": "0",
+        "title": "What is your name?",
+        "questionItem": {
+          "question": {
+            "questionId": "0",
+            "required": true,
+            "textQuestion": {
+              "paragraph": false
+            }
+          }
         }
+      },
+      "location": {
+        "index": 0
       }
     }
   },
   {
-    "itemId": "project_pref_2",
-    "title": "What is your student ID?",
-    "questionItem": {
-      "question": {
-        "questionId": "project_pref_q2",
-        "required": true,
-        "textQuestion": {
-          "paragraph": false
+    "createItem": {
+      "item": {
+        "itemId": "1",
+        "title": "What is your student ID?",
+        "questionItem": {
+          "question": {
+            "questionId": "1",
+            "required": true,
+            "textQuestion": {
+              "paragraph": false
+            }
+          }
         }
+      },
+      "location": {
+        "index": 1
       }
     }
   },
   {
-    "itemId": "project_pref_3",
-    "title": "Rank projects in order of preference",
-    "questionItem": {
-      "question": {
-        "questionId": "project_pref_q3",
-        "required": true,
-        "gridQuestion": {
-          "rows": [
-            { "value": "1" }, { "value": "2" }, { "value": "3" }, { "value": "4" },
-            { "value": "5" }, { "value": "6" }, { "value": "7" }, { "value": "8" },
-            { "value": "9" }, { "value": "10" }
+    "createItem": {
+      "item": {
+        "itemId": "2",
+        "title": "Rank projects in order of preference",
+        "questionGroupItem": {
+          "questions": [
+            {
+              "questionId" : "21",
+              "required" : true,
+              "rowQuestion": {
+                "title": "1"
+              }
+            },
+            {
+              "questionId" : "22",
+              "required" : true,
+              "rowQuestion": {
+                "title": "2"
+              }
+            },
+            {
+              "questionId" : "23",
+              "required" : true,
+              "rowQuestion": {
+                "title": "3"
+              }
+            },
+            {
+              "questionId" : "24",
+              "required" : true,
+              "rowQuestion": {
+                "title": "4"
+              }
+            },
+            {
+              "questionId" : "25",
+              "required" : true,
+              "rowQuestion": {
+                "title": "5"
+              }
+            },
+            {
+              "questionId" : "26",
+              "required" : true,
+              "rowQuestion": {
+                "title": "6"
+              }
+            },
+            {
+              "questionId" : "27",
+              "required" : true,
+              "rowQuestion": {
+                "title": "7"
+              }
+            },
+            {
+              "questionId" : "28",
+              "required" : true,
+              "rowQuestion": {
+                "title": "8"
+              }
+            },
+            {
+              "questionId" : "29",
+              "required" : true,
+              "rowQuestion": {
+                "title": "9"
+              }
+            },
+            {
+              "questionId" : "210",
+              "required" : true,
+              "rowQuestion": {
+                "title": "10"
+              }
+            }
           ],
-          "columns": [
-            { "value": "1" }, { "value": "2" }, { "value": "3" }, { "value": "4" },
-            { "value": "5" }, { "value": "6" }, { "value": "7" }, { "value": "8" },
-            { "value": "9" }, { "value": "10" }
-          ]
+          "grid": {
+            "columns": {
+              "type": "RADIO",
+              "options": [
+                { "value": "1" },
+                { "value": "2" },
+                { "value": "3" },
+                { "value": "4" },
+                { "value": "5" },
+                { "value": "6" },
+                { "value": "7" },
+                { "value": "8" },
+                { "value": "9" },
+                { "value": "10" }
+              ]
+            },
+          }
         }
+      },
+      "location": {
+        "index": 2
       }
     }
   },
   {
-    "itemId": "project_pref_4",
-    "title": "Do you consent to this data being stored for the duration of this unit?",
-    "questionItem": {
-      "question": {
-        "questionId": "project_pref_q4",
-        "required": true,
-        "choiceQuestion": {
-          "type": "RADIO",
-          "options": [
-            { "value": "Yes" }
-          ]
+    "createItem": {
+      "item": {
+        "itemId": "3",
+        "title": "Do you consent to this data being stored for the duration of this unit?",
+        "questionItem": {
+          "question": {
+            "questionId": "3",
+            "required": true,
+            "choiceQuestion": {
+              "type": "RADIO",
+              "options": [
+                {
+                  "value": "Yes"
+                }
+              ]
+            }
+          }
         }
+      },
+      "location": {
+        "index": 3
       }
     }
   }
 ]
+
 const effortRequest = [
   {
     "createItem": {
@@ -373,6 +477,18 @@ const effortRequest = [
     }
   }
 ]
+const belbinRequest = belbinItems.map((item, index) => ({
+  createItem: {
+    item: {
+      itemId: index.toString(),
+      title: item.title,
+      questionItem: item.questionItem
+    },
+    location: {
+      index: index
+    }
+  }
+}));
 
 let belbinFormId = null
 let belbinResponderURL = null
@@ -435,16 +551,13 @@ function belbinForm() {
 
 async function generateForms(effort, project, belbin) {
 
-    var forms = []
 
     if (effort) {
         var effortFormBody = effortForm()
         var effForm = await createForm(auth, effortFormBody)
         effortFormId = effForm.data.formId;
         effortResponderURL = effForm.data.responderUri;
-        effortForm = await updateForm(auth, effortFormId, effortRequest)
-        console.log(effForm.data)
-        forms.push(effForm)
+        await updateForm(auth, effortFormId, effortRequest)
     }
 
     if (project) {
@@ -452,8 +565,7 @@ async function generateForms(effort, project, belbin) {
         var projForm = await createForm(auth, projectFormBody)
         projectFormId = projForm.data.formId
         projectResponderURL = projForm.data.responderUri
-        console.log(projForm.data)
-        forms.push(projForm)
+        await updateForm(auth, projectFormId, projectRequest)
     }
 
     if (belbin) {
@@ -461,12 +573,8 @@ async function generateForms(effort, project, belbin) {
         var belbForm = await createForm(auth, belbinFormBody)
         belbinFormId = belbForm.data.formId
         belbinResponderURL = belbForm.data.responderUri
-        console.log(belbForm.data)
-        forms.push(belbForm)
+        // await updateForm(auth, belbinFormId, belbinRequest)
     }
-
-    return forms
-
 }
 
 
