@@ -12,216 +12,674 @@ const auth = new GoogleAuth({
     credentials: SERVICE_ACCOUNT_JSON,
     scopes: SCOPES,
 });
-const belbinItems = [
+const belbinRequest = [
   {
-      "itemId": "belbin_1",
-      "title": "What is your name?",
-      "questionItem": {
+    "createItem": {
+      "item": {
+        "itemId": "0",
+        "title": "What is your name?",
+        "questionItem": {
           "question": {
-              "questionId": "belbin_q1",
-              "required": true,
-              "textQuestion": {
-                  "paragraph": false
-              }
+            "questionId": "0",
+            "required": true,
+            "textQuestion": {
+              "paragraph": false
+            }
           }
+        }
+      },
+      "location": {
+        "index": 0
       }
+    }
   },
   {
-      "itemId": "belbin_2",
-      "title": "What is your student ID?",
-      "questionItem": {
+    "createItem": {
+      "item": {
+        "itemId": "1",
+        "title": "What is your student ID?",
+        "questionItem": {
           "question": {
-              "questionId": "belbin_q2",
-              "required": true,
-              "textQuestion": {
-                  "paragraph": false
-              }
+            "questionId": "1",
+            "required": true,
+            "textQuestion": {
+              "paragraph": false
+            }
           }
+        }
+      },
+      "location": {
+        "index": 1
       }
+    }
   },
   {
-      "itemId": "belbin_3",
-      "title": "What I believe I can contribute to a team:",
-      "questionItem": {
-          "question": {
-              "questionId": "belbin_q3",
+    "createItem": {
+      "item": {
+        "itemId": "2",
+        "title": "What I believe I can contribute to a team:",
+        "questionGroupItem": {
+          "questions": [
+            {
+              "questionId": "21",
               "required": true,
-              "gridQuestion": {
-                  "rows": [
-                      { "value": "a. I think I can quickly see and take advantage of new opportunities" },
-                      { "value": "b. I can work well with a very wide range of people" },
-                      { "value": "c. Producing ideas is one of my natural assets" },
-                      { "value": "d. My ability rests in being able to draw people out whenever I detect they have something of value to contribute to group objectives" },
-                      { "value": "e. My capacity to follow through has much to do with my personal effectiveness" },
-                      { "value": "f. I am ready to face temporary unpopularity if it leads to worthwhile results in the end" },
-                      { "value": "g. I can usually sense what is realistic and likely to work" },
-                      { "value": "h. I can offer a reasoned case for alternative courses of action without introducing bias or prejudice" }
-                  ],
-                  "columns": [
-                      { "value": "1" }, { "value": "2" }, { "value": "3" }, { "value": "4" },
-                      { "value": "5" }, { "value": "6" }, { "value": "7" }, { "value": "8" }
-                  ]
+              "rowQuestion": {
+                "title": "a. I think I can quickly see and take advantage of new opportunities"
               }
+            },
+            {
+              "questionId": "22",
+              "required": true,
+              "rowQuestion": {
+                "title": "b. I can work well with a very wide range of people"
+              }
+            },
+            {
+              "questionId": "23",
+              "required": true,
+              "rowQuestion": {
+                "title": "c. Producing ideas is one of my natural assets"
+              }
+            },
+            {
+              "questionId": "24",
+              "required": true,
+              "rowQuestion": {
+                "title": "d. My ability rests in being able to draw people out whenever I detect they have something of value to contribute to group objectives"
+              }
+            },
+            {
+              "questionId": "25",
+              "required": true,
+              "rowQuestion": {
+                "title": "e. My capacity to follow through has much to do with my personal effectiveness"
+              }
+            },
+            {
+              "questionId": "26",
+              "required": true,
+              "rowQuestion": {
+                "title": "f. I am ready to face temporary unpopularity if it leads to worthwhile results in the end"
+              }
+            },
+            {
+              "questionId": "27",
+              "required": true,
+              "rowQuestion": {
+                "title": "g. I can usually sense what is realistic and likely to work"
+              }
+            },
+            {
+              "questionId": "28",
+              "required": true,
+              "rowQuestion": {
+                "title": "h. I can offer a reasoned case for alternative courses of action without introducing bias or prejudice"
+              }
+            }
+          ],
+          "grid": {
+            "columns": {
+              "type": "RADIO",
+              "options": [
+                { "value": "1" },
+                { "value": "2" },
+                { "value": "3" },
+                { "value": "4" },
+                { "value": "5" },
+                { "value": "6" },
+                { "value": "7" },
+                { "value": "8" }
+              ]
+            }
           }
+        }
+      },
+      "location": {
+        "index": 2
       }
+    }
   },
   {
-      "itemId": "belbin_4",
-      "title": "If I have a possible shortcoming in teamwork, it could be that:",
-      "questionItem": {
-          "question": {
-              "questionId": "belbin_q4",
+    "createItem": {
+      "item": {
+        "itemId": "3",
+        "title": "If I have a possible shortcoming in teamwork, it could be that:",
+        "questionGroupItem": {
+          "questions": [
+            {
+              "questionId": "31",
               "required": true,
-              "gridQuestion": {
-                  "rows": [
-                      { "value": "a. I am not at ease unless meetings are well structured and controlled and generally well conducted" },
-                      { "value": "b. I am inclined to be too generous towards others who have a valid viewpoint that has not been given a proper airing" },
-                      { "value": "c. I have a tendency to talk too much once the group gets on to new ideas" },
-                      { "value": "d. My objectives outlook makes it difficult for me to join in readily and enthusiastically with colleagues" },
-                      { "value": "e. I am sometimes seen as forceful and authoritarian if there is a need to get something done." },
-                      { "value": "f. I find it difficult to lead from the front, perhaps because I am over-responsive to the group atmosphere" },
-                      { "value": "g. I am apt to get too caught up in ideas that occur to me and so lose track of what is happening" },
-                      { "value": "h. My colleagues tend to see me as worrying unnecessarily over detail and the possibility that things may go wrong" }
-                  ],
-                  "columns": [
-                      { "value": "1" }, { "value": "2" }, { "value": "3" }, { "value": "4" },
-                      { "value": "5" }, { "value": "6" }, { "value": "7" }, { "value": "8" }
-                  ]
+              "rowQuestion": {
+                "title": "a. I am not at ease unless meetings are well structured and controlled and generally well conducted"
               }
+            },
+            {
+              "questionId": "32",
+              "required": true,
+              "rowQuestion": {
+                "title": "b. I am inclined to be too generous towards others who have a valid viewpoint that has not been given a proper airing"
+              }
+            },
+            {
+              "questionId": "33",
+              "required": true,
+              "rowQuestion": {
+                "title": "c. I have a tendency to talk too much once the group gets on to new ideas"
+              }
+            },
+            {
+              "questionId": "34",
+              "required": true,
+              "rowQuestion": {
+                "title": "d. My objective outlook makes it difficult for me to join in readily and enthusiastically with colleagues"
+              }
+            },
+            {
+              "questionId": "35",
+              "required": true,
+              "rowQuestion": {
+                "title": "e. I am sometimes seen as forceful and authoritarian if there is a need to get something done."
+              }
+            },
+            {
+              "questionId": "36",
+              "required": true,
+              "rowQuestion": {
+                "title": "f. I find it difficult to lead from the front, perhaps because I am over-responsive to the group atmosphere"
+              }
+            },
+            {
+              "questionId": "37",
+              "required": true,
+              "rowQuestion": {
+                "title": "g. I am apt to get too caught up in ideas that occur to me and so lose track of what is happening"
+              }
+            },
+            {
+              "questionId": "38",
+              "required": true,
+              "rowQuestion": {
+                "title": "h. My colleagues tend to see me as worrying unnecessarily over detail and the possibility that things may go wrong"
+              }
+            }
+          ],
+          "grid": {
+            "columns": {
+              "type": "RADIO",
+              "options": [
+                { "value": "1" },
+                { "value": "2" },
+                { "value": "3" },
+                { "value": "4" },
+                { "value": "5" },
+                { "value": "6" },
+                { "value": "7" },
+                { "value": "8" }
+              ]
+            }
           }
+        }
+      },
+      "location": {
+        "index": 3
       }
+    }
   },
   {
-      "itemId": "belbin_5",
-      "title": "When involved in a project with other people:",
-      "questionItem": {
-          "question": {
-              "questionId": "belbin_q5",
+    "createItem": {
+      "item": {
+        "itemId": "4",
+        "title": "When involved in a project with other people:",
+        "questionGroupItem": {
+          "questions": [
+            {
+              "questionId": "40",
               "required": true,
-              "gridQuestion": {
-                  "rows": [
-                      { "value": "a. I have an aptitude for influencing people without pressuring them" },
-                      { "value": "b. My general vigilance prevents careless mistakes and omissions being made" },
-                      { "value": "c. I am ready to press for action to make sure that the meeting does not waste time or lose sight of the main objective" },
-                      { "value": "d. I can be counted on to contribute something original" },
-                      { "value": "e. I am always ready to back a good suggestion in the common interest" },
-                      { "value": "f. I am keen to look for the latest in new ideas and developments" },
-                      { "value": "g. I believe my capacity for judgment can help to bring about the right decisions" },
-                      { "value": "h. I can be called upon to see that all essential work is organised" }
-                  ],
-                  "columns": [
-                      { "value": "1" }, { "value": "2" }, { "value": "3" }, { "value": "4" },
-                      { "value": "5" }, { "value": "6" }, { "value": "7" }, { "value": "8" }
-                  ]
+              "rowQuestion": {
+                "title": "a. I have an aptitude for influencing people without pressuring them"
               }
+            },
+            {
+              "questionId": "41",
+              "required": true,
+              "rowQuestion": {
+                "title": "b. My general vigilance prevents careless mistakes and omissions being made"
+              }
+            },
+            {
+              "questionId": "42",
+              "required": true,
+              "rowQuestion": {
+                "title": "c. I am ready to press for action to make sure that the meeting does not waste time or lose sight of the main objective"
+              }
+            },
+            {
+              "questionId": "43",
+              "required": true,
+              "rowQuestion": {
+                "title": "d. I can be counted on to contribute something original"
+              }
+            },
+            {
+              "questionId": "44",
+              "required": true,
+              "rowQuestion": {
+                "title": "e. I am always ready to back a good suggestion in the common interest"
+              }
+            },
+            {
+              "questionId": "45",
+              "required": true,
+              "rowQuestion": {
+                "title": "f. I am keen to look for the latest in new ideas and developments"
+              }
+            },
+            {
+              "questionId": "46",
+              "required": true,
+              "rowQuestion": {
+                "title": "g. I believe my capacity for judgment can help to bring about the right decisions"
+              }
+            },
+            {
+              "questionId": "47",
+              "required": true,
+              "rowQuestion": {
+                "title": "h. I can be called upon to see that all essential work is organised"
+              }
+            }
+          ],
+          "grid": {
+            "columns": {
+              "type": "RADIO",
+              "options": [
+                { "value": "1" },
+                { "value": "2" },
+                { "value": "3" },
+                { "value": "4" },
+                { "value": "5" },
+                { "value": "6" },
+                { "value": "7" },
+                { "value": "8" }
+              ]
+            }
           }
+        }
+      },
+      "location": {
+        "index": 4
       }
+    }
   },
   {
-      "itemId": "belbin_6",
-      "title": "My characteristic approach to group work is that:",
-      "questionItem": {
-          "question": {
-              "questionId": "belbin_q6",
+    "createItem": {
+      "item": {
+        "itemId": "5",
+        "title": "My characteristic approach to group work is that:",
+        "questionGroupItem": {
+          "questions": [
+            {
+              "questionId": "51",
               "required": true,
-              "gridQuestion": {
-                  "rows": [
-                      { "value": "a. I have a quiet interest in getting to know colleagues better" },
-                      { "value": "b. I am not reluctant to challenge the views of others or to hold a minority view myself" },
-                      { "value": "c. I can usually find a line of argument to refute unsound propositions" },
-                      { "value": "d. I think I have a talent for making things work once a plan has to be put into operation" },
-                      { "value": "e. I have a tendency to avoid the obvious and to come out with the unexpected" },
-                      { "value": "f. I bring a touch of perfectionism to any job I undertake" },
-                      { "value": "g. I am ready to make use of contacts outside the group itself" },
-                      { "value": "h. While I am interested in all views I have no hesitation in making up my mind once a decision has to be made" }
-                  ],
-                  "columns": [
-                      { "value": "1" }, { "value": "2" }, { "value": "3" }, { "value": "4" },
-                      { "value": "5" }, { "value": "6" }, { "value": "7" }, { "value": "8" }
-                  ]
+              "rowQuestion": {
+                "title": "a. I have a quiet interest in getting to know colleagues better"
               }
+            },
+            {
+              "questionId": "52",
+              "required": true,
+              "rowQuestion": {
+                "title": "b. I am not reluctant to challenge the views of others or to hold firm to principles"
+              }
+            },
+            {
+              "questionId": "53",
+              "required": true,
+              "rowQuestion": {
+                "title": "c. I am prepared to be radical when it brings change that moves things forward"
+              }
+            },
+            {
+              "questionId": "54",
+              "required": true,
+              "rowQuestion": {
+                "title": "d. I have a talent for seeing both sides of an argument"
+              }
+            },
+            {
+              "questionId": "55",
+              "required": true,
+              "rowQuestion": {
+                "title": "e. I am willing to put myself in other people's shoes to understand how they feel"
+              }
+            },
+            {
+              "questionId": "56",
+              "required": true,
+              "rowQuestion": {
+                "title": "f. I contribute ideas that can stir up further innovation"
+              }
+            },
+            {
+              "questionId": "57",
+              "required": true,
+              "rowQuestion": {
+                "title": "g. I work best when I know that a clear sense of direction is established"
+              }
+            },
+            {
+              "questionId": "58",
+              "required": true,
+              "rowQuestion": {
+                "title": "h. I like to follow things through until I see tangible results"
+              }
+            }
+          ],
+          "grid": {
+            "columns": {
+              "type": "RADIO",
+              "options": [
+                { "value": "1" },
+                { "value": "2" },
+                { "value": "3" },
+                { "value": "4" },
+                { "value": "5" },
+                { "value": "6" },
+                { "value": "7" },
+                { "value": "8" }
+              ]
+            }
           }
+        }
+      },
+      "location": {
+        "index": 5
       }
+    }
   },
   {
-      "itemId": "belbin_7",
-      "title": "I gain satisfaction in a job because:",
-      "questionItem": {
-          "question": {
-              "questionId": "belbin_q7",
+    "createItem": {
+      "item": {
+        "itemId": "6",
+        "title": "When it comes to teamwork, I am:",
+        "questionGroupItem": {
+          "questions": [
+            {
+              "questionId": "61",
               "required": true,
-              "gridQuestion": {
-                  "rows": [
-                      { "value": "a. I enjoy analysing situations and weighing up all the possible choices" },
-                      { "value": "b. I am interested in finding practical solutions to problems" },
-                      { "value": "c. I like to feel I am fostering good working relationships" },
-                      { "value": "d. I can have a strong influence on decisions" },
-                      { "value": "e. I can meet people who may have something new to offer" },
-                      { "value": "f. I can get people to agree on a necessary course of action" },
-                      { "value": "g. I feel in my element where I can give a task my full attention" },
-                      { "value": "h. I like to find a field that stretches my imagination" }
-                  ],
-                  "columns": [
-                      { "value": "1" }, { "value": "2" }, { "value": "3" }, { "value": "4" },
-                      { "value": "5" }, { "value": "6" }, { "value": "7" }, { "value": "8" }
-                  ]
+              "rowQuestion": {
+                "title": "a. Always alert to opportunities to improve team effectiveness"
               }
+            },
+            {
+              "questionId": "62",
+              "required": true,
+              "rowQuestion": {
+                "title": "b. Good at making connections between different perspectives"
+              }
+            },
+            {
+              "questionId": "63",
+              "required": true,
+              "rowQuestion": {
+                "title": "c. Often the one who drives the team to meet its goals"
+              }
+            },
+            {
+              "questionId": "64",
+              "required": true,
+              "rowQuestion": {
+                "title": "d. Keen to explore new ideas and strategies"
+              }
+            },
+            {
+              "questionId": "65",
+              "required": true,
+              "rowQuestion": {
+                "title": "e. Adept at mediating between conflicting points of view"
+              }
+            },
+            {
+              "questionId": "66",
+              "required": true,
+              "rowQuestion": {
+                "title": "f. Often willing to take charge and set clear goals"
+              }
+            },
+            {
+              "questionId": "67",
+              "required": true,
+              "rowQuestion": {
+                "title": "g. Always paying attention to the fine details that others might overlook"
+              }
+            },
+            {
+              "questionId": "68",
+              "required": true,
+              "rowQuestion": {
+                "title": "h. Happy to work in the background, quietly supporting the team"
+              }
+            }
+          ],
+          "grid": {
+            "columns": {
+              "type": "RADIO",
+              "options": [
+                { "value": "1" },
+                { "value": "2" },
+                { "value": "3" },
+                { "value": "4" },
+                { "value": "5" },
+                { "value": "6" },
+                { "value": "7" },
+                { "value": "8" }
+              ]
+            }
           }
+        }
+      },
+      "location": {
+        "index": 6
       }
+    }
   },
   {
-      "itemId": "belbin_8",
-      "title": "If I’m suddenly given a difficult task with limited time and unfamiliar people:",
-      "questionItem": {
-          "question": {
-              "questionId": "belbin_q8",
+    "createItem": {
+      "item": {
+        "itemId": "7",
+        "title": "I tend to:",
+        "questionGroupItem": {
+          "questions": [
+            {
+              "questionId": "71",
               "required": true,
-              "gridQuestion": {
-                  "rows": [
-                      { "value": "a. I would feel like retiring to a corner to devise a way out of the impasse before developing a line" },
-                      { "value": "b. I would be ready to work with the person who showed the most positive approach." },
-                      { "value": "c. I would find some way of reducing the size of the task by establishing what different individuals might best contribute" },
-                      { "value": "d. My natural sense of urgency would help to ensure that we did not fall behind schedule" },
-                      { "value": "e. I believe I would keep cool and maintain my capacity to think straight" },
-                      { "value": "f. I would retain a steadiness of purpose in spite of the pressures" },
-                      { "value": "g. I would be prepared to take a positive lead if I felt the group was making no progress" },
-                      { "value": "h. I would open up discussions with a view to stimulating new thoughts and getting something moving" }
-                  ],
-                  "columns": [
-                      { "value": "1" }, { "value": "2" }, { "value": "3" }, { "value": "4" },
-                      { "value": "5" }, { "value": "6" }, { "value": "7" }, { "value": "8" }
-                  ]
+              "rowQuestion": {
+                "title": "a. Trust my instincts when making decisions"
               }
+            },
+            {
+              "questionId": "72",
+              "required": true,
+              "rowQuestion": {
+                "title": "b. Seek to build consensus in discussions"
+              }
+            },
+            {
+              "questionId": "73",
+              "required": true,
+              "rowQuestion": {
+                "title": "c. Focus on ensuring that deadlines are met"
+              }
+            },
+            {
+              "questionId": "74",
+              "required": true,
+              "rowQuestion": {
+                "title": "d. Enjoy brainstorming sessions to generate new ideas"
+              }
+            },
+            {
+              "questionId": "75",
+              "required": true,
+              "rowQuestion": {
+                "title": "e. Stay calm in high-pressure situations"
+              }
+            },
+            {
+              "questionId": "76",
+              "required": true,
+              "rowQuestion": {
+                "title": "f. Like to take on responsibility for decision-making"
+              }
+            },
+            {
+              "questionId": "77",
+              "required": true,
+              "rowQuestion": {
+                "title": "g. Prefer to work methodically and ensure accuracy"
+              }
+            },
+            {
+              "questionId": "78",
+              "required": true,
+              "rowQuestion": {
+                "title": "h. Like to ensure that everyone is included in discussions"
+              }
+            }
+          ],
+          "grid": {
+            "columns": {
+              "type": "RADIO",
+              "options": [
+                { "value": "1" },
+                { "value": "2" },
+                { "value": "3" },
+                { "value": "4" },
+                { "value": "5" },
+                { "value": "6" },
+                { "value": "7" },
+                { "value": "8" }
+              ]
+            }
           }
+        }
+      },
+      "location": {
+        "index": 7
       }
+    }
   },
   {
-      "itemId": "belbin_9",
-      "title": "With reference to the problems to which I am subject in working in groups:",
-      "questionItem": {
-          "question": {
-              "questionId": "belbin_q9",
+    "createItem": {
+      "item": {
+        "itemId": "8",
+        "title": "In a group setting, my role is often:",
+        "questionGroupItem": {
+          "questions": [
+            {
+              "questionId": "81",
               "required": true,
-              "gridQuestion": {
-                  "rows": [
-                      { "value": "a. I am apt to show my impatience with those who are obstructing progress" },
-                      { "value": "b. Others may criticise me for being too analytical & insufficiently intuitive" },
-                      { "value": "c. My desire to ensure that work is properly done can hold up proceedings" },
-                      { "value": "d. I tend to get bored rather easily and rely on one or two stimulating members to spark me off" },
-                      { "value": "e. I find it difficult to get started unless the goals are clear" },
-                      { "value": "f. I am sometimes poor at explaining and clarifying complex points that occur to me" },
-                      { "value": "g. I am conscious of demanding from others the things I cannot do myself" },
-                      { "value": "h. I hesitate to get my points across when I run up against real opposition" }
-                  ],
-                  "columns": [
-                      { "value": "1" }, { "value": "2" }, { "value": "3" }, { "value": "4" },
-                      { "value": "5" }, { "value": "6" }, { "value": "7" }, { "value": "8" }
-                  ]
+              "rowQuestion": {
+                "title": "a. The person who makes sure that the work gets done"
               }
+            },
+            {
+              "questionId": "82",
+              "required": true,
+              "rowQuestion": {
+                "title": "b. The one who encourages everyone to contribute their ideas"
+              }
+            },
+            {
+              "questionId": "83",
+              "required": true,
+              "rowQuestion": {
+                "title": "c. The one who challenges the team to think differently"
+              }
+            },
+            {
+              "questionId": "84",
+              "required": true,
+              "rowQuestion": {
+                "title": "d. The person who helps resolve conflicts and ensures harmony"
+              }
+            },
+            {
+              "questionId": "85",
+              "required": true,
+              "rowQuestion": {
+                "title": "e. The one who coordinates tasks and ensures the team is focused"
+              }
+            },
+            {
+              "questionId": "86",
+              "required": true,
+              "rowQuestion": {
+                "title": "f. The one who brings fresh perspectives to the team"
+              }
+            },
+            {
+              "questionId": "87",
+              "required": true,
+              "rowQuestion": {
+                "title": "g. The one who makes sure all the details are handled"
+              }
+            },
+            {
+              "questionId": "88",
+              "required": true,
+              "rowQuestion": {
+                "title": "h. The person who takes the lead and ensures progress"
+              }
+            }
+          ],
+          "grid": {
+            "columns": {
+              "type": "RADIO",
+              "options": [
+                { "value": "1" },
+                { "value": "2" },
+                { "value": "3" },
+                { "value": "4" },
+                { "value": "5" },
+                { "value": "6" },
+                { "value": "7" },
+                { "value": "8" }
+              ]
+            }
           }
+        }
+      },
+      "location": {
+        "index": 8
       }
+    }
+  },
+  {
+    "createItem": {
+      "item": {
+        "itemId": "9",
+        "title": "Do you consent to this data being stored for the duration of this unit?",
+        "questionItem": {
+          "question": {
+            "questionId": "9",  
+            "required": true,
+            "choiceQuestion": {
+              "type": "RADIO",
+              "options": [
+                { "value": "Yes" }
+              ]
+            }
+          }
+        }
+      },
+      "location": {
+        "index": 9
+      }
+    }
   }
 ]
+
 const projectRequest = [
   {
     "createItem": {
@@ -477,18 +935,7 @@ const effortRequest = [
     }
   }
 ]
-const belbinRequest = belbinItems.map((item, index) => ({
-  createItem: {
-    item: {
-      itemId: index.toString(),
-      title: item.title,
-      questionItem: item.questionItem
-    },
-    location: {
-      index: index
-    }
-  }
-}));
+
 
 let belbinFormId = null
 let belbinResponderURL = null
@@ -573,7 +1020,7 @@ async function generateForms(effort, project, belbin) {
         var belbForm = await createForm(auth, belbinFormBody)
         belbinFormId = belbForm.data.formId
         belbinResponderURL = belbForm.data.responderUri
-        // await updateForm(auth, belbinFormId, belbinRequest)
+        await updateForm(auth, belbinFormId, belbinRequest)
     }
 }
 
