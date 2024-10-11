@@ -1205,12 +1205,6 @@ async function getPreferenceResponse(auth, formId) {
   return responseList;
 }
 
-getEffortResponse(auth, '1sP60_O2YJ5LpD7M6bNHFJ5CKShYhH1DwpZSnknwTBaQ')
-console.log("===============================================")
- getPreferenceResponse(auth, '11bFqG_0MsJDI7FqqCx9ZJ9x5FzTtq1R_PqUHlHfrzio')
-console.log("===============================================")
-getBelbinResponse(auth, '1GR2Fa8X8q-1Qcfos7pH1tkAyNIvEvZAY3X3vUKPZjX0')
-
 module.exports = {
     getBelbinResponse,
     getEffortResponse,
