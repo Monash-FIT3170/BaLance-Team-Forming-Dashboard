@@ -288,8 +288,9 @@ const projectItems = [
     }
   }
 ]
-const effortItems = {
-  "createItem": {
+const effortRequest = [
+  {
+    "createItem": {
       "item": {
         "itemId": "0",
         "title": "What is your name?",
@@ -306,68 +307,72 @@ const effortItems = {
       "location": {
         "index": 0
       }
-    },
-  "createItem": {
-    "item": {
-      "itemId": "1",
-      "title": "What is your student ID?",
-      "questionItem": {
-        "question": {
-          "questionId": "1",
-          "required": true,
-          "textQuestion": {
-            "paragraph": false
+    }
+  },
+  {
+    "createItem": {
+      "item": {
+        "itemId": "1",
+        "title": "What is your student ID?",
+        "questionItem": {
+          "question": {
+            "questionId": "1",
+            "required": true,
+            "textQuestion": {
+              "paragraph": false
+            }
           }
         }
+      },
+      "location": {
+        "index": 1
       }
-    },
-    "location": {
-      "index": 1
     }
   },
-  "createItem": {
-    "item": {
-      "itemId": "2",
-      "title": "How many hours are you willing to allocate to this unit per week?",
-      "questionItem": {
-        "question": {
-          "questionId": "2",
-          "required": true,
-          "textQuestion": {
-            "paragraph": false
+  {
+    "createItem": {
+      "item": {
+        "itemId": "2",
+        "title": "How many hours are you willing to allocate to this unit per week?",
+        "questionItem": {
+          "question": {
+            "questionId": "2",
+            "required": true,
+            "textQuestion": {
+              "paragraph": false
+            }
           }
         }
+      },
+      "location": {
+        "index": 2
       }
-    },
-    "location": {
-      "index": 2
     }
   },
-  "createItem": {
-    "item": {
-      "itemId": "3",
-      "title": "Do you consent to this data being stored for the duration of this unit?",
-      "questionItem": {
-        "question": {
-          "questionId": "3",  // Update to your desired question ID
-          "required": true,
-          "choiceQuestion": {
-          "type": "RADIO",
-          "options": [
-             { "value": "Yes" }
-         ]
+  {
+    "createItem": {
+      "item": {
+        "itemId": "3",
+        "title": "Do you consent to this data being stored for the duration of this unit?",
+        "questionItem": {
+          "question": {
+            "questionId": "3",  
+            "required": true,
+            "choiceQuestion": {
+              "type": "RADIO",
+              "options": [
+                { "value": "Yes" }
+              ]
+            }
+          }
         }
+      },
+      "location": {
+        "index": 3
       }
-    }
-  },
-    "location": {
-      "index": 3
     }
   }
-}
-
-
-
+]
 
 let belbinFormId = null
 let belbinResponderURL = null
@@ -437,7 +442,7 @@ async function generateForms(effort, project, belbin) {
         var effForm = await createForm(auth, effortFormBody)
         effortFormId = effForm.data.formId;
         effortResponderURL = effForm.data.responderUri;
-        effortForm = await updateForm(auth, effortFormId, effortItems)
+        effortForm = await updateForm(auth, effortFormId, effortRequest)
         console.log(effForm.data)
         forms.push(effForm)
     }
