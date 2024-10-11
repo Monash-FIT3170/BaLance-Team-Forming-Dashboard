@@ -1,7 +1,8 @@
 const { google } = require('googleapis');
 const { GoogleAuth } = require('google-auth-library');
 const { response } = require('express');
-const { v4: uuidv4 } = require('uuid')
+const { v4: uuidv4 } = require('uuid');
+const { MAX_ACCESS_BOUNDARY_RULES_COUNT } = require('google-auth-library/build/src/auth/downscopedclient');
 require('dotenv').config();``
 
 const SERVICE_ACCOUNT_JSON = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_TOKEN )
@@ -420,7 +421,7 @@ async function generateForms(effort, project, belbin) {
         effortFormId = uuidv4();
         effortRevisionId = uuidv4();
         var effortFormBody = effortForm(effortFormId, effortRevisionId)
-        var effForm = createForm(auth, effortFormBody)
+        var effForm = await createForm(auth, effortFormBody)
         forms.push(effForm)
     }
 
@@ -428,7 +429,7 @@ async function generateForms(effort, project, belbin) {
         projectFormId = uuidv4();
         projectRevisionId = uuidv4();
         var projectFormBody = projectPreferencesForm(projectFormId, projectRevisionId)
-        var projForm = createForm(auth, projectFormBody)
+        var projForm = await createForm(auth, projectFormBody)
         forms.push(projForm)
     }
 
@@ -436,7 +437,7 @@ async function generateForms(effort, project, belbin) {
         belbinFormId = uuidv4();
         belbinRevisionId = uuidv4();
         var belbinFormBody = belbinForm(belbinFormId, belbinRevisionId)
-        var belbForm = createForm(auth, belbinFormBody)
+        var belbForm = await createForm(auth, belbinFormBody)
         forms.push(belbForm)
     }
 
@@ -475,52 +476,90 @@ const form = getForm(auth, "1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE")
 
 
 async function getBelbinResponse(auth, formId) {
-    const belbinResponses = await getFormResponseList(auth,formId);
-    responseList = []
-    for (let i = 0; i < belbinResponses.data.responses.length; i++) {
-        answer = belbinResponses.data.responses[i].answers
-        belbinType = answer['299979bf'].textAnswers.answers[0].value
-        studentId = answer['16df7bea'].textAnswers.answers[0].value
-        responseList.push([studentId, belbinType])
-    }
-    console.log(responseList)
-    return responseList
+  const belbinResponses = await getFormResponseList(auth, formId);
+  let responseList = [];
+  
+  for (let i = 0; i < belbinResponses.data.responses.length; i++) {
+      const answer = belbinResponses.data.responses[i].answers;
+      const studentId = answer['belbin_q2'].textAnswers.answers[0].value;
+      const i = answer['belbin_q3'].gridAnswers.answers;
+      const ii = answer['belbin_q4'].gridAnswers.answers;
+      const iii = answer['belbin_q5'].gridAnswers.answers;
+      const iv = answer['belbin_q6'].gridAnswers.answers;
+      const v = answer['belbin_q7'].gridAnswers.answers;
+      const vi = answer['belbin_q8'].gridAnswers.answers;
+      const vii = answer['belbin_q9'].gridAnswers.answers;
+
+      let IM = i[6] + ii[0] + iii[7] + iv[3] + v[1] + vi[5] + vii[4];
+      let CO = i[3] + ii[1] + iii[0] + iv[7] + v[5] + vi[2] + vii[6];
+      let SH = i[5] + ii[4] + iii[2] + iv[1] + v[3] + vi[6] + vii[0];
+      let PL = i[2] + ii[6] + iii[3] + iv[4] + v[7] + vi[0] + vi[5];
+      let RI = i[0] + ii[2] + iii[5] + iv[6] + v[4] + vi[7] + vii[3];
+      let ME = i[7] + ii[3] + iii[6] + iv[2] + v[0] + vi[4] + vii[1];
+      let TW = i[1] + ii[5] + iii[4] + iv[0] + v[2] + vi[1] + vii[7];
+      let CF = i[4] + ii[7] + iii[1] + iv[5] + v[6] + vi[3] + vii[2];
+
+      let attributes = [["IM", IM], ["CO", CO], ["SH", SH], ["PL", PL], ["RI", RI], ["ME", ME], ["TW", TW], ["CF", CF]];
+
+      let max_value = 0;
+      let max_attribute = null;
+      
+      for (let j = 0; j < attributes.length; j++) {
+        if (j[i][1] > max_value) {
+          max_attribute = j[i][0];
+        }
+      }
+
+      let belbin_type = null;
+
+      if (max_attribute == "PL" || max_attribute == "ME") {
+        belbin_type = "Thinking";
+      }
+      else if (max_attribute == "SH" || max_attribute == "IM" || max_attribute == "CF") {
+        belbin_type = "Action";
+      }
+      else if (max_attribute == "CO" || max_attribute == "TW" || max_attribute == "RI") {
+        belbin_type = "People";
+      }
+
+      responseList.push([studentId, belbin_type]);
+  }
+  
+  console.log(responseList);
+  return responseList;
 }
 
 async function getEffortResponse(auth, formId) {
-    const belbinResponses = await getFormResponseList(auth,formId);
-    responseList = []
-    for (let i = 0; i < belbinResponses.data.responses.length; i++) {
-        answer = belbinResponses.data.responses[i].answers
-        effort = answer['4d44c000'].textAnswers.answers[0].value
-        studentId = answer['16df7bea'].textAnswers.answers[0].value
-        responseList.push([studentId, effort, 70])
-    }
-    console.log(responseList)
-    return responseList
+  const effortResponses = await getFormResponseList(auth, formId);
+  let responseList = [];
+  
+  for (let i = 0; i < effortResponses.data.responses.length; i++) {
+      const answer = effortResponses.data.responses[i].answers;
+      const studentId = answer['effort_q2'].textAnswers.answers[0].value;
+      const effortHours = answer['effort_q3'].textAnswers.answers[0].value;
+      
+      responseList.push([studentId, effortHours, 70]);
+  }
+  
+  console.log(responseList);
+  return responseList;
 }
 
 
 async function getPreferenceResponse(auth, formId) {
-    const belbinResponses = await getFormResponseList(auth,formId);
-    responseList = []
-    for (let i = 0; i < belbinResponses.data.responses.length; i++) {
-        answer = belbinResponses.data.responses[i].answers
-        studentId = answer['16df7bea'].textAnswers.answers[0].value
-        pref1 = answer['785732d7'].textAnswers.answers[0].value
-        pref2 = answer['48f63368'].textAnswers.answers[0].value
-        pref3 = answer['62f90bcd'].textAnswers.answers[0].value
-        pref4 = answer['3ecb43fa'].textAnswers.answers[0].value        
-        pref5 = answer['502b627b'].textAnswers.answers[0].value
-        pref6 = answer['31406d5e'].textAnswers.answers[0].value
-        pref7 = answer['7128b09f'].textAnswers.answers[0].value
-        pref8 = answer['0113e93b'].textAnswers.answers[0].value
-        pref9 = answer['3a0af029'].textAnswers.answers[0].value
-        pref10 = answer['075ae5ce'].textAnswers.answers[0].value
-        responseList.push([studentId, pref1, pref2, pref3, pref4, pref5, pref6, pref7, pref8, pref9, pref10])
-    }
-    console.log(responseList)
-    return responseList
+  const projectPreferencesResponses = await getFormResponseList(auth, formId);
+  let responseList = [];
+  
+  for (let i = 0; i < projectPreferencesResponses.data.responses.length; i++) {
+      const answer = projectPreferencesResponses.data.responses[i].answers;
+      const studentId = answer['project_pref_q2'].textAnswers.answers[0].value;
+      const preferences = answer['project_pref_q3'].choiceAnswers.answers.map(pref => pref.value);
+
+      responseList.push([studentId, ...preferences]);
+  }
+  
+  console.log(responseList);
+  return responseList;
 }
 
 // getBelbinResponse(auth, '1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE')
