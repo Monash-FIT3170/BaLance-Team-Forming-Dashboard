@@ -36,6 +36,10 @@ const pushData = async (req, res) => {
 };
 
 function preparePersonalityData(belbinResponses, effortResponses) {
+    /**
+    * Prepares and formats student personality data based on Belbin role responses and effort responses.
+    */
+
     console.log(belbinResponses)
     const belbinData = belbinResponses.map(([studentId, belbinType]) => ({
       studentId,
