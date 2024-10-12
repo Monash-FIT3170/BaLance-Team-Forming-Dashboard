@@ -146,7 +146,8 @@ ALTER TABLE project_preference AUTO_INCREMENT=100000000;
 CREATE TABLE IF NOT EXISTS unit_form (
     test_type ENUM ("belbin", "preference", "effort") COMMENT 'the type of test it relates to',
     unit_off_id INT,
-    form_id VARCHAR(50) COMMENT 'The google form ID of a response',
+    form_id VARCHAR(50) COMMENT 'google form ID of a response',
+    responder_url VARCHAR(256) COMMENT 'url for student form responses',
     CONSTRAINT pk_unit_form PRIMARY KEY(test_type, unit_off_id)
 );
 

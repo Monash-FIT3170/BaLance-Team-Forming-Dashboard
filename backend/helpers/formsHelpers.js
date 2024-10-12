@@ -15,6 +15,7 @@ const auth = new GoogleAuth({
 
 const formData = require('../data/forms.json');
 
+
 let belbinFormId = null
 let belbinResponderURL = null
 let projectFormId = null
@@ -85,7 +86,7 @@ async function generateForms(effort, project, belbin, unitId) {
         let formValues = [
           [unitId, effortFormId, 'effort']
         ]
-        await promiseBasedQuery("INSERT IGNORE INTO unit_form (unit_off_id, test_id, test_type) VALUES ?;", [formValues]);
+        await promiseBasedQuery("INSERT IGNORE INTO unit_form (unit_off_id, test_id, test_type, responder_url) VALUES ?;", [formValues]);
     }
 
     if (project) {
@@ -97,7 +98,7 @@ async function generateForms(effort, project, belbin, unitId) {
         let formValues = [
           [unitId, projectFormId, 'preference']
         ]
-        await promiseBasedQuery("INSERT IGNORE INTO unit_form (unit_off_id, test_id, test_type) VALUES ?;", [formValues]);
+        await promiseBasedQuery("INSERT IGNORE INTO unit_form (unit_off_id, test_id, test_type, responder_url) VALUES ?;", [formValues]);
     }
 
     if (belbin) {
@@ -109,7 +110,7 @@ async function generateForms(effort, project, belbin, unitId) {
         let formValues = [
           [unitId, belbinFormId, 'belbin']
         ]
-        await promiseBasedQuery("INSERT IGNORE INTO unit_form (unit_off_id, test_id, test_type) VALUES ?;", [formValues]);
+        await promiseBasedQuery("INSERT IGNORE INTO unit_form (unit_off_id, test_id, test_type, responder_url) VALUES ?;", [formValues]);
     }
 }
 
