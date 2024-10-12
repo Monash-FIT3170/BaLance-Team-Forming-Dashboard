@@ -8,6 +8,7 @@ const { spawn } = require("child_process");
 
 const { promiseBasedQuery, selectUnitOffKey } = require("../helpers/commonHelpers");
 
+// Stores the generated student groups into the database.
 async function storeGroupsInDatabase(unitCode, year, period, parsedOutput) {
     const unitOffIdResult = await promiseBasedQuery(
         "SELECT unit_off_id FROM unit_offering " +
@@ -84,6 +85,7 @@ async function storeGroupsInDatabase(unitCode, year, period, parsedOutput) {
     }
 }
 
+// Retrieves student data from a unit.
 async function getUnitStudentData(unitCode, year, period) {
     return await promiseBasedQuery(
         "SELECT stud.stud_unique_id, stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val " +
@@ -95,14 +97,17 @@ async function getUnitStudentData(unitCode, year, period) {
     );
 }
 
+// Retrieves labs in a unit offering.
 async function getLabsInUnit(unit_off_id) {
     return await promiseBasedQuery("SELECT unit_off_lab_id FROM unit_off_lab WHERE unit_off_id = ?", [unit_off_id]);
 }
 
+// Retrieves the unit offering ID by unit code.
 async function getUnitOffId(unit_code) {
     return await promiseBasedQuery("SELECT unit_off_id FROM unit_offering WHERE unit_code = ?", [unit_code]);
 }
 
+// Retrieves students assigned to a lab.
 async function getStudedntsInLab(unit_off_lab_id) {
     //const studentIds = students.map((s) => s.stud_unique_id);
     return await promiseBasedQuery("SELECT stud_unique_id FROM student_lab_allocation WHERE unit_off_lab_id = ?", [
@@ -110,6 +115,7 @@ async function getStudedntsInLab(unit_off_lab_id) {
     ]);
 }
 
+// Retrieves data for a specific student.
 async function getStudentData(stud_unique_id) {
     return await promiseBasedQuery(
         "SELECT stud.student_id, stud.preferred_name, stud.last_name, stud.email_address, stud.wam_val " +
@@ -118,12 +124,14 @@ async function getStudentData(stud_unique_id) {
     );
 }
 
+// Retrieves the unique ID of a student.
 async function getStudentUniqueId(student_id) {
     return await promiseBasedQuery("SELECT stud.stud_unique_id " + "FROM student stud WHERE student_id = ?",
         [student_id,]
     );
 }
 
+// Transforms the parsed Python script output into a suitable format for group allocation.
 async function transformParsedOutput(parsedOutput) {
     const labStudents = {};
 
@@ -146,6 +154,7 @@ async function transformParsedOutput(parsedOutput) {
     return labStudents;
 }
 
+// Handles the custom script upload, processing, and group generation.
 async function uploadCustomScript(req, res) {
     const { unitCode, year, period } = req.params;
     const studentsInUnit = await getUnitStudentData(unitCode, year, period);
