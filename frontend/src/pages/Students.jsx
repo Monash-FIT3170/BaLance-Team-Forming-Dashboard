@@ -146,15 +146,6 @@ function Students() {
           </HStack>
         </Button>
       </HStack>
-      <HStack justifyContent={'center'} marginTop={'10px'}>
-        <Button onClick={pushData}>
-          <HStack>
-            <CheckIcon />
-            <Spacer />
-            <Text>Save Responses</Text>
-          </HStack>
-        </Button>
-      </HStack>
       <br />
       <br />
       <HStack margin="0px 20vw 5vh 20vw" justifyContent={'center'}>

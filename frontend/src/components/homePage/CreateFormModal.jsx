@@ -1,3 +1,8 @@
+import { useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { MockAuth } from '../../helpers/mockAuth';
+import { useParams } from 'react-router';
+
 import {
   Checkbox,
   Flex,
@@ -12,13 +17,21 @@ import {
   Text,
   Button,
   Box,
+  useToast
 } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
 
 const CreateFormModal = ({ isModalOpen, onModalClose }) => {
+  
+  let authService = {
+    DEV: MockAuth,
+    TEST: useAuth0,
+  };
+
+  const toast = useToast();
   const [submitted, setSubmitted] = useState(false);
   const [formClosed, setFormClosed] = useState(false);
-
+  const { getAccessTokenSilently } = authService[import.meta.env.VITE_REACT_APP_AUTH]();
+  const { unitCode, year, period } = useParams();
 
   const closeModal = () => {
     setSubmitted(false);
@@ -28,7 +41,7 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
   //Checkbox states
   const [formOptions, setFormOptions] = useState({
     Belbin: false,
-    Effot: false,
+    Effort: false,
     TimeAndPref: false
   });
 
@@ -42,25 +55,66 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
   };
 
   const sendForm = (event) => {
-    const forms = google.forms({version:'v1', auth: jwclient});
+    // const forms = google.forms({version:'v1', auth: jwclient});
 
-    //Create google form based on checkbox options
-    const form = {
+    // //Create google form based on checkbox options
+    // const form = {
 
-    //Belbin questions
+    // //Belbin questions
 
-    //Effort questions
+    // //Effort questions
 
-    //Time preference questions
-    }
-    
+    // //Time preference questions
+    // }
+
     //Get students from unit
-    event.preventDefault();
-    setSubmitted(true);
+    // event.preventDefault();
+    // setSubmitted(true);
 
 
     //Backend api call
-  };
+
+    getAccessTokenSilently().then((token) => {
+      
+      fetch(
+      `/api/forms/${unitCode}/${year}/${period}/`,
+      {
+        method: 'POST',
+        headers: new Headers({
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        }),
+        body: JSON.stringify({
+          formOptions
+      })
+        // body: JSON.stringify({students: data.students, testType: data.testType}),
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          console.log("Send request for form creation");
+        } else {
+          return response.text().then((responseText) => {
+            console.log("Retrieved response for form creation")
+          });
+        }
+      })
+      .catch((error) => {
+        console.error('Error sending data to the REST API:', error);
+        // Optionally show an error message to the user.
+      });
+
+      toast({
+        title: 'Form Created',
+        description: `Google form(s) for ${unitCode} have been successfully created`,
+        status: 'success',
+        duration: 4000,
+        isClosable: true,
+    });
+    },
+    closeModal(),
+  )};
 
   const renderForm = () => (
     <form id="create-google-form" onSubmit={sendForm}>

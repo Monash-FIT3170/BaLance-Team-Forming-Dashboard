@@ -30,8 +30,10 @@ const pushData = async (req, res) => {
         "    SELECT unit_off_id " +
         "    FROM unit_offering " +
         "    WHERE UPPER(unit_code) = UPPER(?) " +
+        "       AND unit_off_year = ?" +
+        "       AND unit_off_period = ?" +
         ")",
-        [unitCode]
+        [unitCode, year, period]
     );
 
     const belbinFormId = results.find(result => result.testType === 'belbin')?.formId;
@@ -49,6 +51,11 @@ const pushData = async (req, res) => {
 
     res.status(200).json();
 };
+
+const createForms = async (req, res) => {
+    const { unitCode, year, period, belbin, effort, project} = req.params
+    res.status(200).json();
+}
 
 function preparePersonalityData(belbinResponses, effortResponses) {
     console.log(belbinResponses)
@@ -244,4 +251,4 @@ const addTestResultFunctionStrats = {
     // preference: addStudentPreferences
 };
 
-module.exports =  { pushData };
+module.exports =  { pushData, createForms };
