@@ -143,6 +143,14 @@ CREATE TABLE IF NOT EXISTS project_preference (
 );
 ALTER TABLE project_preference AUTO_INCREMENT=100000000;
 
+CREATE TABLE IF NOT EXISTS unit_form (
+    test_type ENUM ("belbin", "preference", "effort") COMMENT 'the type of test it relates to',
+    unit_off_id INT,
+    form_id VARCHAR(50) COMMENT 'The google form ID of a response',
+    CONSTRAINT pk_unit_form PRIMARY KEY(test_id, unit_off_id)
+
+);
+
 -- FOREIGN KEY CREATION
 -- student to enrolment, group allocation, lab allocation, personality_test_attempt
 ALTER TABLE unit_enrolment ADD FOREIGN KEY (stud_unique_id) REFERENCES student(stud_unique_id);
@@ -172,3 +180,6 @@ ALTER TABLE preference_submission ADD FOREIGN KEY (personality_test_attempt) REF
 
 -- FOREIGN KEY CREATION FOR project_preference TABLE
 ALTER TABLE project_preference ADD FOREIGN KEY (preference_submission_id) REFERENCES preference_submission(preference_submission_id);
+
+-- unit form to unit 
+ALTER TABLE unit_form add FOREIGN KEY (unit_off_id) REFERENCES unit_offering(unit_off_id);

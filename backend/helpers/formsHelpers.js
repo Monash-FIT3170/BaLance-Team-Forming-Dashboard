@@ -74,7 +74,7 @@ function belbinForm() {
     }
 }
 
-async function generateForms(effort, project, belbin) {
+async function generateForms(effort, project, belbin, unitId) {
 
     if (effort) {
         var effortFormBody = effortForm()
@@ -82,6 +82,7 @@ async function generateForms(effort, project, belbin) {
         effortFormId = effForm.data.formId;
         effortResponderURL = effForm.data.responderUri;
         await updateForm(auth, effortFormId, formData["effortRequest"])
+        await promiseBasedQuery("INSERT IGNORE INTO unit_form (unit_off_id, test_id, test_type) VALUES ?;", [unitId, effortFormId, 'effort']);
     }
 
     if (project) {
@@ -90,6 +91,7 @@ async function generateForms(effort, project, belbin) {
         projectFormId = projForm.data.formId
         projectResponderURL = projForm.data.responderUri
         await updateForm(auth, projectFormId, formData["projectRequest"])
+        await promiseBasedQuery("INSERT IGNORE INTO unit_form (unit_off_id, test_id, test_type) VALUES ?;", [unitId, projectFormId, 'preference']);
     }
 
     if (belbin) {
@@ -98,6 +100,7 @@ async function generateForms(effort, project, belbin) {
         belbinFormId = belbForm.data.formId
         belbinResponderURL = belbForm.data.responderUri
         await updateForm(auth, belbinFormId, formData["belbinRequest"])
+        await promiseBasedQuery("INSERT IGNORE INTO unit_form (unit_off_id, test_id, test_type) VALUES ?;", [unitId, belbinFormId, 'belbin']);
     }
 }
 
