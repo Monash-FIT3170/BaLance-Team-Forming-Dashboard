@@ -1,10 +1,10 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import { Image, Flex, Button, Link } from '@chakra-ui/react';
+import { Image, Flex, Button, Link,Menu,MenuButton,MenuList,MenuItem,Avatar, IconButton } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
-
+import { ChevronDownIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../../helpers/mockAuth';
 import logo from '../../assets/logo_separated.png';
-import { useNavigate } from 'react-router-dom';
+
 
 const NavBar = ({ authenticated }) => {
   let authService = {
@@ -14,12 +14,6 @@ const NavBar = ({ authenticated }) => {
 
   const { loginWithRedirect, logout } =
     authService[import.meta.env.VITE_REACT_APP_AUTH]();
-  const navigate = useNavigate();
-
-  const navigateToPage = () =>{
-    console.log("Going to contributors page")
-    navigate("/ContributorPage")
-  }
 
   return (
     <Flex as="header"
@@ -59,11 +53,6 @@ const NavBar = ({ authenticated }) => {
             <b>Tutorial</b>
           </Button>
         </Link>
-        <Link as={RouterLink} to="/userInfo" ml="8">
-          <Button colorScheme="white" variant="solid" color="black" fontSize="1.4em" fontWeight="light" size="lg" height="63" px="6">
-            <b>User</b>
-          </Button>
-        </Link>
         <Link as={RouterLink} to="/FAQ" ml="8">
           <Button colorScheme="white" variant="solid" color="black" fontSize="1.4em" fontWeight="light" size="lg" height="63" px="6">
             <b>FAQ</b>
@@ -76,15 +65,24 @@ const NavBar = ({ authenticated }) => {
         </Link>
 
       </Flex>
-      <Flex>
-        {authenticated ? (
-              <Button onClick={logout} height="8vh" width="14vh" maxHeight="2.6em" minHeight="1.8em" maxWidth="6.5em" minWidth="4.3em" boxShadow="lg">Logout</Button>
-        ) : (
-            <Button onClick={()=> loginWithRedirect()}>
-              Login
-            </Button>
-        )}
-      </Flex>
+      <Menu>
+        <MenuButton
+          as={IconButton}
+          icon={<Avatar size="sm"/>}
+          boxShadow="lg"
+        >
+        </MenuButton>
+        <MenuList>
+          {authenticated ? (
+            <>
+              <MenuItem as={RouterLink} to="/userInfo">View Profile</MenuItem>
+              <MenuItem onClick={logout}>Logout</MenuItem>
+            </>
+          ) : (
+            <MenuItem onClick={loginWithRedirect}>Login</MenuItem>
+          )}
+        </MenuList>
+      </Menu>
     </Flex>
   );
 };
