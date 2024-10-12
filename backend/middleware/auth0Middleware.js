@@ -4,13 +4,12 @@ const axios = require('axios');
 
 async function getUserDetails(req) {
     const accessToken = req.auth.token;
-        const userResponse = await axios.get(process.env.AUTH_DOMAIN+ 'userinfo',
+        const userResponse = await axios.get(process.env.AUTH_DOMAIN+ '/userinfo',
         {
             headers: {
                 authorization: `Bearer ${accessToken}`
             }
         })
-
         return userResponse.data;
 }
 
@@ -21,14 +20,16 @@ async function delay(time) {
 
 
 const auth0Middleware = (app) => {
-    const verifyJwt = auth({
-        audience: 'balance-api-endpoint',
-        issuerBaseURL: process.env.AUTH_DOMAIN,
+    const jwtCheck = auth({
+        audience: 'https://balance-api-endpoint',
+        issuerBaseURL: 'https://balancedev.au.auth0.com/',
         tokenSigningAlg: 'RS256'
       });
     
-    app.use(verifyJwt);
-
+    app.use(jwtCheck, (req, res, next) => {
+        next();
+    });
+    
     app.use(async (req, res, next) => {
         try {
             req.user = await getUserDetails(req);

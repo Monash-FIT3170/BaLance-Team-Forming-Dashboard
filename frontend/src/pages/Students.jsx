@@ -58,7 +58,7 @@ function Students() {
       {
         method: 'POST',
         headers: new Headers({
-          Authorization: `Bearer 0000`,
+          Authorization: `Bearer ${token}`,
           Accept: 'application/json',
           'Content-Type': 'application/json',
         })

@@ -6,7 +6,6 @@ const { promiseBasedQuery, selectUnitOffKey } = require("./commonHelpers");
 const { MAX_ACCESS_BOUNDARY_RULES_COUNT } = require('google-auth-library/build/src/auth/downscopedclient');
 require('dotenv').config();``
 
-console.log(process.env)
 const SERVICE_ACCOUNT_JSON = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_TOKEN )
 const SCOPES = ['https://www.googleapis.com/auth/forms', 'https://www.googleapis.com/auth/drive'];
 const auth = new GoogleAuth({
