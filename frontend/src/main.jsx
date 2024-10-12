@@ -15,7 +15,7 @@ root.render(
         clientId={import.meta.env.VITE_REACT_APP_AUTH_CLIENT_ID}
         authorizationParams={{
           redirect_uri: window.location.origin,
-          audience: 'balance-api-endpoint',
+          audience: 'https://balance-api-endpoint',
           scope: 'openid profile email',
         }}
       >

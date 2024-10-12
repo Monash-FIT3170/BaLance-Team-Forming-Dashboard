@@ -10,8 +10,19 @@ const getAllUnits = async (req, res) => {
     /**
      * Gets all units registered under a user
      */
+    const email = req.user.email;
     try {
-        const units = await promiseBasedQuery("SELECT * FROM unit_offering;");
+        const [staff] = await promiseBasedQuery(
+            "SELECT staff_unique_id FROM staff WHERE email_address = ?;",
+            [email]
+        );
+
+        if (!staff) {
+            return res.status(404).send('Staff not found');
+        }
+        staff_id= staff.staff_unique_id
+        console.log('getreq: ',staff_id)
+        const units = await promiseBasedQuery("SELECT * FROM unit_offering where staff_unique_id=?",[staff_id]);
         res.status(200).json(units);
     } catch (e) {
         console.log(e);
@@ -19,9 +30,6 @@ const getAllUnits = async (req, res) => {
 };
 
 const addUnit = async (req, res) => {
-    /**
-     * Adds a new unit under a users account
-     */
     const {
         unitCode,
         unitName,
@@ -30,13 +38,27 @@ const addUnit = async (req, res) => {
         color
     } = req.body;
 
+    const email = req.user.email; // Assuming email is available from the decoded token
+
     try {
-        // note: unique id has auto_increment enabled thus not provided
+        // First, retrieve staff_id from the staff table
+        const [staff] = await promiseBasedQuery(
+            "SELECT staff_unique_id FROM staff WHERE email_address = ?;",
+            [email]
+        );
+
+        if (!staff) {
+            return res.status(404).send('Staff not found');
+        }
+        staff_id= staff.staff_unique_id
+        console.log(staff_id)
+
+        // Now, insert the unit offering
         await promiseBasedQuery(
             "INSERT INTO unit_offering " +
-            "(unit_code, unit_name, unit_off_year, unit_off_period, enrolment_count, unit_color) " +
-            "VALUES (?, ?, ?, ?, ?, ?);",
-            [unitCode, unitName, Number(year), period, 0, color]
+            "(unit_code, unit_name, unit_off_year, unit_off_period, staff_unique_id, enrolment_count, unit_color) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?);",
+            [unitCode, unitName, Number(year), period, staff_id, 0, color]
         );
 
         res.status(200).send();
@@ -45,18 +67,17 @@ const addUnit = async (req, res) => {
         let errorMsg;
         switch (error.code) {
             case "ER_DUP_ENTRY":
-                errorMsg = `the unit offering ${unitCode}, ${year}, ${period} already exists`;
+                errorMsg = `The unit offering ${unitCode}, ${year}, ${period} already exists`;
                 break;
             case "ER_BAD_FIELD_ERROR":
-                errorMsg = `year ${year} is not a number`;
+                errorMsg = `Year ${year} is not a number`;
                 break;
             default:
-                errorMsg = "something went wrong :(";
+                errorMsg = "Something went wrong :(";
         }
         res.status(400).send(errorMsg);
     }
 };
-
 const deleteUnit = async function (req, res) {
     /**
      * Deletes a unit registered under a user by going through related foreign key constraints
