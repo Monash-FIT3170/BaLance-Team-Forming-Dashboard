@@ -30,9 +30,8 @@ const pushData = async (req, res) => {
         "    SELECT unit_off_id " +
         "    FROM unit_offering " +
         "    WHERE UPPER(unit_code) = UPPER(?) " +
-        ") " +
-        "AND test_type = ?;",
-        [unitCode, 'belbin']
+        ")",
+        [unitCode]
     );
 
     const belbinFormId = results.find(result => result.testType === 'belbin')?.formId;
