@@ -2,6 +2,7 @@ const { google } = require('googleapis');
 const { GoogleAuth } = require('google-auth-library');
 const { response } = require('express');
 const { v4: uuidv4 } = require('uuid');
+const { promiseBasedQuery, selectUnitOffKey } = require("./commonHelpers");
 const { MAX_ACCESS_BOUNDARY_RULES_COUNT } = require('google-auth-library/build/src/auth/downscopedclient');
 require('dotenv').config();``
 
@@ -13,7 +14,7 @@ const auth = new GoogleAuth({
     scopes: SCOPES,
 });
 
-const { formData } = require('../data/forms.json')
+const formData = require('../data/forms.json');
 
 let belbinFormId = null
 let belbinResponderURL = null
@@ -81,7 +82,7 @@ async function generateForms(effort, project, belbin, unitId) {
         var effForm = await createForm(auth, effortFormBody)
         effortFormId = effForm.data.formId;
         effortResponderURL = effForm.data.responderUri;
-        await updateForm(auth, effortFormId, formData["effortRequest"])
+        await updateForm(auth, effortFormId, formData.effortRequest)
         let formValues = [
           [unitId, effortFormId, 'effort']
         ]
@@ -93,7 +94,7 @@ async function generateForms(effort, project, belbin, unitId) {
         var projForm = await createForm(auth, projectFormBody)
         projectFormId = projForm.data.formId
         projectResponderURL = projForm.data.responderUri
-        await updateForm(auth, projectFormId, formData["projectRequest"])
+        await updateForm(auth, projectFormId, formData.projectRequest)
         let formValues = [
           [unitId, projectFormId, 'preference']
         ]
@@ -105,7 +106,7 @@ async function generateForms(effort, project, belbin, unitId) {
         var belbForm = await createForm(auth, belbinFormBody)
         belbinFormId = belbForm.data.formId
         belbinResponderURL = belbForm.data.responderUri
-        await updateForm(auth, belbinFormId, formData["belbinRequest"])
+        await updateForm(auth, belbinFormId, formData.belbinRequest)
         let formValues = [
           [unitId, belbinFormId, 'belbin']
         ]
@@ -303,5 +304,6 @@ async function getPreferenceResponse(auth, formId) {
 module.exports = {
     getBelbinResponse,
     getEffortResponse,
-    getPreferenceResponse
+    getPreferenceResponse,
+    generateForms
 }
