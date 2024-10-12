@@ -76,7 +76,6 @@ function belbinForm() {
 
 async function generateForms(effort, project, belbin) {
 
-
     if (effort) {
         var effortFormBody = effortForm()
         var effForm = await createForm(auth, effortFormBody)
@@ -238,7 +237,7 @@ async function getBelbinResponse(auth, formId) {
       responseList.push([studentId, belbin_type]);
   }
   
-  console.log(responseList);
+  // console.log(responseList);
   return responseList;
 }
 
@@ -254,32 +253,38 @@ async function getEffortResponse(auth, formId) {
       responseList.push([studentId, effortHours, 70]);
   }
   
-  console.log(responseList);
+  // console.log(responseList);
   return responseList;
 }
 
 async function getPreferenceResponse(auth, formId) {
   const projectPreferencesResponses = await getFormResponseList(auth, formId);
   let responseList = [];
+  let response = [studentId];
   
   for (let i = 0; i < projectPreferencesResponses.data.responses.length; i++) {
       const answer = projectPreferencesResponses.data.responses[i].answers;
       const studentId = answer['00000001'].textAnswers.answers[0].value;
-      const pref1 = answer['00000021'].textAnswers.answers[0].value;
-      const pref2 = answer['00000022'].textAnswers.answers[0].value;
-      const pref3 = answer['00000023'].textAnswers.answers[0].value;
-      const pref4 = answer['00000024'].textAnswers.answers[0].value;
-      const pref5 = answer['00000025'].textAnswers.answers[0].value;
-      const pref6 = answer['00000026'].textAnswers.answers[0].value;
-      const pref7 = answer['00000027'].textAnswers.answers[0].value;
-      const pref8 = answer['00000028'].textAnswers.answers[0].value;
-      const pref9 = answer['00000029'].textAnswers.answers[0].value;
-      const pref10 = answer['00000210'].textAnswers.answers[0].value;
+      
+      let answerNo = 1;
+      // Get next preference answer ID, add it if it exists
+      while(true) {
+          let idBase = '00000000'; // answers have the form '...0002n', left-padded with 0s to 8 chars
+          let id = answerNo.toString();
+          id = '2'+id;
+          id = idBase.substring(0, 8 - id.length) + id;
+          if (answer.hasOwnProperty(id)) {
+            response.push(answer[id].textAnswers.answers[0].value);
+          }
+          else {
+            break;
+          }
+      }
 
       responseList.push([studentId, pref1, pref2, pref3, pref4, pref5, pref6, pref7, pref8, pref9, pref10]);
   }
   
-  console.log(responseList);
+  // console.log(responseList);
   return responseList;
 }
 
