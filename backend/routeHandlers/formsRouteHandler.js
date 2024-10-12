@@ -22,9 +22,25 @@ const pushData = async (req, res) => {
 
     console.log("pushData called")
 
-    const belbinResponse = await getBelbinResponse(auth, '1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE')
-    const effortResponse = await getEffortResponse(auth, '1gaVlsQARmiYYTmgr3wezZdWFJxVcyrWAaFpX5QleVy8')
-    console.log(belbinResponse)
+
+    const [{ formId }] = await promiseBasedQuery(
+        "SELECT form_id AS formId, test_type as testType " +
+        "FROM unit_form " +
+        "WHERE unit_off_id = ( " +
+        "    SELECT unit_off_id " +
+        "    FROM unit_offering " +
+        "    WHERE UPPER(unit_code) = UPPER(?) " +
+        ") " +
+        "AND test_type = ?;",
+        [unitCode, 'belbin']
+    );
+
+    const belbinFormId = results.find(result => result.testType === 'belbin')?.formId;
+    const projectFormId = results.find(result => result.testType === 'preference')?.formId;
+    const effortFormId = results.find(result => result.testType === 'effort')?.formId;
+
+    const belbinResponse = await getBelbinResponse(auth, belbinFormId)
+    const effortResponse = await getEffortResponse(auth, effortFormId)
 
     personalityData = preparePersonalityData(belbinResponse, effortResponse)
 
@@ -166,27 +182,47 @@ const addStudentBelbin = async (personalityTestAttemptKeys, students) => {
 };
 
 const addStudentEffort = async (personalityTestAttemptKeys, students) => {
+
     /**
      * Implements the logic required to add 'effort' personality data to the
      * database given the unique column requirements it has.
      */
     const resultInsertData = [];
-    // format the data so it fulfils the database column requirements
-    personalityTestAttemptKeys.forEach((attempt) => {
-        // find the student who made this attempt
-        const [student] = students.filter((student) => {
-            return student.studentId === attempt.student_id;
-        });
-        // add their data in a suitable format
-        resultInsertData.push([
-            attempt.test_attempt_id,
-            student.avgAssignmentMark,
-            student.hourCommitment,
-            student.avgAssignmentMark / student.hourCommitment,
-        ]);
-    });
+
+    // Step 1: Gather unique student IDs
+    const studentIds = [...new Set(personalityTestAttemptKeys.map(attempt => attempt.student_id))];
 
     try {
+        // Step 2: Fetch average assignment marks for the relevant students
+        const avgMarks = await promiseBasedQuery(`
+            SELECT studentId, AVG(assignmentMark) AS avgAssignmentMark
+            FROM assignments
+            WHERE studentId IN (?)
+            GROUP BY studentId;`, [studentIds]);
+
+        // Step 3: Map results for easy lookup
+        const avgMarksMap = avgMarks.reduce((acc, row) => {
+            acc[row.studentId] = row.avgAssignmentMark;
+            return acc;
+        }, {});
+
+        // Process each personality test attempt
+        personalityTestAttemptKeys.forEach((attempt) => {
+            const studentId = attempt.student_id;
+            const avgAssignmentMark = avgMarksMap[studentId] || 0;
+            const student = students.find(student => student.studentId === studentId);
+
+            // Check if the student was found
+            if (student) {
+                resultInsertData.push([
+                    attempt.test_attempt_id,
+                    avgAssignmentMark,
+                    student.hourCommitment,
+                    avgAssignmentMark / (student.hourCommitment || 1),
+                ]);
+            }
+        });
+
         await promiseBasedQuery(
             "INSERT IGNORE INTO effort_result " +
             "(personality_test_attempt, assignment_avg, time_commitment_hrs, marks_per_hour) " +
