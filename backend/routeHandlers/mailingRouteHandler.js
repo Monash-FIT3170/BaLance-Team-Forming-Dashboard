@@ -25,13 +25,19 @@ const sendEmails = async (req,res) => {
         service: 'gmail',
         auth: {
           user: "sender email",
-          pass: "sender password",
+          pass: "sender password", //google app password
         },
       });
 
     for(address in studentEmails){
         //sends new email for every student
-        transporter.sendMail(createEmail(user,address,"subject","text"));
+        transporter.sendMail(createEmail(user,address,"subject","text"), (error, info) => {
+            if (error) {
+              console.log('Error occurred: ' + error.message);
+            } else {
+              console.log('Email sent: ' + info.response);
+            }
+          });
     }
     
     res.status(200).send();
