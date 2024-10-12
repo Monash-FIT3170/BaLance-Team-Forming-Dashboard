@@ -13,7 +13,7 @@ const auth = new GoogleAuth({
     scopes: SCOPES,
 });
 
-import formData from '../data/forms.json';
+const { formData } = require('../data/forms.json')
 
 let belbinFormId = null
 let belbinResponderURL = null
@@ -305,4 +305,3 @@ module.exports = {
     getEffortResponse,
     getPreferenceResponse
 }
-

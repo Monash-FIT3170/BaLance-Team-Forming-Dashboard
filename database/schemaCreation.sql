@@ -147,8 +147,7 @@ CREATE TABLE IF NOT EXISTS unit_form (
     test_type ENUM ("belbin", "preference", "effort") COMMENT 'the type of test it relates to',
     unit_off_id INT,
     form_id VARCHAR(50) COMMENT 'The google form ID of a response',
-    CONSTRAINT pk_unit_form PRIMARY KEY(test_id, unit_off_id)
-
+    CONSTRAINT pk_unit_form PRIMARY KEY(test_type, unit_off_id)
 );
 
 -- FOREIGN KEY CREATION
