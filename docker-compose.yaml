@@ -2,34 +2,19 @@ version: "3.8"
 
 services:
     database:
-        # build: ./database
         image: mysql:8.3
         container_name: balance_database_container
-        command: --authentication_policy=caching_sha2_password
-        restart: unless-stopped
-        env_file: ./backend/.env
         environment:
-            MYSQL_HOST_IP: database
-            DB_HOST: localhost
-        volumes:
-            - ./database/schemaCreation.sql:/docker-entrypoint-initdb.d/1.sql
+            MYSQL_ROOT_PASSWORD: root_password
+            MYSQL_DATABASE: student_group_db
         ports:
-            - 3307:3306
+        - "3307:3306"  # host:container
         networks:
-            - balance_network
+        - balance_network
         healthcheck:
-            test:
-                [
-                    "CMD",
-                    "mysqladmin",
-                    "ping",
-                    "-h",
-                    "database",
-                    "-u",
-                    "root",
-                    "--password=somethingverysecure",
-                ]
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
             interval: 10s
+            timeout: 5s
             retries: 5
 
     backend:
@@ -42,7 +27,6 @@ services:
         volumes:
             - ./backend:/balance_backend
             - /balance_backend/node_modules
-        env_file: ./backend/.env
         environment:
             WATCHPACK_POLLING: true # https://stackoverflow.com/a/72661752
             PORT: 8080
