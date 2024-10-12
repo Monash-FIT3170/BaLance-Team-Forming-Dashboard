@@ -84,7 +84,7 @@ async function generateForms(effort, project, belbin, unitId) {
         effortResponderURL = effForm.data.responderUri;
         await updateForm(auth, effortFormId, formData.effortRequest)
         let formValues = [
-          [unitId, effortFormId, 'effort']
+          [unitId, effortFormId, 'effort', effortResponderURL]
         ]
         await promiseBasedQuery("INSERT IGNORE INTO unit_form (unit_off_id, test_id, test_type, responder_url) VALUES ?;", [formValues]);
     }
@@ -96,7 +96,7 @@ async function generateForms(effort, project, belbin, unitId) {
         projectResponderURL = projForm.data.responderUri
         await updateForm(auth, projectFormId, formData.projectRequest)
         let formValues = [
-          [unitId, projectFormId, 'preference']
+          [unitId, projectFormId, 'preference', projectResponderURL]
         ]
         await promiseBasedQuery("INSERT IGNORE INTO unit_form (unit_off_id, test_id, test_type, responder_url) VALUES ?;", [formValues]);
     }
@@ -108,10 +108,11 @@ async function generateForms(effort, project, belbin, unitId) {
         belbinResponderURL = belbForm.data.responderUri
         await updateForm(auth, belbinFormId, formData.belbinRequest)
         let formValues = [
-          [unitId, belbinFormId, 'belbin']
+          [unitId, belbinFormId, 'belbin', belbinResponderURL]
         ]
         await promiseBasedQuery("INSERT IGNORE INTO unit_form (unit_off_id, test_id, test_type, responder_url) VALUES ?;", [formValues]);
     }
+    console.log(belbinResponderURL, effortResponderURL, projectResponderURL)
 }
 
 

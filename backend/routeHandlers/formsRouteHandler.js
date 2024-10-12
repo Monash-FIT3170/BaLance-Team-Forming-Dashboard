@@ -1,4 +1,4 @@
-const { getBelbinResponse, getEffortResponse, getPreferenceResponse } = require('../helpers/formsHelpers');
+const { getBelbinResponse, getEffortResponse, getPreferenceResponse, generateForms } = require('../helpers/formsHelpers');
 const { promiseBasedQuery, selectUnitOffKey } = require("../helpers/commonHelpers");
 
 const { google } = require('googleapis');
@@ -53,9 +53,22 @@ const pushData = async (req, res) => {
 };
 
 const createForms = async (req, res) => {
-    const { unitCode, year, period, belbin, effort, project} = req.params
+    const { unitCode, year, period } = req.params;
+    testTypes = req.body;
+
+    const [{ unitId }] = await promiseBasedQuery(
+        "SELECT unit_off_id FROM unit_offering " +
+        "WHERE " +
+        "   unit_code=? " +
+        "   AND unit_off_year=? " +
+        "   AND unit_off_period=?; ",
+        [unitCode, year, period]
+    );
+    generateForms(testTypes.Effort, testTypes.TimeAndPref, testTypes.Belbin, unitId);
+
     res.status(200).json();
 }
+
 
 function preparePersonalityData(belbinResponses, effortResponses) {
     console.log(belbinResponses)

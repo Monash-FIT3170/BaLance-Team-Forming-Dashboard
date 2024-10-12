@@ -77,7 +77,7 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
     getAccessTokenSilently().then((token) => {
       
       fetch(
-      `/api/forms/${unitCode}/${year}/${period}/`,
+      `/api/forms/${unitCode}/${year}/${period}/create`,
       {
         method: 'POST',
         headers: new Headers({
@@ -85,10 +85,9 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         }),
-        body: JSON.stringify({
+        body: JSON.stringify(
           formOptions
-      })
-        // body: JSON.stringify({students: data.students, testType: data.testType}),
+      )
       }
     )
       .then((response) => {
@@ -137,7 +136,7 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
 
           <Checkbox
           name="TimeAndPreference"
-          isChecked={formOptions.TimeAndPreference}
+          isChecked={formOptions.TimeAndPref}
           onChange={handleCheckboxChange}>
             Time & Preference
           </Checkbox>
