@@ -29,6 +29,7 @@ import GroupAnalytics from './pages/GroupAnalytics';
 import Import from './pages/Import';
 import RegistrationPage from "./components/loginPage/RegistrationPage.jsx";
 import FAQ from './pages/FAQ';
+import UserDashboard from './pages/UserDashboard.jsx';
 
 const theme = extendTheme({
   colors: {
@@ -93,32 +94,14 @@ function App() {
                 path="/login"
                 element={<LoginPage />}
               />
+              <Route
+                path="/userInfo"
+                element={<UserDashboard />}
+              />
             </Routes>
           )}
           {!isAuthenticated && (
-            <Container centerContent>
-              <Routes>
-                <Route
-                  path="/login"
-                  element={<LoginPage />}
-                />
-                <Route
-                  path="signup"
-                  element={<RegistrationPage />}
-                />
-              </Routes>
-              <Box height="100px"></Box>
-              <Heading as="h3" size="xl">
-                <Link as={RouterLink} to="login" ml="8">
-                  <button>
-                    <Heading as="h2" size="xl" variant="underline">
-                      Login
-                    </Heading>
-                  </button>{' '}
-                </Link>
-                to Create Groups!
-              </Heading>
-            </Container>
+            <LandingPage/>
           )}
         </div>
       </BrowserRouter>
