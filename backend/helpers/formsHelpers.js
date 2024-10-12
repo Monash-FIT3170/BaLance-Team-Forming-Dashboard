@@ -10,14 +10,15 @@ const auth = new GoogleAuth({
     scopes: SCOPES,
 });
 
-
-
+//Creates a new Google Form using the specified form body.
 async function createForm(auth,formBody){
     const authClient = await auth.getClient();
     const forms = google.forms({ version: 'v1', auth: authClient });
     const result = await forms.forms.create({ requestBody: formBody });
     return result;
 }
+
+//Retrieves all responses from a specified Google Form.
 //note: this can probably only fetch responses from forms the service account has access to, either send the form to the email or make the account create it using createForm. 
 async function getFormResponseList(auth,formId){
     const authClient = await auth.getClient();
@@ -27,6 +28,7 @@ async function getFormResponseList(auth,formId){
     return responses;
 }
 
+//Retrieves a specific response from a form using its formId and the responseId.
 async function getFormResponse(auth,formId,responseId){
     const authClient = await auth.getClient();
     const forms = google.forms({ version: 'v1', auth: authClient });
@@ -34,6 +36,7 @@ async function getFormResponse(auth,formId,responseId){
     return response
 }
 
+// Retrieves the metadata and questions of a specified Google Form.
 async function getForm(auth, formId){
     const authClient = await auth.getClient();
     const forms = google.forms({ version: 'v1', auth: authClient });
@@ -46,7 +49,7 @@ async function getForm(auth, formId){
 //const responses = getFormResponseList(auth,'1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE')
 const form = getForm(auth, "1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE")
 
-
+// Retrieves Belbin responses from the form, extracting the student ID and Belbin type.
 async function getBelbinResponse(auth, formId) {
     const belbinResponses = await getFormResponseList(auth,formId);
     responseList = []
@@ -60,6 +63,7 @@ async function getBelbinResponse(auth, formId) {
     return responseList
 }
 
+// Retrieves effort responses from the form, extracting the student ID and effort level.
 async function getEffortResponse(auth, formId) {
     const belbinResponses = await getFormResponseList(auth,formId);
     responseList = []
@@ -73,7 +77,7 @@ async function getEffortResponse(auth, formId) {
     return responseList
 }
 
-
+// Retrieves preferences from the form, extracting the student ID and preferences.
 async function getPreferenceResponse(auth, formId, prefNum) {
     const belbinResponses = await getFormResponseList(auth, formId);
     const responseList = [];
@@ -111,6 +115,7 @@ async function getPreferenceResponse(auth, formId, prefNum) {
 // getEffortResponse(auth, '1gaVlsQARmiYYTmgr3wezZdWFJxVcyrWAaFpX5QleVy8')
 // getPreferenceResponse(auth, '1BPup6OBO3qyp3Tob2fpTZloGHPuvbzzmFADdNI_NcTg')
 
+// Updates the form feilds to have questions relavent to Belbin information
 async function updateToBelbinForm(auth, formId) {
     const authClient = await auth.getClient();
     const forms = google.forms({ version: 'v1', auth: authClient });
@@ -165,6 +170,7 @@ async function updateToBelbinForm(auth, formId) {
     }
 }
 
+// Updates the form feilds to have questions relavent to Effort information
 async function updateToEffortForm(auth, formId) {
     const authClient = await auth.getClient();
     const forms = google.forms({ version: 'v1', auth: authClient });
@@ -219,6 +225,7 @@ async function updateToEffortForm(auth, formId) {
     }
 }
 
+// Updates the form feilds to have questions relavent to Preference information
 async function updateToPreferenceForm(auth, formId, prefNum) {
     const authClient = await auth.getClient();
     const forms = google.forms({ version: 'v1', auth: authClient });
