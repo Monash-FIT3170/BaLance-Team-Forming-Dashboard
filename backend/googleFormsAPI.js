@@ -15,7 +15,7 @@ async function createForm(auth,formBody){
     const authClient = await auth.getClient();
     const forms = google.forms({ version: 'v1', auth: authClient });
     const result = await forms.forms.create({ requestBody: formBody });
-    return result;
+    return result;//save the responder URI from this for the emails
 }
 //note: this can probably only fetch responses from forms the service account has access to, either send the form to the email or make the account create it using createForm. 
 async function getFormResponseList(auth,formId){
