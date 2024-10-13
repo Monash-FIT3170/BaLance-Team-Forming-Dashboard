@@ -63,6 +63,47 @@ const pushData = async (req, res) => {
     res.status(200).json();
 };
 
+const getForms = async (req, res) => {
+
+    const { unitCode, year, period } = req.params;
+
+    const results = await promiseBasedQuery(
+        "SELECT form_id AS formId, test_type as testType, responder_url as url " +
+        "FROM unit_form " +
+        "WHERE unit_off_id = ( " +
+        "    SELECT unit_off_id " +
+        "    FROM unit_offering " +
+        "    WHERE UPPER(unit_code) = UPPER(?) " +
+        "       AND unit_off_year = ?" +
+        "       AND unit_off_period = ?" +
+        ")",
+        [unitCode, year, period]
+    );
+    
+    console.log(results);
+
+    let belbinResponse = null;
+    let effortResponse = null;
+    let projectResponse = null;
+
+    let formTypes = ['Belbin', 'Preference', 'Effort'];
+    let openForms = []
+    if (results.length > 0) {
+        formTypes.forEach(name => {
+            form = results.find(result => result.testType === name.toLowerCase());
+            if (form) {
+                openForms.push({
+                    url: form.url,
+                    type: name
+                })
+            }
+        });
+    }
+    console.log(openForms)
+
+    res.status(200).json(openForms);
+}
+
 const createForms = async (req, res) => {
     const { unitCode, year, period } = req.params;
     testTypes = req.body;
@@ -310,4 +351,4 @@ const addTestResultFunctionStrats = {
     // preference: addStudentPreferences
 };
 
-module.exports =  { pushData, createForms };
+module.exports =  { pushData, createForms, getForms };

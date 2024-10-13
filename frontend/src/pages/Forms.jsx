@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { MockAuth } from '../helpers/mockAuth';
 import { useParams } from 'react-router';
 import { AddIcon, ArrowBackIcon } from "@chakra-ui/icons";
 import {
@@ -10,6 +12,13 @@ import {
     useDisclosure,
     Box,
     SimpleGrid,
+    TableContainer,
+    Table,
+    Thead,
+    Tbody,
+    Tr,
+    Th,
+    Td,
 } from '@chakra-ui/react';
 
 import {
@@ -19,8 +28,16 @@ import {
 import CreateFormModal from "../components/homePage/CreateFormModal";
 
 const Forms = () => {
+    const [forms, setForms] = useState([]);
     const { unitCode, year, period } = useParams();
     const { isOpen, onOpen, onClose } = useDisclosure();
+
+    let authService = {
+        DEV: MockAuth,
+        TEST: useAuth0,
+    };
+
+    const { getAccessTokenSilently } = authService[import.meta.env.VITE_REACT_APP_AUTH]();
 
     const renderFormCard = (form) => (
         <Box
@@ -35,6 +52,24 @@ const Forms = () => {
             <Text color="gray.500">{form.status}</Text>
         </Box>
     );
+
+    useEffect(() => {
+        getAccessTokenSilently().then((token) => {
+            fetch(`/api/forms/${unitCode}/${year}/${period}`, {
+                method: 'get',
+                headers: new Headers({
+                    Authorization: `Bearer ${token}`,
+                }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    setForms(data);
+                })
+                .catch((err) => {
+                    console.error('Error fetching forms:', err);
+                });
+        });
+    }, []);
 
     return (
         <VStack spacing={6}>
@@ -64,6 +99,25 @@ const Forms = () => {
                 <Text fontSize="xl" fontWeight="bold" mb={4}>
                     Forms In Progress
                 </Text>
+                <TableContainer>
+                    <Table variant="striped">
+                    <Thead>
+                        <Tr>
+                            <Th>Form Type</Th>
+                            <Th>Responder URL</Th>
+                        </Tr>
+                    </Thead>
+                    <Tbody>
+                        {forms &&
+                                forms.map((form) => (
+                                    <Tr>
+                                        <Td>{form.type}</Td>
+                                        <Td>{form.url}</Td>
+                                    </Tr>
+                                ))}
+                    </Tbody>
+                </Table>
+            </TableContainer>
             </Box>
 
             {/* Placeholder for Finished Forms */}

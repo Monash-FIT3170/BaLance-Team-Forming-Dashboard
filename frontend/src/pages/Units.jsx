@@ -90,7 +90,6 @@ function Units() {
                 </Grid>
             </Center>
 
-      {/*<CreateFormModal isModalOpen={isFormOpen} onModalClose={onFormClose} />*/}
             <CreateUnitModal isModalOpen={isAddOpen} onModalClose={onAddClose} />
         </div>
     );
