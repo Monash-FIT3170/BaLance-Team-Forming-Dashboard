@@ -95,7 +95,13 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
           console.log("Send request for form creation");
         } else {
           return response.text().then((responseText) => {
-            console.log("Retrieved response for form creation")
+            toast({
+              title: 'Form Created',
+              description: `Google form(s) for ${unitCode} have been successfully created`,
+              status: 'success',
+              duration: 4000,
+              isClosable: true,
+          });
           });
         }
       })
@@ -103,14 +109,6 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
         console.error('Error sending data to the REST API:', error);
         // Optionally show an error message to the user.
       });
-
-      toast({
-        title: 'Form Created',
-        description: `Google form(s) for ${unitCode} have been successfully created`,
-        status: 'success',
-        duration: 4000,
-        isClosable: true,
-    });
     },
     closeModal(),
   )};

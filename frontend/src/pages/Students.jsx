@@ -1,6 +1,6 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { useParams } from 'react-router';
-import { HStack, Center } from '@chakra-ui/react';
+import { HStack, Center, useToast } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { AddIcon, CalendarIcon, EditIcon, ViewIcon, RepeatIcon, CheckIcon} from '@chakra-ui/icons';
 import { Button, Text, Spacer} from '@chakra-ui/react';
@@ -42,7 +42,8 @@ function Students() {
         DEV: MockAuth,
         TEST: useAuth0,
     };
-
+    
+    const toast = useToast();
     const { getAccessTokenSilently } = authService[import.meta.env.VITE_REACT_APP_AUTH]();
     const [students, setStudents] = useState([]);
     const [numberOfGroups, setNumberOfGroups] = useState(0);
@@ -67,7 +68,13 @@ function Students() {
     )
       .then((response) => {
         if (response.ok) {
-          console.log("it worked!!!!!!!!!!");
+          toast({
+            title: 'Responses Saved',
+            description: `Google form(s) for ${unitCode} have been successfully saved`,
+            status: 'success',
+            duration: 4000,
+            isClosable: true,
+        });
         } else {
           return response.text().then((responseText) => {
             console.log("it worked!!!")

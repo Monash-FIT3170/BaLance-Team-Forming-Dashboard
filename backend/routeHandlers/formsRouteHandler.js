@@ -22,8 +22,7 @@ const pushData = async (req, res) => {
 
     console.log("pushData called")
 
-
-    const [{ formId }] = await promiseBasedQuery(
+    const results = await promiseBasedQuery(
         "SELECT form_id AS formId, test_type as testType " +
         "FROM unit_form " +
         "WHERE unit_off_id = ( " +
@@ -35,20 +34,32 @@ const pushData = async (req, res) => {
         ")",
         [unitCode, year, period]
     );
+    console.log(results);
+    let belbinResponse = null;
+    let effortResponse = null;
+    let projectResponse = null;
+    if (results.length > 0) {
 
-    const belbinFormId = results.find(result => result.testType === 'belbin')?.formId;
-    const projectFormId = results.find(result => result.testType === 'preference')?.formId;
-    const effortFormId = results.find(result => result.testType === 'effort')?.formId;
+        const belbinFormId = results.find(result => result.testType === 'belbin');
+        const projectFormId = results.find(result => result.testType === 'preference');
+        const effortFormId = results.find(result => result.testType === 'effort');
 
-    const belbinResponse = await getBelbinResponse(auth, belbinFormId)
-    const effortResponse = await getEffortResponse(auth, effortFormId)
+        if (belbinFormId){
+            belbinResponse = await getBelbinResponse(auth, belbinFormId.formId)
+        }
+        if (effortFormId) {
+            effortResponse = await getEffortResponse(auth, effortFormId.formId)
+        }
+        if (projectFormId) {
+            projectResponse = await getPreferenceResponse(auth, projectFormId.formId)
+        }
+        
+        personalityData = preparePersonalityData(belbinResponse, effortResponse)
 
-    personalityData = preparePersonalityData(belbinResponse, effortResponse)
-
-    for (const data of personalityData) {
-        addPersonalityData(data.students, data.testType, unitCode, year, period)
+        for (const data of personalityData) {
+            addPersonalityData(data.students, data.testType, unitCode, year, period)
+        }
     }
-
     res.status(200).json();
 };
 
@@ -57,7 +68,7 @@ const createForms = async (req, res) => {
     testTypes = req.body;
 
     const [{ unitId }] = await promiseBasedQuery(
-        "SELECT unit_off_id FROM unit_offering " +
+        "SELECT unit_off_id as unitId FROM unit_offering " +
         "WHERE " +
         "   unit_code=? " +
         "   AND unit_off_year=? " +
@@ -70,18 +81,30 @@ const createForms = async (req, res) => {
 }
 
 
-function preparePersonalityData(belbinResponses, effortResponses) {
-    console.log(belbinResponses)
-    const belbinData = belbinResponses.map(([studentId, belbinType]) => ({
-      studentId,
-      belbinType,
-    }));
-    const effortData = effortResponses.map(([studentId, hourCommitment, avgAssignmentMark]) => ({
-      studentId,
-      hourCommitment,
-      avgAssignmentMark,
-    }));
-  
+function preparePersonalityData(belbinResponses, effortResponses, projectResponses) {
+    let belbinData = null;
+    let effortData = null;
+    let preferenceData = null;
+    if (belbinResponses) {
+        belbinData = belbinResponses.map(([studentId, belbinType]) => ({
+        studentId,
+        belbinType,
+        }));
+    }
+    if (effortResponses) {
+        effortData = effortResponses.map(([studentId, hourCommitment, avgAssignmentMark]) => ({
+        studentId,
+        hourCommitment,
+        avgAssignmentMark,
+        }));
+    }
+    if (projectResponses) {
+        preferenceData = belbinResponses.map(([studentId, belbinType]) => ({
+        studentId,
+        belbinType,
+        }));
+    }
+
     const personalityData = [
       {
         students: belbinData,
@@ -90,6 +113,10 @@ function preparePersonalityData(belbinResponses, effortResponses) {
       {
         students: effortData,
         testType: 'effort'
+      },
+      {
+        students: preferenceData,
+        testType: "preference"
       }
     ];
   
@@ -112,7 +139,10 @@ const addPersonalityData = async(students, testType, unitCode, year, period) => 
         [unitCode, year, period]
     );
 
-    if (numEnrolledStudents !== students.length) {
+    if (!students) {
+        return;
+    }
+    if (numEnrolledStudents > students.length) {
         console.error("Personality data does not match number of students in database.")
         return;
     }
@@ -201,55 +231,71 @@ const addStudentBelbin = async (personalityTestAttemptKeys, students) => {
 };
 
 const addStudentEffort = async (personalityTestAttemptKeys, students) => {
-
     /**
      * Implements the logic required to add 'effort' personality data to the
      * database given the unique column requirements it has.
      */
     const resultInsertData = [];
 
-    // Step 1: Gather unique student IDs
+    // Extract all student IDs from the attempts
     const studentIds = [...new Set(personalityTestAttemptKeys.map(attempt => attempt.student_id))];
 
+    // Fetch wam_val for all students in one query
+    let wamValues = {};
     try {
-        // Step 2: Fetch average assignment marks for the relevant students
-        const avgMarks = await promiseBasedQuery(`
-            SELECT studentId, AVG(assignmentMark) AS avgAssignmentMark
-            FROM assignments
-            WHERE studentId IN (?)
-            GROUP BY studentId;`, [studentIds]);
+        const wamResults = await promiseBasedQuery(
+            "SELECT student_id, wam_val FROM student WHERE student_id IN (?);",
+            [studentIds]
+        );
 
-        // Step 3: Map results for easy lookup
-        const avgMarksMap = avgMarks.reduce((acc, row) => {
-            acc[row.studentId] = row.avgAssignmentMark;
-            return acc;
-        }, {});
+        // Map wam_val results to a dictionary for quick access
+        wamResults.forEach(({ student_id, wam_val }) => {
+            wamValues[student_id] = wam_val;
+        });
+    } catch (err) {
+        console.error("Error fetching wam_val for students:", err);
+        return; // Exit if there's an error
+    }
 
-        // Process each personality test attempt
-        personalityTestAttemptKeys.forEach((attempt) => {
-            const studentId = attempt.student_id;
-            const avgAssignmentMark = avgMarksMap[studentId] || 0;
-            const student = students.find(student => student.studentId === studentId);
+    // Format the data for insertion
+    personalityTestAttemptKeys.forEach((attempt) => {
+        const avgAssignmentMark = wamValues[attempt.student_id];
 
-            // Check if the student was found
+        if (avgAssignmentMark !== undefined) {
+            const student = students.find(s => s.studentId === attempt.student_id);
+
             if (student) {
+                const timeCommitment = student.hourCommitment;
+
+                // Add their data in a suitable format
                 resultInsertData.push([
                     attempt.test_attempt_id,
                     avgAssignmentMark,
-                    student.hourCommitment,
-                    avgAssignmentMark / (student.hourCommitment || 1),
+                    timeCommitment,
+                    avgAssignmentMark / timeCommitment,
                 ]);
+            } else {
+                console.log(`No student found for attempt ID: ${attempt.test_attempt_id}`);
             }
-        });
+        } else {
+            console.log(`No wam_val found for student ID: ${attempt.student_id}`);
+        }
+    });
 
-        await promiseBasedQuery(
-            "INSERT IGNORE INTO effort_result " +
-            "(personality_test_attempt, assignment_avg, time_commitment_hrs, marks_per_hour) " +
-            "VALUES ?;",
-            [resultInsertData]
-        );
-    } catch (err) {
-        console.log(err);
+    // Insert the data into the effort_result table
+    if (resultInsertData.length > 0) {
+        try {
+            await promiseBasedQuery(
+                "INSERT IGNORE INTO effort_result " +
+                "(personality_test_attempt, assignment_avg, time_commitment_hrs, marks_per_hour) " +
+                "VALUES ?;",
+                [resultInsertData]
+            );
+        } catch (err) {
+            console.error("Error inserting into effort_result:", err);
+        }
+    } else {
+        console.log("No data to insert into effort_result.");
     }
 };
 

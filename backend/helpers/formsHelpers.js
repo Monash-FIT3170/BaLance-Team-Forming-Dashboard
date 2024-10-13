@@ -78,41 +78,45 @@ function belbinForm() {
 async function generateForms(effort, project, belbin, unitId) {
 
     if (effort) {
-        var effortFormBody = effortForm()
-        var effForm = await createForm(auth, effortFormBody)
+        var effortFormBody = effortForm();
+        var effForm = await createForm(auth, effortFormBody);
         effortFormId = effForm.data.formId;
         effortResponderURL = effForm.data.responderUri;
-        await updateForm(auth, effortFormId, formData.effortRequest)
-        let formValues = [
+        await updateForm(auth, effortFormId, formData.effortRequest);
+        await promiseBasedQuery(
+          "INSERT IGNORE INTO unit_form (unit_off_id, form_id, test_type, responder_url)" +
+          "VALUES (?, ?, ?, ?);", 
           [unitId, effortFormId, 'effort', effortResponderURL]
-        ]
-        await promiseBasedQuery("INSERT IGNORE INTO unit_form (unit_off_id, test_id, test_type, responder_url) VALUES ?;", [formValues]);
+        );
     }
 
     if (project) {
-        var projectFormBody = projectPreferencesForm()
-        var projForm = await createForm(auth, projectFormBody)
-        projectFormId = projForm.data.formId
-        projectResponderURL = projForm.data.responderUri
-        await updateForm(auth, projectFormId, formData.projectRequest)
-        let formValues = [
+        var projectFormBody = projectPreferencesForm();
+        var projForm = await createForm(auth, projectFormBody);
+        projectFormId = projForm.data.formId;
+        projectResponderURL = projForm.data.responderUri;
+        await updateForm(auth, projectFormId, formData.projectRequest);
+        await promiseBasedQuery(
+          "INSERT IGNORE INTO unit_form (unit_off_id, form_id, test_type, responder_url)" +
+          "VALUES (?, ?, ?, ?);", 
           [unitId, projectFormId, 'preference', projectResponderURL]
-        ]
-        await promiseBasedQuery("INSERT IGNORE INTO unit_form (unit_off_id, test_id, test_type, responder_url) VALUES ?;", [formValues]);
+        );
     }
 
     if (belbin) {
-        var belbinFormBody = belbinForm()
-        var belbForm = await createForm(auth, belbinFormBody)
-        belbinFormId = belbForm.data.formId
-        belbinResponderURL = belbForm.data.responderUri
-        await updateForm(auth, belbinFormId, formData.belbinRequest)
-        let formValues = [
+        var belbinFormBody = belbinForm();
+        var belbForm = await createForm(auth, belbinFormBody);
+        belbinFormId = belbForm.data.formId;
+        belbinResponderURL = belbForm.data.responderUri;
+        await updateForm(auth, belbinFormId, formData.belbinRequest);
+        await promiseBasedQuery(
+          "INSERT IGNORE INTO unit_form (unit_off_id, form_id, test_type, responder_url)" +
+          "VALUES (?, ?, ?, ?);", 
           [unitId, belbinFormId, 'belbin', belbinResponderURL]
-        ]
-        await promiseBasedQuery("INSERT IGNORE INTO unit_form (unit_off_id, test_id, test_type, responder_url) VALUES ?;", [formValues]);
+        );
+
     }
-    console.log(belbinResponderURL, effortResponderURL, projectResponderURL)
+    console.log(belbinResponderURL, effortResponderURL, projectResponderURL);
 }
 
 
@@ -147,6 +151,10 @@ async function getForm(auth, formId){
 async function getBelbinResponse(auth, formId) {
   const belbinResponses = await getFormResponseList(auth, formId);
   let responseList = [];
+
+  if(!belbinResponses.data.responses) {
+    return;
+  }
   
   for (let i = 0; i < belbinResponses.data.responses.length; i++) {
       const answer = belbinResponses.data.responses[i].answers;
@@ -258,6 +266,10 @@ async function getBelbinResponse(auth, formId) {
 async function getEffortResponse(auth, formId) {
   const effortResponses = await getFormResponseList(auth, formId);
   let responseList = [];
+
+  if(!effortResponses.data.responses) {
+    return;
+  }
   
   for (let i = 0; i < effortResponses.data.responses.length; i++) {
       const answer = effortResponses.data.responses[i].answers;
@@ -275,6 +287,10 @@ async function getPreferenceResponse(auth, formId) {
   const projectPreferencesResponses = await getFormResponseList(auth, formId);
   let responseList = [];
   let response = [studentId];
+
+  if(!projectPreferencesResponses.data.responses) {
+    return;
+  }
   
   for (let i = 0; i < projectPreferencesResponses.data.responses.length; i++) {
       const answer = projectPreferencesResponses.data.responses[i].answers;
