@@ -123,7 +123,7 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
           <Checkbox
           name="Belbin"
           isChecked={formOptions.Belbin}
-          onChange={(e) => handleCheckboxChange(e)}>
+          onChange={(e) => handleCheckboxChange('Belbin', e.target.checked)}>
           
             Belbin
           </Checkbox>
@@ -131,14 +131,14 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
           <Checkbox
            name="Effort"
            isChecked={formOptions.Effort}
-           onChange={(e) => handleCheckboxChange(e)}>
+           onChange={(e) => handleCheckboxChange('Effort', e.target.checked)}>
             Effort
           </Checkbox>
 
           <Checkbox
           name="TimeAndPref"
           isChecked={formOptions.TimeAndPref}
-          onChange={(e) => handleCheckboxChange(e)}>
+          onChange={(e) => handleCheckboxChange('TimeAndPref', e.target.checked)}>
             Time & Preference
           </Checkbox>
         </Stack>
