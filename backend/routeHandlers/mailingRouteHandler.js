@@ -4,8 +4,10 @@
  *
  * */
 
-const {getAllEmails, createEmail,} = require("../helpers/mailingRouteHandlerHelpers");
-const {nodemailer} = require("nodemailer")//new nodejs module for email
+const { getAllEmails, createEmail, } = require("../helpers/mailingRouteHandlerHelpers");
+const nodemailer = require('nodemailer');
+
+require('dotenv').config();
 
 const getStudentEmails = async (req,res) => {
 
@@ -19,29 +21,28 @@ const getStudentEmails = async (req,res) => {
 
 const sendEmails = async (req,res) => {
     const {unitCode,year,period} = req.params; 
+    const link = req.body;
+    console.log(link);
+    
     const studentEmails = await getAllEmails(unitCode,year,period); //either this to get student emails or get it from receiver
 
     const transporter = nodemailer.createTransport({//transporter for email
         service: 'gmail',
         auth: {
-          user: "sender email",
-          pass: "sender password", //google app password
+          user: process.env.SERVICE_EMAIL,
+          pass: process.env.EMAIL_PASSWORD, //google app password
         },
       });
-
-    for(address in studentEmails){
-        //sends new email for every student
-        transporter.sendMail(createEmail(user,address,"subject","text"), (error, info) => {
-            if (error) {
-              console.log('Error occurred: ' + error.message);
-            } else {
-              console.log('Email sent: ' + info.response);
-            }
-          });
-    }
+      //sends new email for every student
+      const info = await transporter.sendMail({
+        from: `"BaLanceApp" <${process.env.SERVICE_EMAIL}>`, // sender address
+        to: studentEmails.join(", "), // list of receivers
+        subject: "Hello ✔", // Subject line
+        text: "Hello world?", // plain text body
+        html: "<b>Hello world?</b>", // html body
+      });
     
     res.status(200).send();
-
 }
 
 

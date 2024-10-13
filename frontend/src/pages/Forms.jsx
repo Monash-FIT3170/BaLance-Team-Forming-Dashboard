@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { MockAuth } from '../helpers/mockAuth';
 import { useParams } from 'react-router';
-import { AddIcon, ArrowBackIcon } from "@chakra-ui/icons";
+import { AddIcon, ArrowBackIcon, EmailIcon } from "@chakra-ui/icons";
 import {
     Flex,
     VStack,
@@ -19,6 +19,7 @@ import {
     Tr,
     Th,
     Td,
+    useToast
 } from '@chakra-ui/react';
 
 import {
@@ -31,6 +32,7 @@ const Forms = () => {
     const [forms, setForms] = useState([]);
     const { unitCode, year, period } = useParams();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const toast = useToast();
 
     let authService = {
         DEV: MockAuth,
@@ -52,6 +54,62 @@ const Forms = () => {
             <Text color="gray.500">{form.status}</Text>
         </Box>
     );
+
+    // nice function to automatically copy responder url
+    const handleCopy = (url) => {
+        navigator.clipboard.writeText(url)
+        .then(() => {
+            console.log('URL copied successfully'); // Success log
+            toast({ 
+                title: "Link copied!", 
+                description: "The responder URL has been copied to your clipboard.", 
+                status: "success", 
+                duration: 2000, 
+                isClosable: true,
+            });
+        })
+        .catch(err => {
+            console.error('Failed to copy: ', err);
+        });
+    };
+
+    function sendForms(url) {
+        getAccessTokenSilently().then((token) => {
+      
+            fetch(
+            `/api/mailing/${unitCode}/${year}/${period}`,
+            {
+              method: 'POST',
+              headers: new Headers({
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              }),
+              body: JSON.stringify({url}),
+            }
+          )
+            .then((response) => {
+              if (response.ok) {
+                toast({
+                  title: 'Email Sent',
+                  description: `Google form(s) for ${unitCode} have been successfully sent to all users`,
+                  status: 'success',
+                  duration: 4000,
+                  isClosable: true,
+              });
+              } else {
+                return response.text().then((responseText) => {
+                  console.log("it worked!!!")
+                });
+              }
+            })
+            .catch((error) => {
+              console.error('Error sending data to the REST API:', error);
+              // Optionally show an error message to the user.
+            });
+        }
+        )
+    };
 
     useEffect(() => {
         getAccessTokenSilently().then((token) => {
@@ -105,16 +163,29 @@ const Forms = () => {
                         <Tr>
                             <Th>Form Type</Th>
                             <Th>Responder URL</Th>
+                            <Th></Th>
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {forms &&
-                                forms.map((form) => (
-                                    <Tr>
-                                        <Td>{form.type}</Td>
-                                        <Td>{form.url}</Td>
-                                    </Tr>
-                                ))}
+                    {forms &&
+                        forms.map((form) => (
+                        <Tr key={form.id}> {/* Ensure to add a unique key */}
+                            <Td>{form.type}</Td>
+                            <Td>{form.url}</Td>
+                            <Td>
+                                <Button onClick={() => handleCopy(form.url)}>
+                                    Copy Link
+                                </Button>
+                            </Td>
+                            <Td>
+                                <Button
+                                    leftIcon={<EmailIcon />}
+                                    onClick={() => sendForms(form.url)}>
+                                    Email to All Students
+                                </Button>
+                            </Td>
+                        </Tr>
+                    ))}
                     </Tbody>
                 </Table>
             </TableContainer>
