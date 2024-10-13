@@ -52,6 +52,7 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
       ...prev,
       [name]: checked,
     }));
+    console.log(formOptions);
   };
 
   const sendForm = (event) => {
@@ -134,7 +135,7 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
           </Checkbox>
 
           <Checkbox
-          name="TimeAndPreference"
+          name="TimeAndPref"
           isChecked={formOptions.TimeAndPref}
           onChange={handleCheckboxChange}>
             Time & Preference
