@@ -47,6 +47,7 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
 
   //Changes checkbox state for form creation
   const handleCheckboxChange = (event) => {
+    console.log(event);
     const { name, checked } = event.target;
     setFormOptions((prev) => ({
       ...prev,
