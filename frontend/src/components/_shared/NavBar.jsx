@@ -48,11 +48,6 @@ const NavBar = ({ authenticated }) => {
             <b>Home</b>
           </Button>
         </Link>
-        <Link as={RouterLink} to="/tutorial" ml="8">
-          <Button colorScheme="white" variant="solid" color="black" fontSize="1.4em" fontWeight="light" size="lg" height="63" px="6">
-            <b>Tutorial</b>
-          </Button>
-        </Link>
         <Link as={RouterLink} to="/FAQ" ml="8">
           <Button colorScheme="white" variant="solid" color="black" fontSize="1.4em" fontWeight="light" size="lg" height="63" px="6">
             <b>FAQ</b>

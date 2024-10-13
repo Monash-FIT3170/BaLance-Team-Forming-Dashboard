@@ -1,4 +1,4 @@
-const { getBelbinResponse, getEffortResponse, getPreferenceResponse } = require('../helpers/formsHelpers');
+const { getBelbinResponse, getEffortResponse, getPreferenceResponse, generateForms, closeForm } = require('../helpers/formsHelpers');
 const { promiseBasedQuery, selectUnitOffKey } = require("../helpers/commonHelpers");
 
 const { google } = require('googleapis');
@@ -22,31 +22,145 @@ const pushData = async (req, res) => {
 
     console.log("pushData called")
 
-    const belbinResponse = await getBelbinResponse(auth, '1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE')
-    const effortResponse = await getEffortResponse(auth, '1gaVlsQARmiYYTmgr3wezZdWFJxVcyrWAaFpX5QleVy8')
-    console.log(belbinResponse)
+    const results = await promiseBasedQuery(
+        "SELECT form_id AS formId, test_type as testType " +
+        "FROM unit_form " +
+        "WHERE unit_off_id = ( " +
+        "    SELECT unit_off_id " +
+        "    FROM unit_offering " +
+        "    WHERE UPPER(unit_code) = UPPER(?) " +
+        "       AND unit_off_year = ?" +
+        "       AND unit_off_period = ?" +
+        ")",
+        [unitCode, year, period]
+    );
+    console.log(results);
+    let belbinResponse = null;
+    let effortResponse = null;
+    let projectResponse = null;
+    if (results.length > 0) {
 
-    personalityData = preparePersonalityData(belbinResponse, effortResponse)
+        const belbinFormId = results.find(result => result.testType === 'belbin');
+        const projectFormId = results.find(result => result.testType === 'preference');
+        const effortFormId = results.find(result => result.testType === 'effort');
 
-    for (const data of personalityData) {
-        addPersonalityData(data.students, data.testType, unitCode, year, period)
+        if (belbinFormId){
+            belbinResponse = await getBelbinResponse(auth, belbinFormId.formId)
+        }
+        if (effortFormId) {
+            effortResponse = await getEffortResponse(auth, effortFormId.formId)
+        }
+        if (projectFormId) {
+            projectResponse = await getPreferenceResponse(auth, projectFormId.formId)
+        }
+        
+        personalityData = preparePersonalityData(belbinResponse, effortResponse)
+
+        for (const data of personalityData) {
+            addPersonalityData(data.students, data.testType, unitCode, year, period)
+        }
     }
-
     res.status(200).json();
 };
 
-function preparePersonalityData(belbinResponses, effortResponses) {
-    console.log(belbinResponses)
-    const belbinData = belbinResponses.map(([studentId, belbinType]) => ({
-      studentId,
-      belbinType,
-    }));
-    const effortData = effortResponses.map(([studentId, hourCommitment, avgAssignmentMark]) => ({
-      studentId,
-      hourCommitment,
-      avgAssignmentMark,
-    }));
-  
+const getForms = async (req, res) => {
+
+    const { unitCode, year, period } = req.params;
+
+    const results = await promiseBasedQuery(
+        "SELECT form_id AS formId, test_type as testType, responder_url as url " +
+        "FROM unit_form " +
+        "WHERE unit_off_id = ( " +
+        "    SELECT unit_off_id " +
+        "    FROM unit_offering " +
+        "    WHERE UPPER(unit_code) = UPPER(?) " +
+        "       AND unit_off_year = ?" +
+        "       AND unit_off_period = ?" +
+        ")",
+        [unitCode, year, period]
+    );
+    
+    console.log(results);
+
+    let belbinResponse = null;
+    let effortResponse = null;
+    let projectResponse = null;
+
+    let formTypes = ['Belbin', 'Preference', 'Effort'];
+    let openForms = []
+    if (results.length > 0) {
+        formTypes.forEach(name => {
+            form = results.find(result => result.testType === name.toLowerCase());
+            if (form) {
+                openForms.push({
+                    url: form.url,
+                    type: name,
+                    id: form.formId
+                })
+            }
+        });
+    }
+    console.log(openForms)
+
+    res.status(200).json(openForms);
+}
+
+const closeOpenForm = async (req, res) => {
+    const { unitCode, year, period } = req.params;
+    const formId = req.body;
+
+    await promiseBasedQuery(
+        "DELETE FROM unit_form " +
+        "WHERE " +
+        "   form_id=? ",
+        [formId.id]
+    )
+    closeForm(auth, formId.id);
+    res.status(200).json();
+}
+
+const createForms = async (req, res) => {
+    const { unitCode, year, period } = req.params;
+    testTypes = req.body;
+
+    const [{ unitId }] = await promiseBasedQuery(
+        "SELECT unit_off_id as unitId FROM unit_offering " +
+        "WHERE " +
+        "   unit_code=? " +
+        "   AND unit_off_year=? " +
+        "   AND unit_off_period=?; ",
+        [unitCode, year, period]
+    );
+    generateForms(testTypes.Effort, testTypes.TimeAndPref, testTypes.Belbin, unitId);
+
+    res.status(200).json();
+}
+
+
+function preparePersonalityData(belbinResponses, effortResponses, projectResponses) {
+    let belbinData = null;
+    let effortData = null;
+    let preferenceData = null;
+    if (belbinResponses) {
+        belbinData = belbinResponses.map(([studentId, belbinType]) => ({
+        studentId,
+        belbinType,
+        }));
+    }
+    if (effortResponses) {
+        effortData = effortResponses.map(([studentId, hourCommitment, avgAssignmentMark]) => ({
+        studentId,
+        hourCommitment,
+        avgAssignmentMark,
+        }));
+    }
+    if (projectResponses) {
+        preferenceData = belbinResponses.map(([studentId, belbinType]) => ({
+        studentId,
+        belbinType,
+        }));
+    }
+
     const personalityData = [
       {
         students: belbinData,
@@ -55,6 +169,10 @@ function preparePersonalityData(belbinResponses, effortResponses) {
       {
         students: effortData,
         testType: 'effort'
+      },
+      {
+        students: preferenceData,
+        testType: "preference"
       }
     ];
   
@@ -77,7 +195,10 @@ const addPersonalityData = async(students, testType, unitCode, year, period) => 
         [unitCode, year, period]
     );
 
-    if (numEnrolledStudents !== students.length) {
+    if (!students) {
+        return;
+    }
+    if (numEnrolledStudents > students.length) {
         console.error("Personality data does not match number of students in database.")
         return;
     }
@@ -171,30 +292,66 @@ const addStudentEffort = async (personalityTestAttemptKeys, students) => {
      * database given the unique column requirements it has.
      */
     const resultInsertData = [];
-    // format the data so it fulfils the database column requirements
-    personalityTestAttemptKeys.forEach((attempt) => {
-        // find the student who made this attempt
-        const [student] = students.filter((student) => {
-            return student.studentId === attempt.student_id;
+
+    // Extract all student IDs from the attempts
+    const studentIds = [...new Set(personalityTestAttemptKeys.map(attempt => attempt.student_id))];
+
+    // Fetch wam_val for all students in one query
+    let wamValues = {};
+    try {
+        const wamResults = await promiseBasedQuery(
+            "SELECT student_id, wam_val FROM student WHERE student_id IN (?);",
+            [studentIds]
+        );
+
+        // Map wam_val results to a dictionary for quick access
+        wamResults.forEach(({ student_id, wam_val }) => {
+            wamValues[student_id] = wam_val;
         });
-        // add their data in a suitable format
-        resultInsertData.push([
-            attempt.test_attempt_id,
-            student.avgAssignmentMark,
-            student.hourCommitment,
-            student.avgAssignmentMark / student.hourCommitment,
-        ]);
+    } catch (err) {
+        console.error("Error fetching wam_val for students:", err);
+        return; // Exit if there's an error
+    }
+
+    // Format the data for insertion
+    personalityTestAttemptKeys.forEach((attempt) => {
+        const avgAssignmentMark = wamValues[attempt.student_id];
+
+        if (avgAssignmentMark !== undefined) {
+            const student = students.find(s => s.studentId === attempt.student_id);
+
+            if (student) {
+                const timeCommitment = student.hourCommitment;
+
+                // Add their data in a suitable format
+                resultInsertData.push([
+                    attempt.test_attempt_id,
+                    avgAssignmentMark,
+                    timeCommitment,
+                    avgAssignmentMark / timeCommitment,
+                ]);
+            } else {
+                console.log(`No student found for attempt ID: ${attempt.test_attempt_id}`);
+            }
+        } else {
+            console.log(`No wam_val found for student ID: ${attempt.student_id}`);
+        }
     });
 
-    try {
-        await promiseBasedQuery(
-            "INSERT IGNORE INTO effort_result " +
-            "(personality_test_attempt, assignment_avg, time_commitment_hrs, marks_per_hour) " +
-            "VALUES ?;",
-            [resultInsertData]
-        );
-    } catch (err) {
-        console.log(err);
+    // Insert the data into the effort_result table
+    if (resultInsertData.length > 0) {
+        try {
+            await promiseBasedQuery(
+                "INSERT IGNORE INTO effort_result " +
+                "(personality_test_attempt, assignment_avg, time_commitment_hrs, marks_per_hour) " +
+                "VALUES ?;",
+                [resultInsertData]
+            );
+        } catch (err) {
+            console.error("Error inserting into effort_result:", err);
+        }
+    } else {
+        console.log("No data to insert into effort_result.");
     }
 };
 
@@ -209,4 +366,4 @@ const addTestResultFunctionStrats = {
     // preference: addStudentPreferences
 };
 
-module.exports =  { pushData };
+module.exports =  { pushData, createForms, getForms, closeOpenForm };

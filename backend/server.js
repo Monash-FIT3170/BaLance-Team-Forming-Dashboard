@@ -4,6 +4,7 @@ const groupRoutes = require('./routes/groups');
 const studentRoutes = require('./routes/students');
 const analyticsRoutes = require('./routes/analytics');
 const formsRoutes = require('./routes/forms');
+const mailingRoutes = require('./routes/mailing')
 const cors = require('cors');
 const db_connection = require("./config/databaseConfig");
 const { auth0Middleware } = require('./middleware/auth0Middleware');
@@ -65,7 +66,9 @@ app.use('/api/units/', unitRoutes);
 app.use('/api/groups/', groupRoutes);
 app.use('/api/students/', studentRoutes);
 app.use('/api/analytics/', analyticsRoutes);
-app.use('/api/forms/', formsRoutes);
+app.use('/api/forms/', formsRoutes);;
+app.use('/api/mailing/', mailingRoutes)
+
 
 app.listen(process.env.PORT, "0.0.0.0", () => {
     console.log(`listening to port ${process.env.PORT}`);
