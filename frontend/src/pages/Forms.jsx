@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { MockAuth } from '../helpers/mockAuth';
 import { useParams } from 'react-router';
-import { AddIcon, ArrowBackIcon, EmailIcon } from "@chakra-ui/icons";
+import { AddIcon, ArrowBackIcon, CloseIcon, EmailIcon } from "@chakra-ui/icons";
 import {
     Flex,
     VStack,
@@ -73,6 +73,43 @@ const Forms = () => {
         });
     };
 
+    function closeForms(id) {
+        getAccessTokenSilently().then((token) => {
+      
+            fetch(
+            `/api/forms/${unitCode}/${year}/${period}/close`,
+            {
+              method: 'POST',
+              headers: new Headers({
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              }),
+              body: JSON.stringify({id}),
+            }
+          )
+            .then((response) => {
+              if (response.ok) {
+                toast({
+                  title: 'Form closed',
+                  description: `Google form for ${unitCode} have been successfully closed.`,
+                  status: 'success',
+                  duration: 4000,
+                  isClosable: true,
+              });
+              } else {
+                return response.text().then((responseText) => {
+                  console.log("it worked!!!")
+                });
+              }
+            })
+            .catch((error) => {
+              console.error('Error sending data to the REST API:', error);
+              // Optionally show an error message to the user.
+            });
+        })
+        console.log(id);
+    }
     function sendForms(url) {
         getAccessTokenSilently().then((token) => {
       
@@ -92,7 +129,7 @@ const Forms = () => {
               if (response.ok) {
                 toast({
                   title: 'Email Sent',
-                  description: `Google form(s) for ${unitCode} have been successfully sent to all users`,
+                  description: `Google form(s) for ${unitCode} have been successfully sent to all users. Be sure to tell users to check their spam folder.`,
                   status: 'success',
                   duration: 4000,
                   isClosable: true,
@@ -164,6 +201,7 @@ const Forms = () => {
                             <Th>Form Type</Th>
                             <Th>Responder URL</Th>
                             <Th></Th>
+                            <Th></Th>
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -180,8 +218,25 @@ const Forms = () => {
                             <Td>
                                 <Button
                                     leftIcon={<EmailIcon />}
-                                    onClick={() => sendForms(form.url)}>
+                                    onClick={() => {
+                                        const confirmed = window.confirm("This will email the form link to ALL students in this unit. Do you wish to continue?");
+                                        if (confirmed) {
+                                            sendForms(form.url);
+                                        }
+                                    }}>
                                     Email to All Students
+                                </Button>
+                            </Td>
+                            <Td>
+                                <Button
+                                    leftIcon={<CloseIcon />}
+                                    onClick={() => {
+                                        const confirmed = window.confirm("This will close the associated google form, no responses will be accepted after. Do you wish to continue?");
+                                        if (confirmed) {
+                                            closeForms(form.id);
+                                        }
+                                    }}>
+                                    Close Form
                                 </Button>
                             </Td>
                         </Tr>

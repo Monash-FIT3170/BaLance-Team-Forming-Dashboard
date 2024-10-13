@@ -23,6 +23,12 @@ let projectResponderURL = null
 let effortFormId = null
 let effortResponderURL = null
 
+async function closeForm(auth, formId) {
+  const authClient = await auth.getClient();
+  const forms = google.forms({ version: 'v1', auth: authClient });
+  // Implemented form closing here
+}
+
 async function createForm(auth,formBody){
     const authClient = await auth.getClient();
     const forms = google.forms({ version: 'v1', auth: authClient });
@@ -322,5 +328,6 @@ module.exports = {
     getBelbinResponse,
     getEffortResponse,
     getPreferenceResponse,
-    generateForms
+    generateForms,
+    closeForm
 }

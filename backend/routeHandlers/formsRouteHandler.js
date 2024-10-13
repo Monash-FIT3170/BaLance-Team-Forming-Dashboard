@@ -1,4 +1,4 @@
-const { getBelbinResponse, getEffortResponse, getPreferenceResponse, generateForms } = require('../helpers/formsHelpers');
+const { getBelbinResponse, getEffortResponse, getPreferenceResponse, generateForms, closeForm } = require('../helpers/formsHelpers');
 const { promiseBasedQuery, selectUnitOffKey } = require("../helpers/commonHelpers");
 
 const { google } = require('googleapis');
@@ -94,7 +94,8 @@ const getForms = async (req, res) => {
             if (form) {
                 openForms.push({
                     url: form.url,
-                    type: name
+                    type: name,
+                    id: form.formId
                 })
             }
         });
@@ -102,6 +103,20 @@ const getForms = async (req, res) => {
     console.log(openForms)
 
     res.status(200).json(openForms);
+}
+
+const closeOpenForm = async (req, res) => {
+    const { unitCode, year, period } = req.params;
+    const formId = req.body;
+
+    await promiseBasedQuery(
+        "DELETE FROM unit_form " +
+        "WHERE " +
+        "   form_id=? ",
+        [formId.id]
+    )
+    closeForm(auth, formId.id);
+    res.status(200).json();
 }
 
 const createForms = async (req, res) => {
@@ -351,4 +366,4 @@ const addTestResultFunctionStrats = {
     // preference: addStudentPreferences
 };
 
-module.exports =  { pushData, createForms, getForms };
+module.exports =  { pushData, createForms, getForms, closeOpenForm };

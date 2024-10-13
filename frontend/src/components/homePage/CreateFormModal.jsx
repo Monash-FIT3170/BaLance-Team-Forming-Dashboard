@@ -111,6 +111,7 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
       });
     },
     closeModal(),
+    window.location.reload(),
   )};
 
   const renderForm = () => (
