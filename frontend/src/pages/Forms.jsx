@@ -120,12 +120,12 @@ const Forms = () => {
             </TableContainer>
             </Box>
 
-            {/* Placeholder for Finished Forms */}
+            {/* Placeholder for Finished Forms
             <Box width="80%">
                 <Text fontSize="xl" fontWeight="bold" mt={8} mb={4}>
                     Finished Forms
                 </Text>
-            </Box>
+            </Box> */}
 
             {/* Modal for creating a new form */}
             <CreateFormModal isModalOpen={isOpen} onModalClose={onClose} />
