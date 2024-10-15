@@ -131,7 +131,7 @@ const createForms = async (req, res) => {
         "   AND unit_off_period=?; ",
         [unitCode, year, period]
     );
-    generateForms(testTypes.Effort, testTypes.TimeAndPref, testTypes.Belbin, unitId);
+    generateForms(testTypes[0], testTypes[1], testTypes[2], unitId);
 
     res.status(200).json();
 }
