@@ -1,6 +1,6 @@
 const { getBelbinResponse, getEffortResponse, getPreferenceResponse, generateForms, closeForm } = require('../helpers/formsHelpers');
 const { promiseBasedQuery, selectUnitOffKey } = require("../helpers/commonHelpers");
-const { addPersonalityData } = require('./studentRouteHandler')
+const { addTestResultFunctionStrats } = require("./studentRouteHandler.js");
 
 const { google } = require('googleapis');
 const { GoogleAuth } = require('google-auth-library');
@@ -58,7 +58,7 @@ const pushData = async (req, res) => {
         personalityData = preparePersonalityData(belbinResponse, effortResponse)
 
         for (const data of personalityData) {
-            await addPersonalityData(data.students, data.testType, unitCode, year, period)
+            addPersonalityData(data.students, data.testType, unitCode, year, period)
         }
     }
     res.status(200).json();
@@ -184,7 +184,7 @@ function preparePersonalityData(belbinResponses, effortResponses, projectRespons
     return personalityData
   }
 
-const addPersonalityDataF = async(students, testType, unitCode, year, period) => {
+const addPersonalityData = async(students, testType, unitCode, year, period) => {
     
     /* MAKE SURE ALL THE UNIT'S STUDENTS ARE ADDRESSED/PRESENT IN THE DATA BEING UPLOADED */
     // get count of enrolled students
@@ -264,111 +264,5 @@ const addPersonalityDataF = async(students, testType, unitCode, year, period) =>
        in accordance with its column requirements */
     addTestResultFunctionStrats[testType](personalityTestAttemptKeys, students);
 }
-
-const addStudentBelbin = async (personalityTestAttemptKeys, students) => {
-    /**
-     * Implements the logic required to add 'belbin' personality data to the
-     * database given the unique column requirements it has.
-     */
-    const resultInsertData = [];
-    // format the data so it fulfils the database column requirements
-    personalityTestAttemptKeys.forEach((attempt) => {
-        // find the student who made this attempt
-        const [student] = students.filter((student) => {
-            return student.studentId === attempt.student_id;
-        });
-        // add them to the array in the appropriate format
-        resultInsertData.push([attempt.test_attempt_id, student.belbinType]);
-    });
-
-    try {
-        await promiseBasedQuery(
-            "INSERT IGNORE INTO belbin_result (personality_test_attempt, belbin_type) " + "VALUES ?;",
-            [resultInsertData,]
-        );
-    } catch (err) {
-        console.log(err);
-    }
-};
-
-const addStudentEffort = async (personalityTestAttemptKeys, students) => {
-    /**
-     * Implements the logic required to add 'effort' personality data to the
-     * database given the unique column requirements it has.
-     */
-    const resultInsertData = [];
-
-    // Extract all student IDs from the attempts
-    const studentIds = [...new Set(personalityTestAttemptKeys.map(attempt => attempt.student_id))];
-
-    // Fetch wam_val for all students in one query
-    let wamValues = {};
-    try {
-        const wamResults = await promiseBasedQuery(
-            "SELECT student_id, wam_val FROM student WHERE student_id IN (?);",
-            [studentIds]
-        );
-
-        // Map wam_val results to a dictionary for quick access
-        wamResults.forEach(({ student_id, wam_val }) => {
-            wamValues[student_id] = wam_val;
-        });
-    } catch (err) {
-        console.error("Error fetching wam_val for students:", err);
-        return; // Exit if there's an error
-    }
-
-    // Format the data for insertion
-    personalityTestAttemptKeys.forEach((attempt) => {
-        const avgAssignmentMark = wamValues[attempt.student_id];
-
-        if (avgAssignmentMark !== undefined) {
-            const student = students.find(s => s.studentId === attempt.student_id);
-
-            if (student) {
-                const timeCommitment = student.hourCommitment;
-
-                // Add their data in a suitable format
-                resultInsertData.push([
-                    attempt.test_attempt_id,
-                    avgAssignmentMark,
-                    timeCommitment,
-                    avgAssignmentMark / timeCommitment,
-                ]);
-            } else {
-                console.log(`No student found for attempt ID: ${attempt.test_attempt_id}`);
-            }
-        } else {
-            console.log(`No wam_val found for student ID: ${attempt.student_id}`);
-        }
-    });
-
-    // Insert the data into the effort_result table
-    if (resultInsertData.length > 0) {
-        try {
-            await promiseBasedQuery(
-                "INSERT IGNORE INTO effort_result " +
-                "(personality_test_attempt, assignment_avg, time_commitment_hrs, marks_per_hour) " +
-                "VALUES ?;",
-                [resultInsertData]
-            );
-        } catch (err) {
-            console.error("Error inserting into effort_result:", err);
-        }
-    } else {
-        console.log("No data to insert into effort_result.");
-    }
-};
-
-const addTestResultFunctionStrats = {
-    /**
-     * A store of 'strategies' for adding different personality types with different
-     * column requirements to the database.
-     */
-    belbin: addStudentBelbin,
-    effort: addStudentEffort,
-    // the format of data is quite different, we can make it modular later.
-    // preference: addStudentPreferences
-};
 
 module.exports =  { pushData, createForms, getForms, closeOpenForm };

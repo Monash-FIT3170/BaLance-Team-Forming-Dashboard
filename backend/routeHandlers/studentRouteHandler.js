@@ -386,30 +386,66 @@ const addStudentEffort = async (personalityTestAttemptKeys, students) => {
      * database given the unique column requirements it has.
      */
     const resultInsertData = [];
-    // format the data so it fulfils the database column requirements
-    personalityTestAttemptKeys.forEach((attempt) => {
-        // find the student who made this attempt
-        const [student] = students.filter((student) => {
-            return student.studentId === attempt.student_id;
+
+    // Extract all student IDs from the attempts
+    const studentIds = [...new Set(personalityTestAttemptKeys.map(attempt => attempt.student_id))];
+
+    // Fetch wam_val for all students in one query
+    let wamValues = {};
+    try {
+        const wamResults = await promiseBasedQuery(
+            "SELECT student_id, wam_val FROM student WHERE student_id IN (?);",
+            [studentIds]
+        );
+
+        // Map wam_val results to a dictionary for quick access
+        wamResults.forEach(({ student_id, wam_val }) => {
+            wamValues[student_id] = wam_val;
         });
-        // add their data in a suitable format
-        resultInsertData.push([
-            attempt.test_attempt_id,
-            student.avgAssignmentMark,
-            student.hourCommitment,
-            student.avgAssignmentMark / student.hourCommitment,
-        ]);
+    } catch (err) {
+        console.error("Error fetching wam_val for students:", err);
+        return; // Exit if there's an error
+    }
+
+    // Format the data for insertion
+    personalityTestAttemptKeys.forEach((attempt) => {
+        const avgAssignmentMark = wamValues[attempt.student_id];
+
+        if (avgAssignmentMark !== undefined) {
+            const student = students.find(s => s.studentId === attempt.student_id);
+
+            if (student) {
+                const timeCommitment = student.hourCommitment;
+
+                // Add their data in a suitable format
+                resultInsertData.push([
+                    attempt.test_attempt_id,
+                    avgAssignmentMark,
+                    timeCommitment,
+                    avgAssignmentMark / timeCommitment,
+                ]);
+            } else {
+                console.log(`No student found for attempt ID: ${attempt.test_attempt_id}`);
+            }
+        } else {
+            console.log(`No wam_val found for student ID: ${attempt.student_id}`);
+        }
     });
 
-    try {
-        await promiseBasedQuery(
-            "INSERT IGNORE INTO effort_result " +
-            "(personality_test_attempt, assignment_avg, time_commitment_hrs, marks_per_hour) " +
-            "VALUES ?;",
-            [resultInsertData]
-        );
-    } catch (err) {
-        console.log(err);
+    // Insert the data into the effort_result table
+    if (resultInsertData.length > 0) {
+        try {
+            await promiseBasedQuery(
+                "INSERT IGNORE INTO effort_result " +
+                "(personality_test_attempt, assignment_avg, time_commitment_hrs, marks_per_hour) " +
+                "VALUES ?;",
+                [resultInsertData]
+            );
+        } catch (err) {
+            console.error("Error inserting into effort_result:", err);
+        }
+    } else {
+        console.log("No data to insert into effort_result.");
     }
 };
 
@@ -634,5 +670,6 @@ module.exports = {
     deleteStudentEnrolment,
     deleteStudentGroupAlloc,
     addPersonalityData,
-    addStudentTimesAndPreferences
+    addStudentTimesAndPreferences,
+    addTestResultFunctionStrats
 };
