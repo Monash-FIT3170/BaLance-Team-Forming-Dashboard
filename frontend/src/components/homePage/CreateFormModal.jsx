@@ -17,7 +17,14 @@ import {
   Text,
   Button,
   Box,
-  useToast
+  useToast,
+  HStack,
+  NumberInput,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInputField,
+  NumberInputStepper,
+  Spinner 
 } from "@chakra-ui/react";
 
 const CreateFormModal = ({ isModalOpen, onModalClose }) => {
@@ -39,7 +46,10 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
   };
 
   // Set checkbox values
-  const [checkedItems, setCheckedItems] = useState([false, false, false]);
+  const [checkedItems, setCheckedItems] = useState([false, false, false, 0]);
+
+  // Set preference count
+  const [preferenceCount, setCount] = useState(0)
 
   const sendForm = (event) => {
     // const forms = google.forms({version:'v1', auth: jwclient});
@@ -73,15 +83,13 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
           'Content-Type': 'application/json',
         }),
         body: JSON.stringify(
-          checkedItems
+          {checkedItems, preferenceCount}
       )
       }
     )
       .then((response) => {
         if (response.ok) {
-          console.log("Send request for form creation");
-        } else {
-          return response.text().then((responseText) => {
+          console.log("Sent request for form creation");
             toast({
               title: 'Form Created',
               description: `Google form(s) for ${unitCode} have been successfully created`,
@@ -89,6 +97,9 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
               duration: 4000,
               isClosable: true,
           });
+          window.location.reload();
+        } else {
+          return response.text().then((responseText) => {
           });
         }
       })
@@ -98,7 +109,6 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
       });
     },
     closeModal(),
-    window.location.reload(),
   )};
 
   const renderForm = () => (
@@ -119,12 +129,21 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
             Effort
           </Checkbox>
 
-          <Checkbox
-          name="TimeAndPref"
-          isChecked={checkedItems[2]}
-          onChange={e => setCheckedItems([checkedItems[0], checkedItems[1], e.target.checked])}>
-            Time & Preference
-          </Checkbox>
+          <HStack>
+            <Checkbox
+            name="TimeAndPref"
+            isChecked={checkedItems[2]}
+            onChange={e => setCheckedItems([checkedItems[0], checkedItems[1], e.target.checked])}>
+              Project Preference
+            </Checkbox>
+            <NumberInput size='md' maxW={20} defaultValue={1} min={1} isDisabled={!checkedItems[2]} onChange={(value)=>setCount(value)}>
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          </HStack>
         </Stack>
       </FormControl>
       <Box position="relative">

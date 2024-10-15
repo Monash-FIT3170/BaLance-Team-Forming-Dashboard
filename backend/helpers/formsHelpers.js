@@ -81,7 +81,28 @@ function belbinForm() {
     }
 }
 
-async function generateForms(effort, belbin, project, unitId) {
+function generateProjectForm(projectCount){
+  let projectRequest = formData.projectRequest;
+  for (let i = 0; i < projectCount; i++) {
+
+    let id = "2"
+    let currentValue = i + 1
+    id = id + currentValue.toString()
+    let questionJson = {
+      "questionId" : id,
+      "required" : true,
+      "rowQuestion": {
+        "title": currentValue.toString()
+      }
+    }
+    let groupSelectionJson = { "value": currentValue.toString() }
+    projectRequest[2].createItem.item.questionGroupItem.questions.push(questionJson)
+    projectRequest[2].createItem.item.questionGroupItem.grid.columns.options.push(groupSelectionJson)
+  }
+  return projectRequest
+}
+
+async function generateForms(effort, belbin, project, projectCount, unitId) {
 
     if (effort) {
         var effortFormBody = effortForm();
@@ -101,7 +122,8 @@ async function generateForms(effort, belbin, project, unitId) {
         var projForm = await createForm(auth, projectFormBody);
         projectFormId = projForm.data.formId;
         projectResponderURL = projForm.data.responderUri;
-        await updateForm(auth, projectFormId, formData.projectRequest);
+        const projectFormJSON = generateProjectForm(projectCount);
+        await updateForm(auth, projectFormId, projectFormJSON);
         await promiseBasedQuery(
           "INSERT IGNORE INTO unit_form (unit_off_id, form_id, test_type, responder_url)" +
           "VALUES (?, ?, ?, ?);", 
@@ -124,7 +146,6 @@ async function generateForms(effort, belbin, project, unitId) {
     }
     console.log(belbinResponderURL, effortResponderURL, projectResponderURL);
 }
-
 
 //note: this can probably only fetch responses from forms the service account has access to, either send the form to the email or make the account create it using createForm. 
 async function getFormResponseList(auth,formId){

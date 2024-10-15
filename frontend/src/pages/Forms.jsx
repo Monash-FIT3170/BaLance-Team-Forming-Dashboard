@@ -90,16 +90,16 @@ const Forms = () => {
           )
             .then((response) => {
               if (response.ok) {
+                console.log("submitted close")
                 toast({
-                  title: 'Form closed',
-                  description: `Google form for ${unitCode} have been successfully closed. Refresh page to see updated list.`,
-                  status: 'success',
-                  duration: 4000,
-                  isClosable: true,
-              });
+                    title: 'Form closed',
+                    description: `Google form for ${unitCode} have been successfully closed. Refresh page to see updated list.`,
+                    status: 'success',
+                    duration: 4000,
+                    isClosable: true,
+                });
               } else {
                 return response.text().then((responseText) => {
-                  console.log("it worked!!!")
                 });
               }
             })

@@ -76,7 +76,7 @@ const UnitAnalytics = () => {
                     buttonUrl={`/students/${unitCode}/${year}/${period}`}
                 />
             </Center>
-
+            <Spinner color='blue.500' />
             {analytics.map((data) => (
                 <AnalyticsCard personalityTypeData={data} />
             ))}

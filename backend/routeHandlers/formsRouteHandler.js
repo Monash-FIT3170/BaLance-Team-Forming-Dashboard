@@ -1,5 +1,6 @@
 const { getBelbinResponse, getEffortResponse, getPreferenceResponse, generateForms, closeForm } = require('../helpers/formsHelpers');
 const { promiseBasedQuery, selectUnitOffKey } = require("../helpers/commonHelpers");
+const { addPersonalityData } = require('./studentRouteHandler')
 
 const { google } = require('googleapis');
 const { GoogleAuth } = require('google-auth-library');
@@ -57,7 +58,7 @@ const pushData = async (req, res) => {
         personalityData = preparePersonalityData(belbinResponse, effortResponse)
 
         for (const data of personalityData) {
-            addPersonalityData(data.students, data.testType, unitCode, year, period)
+            await addPersonalityData(data.students, data.testType, unitCode, year, period)
         }
     }
     res.status(200).json();
@@ -121,7 +122,11 @@ const closeOpenForm = async (req, res) => {
 
 const createForms = async (req, res) => {
     const { unitCode, year, period } = req.params;
-    testTypes = req.body;
+    const checkedItems = req.body.checkedItems;
+    const projectCount = req.body.preferenceCount;
+
+    console.log(checkedItems)
+    console.log(projectCount)
 
     const [{ unitId }] = await promiseBasedQuery(
         "SELECT unit_off_id as unitId FROM unit_offering " +
@@ -131,7 +136,7 @@ const createForms = async (req, res) => {
         "   AND unit_off_period=?; ",
         [unitCode, year, period]
     );
-    generateForms(testTypes[0], testTypes[1], testTypes[2], unitId);
+    generateForms(checkedItems[0], checkedItems[1], checkedItems[2], projectCount, unitId);
 
     res.status(200).json();
 }
@@ -155,7 +160,7 @@ function preparePersonalityData(belbinResponses, effortResponses, projectRespons
         }));
     }
     if (projectResponses) {
-        preferenceData = belbinResponses.map(([studentId, belbinType]) => ({
+        preferenceData = projectResponses.map(([studentId, belbinType]) => ({
         studentId,
         belbinType,
         }));
@@ -179,7 +184,7 @@ function preparePersonalityData(belbinResponses, effortResponses, projectRespons
     return personalityData
   }
 
-const addPersonalityData = async(students, testType, unitCode, year, period) => {
+const addPersonalityDataF = async(students, testType, unitCode, year, period) => {
     
     /* MAKE SURE ALL THE UNIT'S STUDENTS ARE ADDRESSED/PRESENT IN THE DATA BEING UPLOADED */
     // get count of enrolled students
