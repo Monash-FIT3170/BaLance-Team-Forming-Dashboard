@@ -23,8 +23,7 @@ import {
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInputField,
-  NumberInputStepper,
-  Spinner 
+  NumberInputStepper
 } from "@chakra-ui/react";
 
 const CreateFormModal = ({ isModalOpen, onModalClose }) => {

@@ -1,6 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { useDisclosure, Grid, Box, Flex, Spacer, Center, VStack } from '@chakra-ui/react';
+import { 
+    useDisclosure, 
+    Grid, 
+    Box, 
+    Flex, 
+    Spacer, 
+    Center, 
+    VStack, 
+    Spinner 
+} from '@chakra-ui/react';
 
 import { MockAuth } from '../helpers/mockAuth';
 import UnitCard from '../components/homePage/UnitCard';
@@ -11,6 +20,7 @@ import AddButton from '../components/_shared/AddButton';
 
 function Units() {
     const [units, setUnits] = useState([]);
+    const [unitsLoaded, setUnitsLoaded] = useState(false);
     let authService = {
         DEV: MockAuth,
         TEST: useAuth0,
@@ -32,6 +42,8 @@ function Units() {
                 .then((res) => res.json())
                 .then((data) => {
                     setUnits(data);
+                    setUnitsLoaded(true);
+                    console.log(unitsLoaded);
                 })
                 .catch((err) => {
                     console.error('Error fetching units:', err);
@@ -66,6 +78,26 @@ function Units() {
             {/*/>*/}
           </VStack>
                 </Flex>
+                { units && unitsLoaded && units.length == 0 ?                             
+                            <Center>
+                                <Box fontSize='2xl'>
+                                    No Units Available, Create Some First!
+                                </Box>
+                            </Center> : 
+                            <></>
+                    }
+                { units && unitsLoaded ?    
+                    <></> : 
+                        <Center>
+                            <Spinner
+                                thickness='4px'
+                                speed='0.65s'
+                                emptyColor='gray.200'
+                                color='blue.500'
+                                size='xl'
+                            />
+                        </Center>
+                }
             </Box>
 
             <Center>
@@ -79,14 +111,15 @@ function Units() {
                     gap={5}
                     className="units"
                 >
-                    {units &&
+                    {units && unitsLoaded && (
                         units.map((unit) => (
                             <UnitCard
                                 {...unit}
                                 key={`${unit.unit_code}/${unit.unit_off_year}/${unit.unit_off_period}`}
                                 className="unit"
                             />
-                        ))}
+                        ))
+                    )}
                 </Grid>
             </Center>
 

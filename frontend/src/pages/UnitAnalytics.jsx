@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { Center } from '@chakra-ui/react';
+import { AbsoluteCenter, Center, Spacer, Spinner, VStack } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { MockAuth } from '../helpers/mockAuth';
@@ -13,7 +13,7 @@ import {
     LinearScale,
     CategoryScale,
     BarController,
-    BarElement,
+    BarElement
 } from 'chart.js';
 
 import PageHeader from '../components/_shared/PageHeader';
@@ -59,16 +59,13 @@ const UnitAnalytics = () => {
                 });
         });
     }, []);
-
-    console.log(analytics);
-
     return (
         <div>
+            <VStack>
             <PageHeader
                 fontSize={'2xl'}
                 pageDesc={`Unit analytics: ${unitCode} ${period} ${year}`}
             />
-
             <Center>
                 <NavButton
                     buttonIcon={<ArrowBackIcon />}
@@ -76,10 +73,25 @@ const UnitAnalytics = () => {
                     buttonUrl={`/students/${unitCode}/${year}/${period}`}
                 />
             </Center>
-            <Spinner color='blue.500' />
+            {analytics && analytics.length > 0 ? 
+                    <></> : (
+                        <div>
+                            <Center>
+                                <Spinner
+                                    thickness='4px'
+                                    speed='0.65s'
+                                    emptyColor='gray.200'
+                                    color='blue.500'
+                                    size='xl'
+                                    />
+                            </Center>
+                        </div>)
+
+                }
             {analytics.map((data) => (
                 <AnalyticsCard personalityTypeData={data} />
             ))}
+            </VStack>
         </div>
     );
 };
