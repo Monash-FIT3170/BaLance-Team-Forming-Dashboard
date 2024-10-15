@@ -92,7 +92,7 @@ const Forms = () => {
               if (response.ok) {
                 toast({
                   title: 'Form closed',
-                  description: `Google form for ${unitCode} have been successfully closed.`,
+                  description: `Google form for ${unitCode} have been successfully closed. Refresh page to see updated list.`,
                   status: 'success',
                   duration: 4000,
                   isClosable: true,
@@ -205,42 +205,49 @@ const Forms = () => {
                         </Tr>
                     </Thead>
                     <Tbody>
-                    {forms &&
-                        forms.map((form) => (
-                        <Tr key={form.id}> {/* Ensure to add a unique key */}
-                            <Td>{form.type}</Td>
-                            <Td>{form.url}</Td>
-                            <Td>
-                                <Button onClick={() => handleCopy(form.url)}>
-                                    Copy Link
-                                </Button>
-                            </Td>
-                            <Td>
-                                <Button
-                                    leftIcon={<EmailIcon />}
-                                    onClick={() => {
-                                        const confirmed = window.confirm("This will email the form link to ALL students in this unit. Do you wish to continue?");
-                                        if (confirmed) {
-                                            sendForms(form.url);
-                                        }
-                                    }}>
-                                    Email to All Students
-                                </Button>
-                            </Td>
-                            <Td>
-                                <Button
-                                    leftIcon={<CloseIcon />}
-                                    onClick={() => {
-                                        const confirmed = window.confirm("This will close the associated google form, no responses will be accepted after. Do you wish to continue?");
-                                        if (confirmed) {
-                                            closeForms(form.id);
-                                        }
-                                    }}>
-                                    Close Form
-                                </Button>
-                            </Td>
-                        </Tr>
-                    ))}
+                    {forms && forms.length > 0 ? (
+                            forms.map((form) => (
+                                <Tr key={form.id}>
+                                    <Td>{form.type}</Td>
+                                    <Td>{form.url}</Td>
+                                    <Td>
+                                        <Button onClick={() => handleCopy(form.url)}>
+                                            Copy Link
+                                        </Button>
+                                    </Td>
+                                    <Td>
+                                        <Button
+                                            leftIcon={<EmailIcon />}
+                                            onClick={() => {
+                                                const confirmed = window.confirm("This will email the form link to ALL students in this unit. Do you wish to continue?");
+                                                if (confirmed) {
+                                                    sendForms(form.url);
+                                                }
+                                            }}>
+                                            Email to All Students
+                                        </Button>
+                                    </Td>
+                                    <Td>
+                                        <Button
+                                            leftIcon={<CloseIcon />}
+                                            onClick={() => {
+                                                const confirmed = window.confirm("This will close the associated google form, no responses will be accepted after. Do you wish to continue?");
+                                                if (confirmed) {
+                                                    closeForms(form.id);
+                                                }
+                                            }}>
+                                            Close Form
+                                        </Button>
+                                    </Td>
+                                </Tr>
+                            ))
+                        ) : (
+                            <Tr>
+                                <Td colSpan={5} style={{ textAlign: 'center' }}>
+                                    No forms created.
+                                </Td>
+                            </Tr>
+                        )}
                     </Tbody>
                 </Table>
             </TableContainer>
