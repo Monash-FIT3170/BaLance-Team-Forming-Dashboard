@@ -38,22 +38,8 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
     onModalClose();
   };
 
-  //Checkbox states
-  const [formOptions, setFormOptions] = useState({
-    Belbin: false,
-    Effort: false,
-    TimeAndPref: false
-  });
-
-  //Changes checkbox state for form creation
-  const handleCheckboxChange = (event) => {
-    const { name, checked } = event.target;
-    setFormOptions((prev) => ({
-      ...prev,
-      [name]: checked,
-    }));
-    console.log(formOptions);
-  };
+  // Set checkbox values
+  const [checkedItems, setCheckedItems] = useState([false, false, false]);
 
   const sendForm = (event) => {
     // const forms = google.forms({version:'v1', auth: jwclient});
@@ -87,7 +73,7 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
           'Content-Type': 'application/json',
         }),
         body: JSON.stringify(
-          formOptions
+          checkedItems
       )
       }
     )
@@ -121,23 +107,22 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
         <Stack spacing={5} direction='column'>
           <Checkbox
           name="Belbin"
-          isChecked={formOptions.Belbin}
-          onChange={handleCheckboxChange}>
-          
+          isChecked={checkedItems[0]}
+          onChange={e => setCheckedItems([e.target.checked, checkedItems[1], checkedItems[2]])}>
             Belbin
           </Checkbox>
 
           <Checkbox
            name="Effort"
-           isChecked={formOptions.Effort}
-           onChange={handleCheckboxChange}>
+           isChecked={checkedItems[1]}
+           onChange={e => setCheckedItems([checkedItems[0], e.target.checked, checkedItems[2]])}>
             Effort
           </Checkbox>
 
           <Checkbox
           name="TimeAndPref"
-          isChecked={formOptions.TimeAndPref}
-          onChange={handleCheckboxChange}>
+          isChecked={checkedItems[2]}
+          onChange={e => setCheckedItems([checkedItems[0], checkedItems[1], e.target.checked])}>
             Time & Preference
           </Checkbox>
         </Stack>
