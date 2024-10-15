@@ -345,10 +345,38 @@ async function getPreferenceResponse(auth, formId) {
   return responseList;
 }
 
+
+const addStudentTimesAndPreferences = async (unitCode, year, period, students, testType) => {
+  // check how many preferences each student has submitted
+  const numberOfPreferencesForEachStudent = students.map(student => {
+      const { timestamp, email, fullName, studentId, ...preferences } = student;
+      return Object.keys(preferences).length;
+  })
+
+  console.log(numberOfPreferencesForEachStudent)
+
+  // get the maximum number of preferences submitted by a student
+  const maxPreferences = Math.max(...numberOfPreferencesForEachStudent);
+  // validate that each student has submitted the same number of preferences
+  const filteredStudents = students.filter(student => {
+      // return only if the student has submitted maxPreferences number of preferences
+      const { timestamp, email, fullName, studentId, ...preferences } = student;
+      return Object.keys(preferences).length === maxPreferences;
+  })
+  try {
+      await populatepersonalityTestAttempt(filteredStudents, unitCode, year, period, testType);
+      await populatePreferenceSubmission(filteredStudents);
+      await populateProjectPreference(filteredStudents, unitCode);
+  } catch (error) {
+      console.log(error)
+  }
+}
+
 module.exports = {
     getBelbinResponse,
     getEffortResponse,
     getPreferenceResponse,
     generateForms,
-    closeForm
+    closeForm,
+    addStudentTimesAndPreferences
 }
