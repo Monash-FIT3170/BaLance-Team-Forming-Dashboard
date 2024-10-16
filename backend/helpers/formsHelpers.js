@@ -174,6 +174,40 @@ async function getForm(auth, formId){
 //const responses = getFormResponseList(auth,'1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE')
 //const form = getForm(auth, "1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE")
 
+async function prepareTimesAndPreferencesData(projectData, unitCode) {
+  const idsAndTimestamps = projectData.map(entry => [entry[0], entry[1]]);
+  const studentIds = idsAndTimestamps.map(entry => entry[0]);
+
+  const studentData = await promiseBasedQuery(
+    "SELECT s.student_id, s.email_address, s.preferred_name || ' ' || last_name AS fullname " +
+    "FROM student s " +
+    "JOIN unit_enrolment ue ON s.stud_unique_id = ue.stud_unique_id " +
+    "WHERE ue.unit_off_id = ? " +
+    "AND s.student_id IN (?);", 
+    [unitCode, studentIds]
+  );
+
+  const result = projectData.map(([studentId, timestamp, ...preferences]) => {
+    const studentInfo = studentData.find(student => student.student_id === studentId);
+
+    // just in case the student id list returns no email / name
+    const student = {
+      timestamp: timestamp,
+      email: studentInfo ? studentInfo.email_address : null,
+      fullName: studentInfo ? studentInfo.fullName : null,
+      studentId: studentId,
+    };
+
+    // Add preferences dynamically
+    preferences.forEach((preference, index) => {
+      student[`Project Preference ${index + 1}`] = preference;
+    });
+
+    return student;
+  });
+
+  return result;
+}
 
 async function getBelbinResponse(auth, formId) {
   const belbinResponses = await getFormResponseList(auth, formId);
@@ -313,7 +347,6 @@ async function getEffortResponse(auth, formId) {
 async function getPreferenceResponse(auth, formId) {
   const projectPreferencesResponses = await getFormResponseList(auth, formId);
   let responseList = [];
-  let response = [studentId];
 
   if(!projectPreferencesResponses.data.responses) {
     return;
@@ -321,7 +354,10 @@ async function getPreferenceResponse(auth, formId) {
   
   for (let i = 0; i < projectPreferencesResponses.data.responses.length; i++) {
       const answer = projectPreferencesResponses.data.responses[i].answers;
+      const lastSubmittedTime = projectPreferencesResponses.data.responses[i].lastSubmittedTime;
       const studentId = answer['00000001'].textAnswers.answers[0].value;
+
+      let response = [studentId, lastSubmittedTime]
       
       let answerNo = 1;
       // Get next preference answer ID, add it if it exists
@@ -338,7 +374,7 @@ async function getPreferenceResponse(auth, formId) {
           }
       }
 
-      responseList.push([studentId, pref1, pref2, pref3, pref4, pref5, pref6, pref7, pref8, pref9, pref10]);
+      responseList.push(response);
   }
   
   // console.log(responseList);
@@ -378,5 +414,6 @@ module.exports = {
     getPreferenceResponse,
     generateForms,
     closeForm,
-    addStudentTimesAndPreferences
+    addStudentTimesAndPreferences,
+    prepareTimesAndPreferencesData
 }

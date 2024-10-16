@@ -1,4 +1,4 @@
-const { getBelbinResponse, getEffortResponse, getPreferenceResponse, generateForms, closeForm } = require('../helpers/formsHelpers');
+const { getBelbinResponse, getEffortResponse, getPreferenceResponse, generateForms, closeForm, addStudentTimesAndPreferences, prepareTimesAndPreferencesData } = require('../helpers/formsHelpers');
 const { promiseBasedQuery, selectUnitOffKey } = require("../helpers/commonHelpers");
 const { addTestResultFunctionStrats } = require("./studentRouteHandler.js");
 
@@ -59,6 +59,10 @@ const pushData = async (req, res) => {
 
         for (const data of personalityData) {
             addPersonalityData(data.students, data.testType, unitCode, year, period)
+        }
+        if (projectResponse) {
+            const projectData = prepareTimesAndPreferencesData(projectResponse)
+            addStudentTimesAndPreferences(unitCode, year, period, projectData, 'times')
         }
     }
     res.status(200).json();
@@ -142,10 +146,9 @@ const createForms = async (req, res) => {
 }
 
 
-function preparePersonalityData(belbinResponses, effortResponses, projectResponses) {
+function preparePersonalityData(belbinResponses, effortResponses) {
     let belbinData = null;
     let effortData = null;
-    let preferenceData = null;
     if (belbinResponses) {
         belbinData = belbinResponses.map(([studentId, belbinType]) => ({
         studentId,
@@ -159,12 +162,6 @@ function preparePersonalityData(belbinResponses, effortResponses, projectRespons
         avgAssignmentMark,
         }));
     }
-    if (projectResponses) {
-        preferenceData = projectResponses.map(([studentId, belbinType]) => ({
-        studentId,
-        belbinType,
-        }));
-    }
 
     const personalityData = [
       {
@@ -174,10 +171,6 @@ function preparePersonalityData(belbinResponses, effortResponses, projectRespons
       {
         students: effortData,
         testType: 'effort'
-      },
-      {
-        students: preferenceData,
-        testType: "preference"
       }
     ];
   
