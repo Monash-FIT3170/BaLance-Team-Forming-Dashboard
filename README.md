@@ -127,7 +127,47 @@ Setting up BaLance:
 ![RailwayDeployed](docs/images/InstallationImages/RailwayDeployed.png) \
 Note: The deployed backend and frontend do not run the schema creation script. If needed to be run, it is recommended to connect to the online database via terminal. Command to so can be found by clicking on the mysql instance -> data tab -> connect ->public network. Can also perform the necessary changes via the railway UI. 
 
+# Git Quality Assurance 
 
+## Git Repository and Branching Model
+The trunk based development branching model will be used in this project. This ensures that the main branch is always in development and the integration of features is continuous. This continuous integration allows for frequent code testing and reviews, promoting the quality of the code. Furthermore, continuous integration and frequent testing will help catch bugs early and reduce the risk of deploying a faulty product.
+Commits
+
+Developers are expected to regularly commit their progress. Commits should be small in size. Examples of acceptable commits are a complete function, or the framework for a class. In the case of large classes, every function within the class should be committed separately. When debugging code, developers should refrain from committing debugs in multiple sections of the code simultaneously. Each commit should only pertain to debugs of one function or a similarly small unit of code. 
+
+Commit descriptions should feature the following prefixes/tags: DEBUG, FEATURE, DOCS, REFACTOR, TEST, STYLE. The format of the commit should be ‘[prefix]: [description]’. Descriptions should be written in an imperative mood, using actionable verbs such as ‘add’, ‘update’, or ‘remove’. The description should be a single concise sentence. If your commit message needs to be longer, this indicates that it can be broken down into multiple commits.
+
+
+## Branch
+### Branching Rules
+The main branch currently in github will function as the trunk branch with ‘feature’ branches as short development branches. Feature branches are branches where teams will develop, implement small tasks and features or perform code spikes all requiring no more than a few days' effort. After features are completed, a pull request (PR) shall be requested by the agile team with final code review and execution of CI/CD pipelines before merging into the main branch. (Complete CI/CD pipelines may not be applicable to certain, if not any, stages of the project as it is a requirement to be implemented). 
+
+
+### Branch Naming Convention
+Branch names shall follow the following convention:
+Type of Branch/Related User Stories/description of branch
+
+Types of branches include:
+Feature
+Code Spike
+Hotfix
+
+Eg. Feature/User Story 1/Add Button
+
+
+## Versioning strategy 
+Semantic Versioning (SemVer): Semantic Versioning uses a three-part version number: MAJOR.MINOR.PATCH. \
+[MAJOR] Significant changes and versions are not backwards compatible \
+[MINOR] New features and versions are backward compatible \
+[PATCH] Bug fixes/ small changes. Remains backward compatible \
+## Pull requests 
+Contributions are welcome and can be submitted via pull requests. \
+All pull requests must include the following: 
+- A brief summary of the changes made.
+- References to any relevant issue numbers (if applicable).
+- Instructions for testing the changes.
+- Any other relevant information (e.g., potential impacts on other parts of the codebase).
+A maintainer will be notified and review the changes made. 
 
 
 
