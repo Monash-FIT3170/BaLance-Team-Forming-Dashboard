@@ -671,5 +671,8 @@ module.exports = {
     deleteStudentGroupAlloc,
     addPersonalityData,
     addStudentTimesAndPreferences,
-    addTestResultFunctionStrats
+    addTestResultFunctionStrats,
+    populatepersonalityTestAttempt,
+    populatePreferenceSubmission,
+    populateProjectPreference
 };

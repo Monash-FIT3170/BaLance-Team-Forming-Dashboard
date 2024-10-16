@@ -54,14 +54,14 @@ const pushData = async (req, res) => {
         if (projectFormId) {
             projectResponse = await getPreferenceResponse(auth, projectFormId.formId)
         }
-        
-        personalityData = preparePersonalityData(belbinResponse, effortResponse)
-
-        for (const data of personalityData) {
-            addPersonalityData(data.students, data.testType, unitCode, year, period)
+        if (effortFormId || belbinFormId){
+            personalityData = preparePersonalityData(belbinResponse, effortResponse)
+            for (const data of personalityData) {
+                addPersonalityData(data.students, data.testType, unitCode, year, period)
+            }
         }
         if (projectResponse) {
-            const projectData = prepareTimesAndPreferencesData(projectResponse)
+            const projectData = await prepareTimesAndPreferencesData(projectResponse, unitCode, year, period)
             addStudentTimesAndPreferences(unitCode, year, period, projectData, 'times')
         }
     }

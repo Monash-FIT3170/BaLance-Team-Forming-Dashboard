@@ -14,6 +14,7 @@ const auth = new GoogleAuth({
 });
 
 const formData = require('../data/forms.json');
+const { populatepersonalityTestAttempt, populatePreferenceSubmission, populateProjectPreference } = require("../routeHandlers/studentRouteHandler.js");
 
 
 let belbinFormId = null
@@ -174,18 +175,29 @@ async function getForm(auth, formId){
 //const responses = getFormResponseList(auth,'1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE')
 //const form = getForm(auth, "1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE")
 
-async function prepareTimesAndPreferencesData(projectData, unitCode) {
+async function prepareTimesAndPreferencesData(projectData, unitCode, year, period) {
   const idsAndTimestamps = projectData.map(entry => [entry[0], entry[1]]);
   const studentIds = idsAndTimestamps.map(entry => entry[0]);
 
-  const studentData = await promiseBasedQuery(
-    "SELECT s.student_id, s.email_address, s.preferred_name || ' ' || last_name AS fullname " +
+  console.log("mapped ids")
+
+  studentData = await promiseBasedQuery(
+    "SELECT s.student_id, s.email_address, CONCAT(s.preferred_name,' ', s.last_name) AS fullname " +
     "FROM student s " +
     "JOIN unit_enrolment ue ON s.stud_unique_id = ue.stud_unique_id " +
-    "WHERE ue.unit_off_id = ? " +
+    "WHERE ue.unit_off_id = (" +
+        "SELECT u.unit_off_id " +
+        "FROM unit_offering u " +
+        "WHERE u.unit_code = ? " +
+        "AND u.unit_off_year = ? " +
+        "AND u.unit_off_period = ?" +
+    ") " +
     "AND s.student_id IN (?);", 
-    [unitCode, studentIds]
+    [unitCode, year, period, studentIds]
   );
+  console.log(studentData)
+
+  console.log("queried students")
 
   const result = projectData.map(([studentId, timestamp, ...preferences]) => {
     const studentInfo = studentData.find(student => student.student_id === studentId);
@@ -194,7 +206,7 @@ async function prepareTimesAndPreferencesData(projectData, unitCode) {
     const student = {
       timestamp: timestamp,
       email: studentInfo ? studentInfo.email_address : null,
-      fullName: studentInfo ? studentInfo.fullName : null,
+      fullName: studentInfo ? studentInfo.fullname : null,
       studentId: studentId,
     };
 
@@ -351,6 +363,7 @@ async function getPreferenceResponse(auth, formId) {
   if(!projectPreferencesResponses.data.responses) {
     return;
   }
+  console.log("getting preference responses")
   
   for (let i = 0; i < projectPreferencesResponses.data.responses.length; i++) {
       const answer = projectPreferencesResponses.data.responses[i].answers;
@@ -372,6 +385,7 @@ async function getPreferenceResponse(auth, formId) {
           else {
             break;
           }
+          answerNo = answerNo + 1;
       }
 
       responseList.push(response);
