@@ -19,7 +19,10 @@ import {
     Tr,
     Th,
     Td,
-    useToast
+    useToast,
+    Spinner,
+    AbsoluteCenter,
+    Spacer
 } from '@chakra-ui/react';
 
 import {
@@ -30,6 +33,7 @@ import CreateFormModal from "../components/homePage/CreateFormModal";
 
 const Forms = () => {
     const [forms, setForms] = useState([]);
+    const [formsLoaded, setFormsLoaded] = useState(false);
     const { unitCode, year, period } = useParams();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const toast = useToast();
@@ -159,6 +163,7 @@ const Forms = () => {
                 .then((res) => res.json())
                 .then((data) => {
                     setForms(data);
+                    setFormsLoaded(true);
                 })
                 .catch((err) => {
                     console.error('Error fetching forms:', err);
@@ -205,7 +210,7 @@ const Forms = () => {
                         </Tr>
                     </Thead>
                     <Tbody>
-                    {forms && forms.length > 0 ? (
+                    {formsLoaded ? (forms && forms.length > 0 ? (
                             forms.map((form) => (
                                 <Tr key={form.id}>
                                     <Td>{form.type}</Td>
@@ -247,7 +252,11 @@ const Forms = () => {
                                     No forms created.
                                 </Td>
                             </Tr>
-                        )}
+                        )) : 
+                        <Center>
+                            <Spinner/>
+                        </Center>
+                            } 
                     </Tbody>
                 </Table>
             </TableContainer>
