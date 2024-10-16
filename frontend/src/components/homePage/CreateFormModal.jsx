@@ -17,7 +17,13 @@ import {
   Text,
   Button,
   Box,
-  useToast
+  useToast,
+  HStack,
+  NumberInput,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInputField,
+  NumberInputStepper
 } from "@chakra-ui/react";
 
 const CreateFormModal = ({ isModalOpen, onModalClose }) => {
@@ -38,22 +44,11 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
     onModalClose();
   };
 
-  //Checkbox states
-  const [formOptions, setFormOptions] = useState({
-    Belbin: false,
-    Effort: false,
-    TimeAndPref: false
-  });
+  // Set checkbox values
+  const [checkedItems, setCheckedItems] = useState([false, false, false, 0]);
 
-  //Changes checkbox state for form creation
-  const handleCheckboxChange = (event) => {
-    const { name, checked } = event.target;
-    setFormOptions((prev) => ({
-      ...prev,
-      [name]: checked,
-    }));
-    console.log(formOptions);
-  };
+  // Set preference count
+  const [preferenceCount, setCount] = useState(0)
 
   const sendForm = (event) => {
     // const forms = google.forms({version:'v1', auth: jwclient});
@@ -87,15 +82,13 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
           'Content-Type': 'application/json',
         }),
         body: JSON.stringify(
-          formOptions
+          {checkedItems, preferenceCount}
       )
       }
     )
       .then((response) => {
         if (response.ok) {
-          console.log("Send request for form creation");
-        } else {
-          return response.text().then((responseText) => {
+          console.log("Sent request for form creation");
             toast({
               title: 'Form Created',
               description: `Google form(s) for ${unitCode} have been successfully created`,
@@ -103,6 +96,9 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
               duration: 4000,
               isClosable: true,
           });
+          window.location.reload();
+        } else {
+          return response.text().then((responseText) => {
           });
         }
       })
@@ -112,7 +108,6 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
       });
     },
     closeModal(),
-    window.location.reload(),
   )};
 
   const renderForm = () => (
@@ -121,25 +116,33 @@ const CreateFormModal = ({ isModalOpen, onModalClose }) => {
         <Stack spacing={5} direction='column'>
           <Checkbox
           name="Belbin"
-          isChecked={formOptions.Belbin}
-          onChange={handleCheckboxChange}>
-          
+          isChecked={checkedItems[0]}
+          onChange={e => setCheckedItems([e.target.checked, checkedItems[1], checkedItems[2]])}>
             Belbin
           </Checkbox>
 
           <Checkbox
            name="Effort"
-           isChecked={formOptions.Effort}
-           onChange={handleCheckboxChange}>
+           isChecked={checkedItems[1]}
+           onChange={e => setCheckedItems([checkedItems[0], e.target.checked, checkedItems[2]])}>
             Effort
           </Checkbox>
 
-          <Checkbox
-          name="TimeAndPref"
-          isChecked={formOptions.TimeAndPref}
-          onChange={handleCheckboxChange}>
-            Time & Preference
-          </Checkbox>
+          <HStack>
+            <Checkbox
+            name="TimeAndPref"
+            isChecked={checkedItems[2]}
+            onChange={e => setCheckedItems([checkedItems[0], checkedItems[1], e.target.checked])}>
+              Project Preference
+            </Checkbox>
+            <NumberInput size='md' maxW={20} defaultValue={1} min={1} isDisabled={!checkedItems[2]} onChange={(value)=>setCount(value)}>
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          </HStack>
         </Stack>
       </FormControl>
       <Box position="relative">

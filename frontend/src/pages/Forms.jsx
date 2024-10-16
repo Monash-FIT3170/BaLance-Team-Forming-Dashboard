@@ -19,7 +19,10 @@ import {
     Tr,
     Th,
     Td,
-    useToast
+    useToast,
+    Spinner,
+    AbsoluteCenter,
+    Spacer
 } from '@chakra-ui/react';
 
 import {
@@ -30,6 +33,7 @@ import CreateFormModal from "../components/homePage/CreateFormModal";
 
 const Forms = () => {
     const [forms, setForms] = useState([]);
+    const [formsLoaded, setFormsLoaded] = useState(false);
     const { unitCode, year, period } = useParams();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const toast = useToast();
@@ -90,16 +94,16 @@ const Forms = () => {
           )
             .then((response) => {
               if (response.ok) {
+                console.log("submitted close")
                 toast({
-                  title: 'Form closed',
-                  description: `Google form for ${unitCode} have been successfully closed.`,
-                  status: 'success',
-                  duration: 4000,
-                  isClosable: true,
-              });
+                    title: 'Form closed',
+                    description: `Google form for ${unitCode} have been successfully closed. Refresh page to see updated list.`,
+                    status: 'success',
+                    duration: 4000,
+                    isClosable: true,
+                });
               } else {
                 return response.text().then((responseText) => {
-                  console.log("it worked!!!")
                 });
               }
             })
@@ -159,6 +163,7 @@ const Forms = () => {
                 .then((res) => res.json())
                 .then((data) => {
                     setForms(data);
+                    setFormsLoaded(true);
                 })
                 .catch((err) => {
                     console.error('Error fetching forms:', err);
@@ -205,42 +210,53 @@ const Forms = () => {
                         </Tr>
                     </Thead>
                     <Tbody>
-                    {forms &&
-                        forms.map((form) => (
-                        <Tr key={form.id}> {/* Ensure to add a unique key */}
-                            <Td>{form.type}</Td>
-                            <Td>{form.url}</Td>
-                            <Td>
-                                <Button onClick={() => handleCopy(form.url)}>
-                                    Copy Link
-                                </Button>
-                            </Td>
-                            <Td>
-                                <Button
-                                    leftIcon={<EmailIcon />}
-                                    onClick={() => {
-                                        const confirmed = window.confirm("This will email the form link to ALL students in this unit. Do you wish to continue?");
-                                        if (confirmed) {
-                                            sendForms(form.url);
-                                        }
-                                    }}>
-                                    Email to All Students
-                                </Button>
-                            </Td>
-                            <Td>
-                                <Button
-                                    leftIcon={<CloseIcon />}
-                                    onClick={() => {
-                                        const confirmed = window.confirm("This will close the associated google form, no responses will be accepted after. Do you wish to continue?");
-                                        if (confirmed) {
-                                            closeForms(form.id);
-                                        }
-                                    }}>
-                                    Close Form
-                                </Button>
-                            </Td>
-                        </Tr>
-                    ))}
+                    {formsLoaded ? (forms && forms.length > 0 ? (
+                            forms.map((form) => (
+                                <Tr key={form.id}>
+                                    <Td>{form.type}</Td>
+                                    <Td>{form.url}</Td>
+                                    <Td>
+                                        <Button onClick={() => handleCopy(form.url)}>
+                                            Copy Link
+                                        </Button>
+                                    </Td>
+                                    <Td>
+                                        <Button
+                                            leftIcon={<EmailIcon />}
+                                            onClick={() => {
+                                                const confirmed = window.confirm("This will email the form link to ALL students in this unit. Do you wish to continue?");
+                                                if (confirmed) {
+                                                    sendForms(form.url);
+                                                }
+                                            }}>
+                                            Email to All Students
+                                        </Button>
+                                    </Td>
+                                    <Td>
+                                        <Button
+                                            leftIcon={<CloseIcon />}
+                                            onClick={() => {
+                                                const confirmed = window.confirm("This will close the associated google form, no responses will be accepted after. Do you wish to continue?");
+                                                if (confirmed) {
+                                                    closeForms(form.id);
+                                                }
+                                            }}>
+                                            Close Form
+                                        </Button>
+                                    </Td>
+                                </Tr>
+                            ))
+                        ) : (
+                            <Tr>
+                                <Td colSpan={5} style={{ textAlign: 'center' }}>
+                                    No forms created.
+                                </Td>
+                            </Tr>
+                        )) : 
+                        <Center>
+                            <Spinner/>
+                        </Center>
+                            } 
                     </Tbody>
                 </Table>
             </TableContainer>
