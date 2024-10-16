@@ -19,33 +19,123 @@ formation strategies for teaching associates to select from.
 4. [Contributors](#contributors)
 5. [License](#license)
 
+# Software Requirements
+## Dependencies
+MERN architecture: 
+- MySQL Ver 8.1x(database)
+- Express.js (backend)
+- React Ver 18.x (frontend)
+- Node.js (runtime)
+- Docker (containerisation)
+## External dependencies 
+- Auth0 (Authentication)
+- Railway (deployment) 
+- Google Service accoutn (API functionality with service account)
+- Google forms API 
+- Nodemailer
+
+# Setup Guide
+## Installation
+- MySQL: Download Youtube guide: https://www.youtube.com/watch?v=u96rVINbAUI&feature=youtu.be \
+  NOTE: When setting up your root account and password, be sure to keep them somewhere as it will be important in setting up the app workbench connection. Forgetting may require you to reinstall MySQL or may completely bar you from being able to set up the application.
+- Docker: [Windows] (https://docs.docker.com/desktop/install/windows-install/) [Mac] (https://docs.docker.com/desktop/install/mac-install/). If on mac or    linux[debian] you could use terminal
+  ```
+  brew install docker
+  sudo apt install docker.io
+  ```
+
+- Node.js Download the Node.js installer from Node.js — Download Node.js® and run it.
+
+## Setup 
+- Clone the repo: 
+  ```
+  git clone https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard.git;
+  cd BaLance-Team-Forming-Dashboard/
+  ```
+- MySQL
+  1. Open up your MySQL workbench and create a new MySQL connection, using the default settings is fine.
+  2. Create .env files in the frontend and backend folders in the below format. Change the DB_PASSWORD to your MySQL root account’s password. If you did not use root as your root account’s username, change DB_USER accordingly.
+  3. Open the MySQL Terminal/ MySQL Shell and type in the following command:
+  `source <absolute path>/schemaCreation.sql;`
+	  NOTE: if copying the path from vscode, explorer, etc. all back slashes ‘\’ must be replaced with forward slashes ‘/’
+  4. Connect to your database:`mysql -h host_address -u user_name -p pass_word < schemaCreation.sql;`
+- npm depencencies:
+  ```
+  cd backend
+  npm i 
+  cd ../frontend
+  npm i
+  ```
+- Google Service Account Creation: 
+  1. In the Google Cloud console, go to the Create service account page.
+  2. Go to Create service account
+  3. Select a Google Cloud project.
+  4. Enter a service account name to display in the Google Cloud console.
+  5. Done
+  6. ![Service Account Creation](docs/images/InstallationImages/GoogleCloudServiceAccount.png)
+  To utilise the account you need to create a key:
+  1. Click on the account, shown in the previous step
+  2. Go to the keys tab 
+  3. Add key
+  Note: This will download a json file. Store this in the backend env file as a string
+
+- Auth0 Guide QuickStart : https://auth0.com/docs/quickstart/spa/react/interactive . Take note of the audience parameters
+
+
+Run the frontend and backend from their respective directories
+
+`cd backend; npm run start`
+`cd frontend; npm run start`
+Required environment variables: 
+In /backend/
+```.dotenv
+MYSQLPORT=
+MYSQLHOST=
+MYSQLUSER=
+MYSQLPASSWORD=
+MYSQL_DATABASE="student_group_db"
+AUTH="TEST"
+GOOGLE_SERVICE_ACCOUNT_TOKEN = 
+AUTH_DOMAIN=""
+``` 
+
+In /frontend/
+```.dotenv
+VITE_REACT_APP_AUTH="TEST"
+VITE_REACT_APP_AUTH_CLIENT_ID=
+VITE_REACT_AUTH_DOMAIN=
+VITE_BACKEND_URL=""
+```
+Note: VITE BACKEND URL should be localhost:8080 if running on local or the backend public url if deployed 
+### Using docker
+
+An existing docker-compose can be used however, it must be noted the database must be
+run from your local device as an existing image has not yet been implemented.
+
+# Deployment
+This application was deployed on railway on their free tier: https://railway.app/ \
+Quick guide on learning railway can be found here: https://docs.railway.app/quick-start \
+Setting up BaLance: 
+1. Deploy from Github Repo (If you have linked your github account, you can find the Balance repo )
+2. In the architecture view, click on the repo block
+3. Under the Source, click on Add Root Directory. Set it to "/frontend" Change the "Branch connected to production" from main to deploymentBranch (optional). Generate domain (this will be the public url). Click out of the block 
+4. Top right, create -> Github Repo -> Balance
+5. Under source, click Add Root Directory. Set it to "/backend"  Change the "Branch connected to production" from main to deploymentBranch (optional). Click out of the block
+6. Top right, create -> database -> mysql. This will create a mysql instance. (Note: if you would like specific version, you can click on the settings and change the source image to another docker image)
+7. Next steps are to connect the backend to the database via variable references. Click on MySQL instance-> variables -> copy database, host, password, port, user variables and add them to the backend service. This is also where env file variables are added. 
+8. Add necessary env variables to both frontend and backend services \
+![RailwayDeployed](docs/images/InstallationImages/RailwayDeployed.png) \
+Note: The deployed backend and frontend do not run the schema creation script. If needed to be run, it is recommended to connect to the online database via terminal. Command to so can be found by clicking on the mysql instance -> data tab -> connect ->public network. Can also perform the necessary changes via the railway UI. 
+
+
+
+
+
 # Features
 
 - Forms groups between students using one of multiple available formation strategies
 - View group by group and cohort wide analytics on personality distribution
 - Export group allocation data in CSV format for use with your learning management system
-
-# Basic Usage
-
-## Running the application
-
-Install and setup
-
-```shell
-git clone https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard.git;
-cd BaLance-Team-Forming-Dashboard/backend; npm i; cd ../frontend; npm i cd ../database;
-mysql -h host_address -u user_name -p pass_word < schemaCreation.sql;
-```
-
-Run the frontend and backend from their respective directories
-
-`cd backend; nodemon server`
-`cd frontend; npm start`
-
-### Using docker
-
-An existing docker-compose can be used however, it must be noted the database must be
-run from your local device as an existing image has not yet been implemented.
 
 ## Walkthrough
 
