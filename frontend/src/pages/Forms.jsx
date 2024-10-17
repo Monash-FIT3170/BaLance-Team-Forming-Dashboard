@@ -102,7 +102,7 @@ const Forms = () => {
                     duration: 4000,
                     isClosable: true,
                 });
-                window.location.reload();
+                setTimeout(window.location.reload(), 2000);
               } else {
                 return response.text().then((responseText) => {
                 });

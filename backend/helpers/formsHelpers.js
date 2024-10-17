@@ -44,6 +44,10 @@ async function closeForm(auth, formId, type) {
     return true;
   } catch (error) {
     console.error(error)
+    // Special case, handle form not found error
+    if (error.status == 404) {
+      return true;
+    }
     return false;
   }
 }

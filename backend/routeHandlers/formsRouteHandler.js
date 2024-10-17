@@ -148,7 +148,7 @@ const closeOpenForm = async (req, res) => {
             "WHERE " +
             "   form_id=? ",
             [formId.id]
-        )
+        );
         res.status(200).json();
     }
     else {
