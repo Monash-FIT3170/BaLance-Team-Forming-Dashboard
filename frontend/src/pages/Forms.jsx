@@ -19,7 +19,10 @@ import {
     Tr,
     Th,
     Td,
-    useToast
+    useToast,
+    Spinner,
+    AbsoluteCenter,
+    Spacer
 } from '@chakra-ui/react';
 
 import {
@@ -30,6 +33,7 @@ import CreateFormModal from "../components/homePage/CreateFormModal";
 
 const Forms = () => {
     const [forms, setForms] = useState([]);
+    const [formsLoaded, setFormsLoaded] = useState(false);
     const { unitCode, year, period } = useParams();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const toast = useToast();
@@ -90,16 +94,16 @@ const Forms = () => {
           )
             .then((response) => {
               if (response.ok) {
+                console.log("submitted close")
                 toast({
-                  title: 'Form closed',
-                  description: `Google form for ${unitCode} have been successfully closed.`,
-                  status: 'success',
-                  duration: 4000,
-                  isClosable: true,
-              });
+                    title: 'Form closed',
+                    description: `Google form for ${unitCode} have been successfully closed. Refresh page to see updated list.`,
+                    status: 'success',
+                    duration: 4000,
+                    isClosable: true,
+                });
               } else {
                 return response.text().then((responseText) => {
-                  console.log("it worked!!!")
                 });
               }
             })
@@ -159,6 +163,7 @@ const Forms = () => {
                 .then((res) => res.json())
                 .then((data) => {
                     setForms(data);
+                    setFormsLoaded(true);
                 })
                 .catch((err) => {
                     console.error('Error fetching forms:', err);
@@ -204,8 +209,8 @@ const Forms = () => {
                             <Th></Th>
                         </Tr>
                     </Thead>
-                        <Tbody>
-                        {forms && forms.length > 0 ? (
+                    <Tbody>
+                    {formsLoaded ? (forms && forms.length > 0 ? (
                             forms.map((form) => (
                                 <Tr key={form.id}>
                                     <Td>{form.type}</Td>
@@ -247,7 +252,11 @@ const Forms = () => {
                                     No forms created.
                                 </Td>
                             </Tr>
-                        )}
+                        )) : 
+                        <Center>
+                            <Spinner/>
+                        </Center>
+                            } 
                     </Tbody>
                 </Table>
             </TableContainer>

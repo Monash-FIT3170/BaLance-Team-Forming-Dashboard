@@ -1,6 +1,6 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { useParams } from 'react-router';
-import { HStack, Center, useToast } from '@chakra-ui/react';
+import { HStack, Center, useToast, Spinner } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { AddIcon, CalendarIcon, EditIcon, ViewIcon, RepeatIcon, CheckIcon} from '@chakra-ui/icons';
 import { Button, Text, Spacer} from '@chakra-ui/react';
@@ -47,6 +47,7 @@ function Students() {
     const { getAccessTokenSilently } = authService[import.meta.env.VITE_REACT_APP_AUTH]();
     const [students, setStudents] = useState([]);
     const [numberOfGroups, setNumberOfGroups] = useState(0);
+    const [studentsLoaded, setStudentsLoaded] = useState(false);
 
     const { unitCode, year, period } = useParams();
 
@@ -100,6 +101,7 @@ function Students() {
         .then((res) => res.json())
         .then((res) => {
           setStudents(res);
+          setStudentsLoaded(true);
         })
         .catch((err) => console.error(err));
 
@@ -166,12 +168,13 @@ function Students() {
         />
       </HStack>
       <Center>
+        {studentsLoaded ?
         <StudentsPreviewTable
           students={students}
           numberOfGroups={numberOfGroups}
           page={'students'}
           rowHeights={'20px'}
-        />
+        /> : <Spinner/>}
       </Center>
     </div>
   );

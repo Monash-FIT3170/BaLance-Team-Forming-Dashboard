@@ -714,91 +714,11 @@
           "title": "Rank projects in order of preference",
           "questionGroupItem": {
             "questions": [
-              {
-                "questionId" : "21",
-                "required" : true,
-                "rowQuestion": {
-                  "title": "1"
-                }
-              },
-              {
-                "questionId" : "22",
-                "required" : true,
-                "rowQuestion": {
-                  "title": "2"
-                }
-              },
-              {
-                "questionId" : "23",
-                "required" : true,
-                "rowQuestion": {
-                  "title": "3"
-                }
-              },
-              {
-                "questionId" : "24",
-                "required" : true,
-                "rowQuestion": {
-                  "title": "4"
-                }
-              },
-              {
-                "questionId" : "25",
-                "required" : true,
-                "rowQuestion": {
-                  "title": "5"
-                }
-              },
-              {
-                "questionId" : "26",
-                "required" : true,
-                "rowQuestion": {
-                  "title": "6"
-                }
-              },
-              {
-                "questionId" : "27",
-                "required" : true,
-                "rowQuestion": {
-                  "title": "7"
-                }
-              },
-              {
-                "questionId" : "28",
-                "required" : true,
-                "rowQuestion": {
-                  "title": "8"
-                }
-              },
-              {
-                "questionId" : "29",
-                "required" : true,
-                "rowQuestion": {
-                  "title": "9"
-                }
-              },
-              {
-                "questionId" : "210",
-                "required" : true,
-                "rowQuestion": {
-                  "title": "10"
-                }
-              }
             ],
             "grid": {
               "columns": {
                 "type": "RADIO",
                 "options": [
-                  { "value": "1" },
-                  { "value": "2" },
-                  { "value": "3" },
-                  { "value": "4" },
-                  { "value": "5" },
-                  { "value": "6" },
-                  { "value": "7" },
-                  { "value": "8" },
-                  { "value": "9" },
-                  { "value": "10" }
                 ]
               }
             }

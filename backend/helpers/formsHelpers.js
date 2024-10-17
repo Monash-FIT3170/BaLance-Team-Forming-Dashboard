@@ -14,6 +14,7 @@ const auth = new GoogleAuth({
 });
 
 const formData = require('../data/forms.json');
+const { populatepersonalityTestAttempt, populatePreferenceSubmission, populateProjectPreference } = require("../routeHandlers/studentRouteHandler.js");
 
 
 let belbinFormId = null
@@ -81,7 +82,28 @@ function belbinForm() {
     }
 }
 
-async function generateForms(effort, project, belbin, unitId) {
+function generateProjectForm(projectCount){
+  let projectRequest = formData.projectRequest;
+  for (let i = 0; i < projectCount; i++) {
+
+    let id = "2"
+    let currentValue = i + 1
+    id = id + currentValue.toString()
+    let questionJson = {
+      "questionId" : id,
+      "required" : true,
+      "rowQuestion": {
+        "title": currentValue.toString()
+      }
+    }
+    let groupSelectionJson = { "value": currentValue.toString() }
+    projectRequest[2].createItem.item.questionGroupItem.questions.push(questionJson)
+    projectRequest[2].createItem.item.questionGroupItem.grid.columns.options.push(groupSelectionJson)
+  }
+  return projectRequest
+}
+
+async function generateForms(belbin, effort, project, projectCount, unitId) {
 
     if (effort) {
         var effortFormBody = effortForm();
@@ -101,7 +123,8 @@ async function generateForms(effort, project, belbin, unitId) {
         var projForm = await createForm(auth, projectFormBody);
         projectFormId = projForm.data.formId;
         projectResponderURL = projForm.data.responderUri;
-        await updateForm(auth, projectFormId, formData.projectRequest);
+        const projectFormJSON = generateProjectForm(projectCount);
+        await updateForm(auth, projectFormId, projectFormJSON);
         await promiseBasedQuery(
           "INSERT IGNORE INTO unit_form (unit_off_id, form_id, test_type, responder_url)" +
           "VALUES (?, ?, ?, ?);", 
@@ -124,7 +147,6 @@ async function generateForms(effort, project, belbin, unitId) {
     }
     console.log(belbinResponderURL, effortResponderURL, projectResponderURL);
 }
-
 
 //note: this can probably only fetch responses from forms the service account has access to, either send the form to the email or make the account create it using createForm. 
 async function getFormResponseList(auth,formId){
@@ -153,6 +175,51 @@ async function getForm(auth, formId){
 //const responses = getFormResponseList(auth,'1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE')
 //const form = getForm(auth, "1wAmNlhVdovg0ULG2SH3HIsnHMcJoJ55i8LVnm7QP9qE")
 
+async function prepareTimesAndPreferencesData(projectData, unitCode, year, period) {
+  const idsAndTimestamps = projectData.map(entry => [entry[0], entry[1]]);
+  const studentIds = idsAndTimestamps.map(entry => entry[0]);
+
+  console.log("mapped ids")
+
+  studentData = await promiseBasedQuery(
+    "SELECT s.student_id, s.email_address, CONCAT(s.preferred_name,' ', s.last_name) AS fullname " +
+    "FROM student s " +
+    "JOIN unit_enrolment ue ON s.stud_unique_id = ue.stud_unique_id " +
+    "WHERE ue.unit_off_id = (" +
+        "SELECT u.unit_off_id " +
+        "FROM unit_offering u " +
+        "WHERE u.unit_code = ? " +
+        "AND u.unit_off_year = ? " +
+        "AND u.unit_off_period = ?" +
+    ") " +
+    "AND s.student_id IN (?);", 
+    [unitCode, year, period, studentIds]
+  );
+  console.log(studentData)
+
+  console.log("queried students")
+
+  const result = projectData.map(([studentId, timestamp, ...preferences]) => {
+    const studentInfo = studentData.find(student => student.student_id === studentId);
+
+    // just in case the student id list returns no email / name
+    const student = {
+      timestamp: timestamp,
+      email: studentInfo ? studentInfo.email_address : null,
+      fullName: studentInfo ? studentInfo.fullname : null,
+      studentId: studentId,
+    };
+
+    // Add preferences dynamically
+    preferences.forEach((preference, index) => {
+      student[`Project Preference ${index + 1}`] = preference;
+    });
+
+    return student;
+  });
+
+  return result;
+}
 
 async function getBelbinResponse(auth, formId) {
   const belbinResponses = await getFormResponseList(auth, formId);
@@ -292,15 +359,18 @@ async function getEffortResponse(auth, formId) {
 async function getPreferenceResponse(auth, formId) {
   const projectPreferencesResponses = await getFormResponseList(auth, formId);
   let responseList = [];
-  let response = [studentId];
 
   if(!projectPreferencesResponses.data.responses) {
     return;
   }
+  console.log("getting preference responses")
   
   for (let i = 0; i < projectPreferencesResponses.data.responses.length; i++) {
       const answer = projectPreferencesResponses.data.responses[i].answers;
+      const lastSubmittedTime = projectPreferencesResponses.data.responses[i].lastSubmittedTime;
       const studentId = answer['00000001'].textAnswers.answers[0].value;
+
+      let response = [studentId, lastSubmittedTime]
       
       let answerNo = 1;
       // Get next preference answer ID, add it if it exists
@@ -315,13 +385,41 @@ async function getPreferenceResponse(auth, formId) {
           else {
             break;
           }
+          answerNo = answerNo + 1;
       }
 
-      responseList.push([studentId, pref1, pref2, pref3, pref4, pref5, pref6, pref7, pref8, pref9, pref10]);
+      responseList.push(response);
   }
   
   // console.log(responseList);
   return responseList;
+}
+
+
+const addStudentTimesAndPreferences = async (unitCode, year, period, students, testType) => {
+  // check how many preferences each student has submitted
+  const numberOfPreferencesForEachStudent = students.map(student => {
+      const { timestamp, email, fullName, studentId, ...preferences } = student;
+      return Object.keys(preferences).length;
+  })
+
+  console.log(numberOfPreferencesForEachStudent)
+
+  // get the maximum number of preferences submitted by a student
+  const maxPreferences = Math.max(...numberOfPreferencesForEachStudent);
+  // validate that each student has submitted the same number of preferences
+  const filteredStudents = students.filter(student => {
+      // return only if the student has submitted maxPreferences number of preferences
+      const { timestamp, email, fullName, studentId, ...preferences } = student;
+      return Object.keys(preferences).length === maxPreferences;
+  })
+  try {
+      await populatepersonalityTestAttempt(filteredStudents, unitCode, year, period, testType);
+      await populatePreferenceSubmission(filteredStudents);
+      await populateProjectPreference(filteredStudents, unitCode);
+  } catch (error) {
+      console.log(error)
+  }
 }
 
 module.exports = {
@@ -329,5 +427,7 @@ module.exports = {
     getEffortResponse,
     getPreferenceResponse,
     generateForms,
-    closeForm
+    closeForm,
+    addStudentTimesAndPreferences,
+    prepareTimesAndPreferencesData
 }
