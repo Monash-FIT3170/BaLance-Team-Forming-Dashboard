@@ -1,4 +1,131 @@
-{"belbinRequest": [
+{
+  "closeBelbinForm": [
+    {
+      "deleteItem": {
+        "location": {
+          "index": 9
+        }
+      }
+    },
+    {
+      "deleteItem": {
+        "location": {
+          "index": 8
+        }
+      }
+    },
+    {
+      "deleteItem": {
+        "location": {
+          "index": 7
+        }
+      }
+    },
+    {
+      "deleteItem": {
+        "location": {
+          "index": 6
+        }
+      }
+    },
+    {
+      "deleteItem": {
+        "location": {
+          "index": 5
+        }
+      }
+    },
+    {
+      "deleteItem": {
+        "location": {
+          "index": 4
+        }
+      }
+    },
+    {
+      "deleteItem": {
+        "location": {
+          "index": 3
+        }
+      }
+    },
+    {
+      "deleteItem": {
+        "location": {
+          "index": 2
+        }
+      }
+    },
+    {
+      "deleteItem": {
+        "location": {
+          "index": 1
+        }
+      }
+    },
+    {
+      "deleteItem": {
+        "location": {
+          "index": 0
+        }
+      }
+    },
+    {
+      "createItem": {
+        "item": {
+          "itemId": "0",
+          "title": "This form is now closed. All further submissions will not be logged. Thank you for using BaLance.",
+          "textItem": {}
+        },
+        "location": {
+          "index": 0
+        }
+      }
+    }
+  ],
+  "closeForm": [
+    {
+      "deleteItem": {
+        "location": {
+          "index": 3
+        }
+      }
+    },
+    {
+      "deleteItem": {
+        "location": {
+          "index": 2
+        }
+      }
+    },
+    {
+      "deleteItem": {
+        "location": {
+          "index": 1
+        }
+      }
+    },
+    {
+      "deleteItem": {
+        "location": {
+          "index": 0
+        }
+      }
+    },
+    {
+      "createItem": {
+        "item": {
+          "itemId": "0",
+          "title": "This form is now closed. All further submissions will not be logged. Thank you for using BaLance.",
+          "textItem": {}
+        },
+        "location": {
+          "index": 0
+        }
+      }
+    }
+  ],
+  "belbinRequest": [
     {
       "createItem": {
         "item": {

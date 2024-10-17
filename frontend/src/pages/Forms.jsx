@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { MockAuth } from '../helpers/mockAuth';
 import { useParams } from 'react-router';
-import { AddIcon, ArrowBackIcon, CloseIcon, EmailIcon } from "@chakra-ui/icons";
+import { AddIcon, ArrowBackIcon, EmailIcon, CloseIcon } from "@chakra-ui/icons";
 import {
     Flex,
     VStack,
@@ -77,7 +77,7 @@ const Forms = () => {
         });
     };
 
-    function closeForms(id) {
+    function closeForms(id, type) {
         getAccessTokenSilently().then((token) => {
       
             fetch(
@@ -89,7 +89,7 @@ const Forms = () => {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
               }),
-              body: JSON.stringify({id}),
+              body: JSON.stringify({id, type}),
             }
           )
             .then((response) => {
@@ -97,11 +97,15 @@ const Forms = () => {
                 console.log("submitted close")
                 toast({
                     title: 'Form closed',
-                    description: `Google form for ${unitCode} have been successfully closed. Refresh page to see updated list.`,
+                    description: `Google form for ${unitCode} have been successfully closed.`,
                     status: 'success',
                     duration: 4000,
                     isClosable: true,
                 });
+                setTimeout(()=>
+                    {
+                        window.location.reload();
+                    }, 3000);
               } else {
                 return response.text().then((responseText) => {
                 });
@@ -204,49 +208,53 @@ const Forms = () => {
                     <Thead>
                         <Tr>
                             <Th>Form Type</Th>
-                            <Th>Responder URL</Th>
                             <Th></Th>
+                            <Th></Th>
+                            <Th>Total Responses</Th>
                             <Th></Th>
                         </Tr>
                     </Thead>
                     <Tbody>
                     {formsLoaded ? (forms && forms.length > 0 ? (
-                            forms.map((form) => (
-                                <Tr key={form.id}>
-                                    <Td>{form.type}</Td>
-                                    <Td>{form.url}</Td>
-                                    <Td>
-                                        <Button onClick={() => handleCopy(form.url)}>
-                                            Copy Link
-                                        </Button>
-                                    </Td>
-                                    <Td>
-                                        <Button
-                                            leftIcon={<EmailIcon />}
-                                            onClick={() => {
-                                                const confirmed = window.confirm("This will email the form link to ALL students in this unit. Do you wish to continue?");
-                                                if (confirmed) {
-                                                    sendForms(form.url);
-                                                }
-                                            }}>
-                                            Email to All Students
-                                        </Button>
-                                    </Td>
-                                    <Td>
-                                        <Button
-                                            leftIcon={<CloseIcon />}
-                                            onClick={() => {
-                                                const confirmed = window.confirm("This will close the associated google form, no responses will be accepted after. Do you wish to continue?");
-                                                if (confirmed) {
-                                                    closeForms(form.id);
-                                                }
-                                            }}>
-                                            Close Form
-                                        </Button>
-                                    </Td>
-                                </Tr>
-                            ))
-                        ) : (
+                        forms.map((form) => (
+                            <Tr key={form.id}>
+                                <Td>{form.type}</Td>
+                                <Td>
+                                    <Button onClick={() => handleCopy(form.url)}>
+                                        Copy Link
+                                    </Button>
+                                </Td>
+                                <Td>
+                                    <Button
+                                        leftIcon={<EmailIcon />}
+                                        onClick={() => {
+                                            const confirmed = window.confirm("This will email the form link to ALL students in this unit. Do you wish to continue?");
+                                            if (confirmed) {
+                                                sendForms(form.url);
+                                            }
+                                        }}>
+                                        Email to All Students
+                                    </Button>
+                                </Td>
+                                <Td>
+                                    {form.responseCount}/
+                                    {form.studentCount}
+                                </Td>
+                                <Td>
+                                    <Button
+                                        leftIcon={<CloseIcon />}
+                                        onClick={() => {
+                                            const confirmed = window.confirm("This will close the associated google form, no responses will be accepted after. Do you wish to continue?");
+                                            if (confirmed) {
+                                                closeForms(form.id, form.type);
+                                            }
+                                        }}>
+                                        Close Form
+                                    </Button>
+                                </Td>
+                            </Tr>
+                        ))
+                    ) : (
                             <Tr>
                                 <Td colSpan={5} style={{ textAlign: 'center' }}>
                                     No forms created.

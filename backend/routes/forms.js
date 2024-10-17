@@ -3,7 +3,8 @@ const {
     pushData,
     createForms,
     getForms,
-    closeOpenForm
+    closeOpenForm,
+    getResponseNumber
 } = require("../routeHandlers/formsRouteHandler");
 
 const router = express.Router();

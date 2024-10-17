@@ -15,6 +15,7 @@ const auth = new GoogleAuth({
 
 const formData = require('../data/forms.json');
 const { populatepersonalityTestAttempt, populatePreferenceSubmission, populateProjectPreference } = require("../routeHandlers/studentRouteHandler.js");
+const { batch } = require('googleapis/build/src/apis/batch/index.js');
 
 
 let belbinFormId = null
@@ -24,10 +25,31 @@ let projectResponderURL = null
 let effortFormId = null
 let effortResponderURL = null
 
-async function closeForm(auth, formId) {
+async function closeForm(auth, formId, type) {
   const authClient = await auth.getClient();
   const forms = google.forms({ version: 'v1', auth: authClient });
   // Implemented form closing here
+  const request = type == "Belbin" ? formData.closeBelbinForm : formData.closeForm
+  try {
+    const response = await forms.forms.batchUpdate(
+      {
+        formId,
+        requestBody: {
+          "includeFormInResponse": true,
+          "requests": request
+        }
+      }
+    );
+    console.log("Form closed successfully: ", response.data)
+    return true;
+  } catch (error) {
+    console.error(error)
+    // Special case, handle form not found error
+    if (error.status == 404) {
+      return true;
+    }
+    return false;
+  }
 }
 
 async function createForm(auth,formBody){
@@ -219,6 +241,42 @@ async function prepareTimesAndPreferencesData(projectData, unitCode, year, perio
   });
 
   return result;
+}
+
+async function getResponseCount(formId, unitCode, year, period) {
+  studentData = await promiseBasedQuery(
+    "SELECT s.student_id " +
+    "FROM student s " +
+    "JOIN unit_enrolment ue ON s.stud_unique_id = ue.stud_unique_id " +
+    "WHERE ue.unit_off_id = (" +
+        "SELECT u.unit_off_id " +
+        "FROM unit_offering u " +
+        "WHERE u.unit_code = ? " +
+        "AND u.unit_off_year = ? " +
+        "AND u.unit_off_period = ?" +
+    "); ",
+    [unitCode, year, period]
+  );
+  const databaseIds = studentData.map(student => student.student_id);
+  const responses = await getFormResponseList(auth, formId);
+  const studentIds = new Set(); // ensure list doesn't repeat student ids
+
+  if(responses.data.responses) {
+    responses.data.responses.map(response => {
+      let id = response.answers['00000001'].textAnswers.answers[0].value;
+      console.log(id);
+      if (databaseIds.includes(id)) {
+        studentIds.add(id);
+      }
+    });
+  }
+
+  const count = {
+    responseCount: studentIds.size,
+    studentCount: databaseIds.length
+  }
+  console.log(count)
+  return count;
 }
 
 async function getBelbinResponse(auth, formId) {
@@ -429,5 +487,6 @@ module.exports = {
     generateForms,
     closeForm,
     addStudentTimesAndPreferences,
-    prepareTimesAndPreferencesData
+    prepareTimesAndPreferencesData,
+    getResponseCount
 }

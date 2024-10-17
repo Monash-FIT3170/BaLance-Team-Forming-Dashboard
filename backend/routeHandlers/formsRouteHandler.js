@@ -1,4 +1,13 @@
-const { getBelbinResponse, getEffortResponse, getPreferenceResponse, generateForms, closeForm, addStudentTimesAndPreferences, prepareTimesAndPreferencesData } = require('../helpers/formsHelpers');
+const { 
+    getBelbinResponse, 
+    getEffortResponse, 
+    getPreferenceResponse, 
+    generateForms, 
+    closeForm, 
+    addStudentTimesAndPreferences, 
+    prepareTimesAndPreferencesData, 
+    getResponseCount 
+} = require('../helpers/formsHelpers');
 const { promiseBasedQuery, selectUnitOffKey } = require("../helpers/commonHelpers");
 const { addTestResultFunctionStrats } = require("./studentRouteHandler.js");
 
@@ -68,6 +77,26 @@ const pushData = async (req, res) => {
     res.status(200).json();
 };
 
+const getForm = async (name, unitCode, year, period, results) => {
+    let form = null;
+
+    form = results.find(result => result.testType === name.toLowerCase());
+    if (form) {
+        console.log("Counting responses")
+        console.log(form.formId)
+        let counts = await getResponseCount(form.formId, unitCode, year, period);
+
+        form = {
+            url: form.url,
+            type: name,
+            id: form.formId,
+            responseCount: counts.responseCount,
+            studentCount: counts.studentCount
+        }
+    }
+    return form
+}
+
 const getForms = async (req, res) => {
 
     const { unitCode, year, period } = req.params;
@@ -87,23 +116,21 @@ const getForms = async (req, res) => {
     
     console.log(results);
 
-    let belbinResponse = null;
-    let effortResponse = null;
-    let projectResponse = null;
-
-    let formTypes = ['Belbin', 'Preference', 'Effort'];
     let openForms = []
-    if (results.length > 0) {
-        formTypes.forEach(name => {
-            form = results.find(result => result.testType === name.toLowerCase());
-            if (form) {
-                openForms.push({
-                    url: form.url,
-                    type: name,
-                    id: form.formId
-                })
-            }
-        });
+    if (results.length > 0) { // We can't loop with awaits, so this is the next best thing
+        let belbinResponse = await getForm('Belbin', unitCode, year, period, results)
+        let preferenceResponse = await getForm('Preference', unitCode, year, period, results)
+        let effortResponse = await getForm('Effort', unitCode, year, period, results)
+
+        if(belbinResponse) {
+            openForms.push(belbinResponse)
+        }
+        if(preferenceResponse) {
+            openForms.push(preferenceResponse)
+        }
+        if(effortResponse) {
+            openForms.push(effortResponse)
+        }
     }
     console.log(openForms)
 
@@ -114,14 +141,19 @@ const closeOpenForm = async (req, res) => {
     const { unitCode, year, period } = req.params;
     const formId = req.body;
 
-    await promiseBasedQuery(
-        "DELETE FROM unit_form " +
-        "WHERE " +
-        "   form_id=? ",
-        [formId.id]
-    )
-    closeForm(auth, formId.id);
-    res.status(200).json();
+    formStatus = await closeForm(auth, formId.id, formId.type);
+    if (formStatus) {
+        await promiseBasedQuery(
+            "DELETE FROM unit_form " +
+            "WHERE " +
+            "   form_id=? ",
+            [formId.id]
+        );
+        res.status(200).json();
+    }
+    else {
+        res.status(500).json();
+    }
 }
 
 const createForms = async (req, res) => {
@@ -258,4 +290,9 @@ const addPersonalityData = async(students, testType, unitCode, year, period) => 
     addTestResultFunctionStrats[testType](personalityTestAttemptKeys, students);
 }
 
-module.exports =  { pushData, createForms, getForms, closeOpenForm };
+module.exports =  { 
+    pushData, 
+    createForms, 
+    getForms, 
+    closeOpenForm
+};
