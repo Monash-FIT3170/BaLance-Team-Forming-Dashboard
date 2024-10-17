@@ -415,7 +415,11 @@ const addStudentEffort = async (personalityTestAttemptKeys, students) => {
             const student = students.find(s => s.studentId === attempt.student_id);
 
             if (student) {
-                const timeCommitment = student.hourCommitment;
+                let timeCommitment = student.hourCommitment;
+                // Prevents division by zero
+                if(timeCommitment < 1) {
+                    timeCommitment = 1;
+                }
 
                 // Add their data in a suitable format
                 resultInsertData.push([

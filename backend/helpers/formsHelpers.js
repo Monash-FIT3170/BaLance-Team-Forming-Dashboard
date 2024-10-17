@@ -237,7 +237,7 @@ async function prepareTimesAndPreferencesData(projectData, unitCode, year, perio
   return result;
 }
 
-async function getResponseCount(auth, formId, unitCode, year, period) {
+async function getResponseCount(formId, unitCode, year, period) {
   studentData = await promiseBasedQuery(
     "SELECT s.student_id " +
     "FROM student s " +
@@ -252,25 +252,24 @@ async function getResponseCount(auth, formId, unitCode, year, period) {
     [unitCode, year, period]
   );
   const databaseIds = studentData.map(student => student.student_id);
+  const responses = await getFormResponseList(auth, formId);
+  const studentIds = new Set(); // ensure list doesn't repeat student ids
 
-  const reponses = await getFormResponseList(auth, formId);
-  const studentIds = new Set(); // ensure list is 
-  if(!reponses.data.responses) {
-    return 0;
+  if(responses.data.responses) {
+    responses.data.responses.map(response => {
+      let id = response.answers['00000001'].textAnswers.answers[0].value;
+      console.log(id);
+      if (databaseIds.includes(id)) {
+        studentIds.add(id);
+      }
+    });
   }
-
-  responses.data.responses.map(response => {
-    let id = response.answers['00000001'];
-    if (databaseIds.has(id)) {
-      studentIds.add(id);
-    }
-  });
 
   const count = {
     responseCount: studentIds.size,
     studentCount: databaseIds.length
   }
-
+  console.log(count)
   return count;
 }
 

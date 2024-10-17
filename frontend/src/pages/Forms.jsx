@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { MockAuth } from '../helpers/mockAuth';
 import { useParams } from 'react-router';
-import { AddIcon, ArrowBackIcon } from "@chakra-ui/icons";
+import { AddIcon, ArrowBackIcon, EmailIcon, CloseIcon } from "@chakra-ui/icons";
 import {
     Flex,
     VStack,
@@ -30,7 +30,6 @@ import {
     PageHeader
 } from "../components/_shared";
 import CreateFormModal from "../components/homePage/CreateFormModal";
-import FormListContainer from '../components/formsPage/formListContainer';
 
 const Forms = () => {
     const [forms, setForms] = useState([]);
@@ -205,13 +204,53 @@ const Forms = () => {
                     <Thead>
                         <Tr>
                             <Th>Form Type</Th>
-                            <Th>Responder URL</Th>
                             <Th></Th>
+                            <Th></Th>
+                            <Th>Total Responses</Th>
                             <Th></Th>
                         </Tr>
                     </Thead>
                     <Tbody>
-                    {formsLoaded ? (forms && forms.length > 0 ? <FormListContainer forms={forms} /> : (
+                    {formsLoaded ? (forms && forms.length > 0 ? (
+                        forms.map((form) => (
+                            <Tr key={form.id}>
+                                <Td>{form.type}</Td>
+                                <Td>
+                                    <Button onClick={() => handleCopy(form.url)}>
+                                        Copy Link
+                                    </Button>
+                                </Td>
+                                <Td>
+                                    <Button
+                                        leftIcon={<EmailIcon />}
+                                        onClick={() => {
+                                            const confirmed = window.confirm("This will email the form link to ALL students in this unit. Do you wish to continue?");
+                                            if (confirmed) {
+                                                sendForms(form.url);
+                                            }
+                                        }}>
+                                        Email to All Students
+                                    </Button>
+                                </Td>
+                                <Td>
+                                    {form.responseCount}/
+                                    {form.studentCount}
+                                </Td>
+                                <Td>
+                                    <Button
+                                        leftIcon={<CloseIcon />}
+                                        onClick={() => {
+                                            const confirmed = window.confirm("This will close the associated google form, no responses will be accepted after. Do you wish to continue?");
+                                            if (confirmed) {
+                                                closeForms(form.id, form.type);
+                                            }
+                                        }}>
+                                        Close Form
+                                    </Button>
+                                </Td>
+                            </Tr>
+                        ))
+                    ) : (
                             <Tr>
                                 <Td colSpan={5} style={{ textAlign: 'center' }}>
                                     No forms created.

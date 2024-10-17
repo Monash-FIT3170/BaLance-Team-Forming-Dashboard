@@ -77,17 +77,24 @@ const pushData = async (req, res) => {
     res.status(200).json();
 };
 
-const getResponseNumber = async (req, res) => {
-    const { unitCode, year, period } = req.params;
-    const formIds = req.body;
+const getForm = async (name, unitCode, year, period, results) => {
+    let form = null;
 
-    const counts = formIds.map((formId) => {
-        getResponseCount(auth, formId, unitCode, year, period);
-    })
+    form = results.find(result => result.testType === name.toLowerCase());
+    if (form) {
+        console.log("Counting responses")
+        console.log(form.formId)
+        let counts = await getResponseCount(form.formId, unitCode, year, period);
 
-    console.log(counts)
-
-    res.status(200).json(counts);
+        form = {
+            url: form.url,
+            type: name,
+            id: form.formId,
+            responseCount: counts.responseCount,
+            studentCount: counts.studentCount
+        }
+    }
+    return form
 }
 
 const getForms = async (req, res) => {
@@ -109,23 +116,21 @@ const getForms = async (req, res) => {
     
     console.log(results);
 
-    let belbinResponse = null;
-    let effortResponse = null;
-    let projectResponse = null;
-
-    let formTypes = ['Belbin', 'Preference', 'Effort'];
     let openForms = []
-    if (results.length > 0) {
-        formTypes.forEach(name => {
-            form = results.find(result => result.testType === name.toLowerCase());
-            if (form) {
-                openForms.push({
-                    url: form.url,
-                    type: name,
-                    id: form.formId
-                })
-            }
-        });
+    if (results.length > 0) { // We can't loop with awaits, so this is the next best thing
+        let belbinResponse = await getForm('Belbin', unitCode, year, period, results)
+        let preferenceResponse = await getForm('Preferences', unitCode, year, period, results)
+        let effortResponse = await getForm('Effort', unitCode, year, period, results)
+
+        if(belbinResponse) {
+            openForms.push(belbinResponse)
+        }
+        if(preferenceResponse) {
+            openForms.push(preferenceResponse)
+        }
+        if(effortResponse) {
+            openForms.push(effortResponse)
+        }
     }
     console.log(openForms)
 
@@ -284,6 +289,5 @@ module.exports =  {
     pushData, 
     createForms, 
     getForms, 
-    closeOpenForm, 
-    getResponseNumber 
+    closeOpenForm
 };
