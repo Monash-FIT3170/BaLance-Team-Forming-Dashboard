@@ -1,4 +1,23 @@
-{"belbinRequest": [
+{
+  "closeForm": [
+    {
+      "updateSettings": {
+        "settings": {
+          "acceptingResponses": false
+        },
+        "updateMask": "acceptingResponses"
+      }
+    },
+    {
+      "updateFormInfo": {
+        "info": {
+          "confirmationMessage": "This form is now closed. Thanks for using BaLance."
+        },
+        "updateMask": "confirmationMessage"
+      }
+    }
+  ],
+  "belbinRequest": [
     {
       "createItem": {
         "item": {

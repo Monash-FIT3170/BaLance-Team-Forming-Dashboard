@@ -15,6 +15,7 @@ const auth = new GoogleAuth({
 
 const formData = require('../data/forms.json');
 const { populatepersonalityTestAttempt, populatePreferenceSubmission, populateProjectPreference } = require("../routeHandlers/studentRouteHandler.js");
+const { batch } = require('googleapis/build/src/apis/batch/index.js');
 
 
 let belbinFormId = null
@@ -28,6 +29,20 @@ async function closeForm(auth, formId) {
   const authClient = await auth.getClient();
   const forms = google.forms({ version: 'v1', auth: authClient });
   // Implemented form closing here
+  try {
+    const response = await forms.forms.batchUpdate(
+      {
+        formId,
+        requestBody: {
+          "includeFormInResponse": true,
+          "requests": formData.closeForm
+        }
+      }
+    );
+    console.log("Form closed successfully: ", response.data)
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 async function createForm(auth,formBody){
