@@ -119,7 +119,7 @@ const getForms = async (req, res) => {
     let openForms = []
     if (results.length > 0) { // We can't loop with awaits, so this is the next best thing
         let belbinResponse = await getForm('Belbin', unitCode, year, period, results)
-        let preferenceResponse = await getForm('Preferences', unitCode, year, period, results)
+        let preferenceResponse = await getForm('Preference', unitCode, year, period, results)
         let effortResponse = await getForm('Effort', unitCode, year, period, results)
 
         if(belbinResponse) {
