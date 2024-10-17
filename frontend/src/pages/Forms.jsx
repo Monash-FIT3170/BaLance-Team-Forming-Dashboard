@@ -97,11 +97,12 @@ const Forms = () => {
                 console.log("submitted close")
                 toast({
                     title: 'Form closed',
-                    description: `Google form for ${unitCode} have been successfully closed. Refresh page to see updated list.`,
+                    description: `Google form for ${unitCode} have been successfully closed.`,
                     status: 'success',
                     duration: 4000,
                     isClosable: true,
                 });
+                window.location.reload();
               } else {
                 return response.text().then((responseText) => {
                 });

@@ -141,14 +141,19 @@ const closeOpenForm = async (req, res) => {
     const { unitCode, year, period } = req.params;
     const formId = req.body;
 
-    await promiseBasedQuery(
-        "DELETE FROM unit_form " +
-        "WHERE " +
-        "   form_id=? ",
-        [formId.id]
-    )
-    closeForm(auth, formId.id, formId.type);
-    res.status(200).json();
+    formStatus = await closeForm(auth, formId.id, formId.type);
+    if (formStatus) {
+        await promiseBasedQuery(
+            "DELETE FROM unit_form " +
+            "WHERE " +
+            "   form_id=? ",
+            [formId.id]
+        )
+        res.status(200).json();
+    }
+    else {
+        res.status(500).json();
+    }
 }
 
 const createForms = async (req, res) => {

@@ -41,8 +41,10 @@ async function closeForm(auth, formId, type) {
       }
     );
     console.log("Form closed successfully: ", response.data)
+    return true;
   } catch (error) {
     console.error(error)
+    return false;
   }
 }
 
