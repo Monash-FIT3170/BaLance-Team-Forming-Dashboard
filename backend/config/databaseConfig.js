@@ -7,12 +7,12 @@
  *
  */
 
-const mysql = require('mysql2');
-require('dotenv').config();
+const mysql = require('mysql2'); // Import the mysql2 package for MySQL database interaction
+require('dotenv').config(); // Load environment variables from a .env file for configuration
 
 const connection = mysql.createConnection({
     host: process.env.MYSQLHOST,  // docker compose service name which resolves to internal IP (by docker)
-    user: process.env.MYSQLUSER,
+    user: process.env.MYSQLUSER, 
     password: process.env.MYSQLPASSWORD,
     database: process.env.MYSQL_DATABASE,
     port: process.env.MYSQLPORT,
@@ -26,4 +26,4 @@ const connection = mysql.createConnection({
 //     connectionLimit: 10
 // });
 
-module.exports = connection;
+module.exports = connection; // Export the connection object to be used in other parts of the application
