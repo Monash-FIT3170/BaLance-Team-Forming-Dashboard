@@ -1,4 +1,13 @@
-const { getBelbinResponse, getEffortResponse, getPreferenceResponse, generateForms, closeForm, addStudentTimesAndPreferences, prepareTimesAndPreferencesData } = require('../helpers/formsHelpers');
+const { 
+    getBelbinResponse, 
+    getEffortResponse, 
+    getPreferenceResponse, 
+    generateForms, 
+    closeForm, 
+    addStudentTimesAndPreferences, 
+    prepareTimesAndPreferencesData, 
+    getResponseCount 
+} = require('../helpers/formsHelpers');
 const { promiseBasedQuery, selectUnitOffKey } = require("../helpers/commonHelpers");
 const { addTestResultFunctionStrats } = require("./studentRouteHandler.js");
 
@@ -67,6 +76,19 @@ const pushData = async (req, res) => {
     }
     res.status(200).json();
 };
+
+const getResponseNumber = async (req, res) => {
+    const { unitCode, year, period } = req.params;
+    const formIds = req.body;
+
+    const counts = formIds.map((formId) => {
+        getResponseCount(auth, formId, unitCode, year, period);
+    })
+
+    console.log(counts)
+
+    res.status(200).json(counts);
+}
 
 const getForms = async (req, res) => {
 
@@ -258,4 +280,10 @@ const addPersonalityData = async(students, testType, unitCode, year, period) => 
     addTestResultFunctionStrats[testType](personalityTestAttemptKeys, students);
 }
 
-module.exports =  { pushData, createForms, getForms, closeOpenForm };
+module.exports =  { 
+    pushData, 
+    createForms, 
+    getForms, 
+    closeOpenForm, 
+    getResponseNumber 
+};

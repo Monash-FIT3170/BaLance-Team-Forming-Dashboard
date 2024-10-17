@@ -237,6 +237,43 @@ async function prepareTimesAndPreferencesData(projectData, unitCode, year, perio
   return result;
 }
 
+async function getResponseCount(auth, formId, unitCode, year, period) {
+  studentData = await promiseBasedQuery(
+    "SELECT s.student_id " +
+    "FROM student s " +
+    "JOIN unit_enrolment ue ON s.stud_unique_id = ue.stud_unique_id " +
+    "WHERE ue.unit_off_id = (" +
+        "SELECT u.unit_off_id " +
+        "FROM unit_offering u " +
+        "WHERE u.unit_code = ? " +
+        "AND u.unit_off_year = ? " +
+        "AND u.unit_off_period = ?" +
+    "); ",
+    [unitCode, year, period]
+  );
+  const databaseIds = studentData.map(student => student.student_id);
+
+  const reponses = await getFormResponseList(auth, formId);
+  const studentIds = new Set(); // ensure list is 
+  if(!reponses.data.responses) {
+    return 0;
+  }
+
+  responses.data.responses.map(response => {
+    let id = response.answers['00000001'];
+    if (databaseIds.has(id)) {
+      studentIds.add(id);
+    }
+  });
+
+  const count = {
+    responseCount: studentIds.size,
+    studentCount: databaseIds.length
+  }
+
+  return count;
+}
+
 async function getBelbinResponse(auth, formId) {
   const belbinResponses = await getFormResponseList(auth, formId);
   let responseList = [];
@@ -445,5 +482,6 @@ module.exports = {
     generateForms,
     closeForm,
     addStudentTimesAndPreferences,
-    prepareTimesAndPreferencesData
+    prepareTimesAndPreferencesData,
+    getResponseCount
 }

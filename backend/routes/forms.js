@@ -3,7 +3,8 @@ const {
     pushData,
     createForms,
     getForms,
-    closeOpenForm
+    closeOpenForm,
+    getResponseNumber
 } = require("../routeHandlers/formsRouteHandler");
 
 const router = express.Router();
@@ -19,5 +20,8 @@ router.get("/:unitCode/:year/:period/", getForms);
 
 // close google forms
 router.post("/:unitCode/:year/:period/close", closeOpenForm);
+
+// get response counts from the 
+router.get("/:unitCode/:year/:period/counts", getResponseNumber)
 
 module.exports = router;
