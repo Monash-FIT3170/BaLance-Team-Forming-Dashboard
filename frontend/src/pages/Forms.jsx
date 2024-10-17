@@ -77,7 +77,7 @@ const Forms = () => {
         });
     };
 
-    function closeForms(id) {
+    function closeForms(id, type) {
         getAccessTokenSilently().then((token) => {
       
             fetch(
@@ -89,7 +89,7 @@ const Forms = () => {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
               }),
-              body: JSON.stringify({id}),
+              body: JSON.stringify({id, type}),
             }
           )
             .then((response) => {
@@ -238,7 +238,7 @@ const Forms = () => {
                                             onClick={() => {
                                                 const confirmed = window.confirm("This will close the associated google form, no responses will be accepted after. Do you wish to continue?");
                                                 if (confirmed) {
-                                                    closeForms(form.id);
+                                                    closeForms(form.id, form.type);
                                                 }
                                             }}>
                                             Close Form

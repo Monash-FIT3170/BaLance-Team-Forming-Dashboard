@@ -120,7 +120,7 @@ const closeOpenForm = async (req, res) => {
         "   form_id=? ",
         [formId.id]
     )
-    closeForm(auth, formId.id);
+    closeForm(auth, formId.id, formId.type);
     res.status(200).json();
 }
 

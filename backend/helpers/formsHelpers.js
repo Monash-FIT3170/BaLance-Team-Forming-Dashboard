@@ -25,17 +25,18 @@ let projectResponderURL = null
 let effortFormId = null
 let effortResponderURL = null
 
-async function closeForm(auth, formId) {
+async function closeForm(auth, formId, type) {
   const authClient = await auth.getClient();
   const forms = google.forms({ version: 'v1', auth: authClient });
   // Implemented form closing here
+  const request = type == "Belbin" ? formData.closeBelbinForm : formData.closeForm
   try {
     const response = await forms.forms.batchUpdate(
       {
         formId,
         requestBody: {
           "includeFormInResponse": true,
-          "requests": formData.closeForm
+          "requests": request
         }
       }
     );
