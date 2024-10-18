@@ -502,6 +502,7 @@ async function getBelbinResponse(auth, formId) {
     for (let j = 0; j < attributes.length; j++) {
       if (attributes[j][1] > max_value) {
         max_attribute = attributes[j][0];
+        max_value = attributes[j][1]
       }
     }
 
