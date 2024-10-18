@@ -8,44 +8,212 @@ and work productively.
 It makes use of student personality data to determine the optimal team formations and provides a variety of team
 formation strategies for teaching associates to select from.
 
+The application offers three methods for forming teams:
+
+1. **Belbin Personality Method**: This method categorizes students by Belbin team roles, where student are categorised as either people, thinking or action.
+
+2. **Effort-Based Method**: This approach assesses the hours students are willing to commit to group work, pairing student together with same work ethics.
+
+3. **Project Preference Method**: This strategy lets students indicate their project preferences with submission time serving a first come first serve basis.
+
+These strategies allow teachers to select the most suitable approach based on their unique cohort dynamics, ultimately enhancing the learning experience for students.
+
 # Table of Contents
 
-1. [Features](#features)
-2. [Basic Usage](#basic-usage)
-   - [Running the application](#running-the-application)
+1. [Software Requirements](#Software-Requirements)
+   - [Dependencies](#Dependencies)
+   - [External Dependencies](#external-dependencies)
+2. [Setup Guide](#Setup-Guide)
+   - [Installation](#installation)
+   - [Setup](#setup)
+3. [Deployment](#Deployment)
+4. [Git Quality Assurance](#Git-Quality-Assurance)
+   - [Versioning Strategy](#versioning-strategy)
+   - [Pull Requests](#pull-requests)
+5. [Features](#features)
    - [Walkthrough](#walkthrough)
-   - [CSV data](#csv-data-format)
-3. [Development guidelines](#development-guidelines)
-4. [Contributors](#contributors)
-5. [License](#license)
+   - [CSV data format](#csv-data-format)
+6. [Development guidelines](#development-guidelines)
+7. [Contributors](#contributors)
+
+# Software Requirements
+
+## Dependencies
+
+MERN architecture:
+
+- MySQL Ver 8.1x(database)
+- Express.js (backend)
+- React Ver 18.x (frontend)
+- Node.js (runtime)
+- Docker (containerisation)
+
+## External dependencies
+
+- Auth0 (Authentication)
+- Railway (deployment)
+- Google Service accoutn (API functionality with service account)
+- Google forms API
+- Nodemailer
+
+# Setup Guide
+
+## Installation
+
+- MySQL: Download Youtube guide: https://www.youtube.com/watch?v=u96rVINbAUI&feature=youtu.be \
+  NOTE: When setting up your root account and password, be sure to keep them somewhere as it will be important in setting up the app workbench connection. Forgetting may require you to reinstall MySQL or may completely bar you from being able to set up the application.
+- Docker: [Windows] (https://docs.docker.com/desktop/install/windows-install/) [Mac] (https://docs.docker.com/desktop/install/mac-install/). If on mac or linux[debian] you could use terminal
+
+  ```
+  brew install docker
+  sudo apt install docker.io
+  ```
+
+- Node.js Download the Node.js installer from Node.js — Download Node.js® and run it.
+
+## Setup
+
+- Clone the repo:
+  ```
+  git clone https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard.git;
+  cd BaLance-Team-Forming-Dashboard/
+  ```
+- MySQL
+  1. Open up your MySQL workbench and create a new MySQL connection, using the default settings is fine.
+  2. Create .env files in the frontend and backend folders in the below format. Change the DB_PASSWORD to your MySQL root account’s password. If you did not use root as your root account’s username, change DB_USER accordingly.
+  3. Open the MySQL Terminal/ MySQL Shell and type in the following command:
+     `source <absolute path>/schemaCreation.sql;`
+     NOTE: if copying the path from vscode, explorer, etc. all back slashes ‘\’ must be replaced with forward slashes ‘/’
+  4. Connect to your database:`mysql -h host_address -u user_name -p pass_word < schemaCreation.sql;`
+- npm depencencies:
+  ```
+  cd backend
+  npm i
+  cd ../frontend
+  npm i
+  ```
+- Google Service Account Creation:
+
+  1. In the Google Cloud console, go to the Create service account page.
+  2. Go to Create service account
+  3. Select a Google Cloud project.
+  4. Enter a service account name to display in the Google Cloud console.
+  5. Done
+  6. ![Service Account Creation](docs/images/InstallationImages/GoogleCloudServiceAccount.png)
+     To utilise the account you need to create a key:
+  7. Click on the account, shown in the previous step
+  8. Go to the keys tab
+  9. Add key
+     Note: This will download a json file. Store this in the backend env file as a string
+
+- Auth0 Guide QuickStart : https://auth0.com/docs/quickstart/spa/react/interactive . Take note of the audience parameters
+
+Run the frontend and backend from their respective directories
+
+`cd backend; npm run start`
+`cd frontend; npm run start`
+Required environment variables:
+In /backend/
+
+```.dotenv
+MYSQLPORT=
+MYSQLHOST=
+MYSQLUSER=
+MYSQLPASSWORD=
+MYSQL_DATABASE="student_group_db"
+AUTH="TEST"
+GOOGLE_SERVICE_ACCOUNT_TOKEN =
+AUTH_DOMAIN=""
+```
+
+In /frontend/
+
+```.dotenv
+VITE_REACT_APP_AUTH="TEST"
+VITE_REACT_APP_AUTH_CLIENT_ID=
+VITE_REACT_AUTH_DOMAIN=
+VITE_BACKEND_URL=""
+```
+
+Note: VITE BACKEND URL should be localhost:8080 if running on local or the backend public url if deployed
+
+### Using docker
+
+An existing docker-compose can be used however, it must be noted the database must be
+run from your local device as an existing image has not yet been implemented.
+
+# Deployment
+
+This application was deployed on railway on their free tier: https://railway.app/ \
+Quick guide on learning railway can be found here: https://docs.railway.app/quick-start \
+Setting up BaLance:
+
+1. Deploy from Github Repo (If you have linked your github account, you can find the Balance repo )
+2. In the architecture view, click on the repo block
+3. Under the Source, click on Add Root Directory. Set it to "/frontend" Change the "Branch connected to production" from main to deploymentBranch (optional). Generate domain (this will be the public url). Click out of the block
+4. Top right, create -> Github Repo -> Balance
+5. Under source, click Add Root Directory. Set it to "/backend" Change the "Branch connected to production" from main to deploymentBranch (optional). Click out of the block
+6. Top right, create -> database -> mysql. This will create a mysql instance. (Note: if you would like specific version, you can click on the settings and change the source image to another docker image)
+7. Next steps are to connect the backend to the database via variable references. Click on MySQL instance-> variables -> copy database, host, password, port, user variables and add them to the backend service. This is also where env file variables are added.
+8. Add necessary env variables to both frontend and backend services \
+   ![RailwayDeployed](docs/images/InstallationImages/RailwayDeployed.png) \
+   Note: The deployed backend and frontend do not run the schema creation script. If needed to be run, it is recommended to connect to the online database via terminal. Command to so can be found by clicking on the mysql instance -> data tab -> connect ->public network. Can also perform the necessary changes via the railway UI.
+
+# Git Quality Assurance
+
+## Git Repository and Branching Model
+
+The trunk based development branching model will be used in this project. This ensures that the main branch is always in development and the integration of features is continuous. This continuous integration allows for frequent code testing and reviews, promoting the quality of the code. Furthermore, continuous integration and frequent testing will help catch bugs early and reduce the risk of deploying a faulty product.
+Commits
+
+Developers are expected to regularly commit their progress. Commits should be small in size. Examples of acceptable commits are a complete function, or the framework for a class. In the case of large classes, every function within the class should be committed separately. When debugging code, developers should refrain from committing debugs in multiple sections of the code simultaneously. Each commit should only pertain to debugs of one function or a similarly small unit of code.
+
+Commit descriptions should feature the following prefixes/tags: DEBUG, FEATURE, DOCS, REFACTOR, TEST, STYLE. The format of the commit should be ‘[prefix]: [description]’. Descriptions should be written in an imperative mood, using actionable verbs such as ‘add’, ‘update’, or ‘remove’. The description should be a single concise sentence. If your commit message needs to be longer, this indicates that it can be broken down into multiple commits.
+
+## Branch
+
+### Branching Rules
+
+The main branch currently in github will function as the trunk branch with ‘feature’ branches as short development branches. Feature branches are branches where teams will develop, implement small tasks and features or perform code spikes all requiring no more than a few days' effort. After features are completed, a pull request (PR) shall be requested by the agile team with final code review and execution of CI/CD pipelines before merging into the main branch. (Complete CI/CD pipelines may not be applicable to certain, if not any, stages of the project as it is a requirement to be implemented).
+
+### Branch Naming Convention
+
+Branch names shall follow the following convention:
+Type of Branch/Related User Stories/description of branch
+
+Types of branches include:
+Feature
+Code Spike
+Hotfix
+
+Eg. Feature/User Story 1/Add Button
+
+## Versioning strategy
+
+Semantic Versioning (SemVer): Semantic Versioning uses a three-part version number: MAJOR.MINOR.PATCH. \
+[MAJOR] Significant changes and versions are not backwards compatible \
+[MINOR] New features and versions are backward compatible \
+[PATCH] Bug fixes/ small changes. Remains backward compatible \
+
+## Pull requests
+
+Contributions are welcome and can be submitted via pull requests. \
+All pull requests must include the following:
+
+- A brief summary of the changes made.
+- References to any relevant issue numbers (if applicable).
+- Instructions for testing the changes.
+- Any other relevant information (e.g., potential impacts on other parts of the codebase).
+  A maintainer will be notified and review the changes made.
 
 # Features
 
 - Forms groups between students using one of multiple available formation strategies
 - View group by group and cohort wide analytics on personality distribution
 - Export group allocation data in CSV format for use with your learning management system
-
-# Basic Usage
-
-## Running the application
-
-Install and setup
-
-```shell
-git clone https://github.com/Monash-FIT3170/BaLance-Team-Forming-Dashboard.git;
-cd BaLance-Team-Forming-Dashboard/backend; npm i; cd ../frontend; npm i cd ../database;
-mysql -h host_address -u user_name -p pass_word < schemaCreation.sql;
-```
-
-Run the frontend and backend from their respective directories
-
-`cd backend; nodemon server`
-`cd frontend; npm start`
-
-### Using docker
-
-An existing docker-compose can be used however, it must be noted the database must be
-run from your local device as an existing image has not yet been implemented.
+- Sending out a google forms to all students to collect results
+- Auth0 login page preventing use of features without authentication
+- Manual data entry, addition, editing or removal of data
 
 ## Walkthrough
 
@@ -95,12 +263,12 @@ hourCommitment is the estimated number of hours that a student expects to commit
 
 ### Times and Preferences data
 
-Preferences can be added to the end of the table as needed
+Preferences can be added to the end of the table as needed. Project Pref is a number from 1 to n, where n is the number of projects.
 
-| timestamp           | studentId | full name   | email                       | Project Pref n |              
-| ------------------- | --------- | ------------| --------------------------- | -------------- | 
-| 2/26/2024 20:00:39  | 12345678  | Jim White   | jwhi0001@student.monash.edu | 1              |
-| 2/26/2024 20:00:39  | 28462818  | Jemma Black | jbla0001@student.monash.edu | 9              |
+| timestamp          | studentId | full name   | email                       | Project Pref n |
+| ------------------ | --------- | ----------- | --------------------------- | -------------- |
+| 2/26/2024 20:00:39 | 12345678  | Jim White   | jwhi0001@student.monash.edu | 1              |
+| 2/26/2024 20:00:39 | 28462818  | Jemma Black | jbla0001@student.monash.edu | 9              |
 
 # Development guidelines
 
@@ -119,8 +287,11 @@ python ./generator.py --help
 ```
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-31-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):

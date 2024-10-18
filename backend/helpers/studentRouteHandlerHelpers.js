@@ -2,6 +2,13 @@ const { promiseBasedQuery } = require("./commonHelpers");
 
 const insertStudents = async (studentInsertData) => {
     /**
+     * Inserts student data into the 'student' table.
+     * Uses INSERT IGNORE to avoid inserting duplicates (based on a unique key, e.g., email or student ID).
+     * 
+     * @param {Array} studentInsertData - An array of arrays where each inner array represents a student row
+     * @returns {Promise} - The result of the insertion query
+     *
+     * 
      * given a list of student data in the form of an array, uploads the data
      * taking into consideration if a student already exists on the database or not
      */
@@ -19,6 +26,12 @@ const insertStudents = async (studentInsertData) => {
 
 const selectStudentsKeys = async (studentEmails) => {
     /**
+     * Retrieves the primary keys (stud_unique_id) for a list of student email addresses.
+     * 
+     * @param {Array} studentEmails - An array of student email addresses
+     * @returns {Promise<Array>} - Array of student primary keys (stud_unique_id)
+     *
+     * 
      * obtains the list of primary keys for the students associated with the list of emails provided
      * result is used to form enrolment data for a unit offering
      */
@@ -31,6 +44,14 @@ const selectStudentsKeys = async (studentEmails) => {
 
 const insertStudentEnrolment = async (studentKeys, unitOffId) => {
     /**
+     * Inserts student enrollment data into 'unit_enrolment' table.
+     * Associates each student (by their stud_unique_id) with a unit offering (unit_off_id).
+     * 
+     * @param {Array} studentKeys - Array of student primary keys (stud_unique_id)
+     * @param {number} unitOffId - The primary key of the unit offering (unit_off_id)
+     * @returns {Promise} - The result of the insertion query
+     *
+     * 
      * adds enrolment data given an array of student keys and a unit offering id,
      */
     try {
@@ -47,6 +68,13 @@ const insertStudentEnrolment = async (studentKeys, unitOffId) => {
 
 const insertUnitOffLabs = async (requestBody, unitOffId) => {
     /**
+     * Determines the number of labs based on the students' lab codes and inserts the labs for the unit offering.
+     * 
+     * @param {Array} requestBody - Array of student objects, each containing a labCode attribute
+     * @param {number} unitOffId - The primary key of the unit offering (unit_off_id)
+     * @returns {Promise} - The result of the insertion query
+     *
+     * 
      * Given a list of students from a request body, determines the number of labs
      * in an offering and creates them in the database
      */
@@ -60,7 +88,8 @@ const insertUnitOffLabs = async (requestBody, unitOffId) => {
             let labNum = Number(split[0]);
             numLabs = labNum > numLabs ? labNum : numLabs;
         }
-
+        
+        // Prepare the lab data for insertion
         // formulate data into the desired format: [unit_off_id, lab_number]
         let labInsertData = [];
         for (let i = 1; i <= numLabs; i++) {
@@ -77,7 +106,16 @@ const insertUnitOffLabs = async (requestBody, unitOffId) => {
 };
 
 const insertStudentLabAllocations = async (requestBody, unitOffId) => {
+    /**
+     * Allocates students to labs based on their lab codes.
+     * This function inserts data into the 'student_lab_allocation' table.
+     * 
+     * @param {Array} requestBody - Array of student objects, each containing an email and labCode
+     * @param {number} unitOffId - The primary key of the unit offering (unit_off_id)
+     * @returns {Promise} - The result of the insertion query
+     */
     try {
+        // Fetch the labs for the unit offering and map them by lab_number
         /* SELECT labs and create a dictionary of form
          * {
          *   01: pk for lab 01,
@@ -93,6 +131,7 @@ const insertStudentLabAllocations = async (requestBody, unitOffId) => {
             studentLabNumberAllocation[lab.lab_number] = [];
         });
 
+        // Build mapping of lab_number to lab's primary key
         /* SORT students by lab number as
          * {
          *   01: [students in this lab],
@@ -110,6 +149,7 @@ const insertStudentLabAllocations = async (requestBody, unitOffId) => {
             studentLabNumberAllocation[labNum].push(student.email);
         });
 
+        // Organize students by their lab number
         /*
          * for (each list of student emails for a given lab) {
          *     SELECT these students via email and get their PK
@@ -117,6 +157,7 @@ const insertStudentLabAllocations = async (requestBody, unitOffId) => {
          *     INSERT into lab_allocation as [lab_pk, student_pk]
          * }
          * */
+        // For each lab, allocate students by inserting into the database
         for (const labNumber of Object.keys(studentLabNumberAllocation)) {
             // get the primary key of all of the students allocated to this lab
             const labStudentKeys = await selectStudentsKeys(studentLabNumberAllocation[labNumber]);
